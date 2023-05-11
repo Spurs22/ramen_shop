@@ -10,7 +10,23 @@ public class RecipeBoard {
 	private String ip_address;
 	private long recipe_id;
 	private int quantity;
+	private long product_id;
 	
+	public long getProduct_id() {
+		return product_id;
+	}
+	public void setProduct_id(long product_id) {
+		this.product_id = product_id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public void setMember_id(long member_id) {
+		this.member_id = member_id;
+	}
+	public void setRecipe_id(long recipe_id) {
+		this.recipe_id = recipe_id;
+	}
 	public long getRecipe_id() {
 		return recipe_id;
 	}
