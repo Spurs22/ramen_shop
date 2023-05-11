@@ -1,17 +1,17 @@
 package com.DTO;
 
 public class RecipeBoard {
-	private int id;
-	private int member_id;
+	private long id;
+	private long member_id;
 	private String created_date;
 	private String subject;
 	private String content;
 	private int hit_count;
 	private String ip_address;
-	private int recipe_id;
+	private long recipe_id;
 	private int quantity;
 	
-	public int getRecipe_id() {
+	public long getRecipe_id() {
 		return recipe_id;
 	}
 	public void setRecipe_id(int recipe_id) {
@@ -23,13 +23,13 @@ public class RecipeBoard {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getMember_id() {
+	public long getMember_id() {
 		return member_id;
 	}
 	public void setMember_id(int member_id) {
