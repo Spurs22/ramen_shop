@@ -34,7 +34,7 @@ public class Order {
 	public long getDeliveryId() {
 		return deliveryId;
 	}
-	public void setDeliveryId(int deliveryId) {
+	public void setDeliveryId(long deliveryId) {
 		this.deliveryId = deliveryId;
 	}
 	public String getCreatedDate() {
