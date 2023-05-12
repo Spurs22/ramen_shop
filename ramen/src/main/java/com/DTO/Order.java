@@ -4,7 +4,7 @@ public class Order {
 	private int id;
 	private String statusName;
 	private int memberId;
-	private int deliveryId;
+	private long deliveryId;
 	private String createdDate;
 	private int productId;
 	private int orderId;
@@ -31,7 +31,7 @@ public class Order {
 	public void setMemberId(int memberId) {
 		this.memberId = memberId;
 	}
-	public int getDeliveryId() {
+	public long getDeliveryId() {
 		return deliveryId;
 	}
 	public void setDeliveryId(int deliveryId) {

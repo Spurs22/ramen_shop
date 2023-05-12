@@ -5,14 +5,23 @@ import com.DTO.Cart;
 import java.util.List;
 
 public interface CartRepository {
+	
+	/**
+	 * @param productId		상품 아이디
+	 * @param memberId		사용자 아이디
+	 * @param quantity		개수
+	 */
+	// 장바구니 아이템 생성( 존재하지 않을 시 )
+	void createItem(Long productId, Long memberId, int quantity);
 
 	/**
 	 * @param memberId      사용자 아이디
 	 * @param productId     상품 아이디
 	 * @param num           개수 (뺄때는 - 입력)
 	 */
-	// 장바구니 
-	void editProduct(Long memberId, Long productId, Long num);
+	
+	// 장바구니 아이템 수정 ( 개수 변경시 )
+	void editItem(Long memberId, Long productId, int num);
 
 	/**
 	 * 
