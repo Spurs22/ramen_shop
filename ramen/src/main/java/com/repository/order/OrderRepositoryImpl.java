@@ -17,12 +17,12 @@ public class OrderRepositoryImpl implements OrderRepository{
 	}
 
 	@Override
-	public void confirmOrder(Long orderId) {
+	public void confirmOrder(Long orderId, String statusName){
 		
 	}
 
 	@Override
-	public void setDeliveryNumber(Long orderId, String deliveryNumber) {
+	public void setDeliveryNumber(Long orderId, Long deliveryId){
 		
 	}
 

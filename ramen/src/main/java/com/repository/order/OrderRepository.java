@@ -13,10 +13,10 @@ public interface OrderRepository {
 	void cancelOrder(Long orderId);
 
 	// 주문상태 변경 - 매개변수:상태(결제완료 - 배송중 - 배송완료)
-	void confirmOrder(Long orderId);
+	void confirmOrder(Long orderId, String statusName);
 
 	// 송장번호 만들기
-	void setDeliveryNumber(Long orderId, String deliveryNumber);
+	void setDeliveryNumber(Long orderId, Long deliveryId);
 
 	// 회원 > 주문내역 확인
 	List<Order> findOrderByMemberId(Long memberId);
