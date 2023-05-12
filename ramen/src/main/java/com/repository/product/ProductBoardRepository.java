@@ -1,11 +1,11 @@
-package com.repository.product;
+package main.java.ramen.interfaces.product;
 
-import com.DTO.ProductBoard;
+import main.java.ramen.DTO.ProductBoard;
 
 import java.util.List;
 
 public interface ProductBoardRepository {
-	Long createPost(ProductBoard productBoard);
+	void createPost(ProductBoard productBoard);
 
 	void editPost(ProductBoard productBoard);
 

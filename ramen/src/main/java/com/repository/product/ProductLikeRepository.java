@@ -1,6 +1,6 @@
-package com.repository.product;
+package main.java.ramen.interfaces.product;
 
-import com.DTO.Member;
+import main.java.ramen.DTO.Member;
 
 import java.util.List;
 
