@@ -6,11 +6,11 @@ import com.DTO.RecipeBoard;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface RecepieBoardRepository {
+public interface RecipeBoardRepository {
 
-	void insertRecipe(RecipeBoard recipeBoard) throws SQLException;
+	void insertRecipe(RecipeBoard recipeBoard, List<RecipeBoard> list) throws SQLException;
 
-	void updateRecipe(RecipeBoard recipeBoard) throws SQLException;
+	void updateRecipe(RecipeBoard recipeBoard, List<RecipeBoard> list) throws SQLException;
 
 	void deleteRecipe(long memberId, long postId) throws SQLException;
 

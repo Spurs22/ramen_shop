@@ -1,4 +1,4 @@
-package com.test;
+package test;
 
 import com.DTO.Product;
 import com.repository.product.ProductRepository;
@@ -17,6 +17,6 @@ public class ProductRepositoryImplTest {
 		);
 
 		productRepository.createProduct(product);
-
+		
 	}
 }

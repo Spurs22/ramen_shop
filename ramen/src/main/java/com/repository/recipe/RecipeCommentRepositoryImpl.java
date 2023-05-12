@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.DTO.RecipeComment;
 
-public class RecepieCommentRepositoryImpl implements RecepieCommentRepository {
+public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 
 	@Override
 	public void createRatingComment(RecipeComment recipeComment) throws SQLException {

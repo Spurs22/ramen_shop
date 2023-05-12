@@ -11,11 +11,11 @@ import com.DTO.RecipeBoard;
 import com.util.DBConn;
 import com.util.DBUtil;
 
-public class RecepieBoardRepositoryImpl implements RecepieBoardRepository {
+public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 	private Connection conn = DBConn.getConnection();
 	
 	@Override
-	public void insertRecipe(RecipeBoard recipeboard) throws SQLException {
+	public void insertRecipe(RecipeBoard recipeboard, List<RecipeBoard> list) throws SQLException {
 		// 등록해야 하는 것 : 아이디, 멤버 아이디(id), 생성일, 제목, 내용(상품, 수량), 조회 수, 아이피 주소 
 		// 레시피 프로덕트에 상품 수량
 		PreparedStatement pstmt = null;
@@ -37,13 +37,15 @@ public class RecepieBoardRepositoryImpl implements RecepieBoardRepository {
 			pstmt.close();
 			pstmt = null;
 			
-			for(int i = 0; i < 4; i++) {
-				sql = "INSERT INTO recipe_product (recipe_id, product_id, quantity) "
-						+ " VALUES (recipe_board.CURRVAL, ?, ?)";
-				pstmt = conn.prepareStatement(sql);
+			sql = "INSERT INTO recipe_product (recipe_id, product_id, quantity) "
+					+ " VALUES (recipe_board_seq.CURRVAL, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
 				
-				pstmt.setLong(1, recipeboard.getProduct_id());
-				pstmt.setInt(2, recipeboard.getQuantity());
+			for(RecipeBoard recipe : list) {
+				pstmt.setLong(1, recipe.getProduct_id());
+				pstmt.setInt(2, recipe.getQuantity());
+				
+				pstmt.executeUpdate();
 			}
 			
 			conn.commit();
@@ -65,14 +67,99 @@ public class RecepieBoardRepositoryImpl implements RecepieBoardRepository {
 	}
 
 	@Override
-	public void updateRecipe(RecipeBoard recipeBoard) throws SQLException {
-		// TODO Auto-generated method stub
+	public void updateRecipe(RecipeBoard recipeBoard, List<RecipeBoard> list) throws SQLException {
+		// 레시피 수정
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			sql = "UPDATE recipe_board SET subject = ?, content = ?, ip_address = ? WHERE id = ? AND member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, recipeBoard.getSubject());
+			pstmt.setString(1, recipeBoard.getContent());
+			pstmt.setString(1, recipeBoard.getIp_address());
+			pstmt.setLong(4, recipeBoard.getId());
+			pstmt.setLong(5, recipeBoard.getMember_id());
+			
+			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "UPDATE recipe_product SET product_id = ?, quantity = ? WHERE recipe_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			for(RecipeBoard recipe : list) {
+				pstmt.setLong(1, recipe.getProduct_id());
+				pstmt.setInt(2, recipe.getQuantity());
+				pstmt.setLong(3, recipe.getRecipe_id());
+				
+				pstmt.executeUpdate();
+			}
+			 	
+			conn.commit();
+			
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.closeResource(pstmt);
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
 		
 	}
 
 	@Override
 	public void deleteRecipe(long memberId, long postId) throws SQLException {
-		// TODO Auto-generated method stub
+		// 삭제
+		PreparedStatement pstmt = null;
+		String sql = "";
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			sql = "DELETE FROM recipe_product WHERE recipe_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, postId);
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "DELETE FROM recipe_board WHERE id = ? AND member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, postId);
+			pstmt.setLong(2, memberId);
+			
+			pstmt.executeUpdate();
+			
+			conn.commit();
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.closeResource(pstmt);
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
 		
 	}
 
