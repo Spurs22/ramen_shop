@@ -36,14 +36,14 @@ public interface CartRepository {
 
 	// 장바구니 ?일 이후 품목 삭제
 	
-	
 	// 장바구니 삭제
-	
+	void deleteCart(Long memberId, Long productId);
+		
 	/**
 	 * 
-	 * @param memberId			
-	 * @param productId
-	 * @return				
-	 */
+	* @param memberId			
+	* @param productId
+	* @return				
+	*/
 	Cart findCartByCartId(Long memberId, Long productId);
 }
