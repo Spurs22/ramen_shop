@@ -163,13 +163,42 @@ private Connection conn = DBConn.getConnection();
 	}
 	
 	/**
-	 * @param memberId			
-	 * @param productId
-	 * @return				
+	 * 
+	 * @param memberId		검색할 사람
+	 * @param productId		품목
+	 * @return				장바구니 정보			
 	 */
+	
 	@Override
 	public Cart findCartByCartId(Long memberId, Long productId) {
-		return null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		Cart cart = new Cart();
+		
+		try {
+			sql = "SELECT product_id, member_id, quantity, created_date "
+					+ "	FROM cart "
+					+ " WHERE member_id = ? AND product_id = ?";
+			pstmt = conn.prepareStatement(sql);
+				
+			pstmt.setLong(1, memberId);
+			pstmt.setLong(2, productId);
+			rs = pstmt.executeQuery();
+				
+			while(rs.next()) {
+				cart.setProductId(rs.getLong("product_id"));
+				cart.setMemberId(rs.getLong("member_id"));
+				cart.setQuantity(rs.getInt("quantity"));
+				cart.setCreatedDate(rs.getString("created_date"));
+			}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+		return cart;
 	}
 
 
