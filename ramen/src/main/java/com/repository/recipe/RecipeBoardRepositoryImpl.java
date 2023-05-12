@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
+import com.DTO.RecipeProduct;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -15,11 +16,12 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 	private Connection conn = DBConn.getConnection();
 	
 	@Override
-	public void insertRecipe(RecipeBoard recipeboard, List<RecipeBoard> list) throws SQLException {
+	public void insertRecipe(RecipeBoard recipeboard) throws SQLException {
 		// 등록해야 하는 것 : 아이디, 멤버 아이디(id), 생성일, 제목, 내용(상품, 수량), 조회 수, 아이피 주소 
 		// 레시피 프로덕트에 상품 수량
 		PreparedStatement pstmt = null;
 		String sql;
+		List<RecipeProduct> list = recipeboard.getRecipeProduct();
 		
 		try {
 			conn.setAutoCommit(false);
@@ -28,10 +30,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 					+ " VALUES (recipe_board_seq.NEXTVAL, ?, SYSDATE, ?, ?, 0, ?)";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, recipeboard.getMember_id());
+			pstmt.setLong(1, recipeboard.getMemberId());
 			pstmt.setString(2, recipeboard.getSubject());
 			pstmt.setString(3, recipeboard.getContent());
-			pstmt.setString(4, recipeboard.getIp_address());
+			pstmt.setString(4, recipeboard.getIpAddress());
 			
 			pstmt.executeUpdate();
 			pstmt.close();
@@ -40,9 +42,9 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			sql = "INSERT INTO recipe_product (recipe_id, product_id, quantity) "
 					+ " VALUES (recipe_board_seq.CURRVAL, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
-				
-			for(RecipeBoard recipe : list) {
-				pstmt.setLong(1, recipe.getProduct_id());
+			
+			for(RecipeProduct recipe : list) {
+				pstmt.setLong(1, recipe.getProductId());
 				pstmt.setInt(2, recipe.getQuantity());
 				
 				pstmt.executeUpdate();
@@ -67,10 +69,11 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 	}
 
 	@Override
-	public void updateRecipe(RecipeBoard recipeBoard, List<RecipeBoard> list) throws SQLException {
+	public void updateRecipe(RecipeBoard recipeBoard) throws SQLException {
 		// 레시피 수정
 		PreparedStatement pstmt = null;
 		String sql;
+		List<RecipeProduct> list = recipeBoard.getRecipeProduct();
 		
 		try {
 			conn.setAutoCommit(false);
@@ -79,22 +82,33 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, recipeBoard.getSubject());
-			pstmt.setString(1, recipeBoard.getContent());
-			pstmt.setString(1, recipeBoard.getIp_address());
+			pstmt.setString(2, recipeBoard.getContent());
+			pstmt.setString(3, recipeBoard.getIpAddress());
 			pstmt.setLong(4, recipeBoard.getId());
-			pstmt.setLong(5, recipeBoard.getMember_id());
+			pstmt.setLong(5, recipeBoard.getMemberId());
 			
 			pstmt.executeUpdate();
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "UPDATE recipe_product SET product_id = ?, quantity = ? WHERE recipe_id = ?";
+			sql = "DELETE FROM recipe_product WHERE recipe_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
-			for(RecipeBoard recipe : list) {
-				pstmt.setLong(1, recipe.getProduct_id());
-				pstmt.setInt(2, recipe.getQuantity());
-				pstmt.setLong(3, recipe.getRecipe_id());
+			pstmt.setLong(1, recipeBoard.getId());
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "INSERT INTO recipe_product (recipe_id, product_id, quantity) "
+					+ " VALUES (?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+				
+			for(RecipeProduct recipe : list) {
+				pstmt.setLong(1, recipe.getRecipeId());
+				pstmt.setLong(2, recipe.getProductId());
+				pstmt.setInt(3, recipe.getQuantity());
 				
 				pstmt.executeUpdate();
 			}
@@ -119,7 +133,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 	}
 
 	@Override
-	public void deleteRecipe(long memberId, long postId) throws SQLException {
+	public void deleteRecipe(Long memberId, Long postId) throws SQLException {
 		// 삭제
 		PreparedStatement pstmt = null;
 		String sql = "";
@@ -164,15 +178,101 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 	}
 
 	@Override
-	public List<ProductBoard> readRecipe() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RecipeBoard> readRecipe() {
+		// 리스트
+		// id, nickname, userId, subject content, hitCount, created_date
+		
+		List<RecipeBoard> list = new ArrayList<RecipeBoard>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT r.id, m.nickname, user_id, subject, content, hit_count, r.created_date "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " ORDER BY id DESC ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				RecipeBoard recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setUserId(rs.getString("user_id"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 	@Override
-	public List<ProductBoard> readRecipe(String condition, String keyword) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RecipeBoard> readRecipe(String condition, String keyword) {
+		List<RecipeBoard> list = new ArrayList<RecipeBoard>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT r.id, m.nickname, user_id, subject, content, hit_count, r.created_date "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id ";
+			if(condition.equals("all")) {
+				sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
+			} else if (condition.equals("created_date")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ?";
+			} else {
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+			}
+			sql += " ORDER BY id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(condition.equals("all")) {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+			} else {
+				pstmt.setString(1, keyword);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				RecipeBoard recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setUserId(rs.getString("user_id"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -211,9 +311,22 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "";
+			sql = "SELECT NVL(COUNT(*), 0) FROM recipe_board ";
+			if(condition.equals("all")) {
+				sql += " WHERE INSTR(subject, ?) >= 1 or INSTR(content, ?) >= 1 ";
+			} else if (condition.equals("created_date")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ?";
+			} else {
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+			}
 			
 			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, keyword);
+			if(condition.equals("all")) {
+				pstmt.setString(2, keyword);
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -231,31 +344,94 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 	}
 
 	@Override
-	public RecipeBoard readRecipe(long id) {
+	public RecipeBoard readRecipe(Long id) {
+		// 글 정보 불러오기
+		// recipe_board : subject, content, hit_count, created_date 
+		// member : user_id, nickname
+		// recipe_product : list(product_id, quantity)
+		RecipeBoard recipeBoard = null;
+		RecipeProduct recipeProduct = null;
+		List<RecipeProduct> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT subject, content, hit_count, r.create_date, user_id, nickname "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " WHERE id = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				recipeBoard = new RecipeBoard();
+				
+				recipeBoard.setSubject(rs.getString("subject"));
+				recipeBoard.setContent(rs.getString("content"));
+				recipeBoard.setHitCount(rs.getInt("hit_count"));
+				recipeBoard.setCreatedDate(rs.getString("created_date"));
+				recipeBoard.setUserId(rs.getString("user_id"));
+				recipeBoard.setNickname(rs.getString("nickname"));
+			}
+			
+			pstmt.close();
+			rs.close();
+			pstmt = null;
+			rs = null;
+			
+			sql = "SELECT product_id, quantity FROM recipe_product WHERE recipe_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipeProduct = new RecipeProduct();
+				
+				recipeProduct.setProductId(rs.getLong("product_id"));
+				recipeProduct.setQuantity(rs.getInt("quantity"));
+				
+				list.add(recipeProduct);
+			}
+			
+			recipeBoard.setRecipeProduct(list);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return recipeBoard;
+	}
+
+	@Override
+	public RecipeBoard preReadRecipe(Long id, String condition, String keyword) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public RecipeBoard preReadRecipe(long id, String condition, String keyword) {
+	public RecipeBoard nextReadRecipe(Long id, String condition, String keyword) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public RecipeBoard nextReadRecipe(long id, String condition, String keyword) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void registPicture(long postId, String path) {
+	public void registPicture(Long postId, String path) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateHitCount(long id) throws SQLException {
+	public void updateHitCount(Long id) throws SQLException {
 		// TODO Auto-generated method stub
 		PreparedStatement pstmt = null;
 		String sql;

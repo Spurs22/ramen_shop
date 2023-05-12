@@ -1,23 +1,38 @@
 package com.DTO;
 
 public class Order {
-	private int id;
-	private String statusName;
-	private int memberId;
-	private long deliveryId;
-	private String createdDate;
-	private int productId;
-	private int orderId;
-	private int statusId;
-	private int quantity;
-	private int price;
-	private int finalPrice;
+	private Long orderBundleId;
+	private Long orderItemId;
+	private Long orderStatusId;
 	
-	public int getId() {
-		return id;
+	private String statusName;
+	private Long memberId;
+	private Long deliveryId;
+	private String createdDate;
+	private Long productId;
+	private Long orderId;
+	private Long statusId;
+	private int quantity;
+	private Long price;
+	private Long finalPrice;
+	
+	public Long getOrderBundleId() {
+		return orderBundleId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setOrderBundleId(Long orderBundleId) {
+		this.orderBundleId = orderBundleId;
+	}
+	public Long getOrderItemId() {
+		return orderItemId;
+	}
+	public void setOrderItemId(Long orderItemId) {
+		this.orderItemId = orderItemId;
+	}
+	public Long getOrderStatusId() {
+		return orderStatusId;
+	}
+	public void setOrderStatusId(Long orderStatusId) {
+		this.orderStatusId = orderStatusId;
 	}
 	public String getStatusName() {
 		return statusName;
@@ -25,16 +40,16 @@ public class Order {
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
-	public int getMemberId() {
+	public Long getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(int memberId) {
+	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
-	public long getDeliveryId() {
+	public Long getDeliveryId() {
 		return deliveryId;
 	}
-	public void setDeliveryId(long deliveryId) {
+	public void setDeliveryId(Long deliveryId) {
 		this.deliveryId = deliveryId;
 	}
 	public String getCreatedDate() {
@@ -43,22 +58,22 @@ public class Order {
 	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
-	public int getProductId() {
+	public Long getProductId() {
 		return productId;
 	}
-	public void setProductId(int productId) {
+	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
-	public int getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(int orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
-	public int getStatusId() {
+	public Long getStatusId() {
 		return statusId;
 	}
-	public void setStatusId(int statusId) {
+	public void setStatusId(Long statusId) {
 		this.statusId = statusId;
 	}
 	public int getQuantity() {
@@ -67,16 +82,16 @@ public class Order {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getPrice() {
+	public Long getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
-	public int getFinalPrice() {
+	public Long getFinalPrice() {
 		return finalPrice;
 	}
-	public void setFinalPrice(int finalPrice) {
+	public void setFinalPrice(Long finalPrice) {
 		this.finalPrice = finalPrice;
 	}
 

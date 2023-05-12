@@ -8,33 +8,38 @@ import com.DTO.Notice;
 public interface NoticeRepository {
 	void insertNotice(Notice dto) throws SQLException;
 	
-	int dataCount();
+	int dataCount(int category);
 	
 	// 검색에서 전체의 개수
-	int dataCount(String condition, String keyword);
+	int dataCount(int category, String condition, String keyword);
 	
 	// 게시물 리스트
-	List<Notice> listNotice(int offset, int size);
+	List<Notice> listNotice(int category, int offset, int size);
 	
 	// 검색에서 리스트
-	List<Notice> listNotice(int offset, int size, String condition, String keyword);
+	List<Notice> listNotice(int category, int offset, int size, String condition, String keyword);
 	
-	// 공지글
-	List<Notice> listNotice();
+	// 공지글 - 파라미터 카테고리 -> 10년 전 글이여도 공지글!
+	List<Notice> listNotice(int category);
 	
+	// 해당 공지글 보기
 	Notice readNotice(long id);
 	
 	// 이전 글
-	Notice preReadNotice(long id, String condition, String keyword);
+	Notice preReadNotice(int category, long id, String condition, String keyword);
 	
 	// 다음 글
-	Notice nextReadNotice(long id, String condition, String keyword);
+	Notice nextReadNotice(int category,long id, String condition, String keyword);
 	
+	// 조회수 증가
 	void updateHitCount(long id) throws SQLException;
 	
+	// 공지글 수정
 	void updateNotice(Notice dto) throws SQLException;
 	
+	// 공지글 삭제
 	void deleteNotice(long id) throws SQLException;
+	
 	
 	void deleteNoticeList(long [] ids) throws SQLException;
 	
