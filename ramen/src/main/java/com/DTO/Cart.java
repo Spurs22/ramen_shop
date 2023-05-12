@@ -1,21 +1,21 @@
 package com.DTO;
 
 public class Cart {
-	private long productId;
-	private long memberId;
+	private Long productId;
+	private Long memberId;
 	private int quantity;
 	private String createdDate;
 	
-	public long getProductId() {
+	public Long getProductId() {
 		return productId;
 	}
-	public void setProductId(long product_id) {
+	public void setProductId(Long product_id) {
 		this.productId = product_id;
 	}
-	public long getMemberId() {
+	public Long getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(long memberId) {
+	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
 	public int getQuantity() {
