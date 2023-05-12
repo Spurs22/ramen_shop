@@ -50,12 +50,6 @@ private Connection conn = DBConn.getConnection();
 	public void cancelOrder(Long orderId) {
 		PreparedStatement pstmt = null;
 		String sql;
-		/*
-		 UPDATE order_status SET status_name = '주문취소' 
-		WHERE EXISTS( SELECT order_id, os.id, status_name  
-		FROM order_status os JOIN order_item oi ON os.id = oi.status_id 
-		WHERE order_id = ?); 
-		 */
 		
 		try {
 			sql = "UPDATE order_status SET status_name = '주문취소'  "
