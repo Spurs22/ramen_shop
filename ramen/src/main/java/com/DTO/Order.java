@@ -1,23 +1,38 @@
 package com.DTO;
 
 public class Order {
-	private int id;
+	private long orderBundleId;
+	private long orderItemId;
+	private long orderStatusId;
+	
 	private String statusName;
-	private int memberId;
+	private long memberId;
 	private long deliveryId;
 	private String createdDate;
-	private int productId;
-	private int orderId;
-	private int statusId;
+	private long productId;
+	private long orderId;
+	private long statusId;
 	private int quantity;
-	private int price;
-	private int finalPrice;
+	private long price;
+	private long finalPrice;
 	
-	public int getId() {
-		return id;
+	public long getOrderBundleId() {
+		return orderBundleId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setOrderBundleId(long orderBundleId) {
+		this.orderBundleId = orderBundleId;
+	}
+	public long getOrderItemId() {
+		return orderItemId;
+	}
+	public void setOrderItemId(long orderItemId) {
+		this.orderItemId = orderItemId;
+	}
+	public long getOrderStatusId() {
+		return orderStatusId;
+	}
+	public void setOrderStatusId(long orderStatusId) {
+		this.orderStatusId = orderStatusId;
 	}
 	public String getStatusName() {
 		return statusName;
@@ -25,10 +40,10 @@ public class Order {
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
-	public int getMemberId() {
+	public long getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(int memberId) {
+	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
 	public long getDeliveryId() {
@@ -43,22 +58,22 @@ public class Order {
 	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
-	public int getProductId() {
+	public long getProductId() {
 		return productId;
 	}
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
-	public int getOrderId() {
+	public long getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(int orderId) {
+	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
-	public int getStatusId() {
+	public long getStatusId() {
 		return statusId;
 	}
-	public void setStatusId(int statusId) {
+	public void setStatusId(long statusId) {
 		this.statusId = statusId;
 	}
 	public int getQuantity() {
@@ -67,16 +82,16 @@ public class Order {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getPrice() {
+	public long getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
-	public int getFinalPrice() {
+	public long getFinalPrice() {
 		return finalPrice;
 	}
-	public void setFinalPrice(int finalPrice) {
+	public void setFinalPrice(long finalPrice) {
 		this.finalPrice = finalPrice;
 	}
 
