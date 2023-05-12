@@ -2,10 +2,31 @@ package com.DTO;
 
 public class Product {
 	private Long id;
-	private String category;
-	private String productName;
+	private int category;
+	private String name;
 	private int price;
 	private int remainQuantity;
+	private String picture;
+
+	public Product() {
+	}
+
+	public Product(Long id, int category, String name, int price, int remainQuantity, String picture) {
+		this.id = id;
+		this.category = category;
+		this.name = name;
+		this.price = price;
+		this.remainQuantity = remainQuantity;
+		this.picture = picture;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 
 	public Long getId() {
 		return id;
@@ -15,27 +36,27 @@ public class Product {
 		this.id = id;
 	}
 
-	public String getCategory() {
+	public int getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(int category) {
 		this.category = category;
 	}
 
-	public String getProductName() {
-		return productName;
+	public String getName() {
+		return name;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(Integer price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
@@ -43,7 +64,7 @@ public class Product {
 		return remainQuantity;
 	}
 
-	public void setRemainQuantity(Integer remainQuantity) {
+	public void setRemainQuantity(int remainQuantity) {
 		this.remainQuantity = remainQuantity;
 	}
 }

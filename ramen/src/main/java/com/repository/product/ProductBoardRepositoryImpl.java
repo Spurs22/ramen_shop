@@ -1,13 +1,11 @@
-package main.java.ramen.interfaces.product;
-
-import main.java.ramen.DTO.ProductBoard;
-import main.java.util.DBConn;
-import main.java.util.DBUtil;
+package com.repository.product;
+import com.DTO.ProductBoard;
+import com.util.DBConn;
+import com.util.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
-
 
 public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 
@@ -20,7 +18,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		String sql;
 
 		try {
-			sql = "DELETE FROM guest WHERE num = ?";
+			sql = "";
 			pstmt = conn.prepareStatement(sql);
 //			pstmt.setLong(1, productBoard.);
 
@@ -30,7 +28,6 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		} finally {
 			DBUtil.closeResource(pstmt);
 		}
-
 	}
 
 	@Override

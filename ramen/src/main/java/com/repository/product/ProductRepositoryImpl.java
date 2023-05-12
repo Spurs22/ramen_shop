@@ -1,8 +1,9 @@
-package main.java.ramen.interfaces.product;
+package com.repository.product;
 
-import main.java.ramen.DTO.Product;
-import main.java.util.DBConn;
-import main.java.util.DBUtil;
+
+import com.DTO.Product;
+import com.util.DBConn;
+import com.util.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,10 +19,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 		String sql;
 
 		try {
-			sql = "insert INTO product (id, category_id, name, price, remain_quantity) " +
-					"VALUES (product_seq.nextval, ?, ?, ?, ?) ";
+			sql = "insert INTO product (id, category_id, name, price, remain_quantity, picture) " +
+					"VALUES (product_seq.nextval, ?, ?, ?, ?, ?) ";
 			pstmt = conn.prepareStatement(sql);
-//			pstmt.setLong(1, productBoard.);
+
+			pstmt.setInt(1, product.getCategory());
+			pstmt.setString(2, product.getName());
+			pstmt.setInt(3, product.getPrice());
+			pstmt.setInt(4, product.getRemainQuantity());
+			pstmt.setString(5, product.getPicture());
 
 			pstmt.executeUpdate();
 		} catch (Exception e) {
