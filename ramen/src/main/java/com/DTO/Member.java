@@ -1,9 +1,12 @@
 package com.DTO;
 
+
+
 public class Member {
 	
-	private String number;
-	private String userName;
+	
+	private String id;
+	private String name;
 	private String nickName;
 	private String userid;
 	private String userPwd;
@@ -12,21 +15,21 @@ public class Member {
 	private String pnum;
 	private String addr1;
 	private String addr2;
-	private int enabled;
-	
-	
-	
-	public String getNumber() {
-		return number;
+    private String crdDate;
+    private int enabled;
+    
+    
+	public String getId() {
+		return id;
 	}
-	public void setNumber(String number) {
-		this.number = number;
+	public void setId(String id) {
+		this.id = id;
 	}
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getNickName() {
 		return nickName;
@@ -76,16 +79,17 @@ public class Member {
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
 	}
+	public String getCrdDate() {
+		return crdDate;
+	}
+	public void setCrdDate(String crdDate) {
+		this.crdDate = crdDate;
+	}
 	public int getEnabled() {
 		return enabled;
 	}
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
-	
-	
-	
-	
-	
 
 }
