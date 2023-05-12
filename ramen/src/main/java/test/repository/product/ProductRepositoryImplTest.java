@@ -1,4 +1,4 @@
-package test;
+package test.repository.product;
 
 import com.DTO.Product;
 import com.repository.product.ProductRepository;
