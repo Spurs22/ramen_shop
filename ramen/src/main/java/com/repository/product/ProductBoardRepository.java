@@ -5,7 +5,7 @@ import com.DTO.ProductBoard;
 import java.util.List;
 
 public interface ProductBoardRepository {
-	Long createPost(ProductBoard productBoard);
+	void createPost(ProductBoard productBoard);
 
 	void editPost(ProductBoard productBoard);
 

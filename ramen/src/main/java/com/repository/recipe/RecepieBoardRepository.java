@@ -1,22 +1,34 @@
 package com.repository.recipe;
 
 import com.DTO.ProductBoard;
+import com.DTO.RecipeBoard;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface RecepieBoardRepository {
 
-	Long createPost(ProductBoard productBoard);
+	void insertRecipe(RecipeBoard recipeBoard) throws SQLException;
 
-	void editPost(ProductBoard productBoard);
+	void updateRecipe(RecipeBoard recipeBoard) throws SQLException;
 
-	int deletePost(Long memberId, Long postId);
+	void deleteRecipe(long memberId, long postId) throws SQLException;
 
-	List<ProductBoard> findPostsByMemberId(Long memberId);
+	List<ProductBoard> readRecipe();
 
-	ProductBoard findPostsByPostId(Long postId);
+	List<ProductBoard> readRecipe(String condition, String keyword);
+	
+	int dataCount();
+	
+	int dataCount(String condition, String keyword);
+	
+	void updateHitCount(long id) throws SQLException;
+	
+	RecipeBoard readRecipe(long id);
+	
+	RecipeBoard preReadRecipe(long id, String condition, String keyword);
+	
+	RecipeBoard nextReadRecipe(long id, String condition, String keyword);
 
-	List<ProductBoard> findAllPosts();
-
-	void registPicture(Long postId, String path);
+	void registPicture(long postId, String path);
 }

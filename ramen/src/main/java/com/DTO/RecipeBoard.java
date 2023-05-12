@@ -1,4 +1,84 @@
 package com.DTO;
 
 public class RecipeBoard {
+	private long id;
+	private long member_id;
+	private String created_date;
+	private String subject;
+	private String content;
+	private int hit_count;
+	private String ip_address;
+	private long recipe_id;
+	private int quantity;
+	private long product_id;
+	
+	public long getProduct_id() {
+		return product_id;
+	}
+	public void setProduct_id(long product_id) {
+		this.product_id = product_id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public void setMember_id(long member_id) {
+		this.member_id = member_id;
+	}
+	public void setRecipe_id(long recipe_id) {
+		this.recipe_id = recipe_id;
+	}
+	public long getRecipe_id() {
+		return recipe_id;
+	}
+	public void setRecipe_id(int recipe_id) {
+		this.recipe_id = recipe_id;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public long getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public long getMember_id() {
+		return member_id;
+	}
+	public void setMember_id(int member_id) {
+		this.member_id = member_id;
+	}
+	public String getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(String created_date) {
+		this.created_date = created_date;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public int getHit_count() {
+		return hit_count;
+	}
+	public void setHit_count(int hit_count) {
+		this.hit_count = hit_count;
+	}
+	public String getIp_address() {
+		return ip_address;
+	}
+	public void setIp_address(String ip_address) {
+		this.ip_address = ip_address;
+	}
 }
