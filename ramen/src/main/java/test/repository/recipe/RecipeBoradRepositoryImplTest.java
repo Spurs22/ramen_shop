@@ -1,4 +1,4 @@
-package com.test.repository.recipe;
+package test.repository.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
