@@ -1,61 +1,37 @@
 package com.DTO;
 
+import java.util.List;
+
 public class RecipeBoard {
-	private long id;
-	private long member_id;
-	private String created_date;
+	private Long id;
+	private Long memberId;
+	private String createdDate;
 	private String subject;
 	private String content;
-	private int hit_count;
-	private String ip_address;
-	private long recipe_id;
-	private int quantity;
-	private long product_id;
+	private int hitCount;
+	private String ipAddress;
+	private Long recipeId;
+	private String nickname;
+	private String userId;
+	private List<RecipeProduct> recipeProduct;
 	
-	public long getProduct_id() {
-		return product_id;
-	}
-	public void setProduct_id(long product_id) {
-		this.product_id = product_id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public void setMember_id(long member_id) {
-		this.member_id = member_id;
-	}
-	public void setRecipe_id(long recipe_id) {
-		this.recipe_id = recipe_id;
-	}
-	public long getRecipe_id() {
-		return recipe_id;
-	}
-	public void setRecipe_id(int recipe_id) {
-		this.recipe_id = recipe_id;
-	}
-	public int getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public long getMember_id() {
-		return member_id;
+	public Long getMemberId() {
+		return memberId;
 	}
-	public void setMember_id(int member_id) {
-		this.member_id = member_id;
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
 	}
-	public String getCreated_date() {
-		return created_date;
+	public String getCreatedDate() {
+		return createdDate;
 	}
-	public void setCreated_date(String created_date) {
-		this.created_date = created_date;
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 	public String getSubject() {
 		return subject;
@@ -69,16 +45,41 @@ public class RecipeBoard {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public int getHit_count() {
-		return hit_count;
+	public int getHitCount() {
+		return hitCount;
 	}
-	public void setHit_count(int hit_count) {
-		this.hit_count = hit_count;
+	public void setHitCount(int hitCount) {
+		this.hitCount = hitCount;
 	}
-	public String getIp_address() {
-		return ip_address;
+	public String getIpAddress() {
+		return ipAddress;
 	}
-	public void setIp_address(String ip_address) {
-		this.ip_address = ip_address;
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
+	public Long getRecipeId() {
+		return recipeId;
+	}
+	public void setRecipeId(Long recipeId) {
+		this.recipeId = recipeId;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public List<RecipeProduct> getRecipeProduct() {
+		return recipeProduct;
+	}
+	public void setRecipeProduct(List<RecipeProduct> recipeProduct) {
+		this.recipeProduct = recipeProduct;
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.DTO.RecipeBoard;
+import com.DTO.RecipeProduct;
 import com.repository.recipe.RecipeBoardRepository;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
 
@@ -12,21 +13,30 @@ public class RecipeBoradRepositoryImplTest {
 		RecipeBoardRepository recipe = new RecipeBoardRepositoryImpl();
 		
 		RecipeBoard reci = new RecipeBoard();
-		reci.setMember_id(1);
+		reci.setMemberId(1L);
+		// reci.setId(5);
 		reci.setSubject("제목1");
 		reci.setContent("내용1");
-		reci.setIp_address("127.0.0.1");
+		reci.setIpAddress("127.0.0.1");
 		
-		List<RecipeBoard> list = new ArrayList<>();
+		List<RecipeProduct> list = new ArrayList<>();
 		
-		RecipeBoard recipeboard = new RecipeBoard();
 		
-		recipeboard.setProduct_id(1);
-		recipeboard.setQuantity(2);
+		for(Long i = 1L; i<=2L; i++) {
+			RecipeProduct recipeproduct = new RecipeProduct();
+			
+			recipeproduct.setProductId(i);
+			recipeproduct.setQuantity(i.intValue() + 4);
+			// recipeboard.setRecipeId(5L);
+			
+			list.add(recipeproduct);
+		}
 		
-		list.add(recipeboard);
 		try {
-			recipe.insertRecipe(reci, list);
+			recipe.insertRecipe(reci);
+			// recipe.updateRecipe(reci);
+			// recipe.deleteRecipe(1, 5);
+			// recipe.readRecipe();
 			
 		} catch (Exception e) {
 			// TODO: handle exception
