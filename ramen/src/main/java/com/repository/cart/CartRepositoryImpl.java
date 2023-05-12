@@ -10,17 +10,11 @@ import com.DTO.Cart;
 import com.util.DBConn;
 import com.util.DBUtil;
 
-
 public class CartRepositoryImpl implements CartRepository{
-private Connection conn = DBConn.getConnection();
+	private Connection conn = DBConn.getConnection();
 	
-	/**
-	 * @param memberId      사용자 아이디
-	 * @param productId     상품 아이디
-	 * @param num           개수 (뺄때는 - 입력)
-	 */
-	// 장바구니 아이템 생성( 존재하지 않을 시 )
-	@Override
+	
+	@Override	// 장바구니 아이템 생성( 존재하지 않을 시 )
 	public void createItem(Long productId, Long memberId, int quantity) {
 		PreparedStatement pstmt = null;
 		String sql;
@@ -42,8 +36,8 @@ private Connection conn = DBConn.getConnection();
 		}
 	}
 	
-	// 장바구니 아이템 수정 ( 개수 변경시, 날짜 변경 )
-	@Override
+	
+	@Override	// 장바구니 아이템 수정 ( 개수 변경시, 날짜 변경 )
 	public void editItem(Long productId, Long memberId, int num) {
 		PreparedStatement pstmt = null;
 		String sql;
@@ -68,14 +62,7 @@ private Connection conn = DBConn.getConnection();
 		}
 	}
 	
-
-	/**
-	 * 
-	 * @param memberId  	검색할 사람
-	 * @param productId		품목
-	 * return				개수
-	 */
-	@Override
+	@Override		// 상품 개수 구하기
 	public int getCnt(Long memberId, Long productId) {
 		int cnt = 0;
 		PreparedStatement pstmt = null;
@@ -102,8 +89,8 @@ private Connection conn = DBConn.getConnection();
 		return cnt;
 	}
 
-	// 장바구니 목록조회
-	@Override
+	
+	@Override	// 장바구니 목록조회
 	public List<Cart> findCartByMemberId(Long memberId) {
 		List<Cart> list = new ArrayList<Cart>();
 		PreparedStatement pstmt = null;
@@ -138,10 +125,28 @@ private Connection conn = DBConn.getConnection();
 	}
 
 	
-	// 장바구니 ?일 이후 품목 삭제
 	
-	// 장바구니 삭제
-	@Override
+
+	@Override	// 장바구니 30일 이후 품목 삭제
+	public void deleteAutoCart() {
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "DELETE FROM cart WHERE created_date + INTERVAL '30' DAY < SYSDATE";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+		
+	}
+	
+	
+
+	@Override	// 장바구니 삭제
 	public void deleteCart(Long memberId, Long productId) {
 		
 		PreparedStatement pstmt = null;
@@ -162,14 +167,8 @@ private Connection conn = DBConn.getConnection();
 		}
 	}
 	
-	/**
-	 * 
-	 * @param memberId		검색할 사람
-	 * @param productId		품목
-	 * @return				장바구니 정보			
-	 */
-	
-	@Override
+
+	@Override	// 사용자, 상품의 해당된 cart 구하기
 	public Cart findCartByCartId(Long memberId, Long productId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -200,7 +199,4 @@ private Connection conn = DBConn.getConnection();
 		}
 		return cart;
 	}
-
-
-
 }
