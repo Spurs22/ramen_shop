@@ -7,11 +7,10 @@ public class Notice {
 	private String content;
 	private String ip_address;
 	private int category;
-	private int hitCount;
+	private int hit_count;
 	private int notice;
 	private String create_date;
 	
-
 	public long getId() {
 		return id;
 	}
@@ -48,11 +47,11 @@ public class Notice {
 	public void setCategory(int category) {
 		this.category = category;
 	}
-	public int getHitCount() {
-		return hitCount;
+	public int getHit_count() {
+		return hit_count;
 	}
-	public void setHitCount(int hitCount) {
-		this.hitCount = hitCount;
+	public void setHit_count(int hitCount) {
+		this.hit_count = hitCount;
 	}
 	public int getNotice() {
 		return notice;
@@ -66,6 +65,9 @@ public class Notice {
 	public void setCreate_date(String create_date) {
 		this.create_date = create_date;
 	}
+	
+
+	
 	
 	
 }
