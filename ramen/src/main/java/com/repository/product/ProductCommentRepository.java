@@ -12,7 +12,7 @@ public interface ProductCommentRepository {
 
 	void deleteComment(Long memberId, Long commentId);
 
-	List<ProductComment> findCommentsById(Long memberId);
+	List<ProductComment> findCommentsByMemberId(Long memberId);
 
 	List<ProductComment> findCommentsByPostId(Long postId);
 

@@ -10,6 +10,7 @@ public class ProductBoardRepositoryImplTest {
 		ProductBoardRepository productBoardRepository = new com.repository.product.ProductBoardRepositoryImpl();
 		ProductBoard productBoard = new ProductBoard(
 				4L,
+				1L,
 				null,
 				"상품 상세 설명입니다.",
 				null,

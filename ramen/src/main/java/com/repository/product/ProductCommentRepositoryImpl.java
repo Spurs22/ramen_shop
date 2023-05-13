@@ -1,13 +1,16 @@
 package com.repository.product;
 
 
+import com.DTO.ProductBoard;
 import com.DTO.ProductComment;
 import com.util.DBConn;
 import com.util.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductCommentRepositoryImpl implements ProductCommentRepository {
@@ -22,8 +25,8 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "INSERT INTO PRODUCT_COMMENT (MEMBER_ID, PRODUCT_BOARD_ID, RATING, PRODUCT_BOARD_COMMENT)" +
-					" VALUES (?,?,?,?)";
+			sql = "INSERT INTO PRODUCT_COMMENT (MEMBER_ID, PRODUCT_BOARD_ID, RATING, PRODUCT_BOARD_COMMENT, CREATED_DATE)" +
+					" VALUES (?,?,?,?, sysdate)";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, productComment.getWriterId());
@@ -36,18 +39,31 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt);
-
-			try {
-				conn.setAutoCommit(true);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
 	@Override
 	public void editComment(ProductComment productComment) {
+		PreparedStatement pstmt = null;
+		String sql;
 
+		try {
+			conn.setAutoCommit(false);
+
+			sql = "UPDATE PRODUCT_COMMENT SET RATING = ?, PRODUCT_BOARD_COMMENT = ? WHERE MEMBER_ID = ? AND PRODUCT_BOARD_ID = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDouble(1, productComment.getRating());
+			pstmt.setString(2, productComment.getContent());
+			pstmt.setLong(3, productComment.getWriterId());
+			pstmt.setLong(4, productComment.getBoardId());
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
 	}
 
 	@Override
@@ -56,12 +72,43 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 	}
 
 	@Override
-	public List<ProductComment> findCommentsById(Long memberId) {
+	public List<ProductComment> findCommentsByMemberId(Long memberId) {
 		return null;
 	}
 
 	@Override
-	public List<ProductComment> findCommentsByPostId(Long postId) {
-		return null;
+	public List<ProductComment> findCommentsByPostId(Long productId) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<ProductComment> result = new ArrayList<>();
+
+		try {
+			sql = "SELECT member_id, m.nickname, product_board_id, rating, product_board_comment, TO_CHAR(pc.created_date, 'yyyy/mm/dd') " +
+					"FROM PRODUCT_COMMENT pc " +
+					"JOIN member m ON m.id = pc.member_id " +
+					"WHERE PRODUCT_BOARD_ID = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, productId);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				result.add(new ProductComment(
+						rs.getLong("member_id"),
+						rs.getLong("product_board_id"),
+						rs.getString("username"),
+						rs.getDouble("rating"),
+						rs.getString("created_date"),
+						rs.getString("product_board_comment")
+				));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return result;
 	}
 }

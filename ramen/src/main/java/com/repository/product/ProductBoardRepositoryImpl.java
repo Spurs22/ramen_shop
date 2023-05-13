@@ -201,6 +201,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 						rs.getInt("hit_count" )
 				));
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -216,6 +217,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 
 	@Override
 	public Float getAverageRateByPost(Long postId) {
+//		String sql = ""
 		return null;
 	}
 }

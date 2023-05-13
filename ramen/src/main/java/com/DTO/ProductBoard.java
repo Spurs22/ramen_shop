@@ -9,6 +9,7 @@ public class ProductBoard {
 	private String content;
 	private String createdDate;
 	private Integer hitCount;
+	private Double rating;
 
 	public ProductBoard() {
 	}
@@ -22,6 +23,7 @@ public class ProductBoard {
 				", content='" + content + '\'' +
 				", createdDate='" + createdDate + '\'' +
 				", hitCount=" + hitCount +
+				", rating=" + rating +
 				'}';
 	}
 
@@ -32,6 +34,24 @@ public class ProductBoard {
 		this.content = content;
 		this.createdDate = createdDate;
 		this.hitCount = hitCount;
+	}
+
+	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount, Double rating) {
+		this.productId = productId;
+		this.writerId = writerId;
+		this.imgList = imgList;
+		this.content = content;
+		this.createdDate = createdDate;
+		this.hitCount = hitCount;
+		this.rating = rating;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
 	}
 
 	public Long getWriterId() {
