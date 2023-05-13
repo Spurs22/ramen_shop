@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.DTO.Member;
 import com.util.DBConn;
-import com.util.DBUtil;
 
 public class MemberRepositoryImpl implements MemberRepository{
 
@@ -18,48 +17,56 @@ public class MemberRepositoryImpl implements MemberRepository{
 	private Connection conn = DBConn.getConnection();
 
 	
+	
 	@Override
-	public Member join(Member member) throws SQLException{
+	public Member insertMember(Member member) throws SQLException{
 		
-    // 로그인
-		Member dto = null;
+        // 회원가입
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		String sql;
 		try {
-
-			sql = "SELECT userId, password "
-					+ "FROM member"
-					+ "WHERE userId = ? AND password = ? AND enabled = 1";
+			conn.setAutoCommit(false);
 			
+			sql = "INSERT INTO member(id,name,nickname,user_id,password,email,tel,post_num,address1,address1,create_date) "
+					+ " VALUES(member_seq.NEXTVAL,?,?,?,?,?,?,?,?,?,SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setString(1, "userid");
-			pstmt.setString(2, "password");
 			
-			rs = pstmt.executeQuery();
+	        pstmt.setString(1, member.getName());
+	        pstmt.setString(2, member.getNickName());
+		    pstmt.setString(3, member.getMemberId());
+			pstmt.setString(4, member.getUserId());
+			pstmt.setString(5, member.getPassord());
+			pstmt.setString(6, member.getTel());
+			pstmt.setString(7, member.getPostNum());
+			pstmt.setString(8, member.getAddress1());
+			pstmt.setString(9, member.getAddress2());
+			pstmt.executeUpdate();
+			
+			pstmt.close();
 		
-		}  catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
+			
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e2) {
 			}
-				
+			e.printStackTrace();
+			throw e;
+		} finally {
 			if(pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 				}
 			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+			}
 		}
-		
-		return dto;
-	}	
-
+	return null;
+	}
 	@Override
 	public Member findById(Long id) throws SQLException {
 
@@ -117,75 +124,8 @@ public class MemberRepositoryImpl implements MemberRepository{
 	}
 	
 	
-	@Override
-	public Member insertMember(Member member) throws SQLException {
-		
-		PreparedStatement pstmt = null;
-		String sql;
-		try {
-			conn.setAutoCommit(false);
-			
-			sql = "INSERT INTO member(id,name,nickname,user_id,password,email,tel,post_num,address1,address1,create_date) "
-					+ " VALUES(member_seq.NEXTVAL,?,?,?,?,?,?,?,?,?,SYSDATE)";
-			pstmt = conn.prepareStatement(sql);
-			
-	        pstmt.setString(1, member.getName());
-	        pstmt.setString(2, member.getNickName());
-		    pstmt.setString(3, member.getMemberId());
-			pstmt.setString(4, member.getUserId());
-			pstmt.setString(5, member.getPassord());
-			pstmt.setString(6, member.getTel());
-			pstmt.setString(7, member.getPostNum());
-			pstmt.setString(8, member.getAddress1());
-			pstmt.setString(9, member.getAddress2());
-			pstmt.executeUpdate();
-			
-			pstmt.close();
-			pstmt = null;
-			
-			sql = "INSERT INTO expired_member(id,name,nickname,user_id,password,email,tel,post_num,address1,address1,create_date)" 
-					+ " VALUES(member_seq.NEXTVAL,?,?,?,?,?,?,?,?,?,SYSDATE)";
-			
-            pstmt = conn.prepareStatement(sql);
-			
-            pstmt.setString(1, member.getName());
-			pstmt.setString(2, member.getNickName());
-			pstmt.setString(3, member.getMemberId());
-			pstmt.setString(4, member.getUserId());
-			pstmt.setString(5, member.getPassord());
-			pstmt.setString(6, member.getTel());
-			pstmt.setString(7, member.getPostNum());
-			pstmt.setString(8, member.getAddress1());
-			pstmt.setString(9, member.getAddress2());
-			
-			pstmt.executeUpdate();
-			
-			pstmt.close();
-			pstmt = null;
-			
-		} catch (SQLException e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e2) {
-			}
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if(pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-				}
-			}
-			
-			try {
-				conn.setAutoCommit(true);
-			} catch (SQLException e2) {
-			}
-		}
-	return null;
-	}
 
+	// 회원정보 수정
 	@Override
 	public Member updateMember(Member member) throws SQLException{
 		
@@ -229,6 +169,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 
 	}
 
+	// 회원탈퇴
 	@Override
 	public int deleteMember(long userId) throws SQLException{
 		
@@ -265,13 +206,13 @@ public class MemberRepositoryImpl implements MemberRepository{
 
 	@Override
 	public Member findByEmail(String email) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public boolean isUsernameExist(String username) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
