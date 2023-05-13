@@ -12,7 +12,6 @@ public class RecipeBoard {
 	private String ipAddress;
 	private Long recipeId;
 	private String nickname;
-	private String userId;
 	private List<RecipeProduct> recipeProduct;
 	
 	public Long getId() {
@@ -68,12 +67,6 @@ public class RecipeBoard {
 	}
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 	public List<RecipeProduct> getRecipeProduct() {
 		return recipeProduct;
