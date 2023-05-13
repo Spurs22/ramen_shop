@@ -90,6 +90,14 @@ public class CartRepositoryImpl implements CartRepository{
 	}
 
 	
+	@Override	// 장바구니의 상품 개수 구하기
+	public int getCnt(Long memberId) {
+		
+		return 0;
+	}
+	
+	
+	
 	@Override	// 장바구니 목록조회
 	public List<Cart> findCartByMemberId(Long memberId) {
 		List<Cart> list = new ArrayList<Cart>();
