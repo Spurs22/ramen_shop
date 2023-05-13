@@ -1,28 +1,35 @@
 package com.DTO;
 
 public class RecipeComment {
-	private long id;
-	private long boardId;
-	private long memberId;
+	private Long id;
+	private Long boardId;
+	private Long memberId;
 	private String cotent;
 	private String createdDate;
+	private int rating;
 	
-	public long getId() {
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public long getBoardId() {
+	public Long getBoardId() {
 		return boardId;
 	}
-	public void setBoardId(long boardId) {
+	public void setBoardId(Long boardId) {
 		this.boardId = boardId;
 	}
-	public long getMemberId() {
+	public Long getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(long memberId) {
+	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
 	public String getCotent() {

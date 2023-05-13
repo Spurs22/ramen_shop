@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface RecipeCommentRepository {
-	void createRatingComment(RecipeComment recipeComment) throws SQLException;
+	void createComment(RecipeComment recipeComment) throws SQLException;
 
 	void editComment(RecipeComment recipeComment) throws SQLException;
 
