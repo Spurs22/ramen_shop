@@ -7,10 +7,13 @@ import com.DTO.RecipeBoard;
 import com.DTO.RecipeProduct;
 import com.repository.recipe.RecipeBoardRepository;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
+import com.repository.recipe.RecipeLikeRepository;
+import com.repository.recipe.RecipeLikeRepositoryImpl;
 
 public class RecipeBoradRepositoryImplTest {
 	public static void main(String[] args) {
-		RecipeBoardRepository recipe = new RecipeBoardRepositoryImpl();
+//		RecipeBoardRepository recipe = new RecipeBoardRepositoryImpl();
+//		RecipeLikeRepository like = new RecipeLikeRepositoryImpl();
 		
 		RecipeBoard reci = new RecipeBoard();
 		reci.setMemberId(1L);
@@ -33,10 +36,14 @@ public class RecipeBoradRepositoryImplTest {
 		}
 		
 		try {
-			recipe.insertRecipe(reci);
+			// recipe.insertRecipe(reci);
 			// recipe.updateRecipe(reci);
 			// recipe.deleteRecipe(1, 5);
 			// recipe.readRecipe();
+			// like.likePost(1L, 7L);
+			// like.cancelLikePost(1L, 7L);
+//			int count = like.CountLike(7L);
+//			System.out.println(count);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
