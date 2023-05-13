@@ -27,15 +27,6 @@ public class ProductBoard {
 				'}';
 	}
 
-	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount) {
-		this.productId = productId;
-		this.writerId = writerId;
-		this.imgList = imgList;
-		this.content = content;
-		this.createdDate = createdDate;
-		this.hitCount = hitCount;
-	}
-
 	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount, Double rating) {
 		this.productId = productId;
 		this.writerId = writerId;

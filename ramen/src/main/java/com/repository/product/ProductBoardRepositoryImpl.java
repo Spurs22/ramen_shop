@@ -121,16 +121,17 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 
 			rs = pstmt.executeQuery();
 
-			while (rs.next()) {
-				result.add(new ProductBoard(
-						rs.getLong("id" ),
-						rs.getLong("member_id"),
-						null,
-						rs.getString("content" ),
-						rs.getString("created_date" ),
-						rs.getInt("hit_count" )
-				));
-			}
+//			while (rs.next()) {
+//				result.add(new ProductBoard(
+//						rs.getLong("id" ),
+//						rs.getLong("member_id"),
+//						null,
+//						rs.getString("content" ),
+//						rs.getString("created_date" ),
+//						rs.getInt("hit_count" )
+//
+//				));
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -141,20 +142,24 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 	}
 
 	@Override
-	public ProductBoard findPostsByPostId(Long postId) {
+	public ProductBoard findPostsByPostId(Long board) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		ProductBoard result = null;
 
 		try {
-			sql = "SELECT id, member_id, content, created_date, hit_count " +
-					"FROM PRODUCT_BOARD " +
-					"WHERE id = ? " +
-					"ORDER BY ID DESC";
+			sql = "SELECT id, member_id, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+					"FROM PRODUCT_BOARD pb " +
+					"LEFT OUTER JOIN (SELECT product_board_id, count(rating) as rating " +
+					"    FROM product_comment " +
+					"    WHERE product_board_id = ? " +
+					"    GROUP BY product_board_id) " +
+					"    pc ON pb.id = pc.product_board_id " +
+					"ORDER BY ID DESC ";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setLong(1, postId);
+			pstmt.setLong(1, board);
 
 			rs = pstmt.executeQuery();
 
@@ -165,7 +170,8 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 						null,
 						rs.getString("content" ),
 						rs.getString("created_date" ),
-						rs.getInt("hit_count" )
+						rs.getInt("hit_count" ),
+						rs.getDouble("rating")
 				);
 			}
 
@@ -186,7 +192,13 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT id, member_id, content, created_date, hit_count FROM PRODUCT_BOARD ORDER BY ID DESC ";
+			sql = "SELECT id, member_id, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+					"FROM PRODUCT_BOARD pb " +
+					"LEFT OUTER JOIN (SELECT product_board_id, count(rating) as rating " +
+					"    FROM product_comment " +
+					"    GROUP BY product_board_id) " +
+					"    pc ON pb.id = pc.product_board_id " +
+					"ORDER BY ID DESC ";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
@@ -198,7 +210,8 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 						null,
 						rs.getString("content" ),
 						rs.getString("created_date" ),
-						rs.getInt("hit_count" )
+						rs.getInt("hit_count" ),
+						rs.getDouble("rating")
 				));
 			}
 

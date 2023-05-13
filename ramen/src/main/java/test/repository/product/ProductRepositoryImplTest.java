@@ -3,6 +3,8 @@ package test.repository.product;
 import com.DTO.Product;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
+import com.service.product.ProductService;
+import com.service.product.ProductServiceImpl;
 
 public class ProductRepositoryImplTest {
 	public static void main(String[] args) {
@@ -54,7 +56,6 @@ public class ProductRepositoryImplTest {
 //		System.out.println("findProductByProductId test");
 //		result = productRepository.findProductByProductId(product.getId());
 //		System.out.println("조회 결과 " + result);
-
 
 
 

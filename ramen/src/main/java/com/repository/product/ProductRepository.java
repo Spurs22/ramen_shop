@@ -18,4 +18,6 @@ public interface ProductRepository {
 	Integer getProductQuantity(Long productId);
 
 	Product findProductByProductId(Long productId);
+
+	List<Product> findProductByName(String name);
 }

@@ -8,6 +8,18 @@ public class ProductComment {
 	private String createdDate;
 	private String content;
 
+	@Override
+	public String toString() {
+		return "ProductComment{" +
+				"writerId=" + writerId +
+				", boardId=" + boardId +
+				", username='" + username + '\'' +
+				", rating=" + rating +
+				", createdDate='" + createdDate + '\'' +
+				", content='" + content + '\'' +
+				'}';
+	}
+
 	public ProductComment() {
 	}
 

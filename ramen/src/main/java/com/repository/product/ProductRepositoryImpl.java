@@ -158,4 +158,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 		}
 		return result;
 	}
+
+	@Override
+	public List<Product> findProductByName(String name) {
+		return null;
+	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 
 public interface OrderRepository {
-
 	// 주문
 	void createOrder(Order order);
 
