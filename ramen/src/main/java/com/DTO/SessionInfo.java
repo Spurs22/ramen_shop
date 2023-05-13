@@ -1,6 +1,6 @@
 package com.DTO;
 
-public class Sessioninfo {
+public class SessionInfo {
 	private String userId;
 	private String userNickname;
 	private int userRoll;
