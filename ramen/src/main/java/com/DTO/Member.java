@@ -9,15 +9,14 @@ public class Member {
 	private String name;
 	private String nickName;
 	private String userid;
-	private String userPwd;
-	private String userEmail;
+	private String password;
+	private String email;
 	private String tel;
-	private String pnum;
-	private String addr1;
-	private String addr2;
-    private String crdDate;
+	private String postNum;
+	private String address1;
+	private String address2;
+    private String createdDate;
     private int enabled;
-    
     
 	public String getId() {
 		return id;
@@ -43,17 +42,17 @@ public class Member {
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
-	public String getUserPwd() {
-		return userPwd;
+	public String getPassword() {
+		return password;
 	}
-	public void setUserPwd(String userPwd) {
-		this.userPwd = userPwd;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	public String getUserEmail() {
-		return userEmail;
+	public String getEmail() {
+		return email;
 	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getTel() {
 		return tel;
@@ -61,29 +60,29 @@ public class Member {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	public String getPnum() {
-		return pnum;
+	public String getPostNum() {
+		return postNum;
 	}
-	public void setPnum(String pnum) {
-		this.pnum = pnum;
+	public void setPostNum(String postNum) {
+		this.postNum = postNum;
 	}
-	public String getAddr1() {
-		return addr1;
+	public String getAddress1() {
+		return address1;
 	}
-	public void setAddr1(String addr1) {
-		this.addr1 = addr1;
+	public void setAddress1(String address1) {
+		this.address1 = address1;
 	}
-	public String getAddr2() {
-		return addr2;
+	public String getAddress2() {
+		return address2;
 	}
-	public void setAddr2(String addr2) {
-		this.addr2 = addr2;
+	public void setAddress2(String address2) {
+		this.address2 = address2;
 	}
-	public String getCrdDate() {
-		return crdDate;
+	public String getCreatedDate() {
+		return createdDate;
 	}
-	public void setCrdDate(String crdDate) {
-		this.crdDate = crdDate;
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 	public int getEnabled() {
 		return enabled;
@@ -91,5 +90,10 @@ public class Member {
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
-
+    
+    
+    
+    
+ 
+    
 }
