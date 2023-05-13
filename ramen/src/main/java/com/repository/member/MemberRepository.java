@@ -6,18 +6,31 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface MemberRepository {
-	Member join(Member member) throws SQLException;
+	
+	
+	
+	    // 로그인
+		Member join(Member member) throws SQLException;
 
-	Member findById(Long id) throws SQLException;
+		// 
+		Member findById(Long id) throws SQLException;
+		
+		// insert
+		Member insertMember(Member member) throws SQLException;
 
-	List<Member> findAll();
+		// read 
+		List<Member> findAll();
 
-	Member findByEmail(String email);
+		// 
+		Member findByEmail(String email);
 
-	/**
- 	 * 나중에
-	 */
-	int deleteMember(long userId);
+		// 회원 탈퇴
+		int deleteMember(long userId) throws SQLException;
 
-	boolean IsUsernameExist(String username);
+		// 회원 존재여부
+		boolean isUsernameExist(String username);
+		
+		// 회원정보 수정
+		
+	    Member updateMember(Member member) throws SQLException;
 }

@@ -20,6 +20,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 	
 	@Override
 	public Member join(Member member) throws SQLException{
+		
     // 로그인
 		Member dto = null;
 		PreparedStatement pstmt = null;
@@ -84,16 +85,16 @@ public class MemberRepositoryImpl implements MemberRepository{
 	        while(rs.next()) {
 	            Member dto = new Member();
 				
-	            dto.setId(rs.getString("id"));
+	            dto.setMemberId(null);
 	            dto.setName(rs.getString("name"));
 	            dto.setNickName(rs.getString("nickname"));
-	            dto.setUserid(rs.getString("user_id"));
-	            dto.setUserPwd(rs.getString("password"));
-	            dto.setUserEmail(rs.getString("email"));
+	            dto.setUserId(rs.getString("user_id"));
+	            dto.setPassord(rs.getString("password"));
+	            dto.setEmail(rs.getString("email"));
 	            dto.setTel(rs.getString("tel"));
-	            dto.setAddr1(rs.getString("address1"));
-	            dto.setAddr2(rs.getString("address2"));
-	            dto.setCrdDate(rs.getString("created_date"));
+	            dto.setAddress1(rs.getString("address1"));
+	            dto.setAddress2(rs.getString("address2"));
+	            dto.setCreatedDate(rs.getString("created_date"));
 				
 	            members.add(dto);
 	        }
@@ -115,8 +116,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 	    return members;
 	}
 	
-	/*
-
+	
 	@Override
 	public Member insertMember(Member member) throws SQLException {
 		
@@ -129,16 +129,15 @@ public class MemberRepositoryImpl implements MemberRepository{
 					+ " VALUES(member_seq.NEXTVAL,?,?,?,?,?,?,?,?,?,SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, member.getName());
-			pstmt.setString(2, member.getNickName());
-			pstmt.setString(3, member.getUserid());
-			pstmt.setString(4, member.getUserPwd());
-			pstmt.setString(5, member.getUserEmail());
+	        pstmt.setString(1, member.getName());
+	        pstmt.setString(2, member.getNickName());
+		    pstmt.setString(3, member.getMemberId());
+			pstmt.setString(4, member.getUserId());
+			pstmt.setString(5, member.getPassord());
 			pstmt.setString(6, member.getTel());
-			pstmt.setString(7, member.getPnum());
-			pstmt.setString(8, member.getAddr1());
-			pstmt.setString(9, member.getAddr2());
-			
+			pstmt.setString(7, member.getPostNum());
+			pstmt.setString(8, member.getAddress1());
+			pstmt.setString(9, member.getAddress2());
 			pstmt.executeUpdate();
 			
 			pstmt.close();
@@ -151,13 +150,13 @@ public class MemberRepositoryImpl implements MemberRepository{
 			
             pstmt.setString(1, member.getName());
 			pstmt.setString(2, member.getNickName());
-			pstmt.setString(3, member.getUserid());
-			pstmt.setString(4, member.getUserPwd());
-			pstmt.setString(5, member.getUserEmail());
+			pstmt.setString(3, member.getMemberId());
+			pstmt.setString(4, member.getUserId());
+			pstmt.setString(5, member.getPassord());
 			pstmt.setString(6, member.getTel());
-			pstmt.setString(7, member.getPnum());
-			pstmt.setString(8, member.getAddr1());
-			pstmt.setString(9, member.getAddr2());
+			pstmt.setString(7, member.getPostNum());
+			pstmt.setString(8, member.getAddress1());
+			pstmt.setString(9, member.getAddress2());
 			
 			pstmt.executeUpdate();
 			
@@ -186,8 +185,6 @@ public class MemberRepositoryImpl implements MemberRepository{
 		}
 	return null;
 	}
-*/
-/*	
 
 	@Override
 	public Member updateMember(Member member) throws SQLException{
@@ -201,18 +198,21 @@ public class MemberRepositoryImpl implements MemberRepository{
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, member.getName());
-			pstmt.setString(2, member.getNickName());			
-			pstmt.setString(3, member.getUserPwd());
-			pstmt.setString(4, member.getUserEmail());
-			pstmt.setString(5, member.getTel());
-			pstmt.setString(6, member.getPnum());
-			pstmt.setString(7, member.getAddr1());
-			pstmt.setString(8, member.getAddr2());
-			pstmt.setString(9, member.getId()); 
+		    pstmt.setString(1, member.getName());
+		    pstmt.setString(2, member.getNickName());
+			pstmt.setString(3, member.getMemberId());
+			pstmt.setString(4, member.getUserId());
+			pstmt.setString(5, member.getPassord());
+			pstmt.setString(6, member.getTel());
+			pstmt.setString(7, member.getPostNum());
+			pstmt.setString(8, member.getAddress1());
+			pstmt.setString(9, member.getAddress2());
+			
+			
+			pstmt.setString(9, member.getMemberId()); 
 		
 			pstmt.executeUpdate();
-			pstmt = null;
+		
 			
 		}  catch (SQLException e) {
 			e.printStackTrace();
@@ -225,11 +225,10 @@ public class MemberRepositoryImpl implements MemberRepository{
 				}
 			}
 		}
+		return member;
 
 	}
-*/
-	
-	/*
+
 	@Override
 	public int deleteMember(long userId) throws SQLException{
 		
@@ -263,33 +262,18 @@ public class MemberRepositoryImpl implements MemberRepository{
 	        }
 	    }
 	}
-	
-	
-	@Override
-	public boolean IsUsernameExist(String username) {
-		
-	}*/
-	
-	
+
 	@Override
 	public Member findByEmail(String email) {
-	
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int deleteMember(long userId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean IsUsernameExist(String username) {
+	public boolean isUsernameExist(String username) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	
-	
+
 
 }

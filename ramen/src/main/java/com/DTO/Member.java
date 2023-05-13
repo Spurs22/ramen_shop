@@ -5,11 +5,11 @@ package com.DTO;
 public class Member {
 	
 	
-	private String id;
+	private String MemberId;
 	private String name;
 	private String nickName;
-	private String userid;
-	private String password;
+	private String userId;
+	private String passord;
 	private String email;
 	private String tel;
 	private String postNum;
@@ -18,11 +18,12 @@ public class Member {
     private String createdDate;
     private int enabled;
     
-	public String getId() {
-		return id;
+    
+	public String getMemberId() {
+		return MemberId;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setMemberId(String memberId) {
+		MemberId = memberId;
 	}
 	public String getName() {
 		return name;
@@ -36,17 +37,17 @@ public class Member {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	public String getUserid() {
-		return userid;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
-	public String getPassword() {
-		return password;
+	public String getPassord() {
+		return passord;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassord(String passord) {
+		this.passord = passord;
 	}
 	public String getEmail() {
 		return email;
@@ -91,9 +92,7 @@ public class Member {
 		this.enabled = enabled;
 	}
     
+
     
-    
-    
- 
-    
+
 }
