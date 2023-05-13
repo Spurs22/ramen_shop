@@ -8,6 +8,18 @@ public class ProductComment {
 	private String createdDate;
 	private String content;
 
+	public ProductComment() {
+	}
+
+	public ProductComment(Long writerId, Long boardId, String username, Double rating, String createdDate, String content) {
+		this.writerId = writerId;
+		this.boardId = boardId;
+		this.username = username;
+		this.rating = rating;
+		this.createdDate = createdDate;
+		this.content = content;
+	}
+
 	public Long getWriterId() {
 		return writerId;
 	}

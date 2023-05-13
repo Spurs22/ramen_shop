@@ -31,6 +31,13 @@ public interface CartRepository {
 	int getCnt(Long memberId, Long productId);
 
 	/**
+	 * [ 장바구니의 상품 개수 구하기 ]
+	 * @param memberId  	사용자 아이디
+	 * return				장바구니 안의 상품 개수
+	 */
+	int getCnt(Long memberId);
+	
+	/**
 	 * [ 장바구니 목록조회 ]
 	 * @param memberId		사용자 아이디
 	 * @return				장바구니 목록

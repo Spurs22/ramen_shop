@@ -12,7 +12,7 @@ public interface OrderRepository {
 	// 주문취소
 	void cancelOrder(Long orderId);
 
-	// 주문상태 변경 - 매개변수:상태(결제완료 - 배송중 - 배송완료)
+	// 주문상태 변경 - 매개변수:상태(결제완료 - 배송중 - 배송완료 - 주문취소)
 	void confirmOrder(Long orderId, String statusName);
 
 	// 송장번호 만들기
