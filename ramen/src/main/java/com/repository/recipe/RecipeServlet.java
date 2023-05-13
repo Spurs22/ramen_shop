@@ -15,6 +15,7 @@ import com.DTO.RecipeBoard;
 import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
 import com.util.MyUploadServlet;
+import com.util.MyUtil;
 
 public class RecipeServlet extends MyUploadServlet {
 	private static final long serialVersionUID = 1L;
@@ -151,13 +152,17 @@ public class RecipeServlet extends MyUploadServlet {
 			dto.setMemberId(info.getMemberId());
 			dto.setContent(req.getParameter("content"));
 			
+			// 어케하누 json list 반환 // 수정
+			
 			dto.setRecipeProduct(list);
 			
 			board.insertRecipe(dto);
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
+		
+		resp.sendRedirect(cp + ""); // 수정 리스트로 가야댐
 	}
 
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -174,6 +179,56 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void recipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 상세 보기
+		RecipeBoardRepository board = new RecipeBoardRepositoryImpl();
+		MyUtil util = new MyUtil();
+		
+		String cp = req.getContextPath();
+		
+		String query = "";
+		
+		try {
+			Long id = Long.parseLong(req.getParameter("postId"));
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition == null) {
+				condition = "all";
+				keyword = "";
+			}
+			
+			keyword = URLDecoder.decode(keyword, "utf-8");
+			
+			if(keyword.length() != 0) {
+				query += "?condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			// 조회수 증가
+			board.updateHitCount(id);
+			
+			RecipeBoard dto = board.readRecipe(id);
+			if(dto == null) {
+				resp.sendRedirect(cp + "" + query);
+				return;
+			}
+			
+			dto.setContent(util.htmlSymbols(dto.getContent()));
+			
+			// 이전글 다음글
+			RecipeBoard preReadDto = board.preReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard nextReadDto = board.nextReadRecipe(dto.getId(), condition, keyword);
+			
+			req.setAttribute("dto", dto);
+			req.setAttribute("query", query);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
+			
+			forward(req, resp, "/WEB-INF/"); // 수정
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		 resp.sendRedirect(cp + "" + query); // 수정
 	}
 
 	protected void writeRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
