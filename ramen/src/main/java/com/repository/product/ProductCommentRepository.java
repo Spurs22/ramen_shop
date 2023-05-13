@@ -6,7 +6,7 @@ import com.DTO.ProductComment;
 import java.util.List;
 
 public interface ProductCommentRepository {
-	void createRatingComment(ProductComment productComment);
+	void createComment(ProductComment productComment);
 
 	void editComment(ProductComment productComment);
 

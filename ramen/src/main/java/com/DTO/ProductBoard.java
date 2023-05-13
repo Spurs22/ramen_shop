@@ -3,18 +3,59 @@ package com.DTO;
 import java.util.List;
 
 public class ProductBoard {
-
-	private List<String> pictureList;
+	private Long productId;
+	private Long writerId;
+	private List<String> imgList;
 	private String content;
 	private String createdDate;
-	private int hitCount;
+	private Integer hitCount;
 
-	public List<String> getPictureList() {
-		return pictureList;
+	public ProductBoard() {
 	}
 
-	public void setPictureList(List<String> pictureList) {
-		this.pictureList = pictureList;
+	@Override
+	public String toString() {
+		return "ProductBoard{" +
+				"productId=" + productId +
+				", writerId=" + writerId +
+				", imgList=" + imgList +
+				", content='" + content + '\'' +
+				", createdDate='" + createdDate + '\'' +
+				", hitCount=" + hitCount +
+				'}';
+	}
+
+	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount) {
+		this.productId = productId;
+		this.writerId = writerId;
+		this.imgList = imgList;
+		this.content = content;
+		this.createdDate = createdDate;
+		this.hitCount = hitCount;
+	}
+
+	public Long getWriterId() {
+		return writerId;
+	}
+
+	public void setWriterId(Long writerId) {
+		this.writerId = writerId;
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public List<String> getImgList() {
+		return imgList;
+	}
+
+	public void setImgList(List<String> imgList) {
+		this.imgList = imgList;
 	}
 
 	public String getContent() {
@@ -33,11 +74,11 @@ public class ProductBoard {
 		this.createdDate = createdDate;
 	}
 
-	public int getHitCount() {
+	public Integer getHitCount() {
 		return hitCount;
 	}
 
-	public void setHitCount(int hitCount) {
+	public void setHitCount(Integer hitCount) {
 		this.hitCount = hitCount;
 	}
 }

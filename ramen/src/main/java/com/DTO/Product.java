@@ -8,6 +8,18 @@ public class Product {
 	private int remainQuantity;
 	private String picture;
 
+	@Override
+	public String toString() {
+		return "Product{" +
+				"id=" + id +
+				", category=" + category +
+				", name='" + name + '\'' +
+				", price=" + price +
+				", remainQuantity=" + remainQuantity +
+				", picture='" + picture + '\'' +
+				'}';
+	}
+
 	public Product() {
 	}
 
