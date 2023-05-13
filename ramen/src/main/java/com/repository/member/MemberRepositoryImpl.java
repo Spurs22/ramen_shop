@@ -1,0 +1,295 @@
+package com.repository.member;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.DTO.Member;
+import com.util.DBConn;
+import com.util.DBUtil;
+
+public class MemberRepositoryImpl implements MemberRepository{
+
+	
+	
+	private Connection conn = DBConn.getConnection();
+
+	
+	@Override
+	public Member join(Member member) throws SQLException{
+    // 로그인
+		Member dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+
+			sql = "SELECT userId, password "
+					+ "FROM member"
+					+ "WHERE userId = ? AND password = ? AND enabled = 1";
+			
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, "userid");
+			pstmt.setString(2, "password");
+			
+			rs = pstmt.executeQuery();
+		
+		}  catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return dto;
+	}	
+
+	@Override
+	public Member findById(Long id) throws SQLException {
+
+
+		return null;
+	}
+
+	
+	@Override
+	public List<Member> findAll() {
+	 List<Member> members = new ArrayList<>();	 
+	 PreparedStatement pstmt = null;
+	 ResultSet rs = null;
+	 StringBuffer sb = new StringBuffer();
+	 
+	 try {
+	        sb.append("SELECT id, name, nickname, user_id, password, email, tel, post_num, address1, address2, created_date ");
+	        sb.append("FROM member");
+		
+	        pstmt = conn.prepareStatement(sb.toString());
+	        rs = pstmt.executeQuery();
+			
+	        while(rs.next()) {
+	            Member dto = new Member();
+				
+	            dto.setId(rs.getString("id"));
+	            dto.setName(rs.getString("name"));
+	            dto.setNickName(rs.getString("nickname"));
+	            dto.setUserid(rs.getString("user_id"));
+	            dto.setUserPwd(rs.getString("password"));
+	            dto.setUserEmail(rs.getString("email"));
+	            dto.setTel(rs.getString("tel"));
+	            dto.setAddr1(rs.getString("address1"));
+	            dto.setAddr2(rs.getString("address2"));
+	            dto.setCrdDate(rs.getString("created_date"));
+				
+	            members.add(dto);
+	        }
+	    } 
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException e) {}
+	        }
+	        if (pstmt != null) {
+	            try {
+	                pstmt.close();
+	            } catch (SQLException e) {}
+	        }
+	    }
+	    return members;
+	}
+	
+	/*
+
+	@Override
+	public Member insertMember(Member member) throws SQLException {
+		
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			conn.setAutoCommit(false);
+			
+			sql = "INSERT INTO member(id,name,nickname,user_id,password,email,tel,post_num,address1,address1,create_date) "
+					+ " VALUES(member_seq.NEXTVAL,?,?,?,?,?,?,?,?,?,SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, member.getName());
+			pstmt.setString(2, member.getNickName());
+			pstmt.setString(3, member.getUserid());
+			pstmt.setString(4, member.getUserPwd());
+			pstmt.setString(5, member.getUserEmail());
+			pstmt.setString(6, member.getTel());
+			pstmt.setString(7, member.getPnum());
+			pstmt.setString(8, member.getAddr1());
+			pstmt.setString(9, member.getAddr2());
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "INSERT INTO expired_member(id,name,nickname,user_id,password,email,tel,post_num,address1,address1,create_date)" 
+					+ " VALUES(member_seq.NEXTVAL,?,?,?,?,?,?,?,?,?,SYSDATE)";
+			
+            pstmt = conn.prepareStatement(sql);
+			
+            pstmt.setString(1, member.getName());
+			pstmt.setString(2, member.getNickName());
+			pstmt.setString(3, member.getUserid());
+			pstmt.setString(4, member.getUserPwd());
+			pstmt.setString(5, member.getUserEmail());
+			pstmt.setString(6, member.getTel());
+			pstmt.setString(7, member.getPnum());
+			pstmt.setString(8, member.getAddr1());
+			pstmt.setString(9, member.getAddr2());
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e2) {
+			}
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+			}
+		}
+	return null;
+	}
+*/
+/*	
+
+	@Override
+	public Member updateMember(Member member) throws SQLException{
+		
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "UPDATE member SET name=?, nickname=?, password =?, email =?, tel=?, post_num=?, address1=?, address2=?"
+					+ " WHERE id=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, member.getName());
+			pstmt.setString(2, member.getNickName());			
+			pstmt.setString(3, member.getUserPwd());
+			pstmt.setString(4, member.getUserEmail());
+			pstmt.setString(5, member.getTel());
+			pstmt.setString(6, member.getPnum());
+			pstmt.setString(7, member.getAddr1());
+			pstmt.setString(8, member.getAddr2());
+			pstmt.setString(9, member.getId()); 
+		
+			pstmt.executeUpdate();
+			pstmt = null;
+			
+		}  catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+*/
+	
+	/*
+	@Override
+	public int deleteMember(long userId) throws SQLException{
+		
+	    PreparedStatement pstmt = null;
+	    String sql;
+	    
+	    try {
+	        sql = "UPDATE member SET enabled = 0 WHERE user_id = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setLong(1, userId);
+	        pstmt.executeUpdate();
+	        
+	        pstmt.close();
+	        pstmt = null;
+	        
+	        sql = "DELETE FROM member WHERE user_id = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setLong(1, userId);
+	        int deletedRows = pstmt.executeUpdate();
+	        
+	        return deletedRows;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        if(pstmt != null) {
+	            try {
+	                pstmt.close();
+	            } catch (SQLException e) {
+	            }
+	        }
+	    }
+	}
+	
+	
+	@Override
+	public boolean IsUsernameExist(String username) {
+		
+	}*/
+	
+	
+	@Override
+	public Member findByEmail(String email) {
+	
+		return null;
+	}
+
+	@Override
+	public int deleteMember(long userId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean IsUsernameExist(String username) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
+	
+
+}
