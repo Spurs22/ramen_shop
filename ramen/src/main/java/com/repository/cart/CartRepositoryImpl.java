@@ -92,10 +92,29 @@ public class CartRepositoryImpl implements CartRepository{
 	
 	@Override	// 장바구니의 상품 개수 구하기
 	public int getCnt(Long memberId) {
+		int cnt = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
 		
-		return 0;
+		try {
+			sql = "SELECT count(*) FROM cart WHERE member_id=?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				cnt = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return cnt;
 	}
-	
 	
 	
 	@Override	// 장바구니 목록조회
