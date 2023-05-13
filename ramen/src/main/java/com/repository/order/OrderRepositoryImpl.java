@@ -95,18 +95,37 @@ private Connection conn = DBConn.getConnection();
 		}
 	}
 
+	// 송장번호 만들기
 	@Override
-	public void setDeliveryNumber(Long orderId, Long deliveryId){
+	public void setDeliveryNumber(Long orderId, Long deliveryNumber) {
 		
 	}
 
+	// 회원 > 주문내역 확인
 	@Override
 	public List<Order> findOrderByMemberId(Long memberId) {
 		return null;
 	}
+	
+	// 상태별 주문내역 확인
+	@Override
+	public List<Order> findOrderByMemberId(String statusName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+
+	// 주문번호 > 주문내역 확인
 	@Override
 	public Order findOrderByOrderId(Long orderId) {
+		return null;
+	}
+
+
+	// 전체 주문내역 확인
+	@Override
+	public List<Order> findOrderByMemberId() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
