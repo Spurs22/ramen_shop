@@ -160,6 +160,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt.executeUpdate();
 			
 			conn.commit();
+			
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -277,7 +278,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 
 	@Override
 	public int dataCount() {
-		// TODO Auto-generated method stub
+		// 페이징 안하면 필요없음
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -304,7 +305,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 
 	@Override
 	public int dataCount(String condition, String keyword) {
-		// TODO Auto-generated method stub
+		// 페이징 안하면 필요없음
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -357,10 +358,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT subject, content, hit_count, r.create_date, user_id, nickname "
+			sql = "SELECT subject, content, hit_count, r.created_date, user_id, nickname "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
-					+ " WHERE id = ? ";
+					+ " WHERE r.id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -414,14 +415,179 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 
 	@Override
 	public RecipeBoard preReadRecipe(Long id, String condition, String keyword) {
-		// TODO Auto-generated method stub
-		return null;
+		RecipeBoard recipeBoard = null;
+		RecipeProduct recipeProduct = null;
+		List<RecipeProduct> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			if (keyword != null && keyword.length() != 0) {
+				sql = " SELECT id, subject "
+						+ " FROM recipe_board r "
+						+ " JOIN member m ON r.member_id = m.id "
+						+ " WHERE ( r.id > ? ) ";
+				if(condition.equals("all")) {
+					sql += " AND ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1";
+				} else if (condition.equals("created_date")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " AND ( TO_CHAR(created_date, 'YYYYMMDD') = ? ) ";
+				} else {
+					sql += " AND ( INSTR(" + condition + ", ?) >= 1 ) ";
+				}
+				sql += " ORDER BY num ASC ";
+				sql += " FETCH FIRST 1 ROWS ONLY ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setLong(1, id);
+				pstmt.setString(2, keyword);
+				if(condition.equals("all")) {
+					pstmt.setString(3, keyword);
+				}
+	
+			} else {
+				sql = " SELECT id, subject FROM recipe_board "
+						+ "WHERE id > ? "
+						+ " ORDER BY id ASC "
+						+ " FETCH FIRST 1 ROWS ONLY ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setLong(1, id);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				recipeBoard = new RecipeBoard();
+				
+				recipeBoard.setId(rs.getLong("id"));
+				recipeBoard.setSubject(rs.getString("subject"));
+			}
+			
+			pstmt.close();
+			rs.close();
+			pstmt = null;
+			rs = null;
+			
+			sql = " SELECT product_id, quantity "
+					+ " WHERE recipe_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, recipeBoard.getId());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipeProduct = new RecipeProduct();
+				
+				recipeProduct.setProductId(rs.getLong("product_id"));
+				recipeProduct.setQuantity(rs.getInt("quantity"));
+				
+				list.add(recipeProduct);
+			}
+			
+			recipeBoard.setRecipeProduct(list);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return recipeBoard;
 	}
 
 	@Override
 	public RecipeBoard nextReadRecipe(Long id, String condition, String keyword) {
 		// TODO Auto-generated method stub
-		return null;
+		RecipeBoard recipeBoard = null;
+		RecipeProduct recipeProduct = null;
+		List<RecipeProduct> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			if (keyword != null && keyword.length() != 0) {
+				sql = " SELECT id, subject "
+						+ " FROM recipe_board r "
+						+ " JOIN member m ON r.member_id = m.id "
+						+ " WHERE ( r.id < ? ) ";
+				if(condition.equals("all")) {
+					sql += " AND ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1";
+				} else if (condition.equals("created_date")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " AND ( TO_CHAR(created_date, 'YYYYMMDD') = ? ) ";
+				} else {
+					sql += " AND ( INSTR(" + condition + ", ?) >= 1 ) ";
+				}
+				sql += " ORDER BY num DESC ";
+				sql += " FETCH FIRST 1 ROWS ONLY ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setLong(1, id);
+				pstmt.setString(2, keyword);
+				if(condition.equals("all")) {
+					pstmt.setString(3, keyword);
+				}
+	
+			} else {
+				sql = " SELECT id, subject FROM recipe_board "
+						+ "WHERE id < ? "
+						+ " ORDER BY id DESC "
+						+ " FETCH FIRST 1 ROWS ONLY ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setLong(1, id);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				recipeBoard = new RecipeBoard();
+				
+				recipeBoard.setId(rs.getLong("id"));
+				recipeBoard.setSubject(rs.getString("subject"));
+			}
+			
+			pstmt.close();
+			rs.close();
+			pstmt = null;
+			rs = null;
+			
+			sql = " SELECT product_id, quantity "
+					+ " WHERE recipe_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, recipeBoard.getId());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipeProduct = new RecipeProduct();
+				
+				recipeProduct.setProductId(rs.getLong("product_id"));
+				recipeProduct.setQuantity(rs.getInt("quantity"));
+				
+				list.add(recipeProduct);
+			}
+			
+			recipeBoard.setRecipeProduct(list);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return recipeBoard;
 	}
 
 	@Override
