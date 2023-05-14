@@ -15,4 +15,6 @@ public interface RecipeCommentRepository {
 	List<RecipeComment> findCommentsByMemberId(Long memberId);
 
 	List<RecipeComment> findCommentsByPostId(Long RecipePostId);
+	
+	RecipeComment readComment(Long commentId, Long memberId);
 }

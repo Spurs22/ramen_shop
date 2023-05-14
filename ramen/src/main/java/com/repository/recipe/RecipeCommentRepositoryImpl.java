@@ -28,7 +28,7 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 			
 			pstmt.setLong(1, recipeComment.getBoardId());
 			pstmt.setLong(2, recipeComment.getMemberId());
-			pstmt.setString(3, recipeComment.getCotent());
+			pstmt.setString(3, recipeComment.getContent());
 			
 			pstmt.executeUpdate();
 			
@@ -51,7 +51,7 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, recipeComment.getCotent());
+			pstmt.setString(1, recipeComment.getContent());
 			pstmt.setLong(2, recipeComment.getId());
 			pstmt.setLong(3, recipeComment.getMemberId());
 			
@@ -162,6 +162,40 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public RecipeComment readComment(Long commentId, Long memberId) {
+		// 댓글 정보 불러오기
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeComment comment = null;
+		
+		try {
+			sql = "";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, commentId);
+			pstmt.setLong(2, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				comment = new RecipeComment();
+				
+				comment.setCotent(rs.getString("content"));
+				comment.setBoardId(rs.getLong("board_id"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return comment;
 	}
 
 }

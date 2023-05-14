@@ -351,7 +351,6 @@ public class RecipeServlet extends MyUploadServlet {
 		}
 		
 		try {
-			Long id = Long.parseLong(req.getParameter("postId"));
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			if(condition == null) {
@@ -394,6 +393,51 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void deleteRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 댓글 삭제
+		RecipeCommentRepository recipeComment = new RecipeCommentRepositoryImpl();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		
+		String cp = req.getContextPath();
+		
+		String query = "";
+		
+		try {
+			Long commentId = Long.parseLong(req.getParameter("")); // 수정
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition == null) {
+				condition = "all";
+				keyword = "";
+			}
+			
+			keyword = URLDecoder.decode(keyword,"utf-8");
+			
+			if(keyword.length() != 0) {
+				query += "?condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			Long memberId = info.getMemberId();
+			
+			RecipeComment comment = recipeComment.readComment(commentId, memberId);
+			
+			if(comment == null) {
+				resp.sendRedirect(cp + "" + query); // 수정
+				return;
+			}
+			
+			if(! comment.getMemberId().equals(info.getMemberId()) && ! info.getUserNickname().equals("admin")) {
+				resp.sendRedirect(cp + "" + query); // 수정
+				return;
+			}
+			
+			recipeComment.deleteComment(memberId, commentId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + "" + query); // 수정
 	}
 
 	protected void likeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -4,7 +4,7 @@ public class RecipeComment {
 	private Long id;
 	private Long boardId;
 	private Long memberId;
-	private String cotent;
+	private String content;
 	private String createdDate;
 	private int rating;
 	
@@ -32,11 +32,11 @@ public class RecipeComment {
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
-	public String getCotent() {
-		return cotent;
+	public String getContent() {
+		return content;
 	}
-	public void setCotent(String cotent) {
-		this.cotent = cotent;
+	public void setCotent(String content) {
+		this.content = content;
 	}
 	public String getCreatedDate() {
 		return createdDate;
