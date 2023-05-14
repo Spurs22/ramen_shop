@@ -32,7 +32,7 @@
 			
 			if(confirm("선택한 게시물을 삭제 하시겠습니까 ?")) {
 				const f = document.listForm;
-				f.action="${pageContext.request.contextPath}/cart/cartlist_cancel.do";
+				f.action="${pageContext.request.contextPath}/cart/list-delete.do";
 				f.submit();
 			}
 		});
