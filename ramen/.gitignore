@@ -4,3 +4,6 @@ DBConn.java
 /ramen.eml
 /.classpath
 /ramen.iml
+../.idea
+../lib
+../out
