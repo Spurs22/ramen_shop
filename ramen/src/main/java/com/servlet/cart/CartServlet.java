@@ -84,6 +84,35 @@ public class CartServlet extends MyServlet{
 	protected void cartSubmit(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
 		// 2) 장바구니의 물건을 선택 > 주문
 		System.out.println("장바구니 물건 선택 > 주문");
+		
+		//HttpSession session = req.getSession();
+		//SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		try {
+			String[] pi = req.getParameterValues("productIds");
+			long[] products = null;
+			products = new long[pi.length];
+			for(int i=0; i<pi.length; i++) {
+				products[i] = Long.parseLong(pi[i]);
+			}
+			
+			CartRepositoryImpl cri = new CartRepositoryImpl();
+			
+			// 아이디 ..
+			long memberId = (long)1;
+			List<Cart> list = cri.transferCartList(memberId, products);
+			
+			req.setAttribute("list", list);
+			
+		}  catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// order 창으로 forward
+		forward(req, resp, "/WEB-INF/views/order/order-list.jsp");
+
 	}
 	
 	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {

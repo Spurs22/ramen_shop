@@ -44,7 +44,16 @@ public interface CartRepository {
 	 * @return				장바구니 목록
 	 */
 	List<Cart> findCartByMemberId(Long memberId);
-
+	
+	/**
+	 * [장바구니 선택한 물품 리스트]
+	 * @param memberId		사용자 아이디
+	 * @param productId		상품 아이디
+	 * @return				장바구니에서 선택한 물품 리스트
+	 */
+	List<Cart> transferCartList(long memberId, long[] productId);
+	
+	
 	/**
 	 * [ 장바구니 30일 이후 품목 삭제 ]
 	 */

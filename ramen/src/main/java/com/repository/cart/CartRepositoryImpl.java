@@ -152,7 +152,49 @@ public class CartRepositoryImpl implements CartRepository{
 		return list;
 	}
 
-	
+	@Override	// 장바구니 선택한 물품 리스트
+	public List<Cart> transferCartList(long memberId, long[] productId) {
+		List<Cart> list = new ArrayList<Cart>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT c.product_id, member_id, quantity, created_date, picture "
+					+ " FROM cart c JOIN product p ON  c.product_id = p.id  "
+					+ " WHERE c.product_id IN (";
+			for (int i = 0; i < productId.length; i++) {
+				sql += "?,";
+			}
+			sql = sql.substring(0, sql.length() - 1) + ") AND member_id=?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			for (int i = 0; i < productId.length; i++) {
+				pstmt.setLong(i + 1, productId[i]);
+			}
+			pstmt.setLong(productId.length+1, memberId);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Cart cart = new Cart();
+				
+				cart.setProductId(rs.getLong("product_id"));
+				cart.setMemberId(rs.getLong("member_id"));
+				cart.setQuantity(rs.getInt("quantity"));
+				cart.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(cart);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
 	
 
 	@Override	// 장바구니 30일 이후 품목 삭제

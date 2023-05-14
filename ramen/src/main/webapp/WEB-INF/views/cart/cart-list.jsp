@@ -26,13 +26,27 @@
 		$("#btnDeleteList").click(function(){
 			let cnt = $("input[name=productIds]:checked").length;
 			if(cnt === 0) {
-				alert("삭제할 게시물을 먼저 선택하세요.");
+				alert("삭제할 물품을 먼저 선택하세요.");
 				return false;
 			}
 			
-			if(confirm("선택한 게시물을 삭제 하시겠습니까 ?")) {
+			if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
 				const f = document.listForm;
 				f.action="${pageContext.request.contextPath}/cart/list-delete.do";
+				f.submit();
+			}
+		});
+		
+		$("#btnOrder").click(function(){
+			let cnt = $("input[name=productIds]:checked").length;
+			if(cnt === 0) {
+				alert("결제할 물품을 먼저 선택하세요.");
+				return false;
+			}
+			
+			if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
+				const f = document.listForm;
+				f.action="${pageContext.request.contextPath}/cart/submit.do";
 				f.submit();
 			}
 		});
@@ -84,6 +98,7 @@
 				
 			</table>
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
+					<button type="button" class="btn" id="btnOrder">결제</button>
 			</form>
 		</div>
 	</div>
