@@ -33,9 +33,12 @@
 
         .menubar-item:hover:not(.selected-menu) {
             filter: brightness(80%);
-            cursor: pointer;
             background: #eeeeee;
             transition: 0.5s;
+        }
+
+        .menubar-item:hover {
+            cursor: pointer;
         }
 
         .logo {

@@ -29,6 +29,13 @@ public class ProductBoard {
 		this.price = price;
 	}
 
+	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content) {
+		this.productId = productId;
+		this.writerId = writerId;
+		this.imgList = imgList;
+		this.content = content;
+	}
+
 	public Long getProductId() {
 		return productId;
 	}

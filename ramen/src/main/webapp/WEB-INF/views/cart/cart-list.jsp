@@ -95,7 +95,6 @@
 						</tr>		
 					</c:if>
 				</tbody>
-				
 			</table>
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
 					<button type="button" class="btn" id="btnOrder">결제</button>

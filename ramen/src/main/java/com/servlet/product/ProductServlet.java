@@ -81,7 +81,20 @@ public class ProductServlet extends MyServlet {
 	}
 
 	protected void createPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String content = req.getParameter("content");
+		System.out.println(content);
+		System.out.println(req.getParameter("productId"));
 
+
+		Long productId = Long.valueOf(req.getParameter("productId"));
+//		req.getParameter("picture");
+
+		System.out.println("content");
+
+		ProductBoard productBoard = new ProductBoard(productId, 1L, null, content);
+		productBoardService.createProductPost(productBoard);
+
+		resp.sendRedirect(req.getContextPath() + "/product/list");
 	}
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("ProductServlet.list" );
