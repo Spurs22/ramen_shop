@@ -74,18 +74,17 @@
 							<td>${cart.createdDate}</td>
 						</tr>
 					</c:forEach>
+					
+					<c:if test="${dataCount == 0}">
+						<tr>		
+							<td>등록된 게시물이 없습니다.</td>
+						</tr>		
+					</c:if>
 				</tbody>
 				
 			</table>
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
 			</form>
-			<!--  
-			<div>
-				<c:if test="${dataCount == 0}">
-					<p>등록된 게시물이 없습니다.</p>
-				</c:if>
-			</div>
-			-->
 		</div>
 	</div>
 
