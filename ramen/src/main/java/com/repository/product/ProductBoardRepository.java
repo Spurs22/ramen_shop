@@ -5,19 +5,19 @@ import com.DTO.ProductBoard;
 import java.util.List;
 
 public interface ProductBoardRepository {
-	void createPost(ProductBoard productBoard);
+	void createProductPost(ProductBoard productBoard);
 
 	void editPost(ProductBoard productBoard);
 
-	int deletePost(Long memberId, Long postId);
+	int deletePost(Long memberId, Long productId);
 
 	List<ProductBoard> findPostsByMemberId(Long memberId);
 
-	ProductBoard findPostsByProductId(Long postId);
+	ProductBoard findPostsByProductId(Long productId);
 
 	List<ProductBoard> findAllPosts();
 
-	void registPicture(Long postId, String path);
+	void registPicture(Long productId, String path);
 
-	Float getAverageRateByPost(Long postId);
+	Float getAverageRateByPost(Long productId);
 }

@@ -15,7 +15,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 	private final Connection conn = DBConn.getConnection();
 
 	@Override
-	public void createPost(ProductBoard productBoard) {
+	public void createProductPost(ProductBoard productBoard) {
 		PreparedStatement pstmt = null;
 		String sql;
 
