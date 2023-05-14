@@ -23,12 +23,10 @@ public interface MemberRepository {
 		
 		// read 
 		List<Member> findAll();
+		
 
-		// 
+		// 이메일로 찾기 
 		Member findByEmail(String email);
 
-
-		// 회원 존재여부
-		boolean isUsernameExist(String username);
 		
 }

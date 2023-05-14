@@ -9,7 +9,7 @@ public class Member {
 	private String name;
 	private String nickName;
 	private String userId;
-	private String passord;
+	private String password;
 	private String email;
 	private String tel;
 	private String postNum;
@@ -17,6 +17,7 @@ public class Member {
 	private String address2;
     private String createdDate;
     private int enabled;
+    
     
     
 	public String getMemberId() {
@@ -43,11 +44,11 @@ public class Member {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getPassord() {
-		return passord;
+	public String getPassword() {
+		return password;
 	}
-	public void setPassord(String passord) {
-		this.passord = passord;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getEmail() {
 		return email;
@@ -92,7 +93,8 @@ public class Member {
 		this.enabled = enabled;
 	}
     
-
+  
+    
     
 
 }
