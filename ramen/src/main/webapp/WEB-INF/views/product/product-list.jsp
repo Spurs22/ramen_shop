@@ -22,6 +22,7 @@
             padding: 20px;
             gap: 30px;
             height: 100%;
+			overflow: auto;
         }
 
         .product-item {
@@ -66,13 +67,21 @@
 			margin-bottom: 10px;
 			padding: 0 20px;
         }
+
+		a {
+			text-decoration: none;
+			color: black;
+		}
 	</style>
 </head>
+<script>
+    let menuIndex = 2
+</script>
 <body>
 <div class="whole-container">
 
 	<header>
-		<jsp:include page="/WEB-INF/views/fragment/ramen-menubar.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
 	<div class="main-container shadow-lg">
@@ -84,22 +93,19 @@
 			</div>
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
-				<button class="btn btn-success">상품 등록</button>
-				<button class="btn btn-success">상품 페이지 등록</button>
+<%--				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>--%>
+				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-form'">상품 등록</button>
 			</div>
 		</div>
 
 		<div class="product-container">
 			<c:forEach var="post" items="${posts}">
-
-				<div class="product-item shadow">
+				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=${post.productId}">
 					<img class="product-img" src="">
 					<div style="margin-top: 5px; font-weight: 750">${post.productName}</div>
-					<div style="color: #5d5d5d">${post.price}</div>
+					<div style="color: #5d5d5d">${post.price}원</div>
 					<div>${post.rating}</div>
-<%--					<div>★★★★★</div>--%>
-				</div>
-
+				</a>
 			</c:forEach>
 		</div>
 	</div>
@@ -114,6 +120,13 @@
 </div>
 --%>
 
+
 </div>
+
+<script>
+    $(document).ready(function () {
+        selectMenu(menuIndex)
+    })
+</script>
 </body>
 </html>

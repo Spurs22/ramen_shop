@@ -43,7 +43,7 @@
 <div class="whole-container">
 
 	<header>
-		<jsp:include page="/WEB-INF/views/fragment/ramen-menubar.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
 	<div class="main-container shadow-lg">

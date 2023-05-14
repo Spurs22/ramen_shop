@@ -49,10 +49,6 @@
             background: white;
         }
 
-
-
-
-
     </style>
 </head>
 
@@ -60,7 +56,7 @@
 <!--    <img class="logo" src="../../static/picture/logo.png">-->
 
     <div class="menubar">
-        <div class="menubar-item selected-menu" onclick="clickMenu(this)">
+        <div class="menubar-item" onclick="">
             <div>
                 메인
             </div>
@@ -69,15 +65,15 @@
             </div>
         </div>
 
-        <div class="menubar-item" onclick="clickMenu(this)">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/product/list'">
             <span>
                 상품
             </span>
         </div>
-        <div class="menubar-item" onclick="clickMenu(this)">
-        <span>
-            레시피
-        </span>
+        <div class="menubar-item" onclick="">
+            <span>
+                레시피
+            </span>
         </div>
     </div>
 

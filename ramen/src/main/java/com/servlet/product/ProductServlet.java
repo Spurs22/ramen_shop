@@ -1,5 +1,6 @@
 package com.servlet.product;
 
+import com.DTO.Product;
 import com.DTO.ProductBoard;
 import com.repository.product.ProductBoardRepository;
 import com.repository.product.ProductBoardRepositoryImpl;
@@ -35,7 +36,11 @@ public class ProductServlet extends MyServlet {
 		if (uri.contains("post-form")) {
 			postForm(req, resp);
 		} else if (uri.contains("post")) {
-			post(req, resp);
+			if (req.getMethod().equals("POST")) {
+				createPost(req, resp);
+			} else {
+				postInfo(req, resp);
+			}
 		} else if (uri.contains("list")) {
 			list(req, resp);
 		} else if (uri.contains("delete")) {
@@ -46,10 +51,36 @@ public class ProductServlet extends MyServlet {
 	}
 
 	protected void postForm(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("ProductServlet.postForm" );
 
+		try {
+			List<Product> products = productService.findAllProduct();
+			req.setAttribute("products", products);
+
+			String path = "/WEB-INF/views/product/product-form.jsp";
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	protected void post(HttpServletRequest req, HttpServletResponse resp) {
+	protected void postInfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("ProductServlet.postInfo" );
+
+		Long productId = Long.valueOf(req.getParameter("id" ));
+		try {
+			ProductBoard post = productBoardService.findPostsByProductId(productId);
+
+			req.setAttribute("post", post);
+
+			String path = "/WEB-INF/views/product/product-info.jsp";
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void createPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 	}
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

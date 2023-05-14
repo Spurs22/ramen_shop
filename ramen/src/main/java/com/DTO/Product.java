@@ -1,7 +1,7 @@
 package com.DTO;
 
 public class Product {
-	private Long id;
+	private Long productId;
 	private int category;
 	private String name;
 	private int price;
@@ -11,7 +11,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product{" +
-				"id=" + id +
+				"id=" + productId +
 				", category=" + category +
 				", name='" + name + '\'' +
 				", price=" + price +
@@ -23,8 +23,8 @@ public class Product {
 	public Product() {
 	}
 
-	public Product(Long id, int category, String name, int price, int remainQuantity, String picture) {
-		this.id = id;
+	public Product(Long productId, int category, String name, int price, int remainQuantity, String picture) {
+		this.productId = productId;
 		this.category = category;
 		this.name = name;
 		this.price = price;
@@ -40,12 +40,12 @@ public class Product {
 		this.picture = picture;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getProductId() {
+		return productId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	public int getCategory() {
