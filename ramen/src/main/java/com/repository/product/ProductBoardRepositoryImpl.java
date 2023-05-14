@@ -112,29 +112,21 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT id, member_id, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+			sql = "SELECT pb.id, member_id, name, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
-					"    GROUP BY product_board_id) " +
-					"pc ON pb.id = pc.product_board_id " +
+					"    GROUP BY product_board_id) pc ON pb.id = pc.product_board_id " +
+					"JOIN product p ON pb.id = p.id " +
 					"WHERE member_id = ? " +
-					"ORDER BY ID DESC ";
+					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, memberId);
 
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				result.add(new ProductBoard(
-						rs.getLong("id" ),
-						rs.getLong("member_id"),
-						null,
-						rs.getString("content" ),
-						rs.getString("created_date" ),
-						rs.getInt("hit_count" ),
-						rs.getFloat("rating")
-				));
+				result.add(getProductBoard(rs));
 			}
 
 		} catch (Exception e) {
@@ -153,13 +145,14 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		ProductBoard result = null;
 
 		try {
-			sql = "SELECT id, member_id, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+			sql = "SELECT pb.id, member_id, NAME, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
 					"    GROUP BY product_board_id) " +
 					"pc ON pb.id = pc.product_board_id " +
-					"WHERE id = ? " +
+					"JOIN product p ON pb.id = p.id " +
+					"WHERE pb.id = ? " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
 
@@ -168,15 +161,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				result = new ProductBoard(
-						rs.getLong("id" ),
-						rs.getLong("member_id"),
-						null,
-						rs.getString("content" ),
-						rs.getString("created_date" ),
-						rs.getInt("hit_count" ),
-						rs.getFloat("rating")
-				);
+				result = getProductBoard(rs);
 			}
 
 		} catch (Exception e) {
@@ -196,27 +181,20 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT id, member_id, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+			sql = "SELECT pb.id, member_id, NAME, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
 					"    GROUP BY product_board_id) " +
 					"    pc ON pb.id = pc.product_board_id " +
+					"JOIN product p ON pb.id = p.id " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				result.add(new ProductBoard(
-						rs.getLong("id" ),
-						rs.getLong("member_id"),
-						null,
-						rs.getString("content" ),
-						rs.getString("created_date" ),
-						rs.getInt("hit_count" ),
-						rs.getFloat("rating")
-				));
+				result.add(getProductBoard(rs));
 			}
 
 		} catch (Exception e) {
@@ -236,6 +214,20 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 	public Float getAverageRateByPost(Long postId) {
 //		String sql = ""
 		return null;
+	}
+
+	private static ProductBoard getProductBoard(ResultSet rs) throws SQLException {
+		return new ProductBoard(
+				rs.getLong("id" ),
+				rs.getLong("member_id" ),
+				rs.getString("name" ),
+				null,
+				rs.getString("content" ),
+				rs.getString("created_date" ),
+				rs.getInt("hit_count" ),
+				rs.getFloat("rating" ),
+				rs.getInt("price")
+		);
 	}
 }
 
