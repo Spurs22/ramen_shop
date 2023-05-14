@@ -24,24 +24,14 @@ public class ProductBoardRepositoryImplTest {
 				8L,
 				1L,
 				null,
-				null,
-				"상품 상세 설명입니다.",
-				null,
-				null,
-				5.0f,
-				null
+				"상품 상세 설명입니다."
 		);
 
 		ProductBoard productBoard3 = new ProductBoard(
 				9L,
 				1L,
 				null,
-				null,
-				"상품 상세 설명입니다.",
-				null,
-				null,
-				4.4f,
-				null
+				"상품 상세 설명입니다."
 		);
 
 		// insert

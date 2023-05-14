@@ -56,7 +56,8 @@
 		.product-content-container {
 			background: rgba(241, 241, 241, 0.8);
 			height: 800px;
-			padding: 10px;
+			padding: 15px;
+			margin-top: 30px;
 		}
 
 		.product-content {
@@ -83,8 +84,8 @@
 			</div>
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
-				<button class="btn btn-success">상품 수정</button>
-				<button class="btn btn-success">상품 삭제</button>
+				<button class="btn btn-primary">상품 수정</button>
+				<button class="btn btn-danger">상품 삭제</button>
 			</div>
 		</div>
 
@@ -106,7 +107,6 @@
 						<button class="btn btn-secondary w-100">상품이 포함된 레시피 조회</button>
 					</div>
 				</div>
-
 			</div>
 
 			<div class="product-content-container">

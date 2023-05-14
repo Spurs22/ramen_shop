@@ -20,4 +20,5 @@ public interface ProductBoardRepository {
 	void registPicture(Long productId, String path);
 
 	Float getAverageRateByPost(Long productId);
+
 }

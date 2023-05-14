@@ -98,9 +98,7 @@
         }
 
 		.product-info {
-            height: 30px;
             text-align: center;
-
         }
 
 		.input-group {
@@ -135,26 +133,26 @@
 
 		<div class="content-container" style="flex: 1; justify-content: end">
 
-
-
-			<form method="post" enctype="multipart/form-data" class="main-content-card" action="">
-				<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between">
-					<div class="input-group">
-						<span class="input-group-text" style="width: 85px; "><span style="margin: auto">상품명</span></span>
-						<textarea class="form-control product-info" aria-label="With textarea" name="content" id="productName" disabled ></textarea>
-					</div>
-
-					<div class="input-group">
-						<span class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></span>
-						<textarea class="form-control product-info" aria-label="With textarea" name="content" id="category" disabled ></textarea>
-					</div>
-
-					<div class="input-group">
-						<span class="input-group-text" style="width: 85px"><span style="margin: auto">재고</span></span>
-						<textarea class="form-control product-info" aria-label="With textarea" name="content" id="quantity" disabled ></textarea>
-					</div>
+			<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+				<div class="input-group">
+					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
+					<input class="form-control product-info" id="productName" disabled>
 				</div>
 
+
+				<div class="input-group">
+					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
+					<input class="form-control product-info" id="category" disabled>
+				</div>
+
+				<div class="input-group">
+					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
+					<input class="form-control product-info" id="quantity" disabled>
+				</div>
+			</div>
+
+			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
+			<form method="post" class="main-content-card" action="${pageContext.request.contextPath}/product/post" id="form">
 				<div class="input-group">
 					<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
 						   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture">
@@ -162,25 +160,20 @@
 
 				<div class="input-group">
 					<span class="input-group-text">상세 설명</span>
-					<textarea class="form-control" aria-label="With textarea" name="content" ></textarea>
+					<textarea class="form-control" aria-label="With textarea" name="content" id="content"></textarea>
 				</div>
 
-				<input type="hidden" name="formType" value="">
-				<input type="hidden" name="postId" value="">
-
-							<div class="selected-product">
-
-							</div>
-
+<%--				<input type="hidden" name="formType" value="">--%>
+				<input type="hidden" name="productId" id="productId" value="1">
+				<div class="selected-product">
+				</div>
 
 				<div class="w-100 text-end" style="margin-top: 20px">
-					<button type="submit" class="btn btn-primary">Submit</button>
+					<button type="button" class="btn btn-primary" id="submitButton">확인</button>
 				</div>
 			</form>
-
 		</div>
 	</div>
-
 
 	<!-- Modal -->
 	<div class="modal fade" id="selectProductModal" tabindex="-1" aria-labelledby="selectProductLabel" aria-hidden="true">
@@ -215,13 +208,15 @@
 			</div>
 		</div>
 	</div>
-
 </div>
 
 <script>
+    let submitBtn = document.getElementById('submitButton');
+    let form = document.getElementById('form');
 	let categoryInput = document.getElementById('category');
     let quantityInput = document.getElementById('quantity');
     let productNameInput = document.getElementById('productName');
+    let productIdInput = document.getElementById('productId');
 
     var modal = new bootstrap.Modal(document.getElementById('selectProductModal'), {
         keyboard: false
@@ -229,12 +224,25 @@
 
     function selectProduct(productId, name, price, remainQuantity, category) {
         // alert(productId + '' + name + '' + price + '' + remainQuantity + '' + category)
+        productIdInput.value = productId;
+
         categoryInput.value = category;
         productNameInput.value = name;
         quantityInput.value = remainQuantity;
 		alert("상품이 선택되었습니다.")
         modal.hide();
     }
+
+    submitBtn.addEventListener('click', function () {
+        if (confirm("등록 하시겠습니까?")) {
+            if (productIdInput.value) {
+                form.submit();
+            } else {
+                alert('상품을 선택하세요.')
+			}
+        }
+    });
+
 </script>
 
 <script>

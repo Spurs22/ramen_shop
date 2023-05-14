@@ -3,8 +3,6 @@ package test.repository.product;
 import com.DTO.Product;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
-import com.service.product.ProductService;
-import com.service.product.ProductServiceImpl;
 
 public class ProductRepositoryImplTest {
 	public static void main(String[] args) {
@@ -14,7 +12,7 @@ public class ProductRepositoryImplTest {
 		Product product = new Product(
 				null,
 				3,
-				"짬뽕",
+				"치즈불닭볶음면",
 				1200,
 				5,
 				null
@@ -23,8 +21,8 @@ public class ProductRepositoryImplTest {
 		Product product2 = new Product(
 				null,
 				2,
-				"육계장",
-				800,
+				"꼬꼬면",
+				1200,
 				2,
 				null
 		);
@@ -32,8 +30,8 @@ public class ProductRepositoryImplTest {
 		Product productEdit = new Product(
 				null,
 				1,
-				"김치면",
-				900,
+				"무파마",
+				1300,
 				5,
 				null
 		);
