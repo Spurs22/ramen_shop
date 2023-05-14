@@ -5,7 +5,7 @@
 	margin: 100px auto;
 }
 
-.product-container {
+.content-container {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-rows: 300px;
@@ -22,6 +22,5 @@
 	top: -1px;
 	border-radius: 0 10px 10px 10px;
 	margin-bottom: 100px;
-	padding: 50px;
-	overflow: auto;
+	padding: 35px 50px 50px 50px;
 }

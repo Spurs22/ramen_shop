@@ -13,27 +13,27 @@ public class ProductRepositoryImplTest {
 		// 샘플 데이터
 		Product product = new Product(
 				null,
-				1,
-				"쫄면",
-				1600,
-				12,
+				3,
+				"짬뽕",
+				1200,
+				5,
 				null
 		);
 
 		Product product2 = new Product(
 				null,
-				1,
-				"짜파게티",
-				1600,
-				12,
+				2,
+				"육계장",
+				800,
+				2,
 				null
 		);
 
 		Product productEdit = new Product(
 				null,
-				2,
-				"비빔면",
-				1200,
+				1,
+				"김치면",
+				900,
 				5,
 				null
 		);
@@ -42,6 +42,10 @@ public class ProductRepositoryImplTest {
 		System.out.println("createProduct test");
 		productRepository.createProduct(product);
 //
+
+		productRepository.createProduct(product2);
+		productRepository.createProduct(productEdit);
+
 
 		// 상품 찾기
 //		System.out.println("findProductByProductId test");
@@ -56,8 +60,6 @@ public class ProductRepositoryImplTest {
 //		System.out.println("findProductByProductId test");
 //		result = productRepository.findProductByProductId(product.getId());
 //		System.out.println("조회 결과 " + result);
-
-
 
 	}
 }

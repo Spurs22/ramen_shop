@@ -21,6 +21,7 @@
             grid-auto-rows: 300px;
             padding: 20px;
             gap: 30px;
+            height: 100%;
         }
 
         .product-item {
@@ -50,6 +51,21 @@
             background: #e8e8e8;
             /*filter: brightness(95%);*/
         }
+
+        .sub-menu button {
+            border-radius: 5px;
+        }
+
+        .sub-menu {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: space-between;
+			margin-bottom: 10px;
+			padding: 0 20px;
+        }
 	</style>
 </head>
 <body>
@@ -60,6 +76,19 @@
 	</header>
 
 	<div class="main-container shadow-lg">
+
+		<div class="sub-menu">
+			<div style="display: flex; flex-direction: row; gap: 5px" >
+				<input type="text" style="width: 150px; padding: 0 5px">
+				<button class="btn btn-primary">검색</button>
+			</div>
+
+			<div style="display: flex; flex-direction: row; gap: 5px">
+				<button class="btn btn-success">상품 등록</button>
+				<button class="btn btn-success">상품 페이지 등록</button>
+			</div>
+		</div>
+
 		<div class="product-container">
 			<c:forEach var="post" items="${posts}">
 

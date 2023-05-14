@@ -18,7 +18,7 @@
 	</header>
 
 	<div class="main-container shadow-lg">
-		<div class="product-container">
+		<div class="content-container">
 			<%--	내용	 --%>
 		</div>
 	</div>
