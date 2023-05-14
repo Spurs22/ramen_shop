@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.DTO.RecipeBoard;
+import com.DTO.RecipeComment;
 import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
 import com.util.MyUploadServlet;
@@ -64,9 +65,9 @@ public class RecipeServlet extends MyUploadServlet {
 		} else if (uri.indexOf("deleteRecipeComment.do") != -1) {
 			deleteRecipeComment(req, resp);
 		} else if (uri.indexOf("likeComment.do") != -1) {
-			likeComment(req, resp);
+			likeRecipe(req, resp);
 		} else if (uri.indexOf("dislikeComment.do") != -1) {
-			dislikeComment(req, resp);
+			dislikeRecipe(req, resp);
 		}
 	}
 
@@ -167,14 +168,113 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정
+		RecipeBoardRepository recipeBoard = new RecipeBoardRepositoryImpl();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		
+		String cp = req.getContextPath();
+		
+		try {
+			Long recipe_id = Long.parseLong(req.getParameter("")); // 수정
+			
+			RecipeBoard board = recipeBoard.readRecipe(recipe_id);
+			if(board == null || ( ! board.getNickname().equals(info.getUserNickname()))) {
+				resp.sendRedirect(cp + "");
+				return;
+			}
+			
+			req.setAttribute("mode", "update");
+			req.setAttribute("board", board);
+			
+			forward(req, resp, ""); // 수정
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + ""); // 수정
 	}
 
 	protected void updateRecipeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정 완료
+		RecipeBoardRepository recipeBoard = new RecipeBoardRepositoryImpl();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		
+		String cp = req.getContextPath();
+		
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			resp.sendRedirect(cp + "");
+			return;
+		}
+		
+		try {
+			RecipeBoard board = new RecipeBoard();
+			
+			board.setId(Long.parseLong(req.getParameter(""))); // 수정
+			board.setSubject(req.getParameter("")); // 수정
+			board.setContent(req.getParameter("")); // 수정
+		
+			// json list 변환 // 수정
+			
+			board.setMemberId(info.getMemberId());
+			
+			recipeBoard.updateRecipe(board);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + ""); // 수정
 	}
 
 	protected void deleteRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 삭제
+		RecipeBoardRepository recipeBoard = new RecipeBoardRepositoryImpl();
+		String cp = req.getContextPath();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		
+		String query = "";
+		
+		try {
+			Long recipe_id = Long.parseLong(req.getParameter("")); // 수정
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition == null) {
+				condition = "all";
+				keyword = "";
+			}
+			
+			keyword = URLDecoder.decode(keyword, "utf-8");
+			
+			if(keyword.length() != 0) {
+				query += "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			RecipeBoard board = recipeBoard.readRecipe(recipe_id);
+			
+			if(board == null) {
+				resp.sendRedirect(cp + "" + query); // 수정
+				return;
+			}
+			
+			if(! info.getMemberId().equals(board.getMemberId()) && ! info.getUserNickname().equals("admin")) {
+				resp.sendRedirect(cp + "" + query);
+				return;
+			}
+			
+			recipeBoard.deleteRecipe(recipe_id, info.getMemberId());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + "" + query); // 수정
 	}
 
 	protected void recipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -233,6 +333,47 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void writeRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 댓글 달기
+		RecipeCommentRepository recipeComment = new RecipeCommentRepositoryImpl();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		
+		String query = "";
+		
+		String cp = req.getContextPath();
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			resp.sendRedirect(cp + ""); // 수정
+			return;
+		}
+		
+		try {
+			Long id = Long.parseLong(req.getParameter("postId"));
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition == null) {
+				condition = "all";
+				keyword = "";
+			}
+			
+			keyword = URLDecoder.decode(keyword, "utf-8");
+			
+			if(keyword.length() != 0) {
+				query += "?condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			RecipeComment comment = new RecipeComment();
+			
+			comment.setMemberId(info.getMemberId());
+			comment.setBoardId(Long.parseLong(req.getParameter("")));
+			comment.setCotent(req.getParameter(""));
+			
+			recipeComment.createComment(comment);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + "" + query); // 수정
 	}
 
 	protected void writeRecipeCommentSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -251,11 +392,11 @@ public class RecipeServlet extends MyUploadServlet {
 		// 레시피 댓글 삭제
 	}
 
-	protected void likeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 댓글 좋아요
+	protected void likeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 레시피 좋아요
 	}
 
-	protected void dislikeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 댓글 좋아요 취소
+	protected void dislikeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 레시피 좋아요 취소
 	}
 }

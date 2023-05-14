@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.DTO.Member;
+import com.DTO.RecipeBoard;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -68,14 +70,78 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 
 	@Override
 	public List<Member> findLikeMembers(Long postId) {
-		// TODO Auto-generated method stub
-		return null;
+		// 게시글 좋아요 누른 사람들
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		Member member = null;
+		List<Member> list = new ArrayList<>();
+		
+		try {
+			sql = "SELECT r.member_id, nickname FROM recipe_like r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " WHERE recipe_id = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, postId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				member = new Member();
+				
+				member.setMemberId(rs.getLong("member_id"));
+				member.setNickName(rs.getString("nickname"));
+				
+				list.add(member);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 	@Override
-	public List<Member> findLikePost(Long memberId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RecipeBoard> findLikePost(Long memberId) {
+		// 사용자가 좋아요 누른 글들
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeBoard board = null;
+		List<RecipeBoard> list = new ArrayList<>();
+		
+		try {
+			sql = "SELECT r.id, subject FROM recipe_board r "
+					+ " JOIN recipe_like l ON r.id = l.recipe_id "
+					+ " WHERE l.member_id = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				
+				list.add(board);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 	@Override

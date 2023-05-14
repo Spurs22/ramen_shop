@@ -27,7 +27,7 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, recipeComment.getBoardId());
-			pstmt.setLong(2, recipeComment.getBoardId());
+			pstmt.setLong(2, recipeComment.getMemberId());
 			pstmt.setString(3, recipeComment.getCotent());
 			
 			pstmt.executeUpdate();

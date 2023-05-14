@@ -1,6 +1,7 @@
 package com.repository.recipe;
 
 import com.DTO.Member;
+import com.DTO.RecipeBoard;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -30,7 +31,7 @@ public interface RecipeLikeRepository {
 	 * @param memberId  멤버 아이디
 	 * @return          좋아요 누른 포스트 리스트
 	 */
-	List<Member> findLikePost(Long memberId);
+	List<RecipeBoard> findLikePost(Long memberId);
 
 	/**
 	 * @param memberId  멤버 아이디
