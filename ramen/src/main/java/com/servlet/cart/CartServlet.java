@@ -41,13 +41,13 @@ public class CartServlet extends MyServlet{
 		// 2) 장바구니의 물건을 선택 > 주문
 		// 3) 장바구니의 물건을 취소한다.
 		// 4) 장바구니의 물건 리스트를 취소한다.
-		if(uri.indexOf("cartList.do")!= -1) {
+		if(uri.indexOf("cart_list.do")!= -1) {
 			listCart(req,resp);
-		} else if(uri.indexOf("cartSelect.do")!= -1) {
+		} else if(uri.indexOf("cart_select.do")!= -1) {
 			selectItem(req,resp);
-		} else if(uri.indexOf("cartCancel.do")!= -1) {
+		} else if(uri.indexOf("cart_cancel.do")!= -1) {
 			cancelItem(req,resp);
-		} else if(uri.indexOf("cartlistCancel.do")!= -1) {
+		} else if(uri.indexOf("cartlist_cancel.do")!= -1) {
 			cancelList(req,resp);
 		}
 	}
@@ -143,7 +143,7 @@ public class CartServlet extends MyServlet{
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/cart/cartList.do?");
+		resp.sendRedirect(cp + "/cart/cart_list.do?");
 	}
 	
 }
