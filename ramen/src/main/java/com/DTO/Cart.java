@@ -5,7 +5,8 @@ public class Cart {
 	private Long memberId;
 	private int quantity;
 	private String createdDate;
-	
+	private String picture;
+
 	public Long getProductId() {
 		return productId;
 	}
@@ -29,5 +30,11 @@ public class Cart {
 	}
 	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
+	}
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 }

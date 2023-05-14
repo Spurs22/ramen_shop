@@ -126,8 +126,8 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT product_id, member_id, quantity, created_date "
-					+ "	FROM cart "
+			sql = "SELECT c.product_id, member_id, quantity, created_date, picture "
+					+ "	FROM cart c JOIN product p ON  c.product_id = p.id "
 					+ " WHERE member_id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
