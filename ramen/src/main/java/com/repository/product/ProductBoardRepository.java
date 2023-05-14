@@ -13,7 +13,7 @@ public interface ProductBoardRepository {
 
 	List<ProductBoard> findPostsByMemberId(Long memberId);
 
-	ProductBoard findPostsByPostId(Long postId);
+	ProductBoard findPostsByProductId(Long postId);
 
 	List<ProductBoard> findAllPosts();
 

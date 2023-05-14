@@ -1,7 +1,8 @@
-package main.com.service.product;
+package com.service.product;
 
-import main.com.DTO.ProductBoard;
-import main.com.repository.product.ProductBoardRepository;
+
+import com.DTO.ProductBoard;
+import com.repository.product.ProductBoardRepository;
 
 import java.util.List;
 

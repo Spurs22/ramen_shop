@@ -15,7 +15,7 @@ public class ProductBoardRepositoryImplTest {
 				"상품 상세 설명입니다.",
 				null,
 				null,
-				4.2
+				4.2f
 		);
 
 		// insert

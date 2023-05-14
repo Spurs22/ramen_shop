@@ -9,7 +9,7 @@ public class ProductBoard {
 	private String content;
 	private String createdDate;
 	private Integer hitCount;
-	private Double rating;
+	private Float rating;
 
 	public ProductBoard() {
 	}
@@ -27,7 +27,7 @@ public class ProductBoard {
 				'}';
 	}
 
-	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount, Double rating) {
+	public ProductBoard(Long productId, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount, Float rating) {
 		this.productId = productId;
 		this.writerId = writerId;
 		this.imgList = imgList;
@@ -37,12 +37,12 @@ public class ProductBoard {
 		this.rating = rating;
 	}
 
-	public Double getRating() {
-		return rating;
+	public Long getProductId() {
+		return productId;
 	}
 
-	public void setRating(Double rating) {
-		this.rating = rating;
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	public Long getWriterId() {
@@ -51,14 +51,6 @@ public class ProductBoard {
 
 	public void setWriterId(Long writerId) {
 		this.writerId = writerId;
-	}
-
-	public Long getProductId() {
-		return productId;
-	}
-
-	public void setProductId(Long productId) {
-		this.productId = productId;
 	}
 
 	public List<String> getImgList() {
@@ -91,5 +83,13 @@ public class ProductBoard {
 
 	public void setHitCount(Integer hitCount) {
 		this.hitCount = hitCount;
+	}
+
+	public Float getRating() {
+		return rating;
+	}
+
+	public void setRating(Float rating) {
+		this.rating = rating;
 	}
 }
