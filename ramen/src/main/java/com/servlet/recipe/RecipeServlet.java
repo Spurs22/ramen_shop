@@ -1,4 +1,4 @@
-package com.repository.recipe;
+package com.servlet.recipe;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -15,6 +15,10 @@ import com.DTO.RecipeBoard;
 import com.DTO.RecipeComment;
 import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
+import com.repository.recipe.RecipeBoardRepository;
+import com.repository.recipe.RecipeBoardRepositoryImpl;
+import com.repository.recipe.RecipeCommentRepository;
+import com.repository.recipe.RecipeCommentRepositoryImpl;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
