@@ -5,10 +5,9 @@ package com.DTO;
 public class Member {
 	
 	
-	private String MemberId;
+	private Long MemberId;
 	private String name;
 	private String nickName;
-	private String userId;
 	private String password;
 	private String email;
 	private String tel;
@@ -19,11 +18,10 @@ public class Member {
     private int enabled;
     
     
-    
-	public String getMemberId() {
+	public Long getMemberId() {
 		return MemberId;
 	}
-	public void setMemberId(String memberId) {
+	public void setMemberId(Long memberId) {
 		MemberId = memberId;
 	}
 	public String getName() {
@@ -37,12 +35,6 @@ public class Member {
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 	public String getPassword() {
 		return password;
@@ -92,9 +84,10 @@ public class Member {
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
+ 
     
-  
     
     
-
+    
+    
 }

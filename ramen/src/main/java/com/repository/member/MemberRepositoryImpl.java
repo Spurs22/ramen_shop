@@ -33,8 +33,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 			
 	        pstmt.setString(1, member.getName());
 	        pstmt.setString(2, member.getNickName());
-		    pstmt.setString(3, member.getMemberId());
-			pstmt.setString(4, member.getUserId());
+		    pstmt.setLong(3, member.getMemberId());	
 			pstmt.setString(5, member.getPassword());
 			pstmt.setString(6, member.getTel());
 			pstmt.setString(7, member.getPostNum());
@@ -97,8 +96,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 				
 	            dto.setMemberId(null);
 	            dto.setName(rs.getString("name"));
-	            dto.setNickName(rs.getString("nickname"));
-	            dto.setUserId(rs.getString("user_id"));
+	            dto.setNickName(rs.getString("nickname"));         
 	            dto.setPassword(rs.getString("password"));
 	            dto.setEmail(rs.getString("email"));
 	            dto.setTel(rs.getString("tel"));
@@ -143,16 +141,13 @@ public class MemberRepositoryImpl implements MemberRepository{
 			
 		    pstmt.setString(1, member.getName());
 		    pstmt.setString(2, member.getNickName());
-			pstmt.setString(3, member.getMemberId());
-			pstmt.setString(4, member.getUserId());
+			pstmt.setLong(3, member.getMemberId());			
 			pstmt.setString(5, member.getPassword());
 			pstmt.setString(6, member.getTel());
 			pstmt.setString(7, member.getPostNum());
 			pstmt.setString(8, member.getAddress1());
-			pstmt.setString(9, member.getAddress2());
-			
-			
-			pstmt.setString(9, member.getMemberId()); 
+			pstmt.setString(9, member.getAddress2());	
+			pstmt.setLong(9, member.getMemberId()); 
 		
 			pstmt.executeUpdate();
 		
@@ -209,10 +204,11 @@ public class MemberRepositoryImpl implements MemberRepository{
 
 	@Override
 	public Member findByEmail(String email) {
+		/*
 		 PreparedStatement pstmt = null;
 		 ResultSet rs = null;
 		 Long memberId = null;
-		
+		*/
 		
 		return null;
 	}
