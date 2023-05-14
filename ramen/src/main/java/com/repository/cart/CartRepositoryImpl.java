@@ -3,6 +3,7 @@ package com.repository.cart;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,6 +189,34 @@ public class CartRepositoryImpl implements CartRepository{
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+	}
+
+	@Override	// 장바구니 물품 리스트 삭제  
+	public void deleteCartList(long memberId, long[] productId) {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "DELETE FROM cart WHERE product_id IN (";
+			for (int i = 0; i < productId.length; i++) {
+				sql += "?,";
+			}
+			sql = sql.substring(0, sql.length() - 1) + ") AND member_id=?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			for (int i = 0; i < productId.length; i++) {
+				pstmt.setLong(i + 1, productId[i]);
+			}
+			pstmt.setLong(productId.length+1, memberId);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt);
