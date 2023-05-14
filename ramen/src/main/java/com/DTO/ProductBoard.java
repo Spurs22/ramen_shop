@@ -3,18 +3,62 @@ package com.DTO;
 import java.util.List;
 
 public class ProductBoard {
-
-	private List<String> pictureList;
+	private Long productId;
+	private Long writerId;
+	private String productName;
+	private List<String> imgList;
 	private String content;
 	private String createdDate;
-	private int hitCount;
+	private Integer hitCount;
+	private Float rating;
 
-	public List<String> getPictureList() {
-		return pictureList;
+	private Integer price;
+
+	public ProductBoard() {
 	}
 
-	public void setPictureList(List<String> pictureList) {
-		this.pictureList = pictureList;
+	public ProductBoard(Long productId, Long writerId, String productName, List<String> imgList, String content, String createdDate, Integer hitCount, Float rating, Integer price) {
+		this.productId = productId;
+		this.writerId = writerId;
+		this.productName = productName;
+		this.imgList = imgList;
+		this.content = content;
+		this.createdDate = createdDate;
+		this.hitCount = hitCount;
+		this.rating = rating;
+		this.price = price;
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public Long getWriterId() {
+		return writerId;
+	}
+
+	public void setWriterId(Long writerId) {
+		this.writerId = writerId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public List<String> getImgList() {
+		return imgList;
+	}
+
+	public void setImgList(List<String> imgList) {
+		this.imgList = imgList;
 	}
 
 	public String getContent() {
@@ -33,11 +77,27 @@ public class ProductBoard {
 		this.createdDate = createdDate;
 	}
 
-	public int getHitCount() {
+	public Integer getHitCount() {
 		return hitCount;
 	}
 
-	public void setHitCount(int hitCount) {
+	public void setHitCount(Integer hitCount) {
 		this.hitCount = hitCount;
+	}
+
+	public Float getRating() {
+		return rating;
+	}
+
+	public void setRating(Float rating) {
+		this.rating = rating;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
 	}
 }

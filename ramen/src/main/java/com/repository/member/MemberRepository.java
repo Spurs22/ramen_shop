@@ -2,21 +2,33 @@ package com.repository.member;
 
 import com.DTO.Member;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface MemberRepository {
-	Member join(Member member);
+	
+	
+	
+	    // 회원가입
+		Member insertMember(Member member) throws SQLException;
 
-	Member findById(Long id);
+		// 아이디로 찾기 
+		Member findById(Long id) throws SQLException;
+		
+		// 회원 탈퇴
+		int deleteMember(long userId) throws SQLException;
+		
+		// 회원정보 수정	
+		Member updateMember(Member member) throws SQLException;
+		
+		// read 
+		List<Member> findAll();
 
-	List<Member> findAll();
+		// 
+		Member findByEmail(String email);
 
-	Member findByEmail(String email);
 
-	/**
- 	 * 나중에
-	 */
-	int deleteMember(long userId);
-
-	boolean IsUsernameExist(String username);
+		// 회원 존재여부
+		boolean isUsernameExist(String username);
+		
 }

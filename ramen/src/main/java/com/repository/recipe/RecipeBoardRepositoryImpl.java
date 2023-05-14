@@ -189,7 +189,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, user_id, subject, content, hit_count, r.created_date "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " ORDER BY id DESC ";
@@ -203,7 +203,6 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				
 				recipe.setId(rs.getLong("id"));
 				recipe.setNickname(rs.getString("nickname"));
-				recipe.setUserId(rs.getString("user_id"));
 				recipe.setSubject(rs.getString("subject"));
 				recipe.setContent(rs.getString("content"));
 				recipe.setHitCount(rs.getInt("hit_count"));
@@ -229,7 +228,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, user_id, subject, content, hit_count, r.created_date "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id ";
 			if(condition.equals("all")) {
@@ -258,7 +257,6 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				
 				recipe.setId(rs.getLong("id"));
 				recipe.setNickname(rs.getString("nickname"));
-				recipe.setUserId(rs.getString("user_id"));
 				recipe.setSubject(rs.getString("subject"));
 				recipe.setContent(rs.getString("content"));
 				recipe.setHitCount(rs.getInt("hit_count"));
@@ -358,7 +356,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT subject, content, hit_count, r.created_date, user_id, nickname "
+			sql = "SELECT subject, content, hit_count, r.created_date, nickname "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " WHERE r.id = ? ";
@@ -376,7 +374,6 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeBoard.setContent(rs.getString("content"));
 				recipeBoard.setHitCount(rs.getInt("hit_count"));
 				recipeBoard.setCreatedDate(rs.getString("created_date"));
-				recipeBoard.setUserId(rs.getString("user_id"));
 				recipeBoard.setNickname(rs.getString("nickname"));
 			}
 			

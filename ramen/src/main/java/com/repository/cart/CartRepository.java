@@ -30,6 +30,14 @@ public interface CartRepository {
 	 */
 	int getCnt(Long memberId, Long productId);
 
+	
+	/**
+	 * [ 장바구니 안의 상품 개수 구하기 ]
+	 * @param memberId  	사용자 아이디
+	 * return				장바구니 안의 상품 개수
+	 */
+	int getCnt(Long memberId);
+	
 	/**
 	 * [ 장바구니 목록조회 ]
 	 * @param memberId		사용자 아이디
@@ -43,12 +51,19 @@ public interface CartRepository {
 	void deleteAutoCart();
 	
 	/**
-	 * [ 장바구니 삭제 ]
+	 * [ 장바구니의 물품 삭제 ]
 	 * @param memberId		사용자 아이디
 	 * @param productId		상품 아이디
 	 */
 	void deleteCart(Long memberId, Long productId);
 	
+	
+	/**
+	 * [ 장바구니 물품 리스트 삭제 ]
+	 * @param memberId	사용자 아이디
+	 * @param nums		삭제할 물건의 아이디
+	 */
+	void deleteCartList(long memberId, long[] nums);
 	
 	/**
 	 * [ 사용자, 상품의 해당된 cart 구하기 ]
@@ -57,4 +72,5 @@ public interface CartRepository {
 	 * @return				
 	 */
 	Cart findCartByCartId(Long memberId, Long productId);
+	
 }

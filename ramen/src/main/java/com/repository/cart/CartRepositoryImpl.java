@@ -3,6 +3,7 @@ package com.repository.cart;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +91,33 @@ public class CartRepositoryImpl implements CartRepository{
 	}
 
 	
+	@Override	// 장바구니의 상품 개수 구하기
+	public int getCnt(Long memberId) {
+		int cnt = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT count(*) FROM cart WHERE member_id=?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				cnt = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return cnt;
+	}
+	
+	
 	@Override	// 장바구니 목록조회
 	public List<Cart> findCartByMemberId(Long memberId) {
 		List<Cart> list = new ArrayList<Cart>();
@@ -98,8 +126,8 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT product_id, member_id, quantity, created_date "
-					+ "	FROM cart "
+			sql = "SELECT c.product_id, member_id, quantity, created_date, picture "
+					+ "	FROM cart c JOIN product p ON  c.product_id = p.id "
 					+ " WHERE member_id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -161,6 +189,34 @@ public class CartRepositoryImpl implements CartRepository{
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+	}
+
+	@Override	// 장바구니 물품 리스트 삭제  
+	public void deleteCartList(long memberId, long[] productId) {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "DELETE FROM cart WHERE product_id IN (";
+			for (int i = 0; i < productId.length; i++) {
+				sql += "?,";
+			}
+			sql = sql.substring(0, sql.length() - 1) + ") AND member_id=?";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			for (int i = 0; i < productId.length; i++) {
+				pstmt.setLong(i + 1, productId[i]);
+			}
+			pstmt.setLong(productId.length+1, memberId);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt);

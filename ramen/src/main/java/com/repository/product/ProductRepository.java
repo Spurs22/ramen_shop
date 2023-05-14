@@ -9,12 +9,15 @@ public interface ProductRepository {
 
 	void createProduct(Product product);
 
-	void editProduct(Product product);
+	void editProduct(Long productId, Product product);
 
 	void deleteProduct(Product product);
 
 	List<Product> findAllProduct();
 
-	void getProductQuantity(Long productId);
+	Integer getProductQuantity(Long productId);
 
+	Product findProductByProductId(Long productId);
+
+	List<Product> findProductByName(String name);
 }
