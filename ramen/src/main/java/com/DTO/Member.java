@@ -1,10 +1,6 @@
 package com.DTO;
-
-
-
 public class Member {
-	
-	
+
 	private Long MemberId;
 	private String name;
 	private String nickName;
@@ -84,10 +80,7 @@ public class Member {
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
- 
     
-    
-    
-    
+
     
 }
