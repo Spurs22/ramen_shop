@@ -101,7 +101,7 @@
 		<div class="product-container">
 			<c:forEach var="post" items="${posts}">
 				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=${post.productId}">
-					<img class="product-img" src="">
+					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 					<div style="margin-top: 5px; font-weight: 750">${post.productName}</div>
 					<div style="color: #5d5d5d">${post.price}원</div>
 					<div>${post.rating}</div>

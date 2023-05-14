@@ -91,7 +91,10 @@
 
 		<div class="content-container">
 			<div style="display: flex; flex-direction: row; gap: 50px">
-				<div style="width: 50%; background: #c5c5c5; aspect-ratio: 1/1"></div>
+				<div style="width: 50%; background: #c5c5c5; aspect-ratio: 1/1">
+					<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/1.png">
+
+				</div>
 
 				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; justify-content: space-between">
 					<div class="product-createdDate">${post.createdDate}</div>
