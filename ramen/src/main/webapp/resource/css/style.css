@@ -5,16 +5,17 @@
 	margin: 100px auto;
 }
 
-.product-container {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-auto-rows: 300px;
+.content-container {
+	display: flex;
+	flex-direction: column;
 	padding: 20px;
-	gap: 30px;
+	gap: 0px;
+	height: 100%;
+	overflow: scroll;
 }
 
 .main-container {
-	border: 1px solid black;
+	border: 1px solid #DFE2E6;
 	/*border-top: none;*/
 	width: 100%;
 	height: 800px;
@@ -22,6 +23,5 @@
 	top: -1px;
 	border-radius: 0 10px 10px 10px;
 	margin-bottom: 100px;
-	padding: 50px;
-	overflow: auto;
+	padding: 35px 50px 50px 50px;
 }

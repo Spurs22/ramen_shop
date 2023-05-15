@@ -15,12 +15,17 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
+
+
+
         .product-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-auto-rows: 300px;
             padding: 20px;
             gap: 30px;
+            height: 90%;
+			overflow: auto;
         }
 
         .product-item {
@@ -35,7 +40,7 @@
             padding: 15px;
             transition: 0.5s;
             background: #ffffff;
-            border: 1px solid black;
+            border: 1px solid #DFE2E6;
         }
 
         .product-img {
@@ -50,27 +55,81 @@
             background: #e8e8e8;
             /*filter: brightness(95%);*/
         }
+
+        .sub-menu button {
+            border-radius: 5px;
+        }
+
+        .sub-menu {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: space-between;
+			margin-bottom: 20px;
+			padding: 0 20px;
+        }
+
+		a {
+			text-decoration: none;
+			color: black;
+		}
+
+        .search-box {
+            border: 1px solid #DFE2E6;
+            border-radius: 5px;
+            width: 150px;
+            padding: 0 5px;
+
+        }
 	</style>
 </head>
+<script>
+    let menuIndex = 2
+</script>
 <body>
 <div class="whole-container">
 
 	<header>
-		<jsp:include page="/WEB-INF/views/fragment/ramen-menubar.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
 	<div class="main-container shadow-lg">
+
+		<div class="sub-menu">
+
+			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+				<label class="btn btn-outline-primary" for="btnradio1">봉지 라면</label>
+
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+				<label class="btn btn-outline-primary" for="btnradio2">컵 라면</label>
+
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+				<label class="btn btn-outline-primary" for="btnradio3">토핑</label>
+
+			</div>
+
+			<div style="display: flex; flex-direction: row; gap: 5px" >
+				<input type="text" class="search-box">
+				<button class="btn btn-primary">검색</button>
+			</div>
+
+			<div style="display: flex; flex-direction: row; gap: 5px">
+<%--				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>--%>
+				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-form'">상품 등록</button>
+			</div>
+		</div>
+
 		<div class="product-container">
 			<c:forEach var="post" items="${posts}">
-
-				<div class="product-item shadow">
-					<img class="product-img" src="">
-					<div style="margin-top: 5px; font-weight: 750">${post.productName}</div>
-					<div style="color: #5d5d5d">${post.price}</div>
+				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=${post.product.productId}">
+					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
+					<div style="margin-top: 5px; font-weight: 750">${post.product.name}</div>
+					<div style="color: #5d5d5d">${post.price}원</div>
 					<div>${post.rating}</div>
-<%--					<div>★★★★★</div>--%>
-				</div>
-
+				</a>
 			</c:forEach>
 		</div>
 	</div>
@@ -85,6 +144,13 @@
 </div>
 --%>
 
+
 </div>
+
+<script>
+    $(document).ready(function () {
+        selectMenu(menuIndex)
+    })
+</script>
 </body>
 </html>

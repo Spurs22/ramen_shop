@@ -26,13 +26,27 @@
 		$("#btnDeleteList").click(function(){
 			let cnt = $("input[name=productIds]:checked").length;
 			if(cnt === 0) {
-				alert("삭제할 게시물을 먼저 선택하세요.");
+				alert("삭제할 물품을 먼저 선택하세요.");
 				return false;
 			}
 			
-			if(confirm("선택한 게시물을 삭제 하시겠습니까 ?")) {
+			if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
 				const f = document.listForm;
-				f.action="${pageContext.request.contextPath}/cart/cartlistCancel.do";
+				f.action="${pageContext.request.contextPath}/cart/list-delete.do";
+				f.submit();
+			}
+		});
+		
+		$("#btnOrder").click(function(){
+			let cnt = $("input[name=productIds]:checked").length;
+			if(cnt === 0) {
+				alert("결제할 물품을 먼저 선택하세요.");
+				return false;
+			}
+			
+			if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
+				const f = document.listForm;
+				f.action="${pageContext.request.contextPath}/order/order.do";
 				f.submit();
 			}
 		});
@@ -43,7 +57,7 @@
 <div class="whole-container">
 
 	<header>
-		<jsp:include page="/WEB-INF/views/fragment/ramen-menubar.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
 	<div class="main-container shadow-lg">
@@ -81,9 +95,9 @@
 						</tr>		
 					</c:if>
 				</tbody>
-				
 			</table>
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
+					<button type="button" class="btn" id="btnOrder">결제</button>
 			</form>
 		</div>
 	</div>

@@ -31,4 +31,9 @@ public interface ProductLikeRepository {
 	 * @return                  찜 여부 Boolean으로 반환
 	 */
 	Boolean isLike(Long memberId, Long ProductPostId);
+
+	int getCntLikePost(Long memberId);
+
+	List<Member> findLikePost(Long memberId, int offset, int size);
+
 }

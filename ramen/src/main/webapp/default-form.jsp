@@ -10,20 +10,27 @@
 
 	</style>
 </head>
+<script>
+    let menuIndex = 1
+</script>
 <body>
 <div class="whole-container">
 
 	<header>
-		<jsp:include page="/WEB-INF/views/fragment/ramen-menubar.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
 	<div class="main-container shadow-lg">
-		<div class="product-container">
+		<div class="content-container">
 			<%--	내용	 --%>
 		</div>
 	</div>
-
-
 </div>
+
+<script>
+    $(document).ready(function () {
+        selectMenu(menuIndex)
+    })
+</script>
 </body>
 </html>

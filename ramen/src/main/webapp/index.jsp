@@ -1,1 +1,1 @@
-<jsp:forward page="/product/list"/>
+<jsp:forward page="/home/"/>

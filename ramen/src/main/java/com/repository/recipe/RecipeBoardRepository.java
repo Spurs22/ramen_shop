@@ -30,4 +30,6 @@ public interface RecipeBoardRepository {
 	RecipeBoard nextReadRecipe(Long id, String condition, String keyword);
 
 	void registPicture(Long postId, String path);
+	
+	List<RecipeBoard> findByMemberId(Long memberId);
 }

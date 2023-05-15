@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.DTO.Member;
 import com.util.DBConn;
+import com.util.DBUtil;
 
 public class MemberRepositoryImpl implements MemberRepository{
 
@@ -33,9 +34,8 @@ public class MemberRepositoryImpl implements MemberRepository{
 			
 	        pstmt.setString(1, member.getName());
 	        pstmt.setString(2, member.getNickName());
-		    pstmt.setString(3, member.getMemberId());
-			pstmt.setString(4, member.getUserId());
-			pstmt.setString(5, member.getPassord());
+		    pstmt.setLong(3, member.getMemberId());	
+			pstmt.setString(5, member.getPassword());
 			pstmt.setString(6, member.getTel());
 			pstmt.setString(7, member.getPostNum());
 			pstmt.setString(8, member.getAddress1());
@@ -46,29 +46,67 @@ public class MemberRepositoryImpl implements MemberRepository{
 		
 			
 		} catch (SQLException e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e2) {
-			}
 			e.printStackTrace();
 			throw e;
+			
 		} finally {
-			if(pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-				}
+			DBUtil.closeResource(pstmt);
+		}
+		return member;
+		
+	}
+	
+	// 로그인 
+	@Override
+	public Member loginMember(Member member) throws SQLException {
+		
+	
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		
+		try {
+			
+			 sql ="SELECT * FROM member WHERE email=? AND password=? AND enabled=1";
+			 pstmt.setString(1, member.getEmail());
+		     pstmt.setString(2, member.getPassword());
+		     rs = pstmt.executeQuery();
+		     
+		     if (rs.next()) {
+		            // 로그인 성공 처리
+		            Member loggedMember = new Member();
+		            loggedMember.setMemberId(rs.getLong("id"));
+		            loggedMember.setName(rs.getString("name"));
+		            loggedMember.setNickName(rs.getString("nickname"));
+		            loggedMember.setEmail(rs.getString("email"));
+		            loggedMember.setTel(rs.getString("tel"));
+		            loggedMember.setPostNum(rs.getString("post_num"));
+		            loggedMember.setAddress1(rs.getString("address1"));
+		            loggedMember.setAddress2(rs.getString("address2"));
+		            return loggedMember;
+		     } else {
+		            // 로그인 실패 처리
+		            return null;
+		        }
+		    } catch (SQLException e) {
+				e.printStackTrace();
+				throw e;
+				
+			} finally {
+				DBUtil.closeResource(pstmt);
 			}
 			
-			try {
-				conn.setAutoCommit(true);
-			} catch (SQLException e2) {
-			}
 		}
-	return null;
-	}
+	
+	
+	
+	
+	
+	//
 	@Override
 	public Member findById(Long id) throws SQLException {
+		
 
 
 		return null;
@@ -83,7 +121,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 	 StringBuffer sb = new StringBuffer();
 	 
 	 try {
-	        sb.append("SELECT id, name, nickname, user_id, password, email, tel, post_num, address1, address2, created_date ");
+	        sb.append("SELECT id, name, nickname, password, email, tel, post_num, address1, address2, created_date ");
 	        sb.append("FROM member");
 		
 	        pstmt = conn.prepareStatement(sb.toString());
@@ -94,9 +132,8 @@ public class MemberRepositoryImpl implements MemberRepository{
 				
 	            dto.setMemberId(null);
 	            dto.setName(rs.getString("name"));
-	            dto.setNickName(rs.getString("nickname"));
-	            dto.setUserId(rs.getString("user_id"));
-	            dto.setPassord(rs.getString("password"));
+	            dto.setNickName(rs.getString("nickname"));         
+	            dto.setPassword(rs.getString("password"));
 	            dto.setEmail(rs.getString("email"));
 	            dto.setTel(rs.getString("tel"));
 	            dto.setAddress1(rs.getString("address1"));
@@ -105,22 +142,15 @@ public class MemberRepositoryImpl implements MemberRepository{
 				
 	            members.add(dto);
 	        }
-	    } 
-	    catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        if (rs != null) {
-	            try {
-	                rs.close();
-	            } catch (SQLException e) {}
-	        }
-	        if (pstmt != null) {
-	            try {
-	                pstmt.close();
-	            } catch (SQLException e) {}
-	        }
-	    }
-	    return members;
+	    }  catch (SQLException e) {
+			e.printStackTrace();
+		
+			
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+	return members;
+		
 	}
 	
 	
@@ -140,33 +170,25 @@ public class MemberRepositoryImpl implements MemberRepository{
 			
 		    pstmt.setString(1, member.getName());
 		    pstmt.setString(2, member.getNickName());
-			pstmt.setString(3, member.getMemberId());
-			pstmt.setString(4, member.getUserId());
-			pstmt.setString(5, member.getPassord());
+			pstmt.setLong(3, member.getMemberId());			
+			pstmt.setString(5, member.getPassword());
 			pstmt.setString(6, member.getTel());
 			pstmt.setString(7, member.getPostNum());
 			pstmt.setString(8, member.getAddress1());
-			pstmt.setString(9, member.getAddress2());
-			
-			
-			pstmt.setString(9, member.getMemberId()); 
+			pstmt.setString(9, member.getAddress2());	
+			pstmt.setLong(9, member.getMemberId()); 
 		
 			pstmt.executeUpdate();
 		
 			
-		}  catch (SQLException e) {
+		}    catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
+	
 		} finally {
-			if(pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-				}
-			}
+			DBUtil.closeResource(pstmt);
 		}
-		return member;
-
+			return member;
+		
 	}
 
 	// 회원탈퇴
@@ -191,30 +213,75 @@ public class MemberRepositoryImpl implements MemberRepository{
 	        int deletedRows = pstmt.executeUpdate();
 	        
 	        return deletedRows;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        throw e;
-	    } finally {
-	        if(pstmt != null) {
-	            try {
-	                pstmt.close();
-	            } catch (SQLException e) {
-	            }
-	        }
-	    }
+	    }  catch (SQLException e) {
+			e.printStackTrace();
+	
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+		return 0;
+	
+		
 	}
 
 	@Override
 	public Member findByEmail(String email) {
+		/*
+		 PreparedStatement pstmt = null;
+		 ResultSet rs = null;
+		 Long memberId = null;
+		*/
 		
 		return null;
 	}
 
+
 	@Override
-	public boolean isUsernameExist(String username) {
+	public Member readMember(Member member) throws SQLException {
+
+		PreparedStatement pstmt = null;
+	    String sql;
+	    ResultSet rs = null;
+	    try {
+        	sql ="SELECT * FROM member WHERE email = ? AND password = ? AND enabled = 1";
+
+        	 pstmt.setString(1, member.getEmail());
+             pstmt.setString(2, member.getPassword());
+             rs = pstmt.executeQuery();
+        	
+             if(rs.next()) {
+             Member foundMember = new Member();
+             foundMember.setMemberId(rs.getLong("memberId"));
+             foundMember.setEmail(rs.getString("email"));
+             foundMember.setPassword(rs.getString("password"));
+             foundMember.setNickName(rs.getString("nickname"));
+            //  foundMember.setRoll(rs.getString("roll"));
+                    return foundMember;
+             }
+             
+		} catch (SQLException e) {
+			e.printStackTrace();
 		
-		return false;
+	
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+		return member;
+	
+		
 	}
+
+	// 회원 / 관리자 구분 
+	@Override
+	public Member Roll(Member member) throws SQLException {
+
+
+		
+		
+		return null;
+	}
+	
+	
 
 
 }

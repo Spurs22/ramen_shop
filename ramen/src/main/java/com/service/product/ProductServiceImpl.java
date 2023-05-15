@@ -48,4 +48,9 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findProductByName(String name) {
 		return null;
 	}
+
+	@Override
+	public List<Product> findNotRegistedProduct() {
+		return productRepository.findNotRegisteredProduct();
+	}
 }

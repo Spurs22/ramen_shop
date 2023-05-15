@@ -1,15 +1,10 @@
 package com.DTO;
-
-
-
 public class Member {
-	
-	
-	private String MemberId;
+
+	private Long MemberId;
 	private String name;
 	private String nickName;
-	private String userId;
-	private String passord;
+	private String password;
 	private String email;
 	private String tel;
 	private String postNum;
@@ -19,10 +14,10 @@ public class Member {
     private int enabled;
     
     
-	public String getMemberId() {
+	public Long getMemberId() {
 		return MemberId;
 	}
-	public void setMemberId(String memberId) {
+	public void setMemberId(Long memberId) {
 		MemberId = memberId;
 	}
 	public String getName() {
@@ -37,17 +32,11 @@ public class Member {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	public String getUserId() {
-		return userId;
+	public String getPassword() {
+		return password;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getPassord() {
-		return passord;
-	}
-	public void setPassord(String passord) {
-		this.passord = passord;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getEmail() {
 		return email;
@@ -92,7 +81,7 @@ public class Member {
 		this.enabled = enabled;
 	}
     
-
     
-
+    
+    
 }

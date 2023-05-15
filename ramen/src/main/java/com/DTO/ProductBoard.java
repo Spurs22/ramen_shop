@@ -3,24 +3,22 @@ package com.DTO;
 import java.util.List;
 
 public class ProductBoard {
-	private Long productId;
+
+	private Product product;
 	private Long writerId;
-	private String productName;
 	private List<String> imgList;
 	private String content;
 	private String createdDate;
 	private Integer hitCount;
 	private Float rating;
-
 	private Integer price;
 
 	public ProductBoard() {
 	}
 
-	public ProductBoard(Long productId, Long writerId, String productName, List<String> imgList, String content, String createdDate, Integer hitCount, Float rating, Integer price) {
-		this.productId = productId;
+	public ProductBoard(Product product, Long writerId, List<String> imgList, String content, String createdDate, Integer hitCount, Float rating, Integer price) {
+		this.product = product;
 		this.writerId = writerId;
-		this.productName = productName;
 		this.imgList = imgList;
 		this.content = content;
 		this.createdDate = createdDate;
@@ -29,12 +27,20 @@ public class ProductBoard {
 		this.price = price;
 	}
 
-	public Long getProductId() {
-		return productId;
+	public ProductBoard(Product product, Long writerId, List<String> imgList, String content, Integer price) {
+		this.product = product;
+		this.writerId = writerId;
+		this.imgList = imgList;
+		this.content = content;
+		this.price = price;
 	}
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Long getWriterId() {
@@ -43,14 +49,6 @@ public class ProductBoard {
 
 	public void setWriterId(Long writerId) {
 		this.writerId = writerId;
-	}
-
-	public String getProductName() {
-		return productName;
-	}
-
-	public void setProductName(String productName) {
-		this.productName = productName;
 	}
 
 	public List<String> getImgList() {

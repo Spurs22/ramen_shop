@@ -1,10 +1,9 @@
 package test.repository.product;
 
 import com.DTO.Product;
+import com.DTO.ProductCategory;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
-import com.service.product.ProductService;
-import com.service.product.ProductServiceImpl;
 
 public class ProductRepositoryImplTest {
 	public static void main(String[] args) {
@@ -12,36 +11,19 @@ public class ProductRepositoryImplTest {
 
 		// 샘플 데이터
 		Product product = new Product(
-				null,
-				1,
-				"쫄면",
-				1600,
-				12,
+				ProductCategory.CUP,
+				"코다리 볶음면",
+				11,
 				null
 		);
 
-		Product product2 = new Product(
-				null,
-				1,
-				"짜파게티",
-				1600,
-				12,
-				null
-		);
 
-		Product productEdit = new Product(
-				null,
-				2,
-				"비빔면",
-				1200,
-				5,
-				null
-		);
 
 //		// 상품 생성
 		System.out.println("createProduct test");
 		productRepository.createProduct(product);
 //
+
 
 		// 상품 찾기
 //		System.out.println("findProductByProductId test");
@@ -56,8 +38,6 @@ public class ProductRepositoryImplTest {
 //		System.out.println("findProductByProductId test");
 //		result = productRepository.findProductByProductId(product.getId());
 //		System.out.println("조회 결과 " + result);
-
-
 
 	}
 }

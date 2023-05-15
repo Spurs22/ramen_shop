@@ -24,7 +24,7 @@
             height: 70%;
             width: 150px;
             /*background: #f6e5cc;*/
-            border: 1px solid black;
+            border: 1px solid #DFE2E6;
             border-bottom: none;
             border-radius: 8px 8px 0 0;
             background: #eeeeee;
@@ -33,9 +33,13 @@
 
         .menubar-item:hover:not(.selected-menu) {
             filter: brightness(80%);
-            cursor: pointer;
             background: #eeeeee;
             transition: 0.5s;
+            height: 80%;
+        }
+
+        .menubar-item:hover {
+            cursor: pointer;
         }
 
         .logo {
@@ -49,10 +53,6 @@
             background: white;
         }
 
-
-
-
-
     </style>
 </head>
 
@@ -60,7 +60,7 @@
 <!--    <img class="logo" src="../../static/picture/logo.png">-->
 
     <div class="menubar">
-        <div class="menubar-item selected-menu" onclick="clickMenu(this)">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/home/'">
             <div>
                 메인
             </div>
@@ -69,15 +69,15 @@
             </div>
         </div>
 
-        <div class="menubar-item" onclick="clickMenu(this)">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/product/list'">
             <span>
                 상품
             </span>
         </div>
-        <div class="menubar-item" onclick="clickMenu(this)">
-        <span>
-            레시피
-        </span>
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do'">
+            <span>
+                레시피
+            </span>
         </div>
     </div>
 

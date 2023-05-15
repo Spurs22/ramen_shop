@@ -12,9 +12,6 @@ import com.DTO.Cart;
 import com.repository.cart.CartRepositoryImpl;
 import com.util.MyServlet;
 
-
-
-
 @WebServlet("/cart/*")
 public class CartServlet extends MyServlet{
 	private static final long serialVersionUID = 1L;
@@ -38,22 +35,19 @@ public class CartServlet extends MyServlet{
 		*/
 		
 		// 1) 장바구니를 본다. - 30일 이후 지나면 삭제
-		// 2) 장바구니의 물건을 선택 > 주문
+		// 2) 장바구니의 물건 리스트를 취소한다.
 		// 3) 장바구니의 물건을 취소한다.
-		// 4) 장바구니의 물건 리스트를 취소한다.
-		if(uri.indexOf("cartList.do")!= -1) {
-			listCart(req,resp);
-		} else if(uri.indexOf("cartSelect.do")!= -1) {
-			selectItem(req,resp);
-		} else if(uri.indexOf("cartCancel.do")!= -1) {
-			cancelItem(req,resp);
-		} else if(uri.indexOf("cartlistCancel.do")!= -1) {
-			cancelList(req,resp);
-		}
+		if(uri.indexOf("list.do")!= -1) {
+			cartList(req,resp);
+		} else if(uri.indexOf("list-delete.do")!= -1) {
+			cartListDelete(req,resp);
+		} else if(uri.indexOf("delete.do")!= -1) {
+			cartDelete(req,resp);
+		} 
 	}
 
 
-	protected void listCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 1) 장바구니를 본다. - 30일 이후 지나면 삭제
 		System.out.println("장바구니 리스트");
 		
@@ -83,38 +77,10 @@ public class CartServlet extends MyServlet{
 		
 		forward(req, resp, "/WEB-INF/views/cart/cart-list.jsp");
 	}
+
 	
-	protected void selectItem(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
-		// 2) 장바구니의 물건을 선택 > 주문
-		System.out.println("장바구니 물건 선택 > 주문");
-	}
-	
-	protected void cancelItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
-		// 3) 장바구니의 물건을 취소한다.
-		System.out.println("장바구니 아이템 취소");
-		
-		CartRepositoryImpl cri = new CartRepositoryImpl();
-		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
-		String cp = req.getContextPath();
-		
-		try {
-			// member 구현 후 수정.. member 확인.... 
-			Long memberId = (long) 1;
-			Long productId = (long) 2;
-			// Long productId = req.getParameter("productId"); // 여러개... 가져와서 jsp 작성후 확인
-			
-			cri.deleteCart(memberId, productId);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	protected void cancelList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
-		// 4) 장바구니의 물건 리스트를 취소한다.
+	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
+		// 2) 장바구니의 물건 리스트를 취소한다.
 		System.out.println("장바구니 리스트 취소");
 		
 		// HttpSession session = req.getSession();
@@ -124,7 +90,7 @@ public class CartServlet extends MyServlet{
 		try {
 			
 			String[] pi = req.getParameterValues("productIds");
-			long products[] = null;
+			long[] products = null;
 			products = new long[pi.length];
 			for(int i=0; i<pi.length; i++) {
 				products[i] = Long.parseLong(pi[i]);
@@ -143,7 +109,32 @@ public class CartServlet extends MyServlet{
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/cart/cartList.do?");
+		resp.sendRedirect(cp + "/cart/list.do");
+	}
+	
+	protected void cartDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
+		// 3) 장바구니의 물건을 취소한다.
+		System.out.println("장바구니 아이템 취소");
+		
+		CartRepositoryImpl cri = new CartRepositoryImpl();
+		
+		// HttpSession session = req.getSession();
+		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		try {
+			// member 구현 후 수정.. member 확인.... 
+			//Long memberId = 1l;
+			//Long productId = 3l;
+			// Long productId = req.getParameter("productId"); // 여러개... 가져와서 jsp 작성후 확인
+			
+			//cri.deleteCart(memberId, productId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 }

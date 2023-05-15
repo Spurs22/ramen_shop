@@ -189,9 +189,13 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id "
 					+ " ORDER BY id DESC ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -207,6 +211,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipe.setContent(rs.getString("content"));
 				recipe.setHitCount(rs.getInt("hit_count"));
 				recipe.setCreatedDate(rs.getString("created_date"));
+				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
 				
 				list.add(recipe);
 			}
@@ -228,7 +233,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id ";
 			if(condition.equals("all")) {
@@ -356,9 +361,13 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT subject, content, hit_count, r.created_date, nickname "
+			sql = "SELECT subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id "
 					+ " WHERE r.id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -375,6 +384,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeBoard.setHitCount(rs.getInt("hit_count"));
 				recipeBoard.setCreatedDate(rs.getString("created_date"));
 				recipeBoard.setNickname(rs.getString("nickname"));
+				recipeBoard.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
 			}
 			
 			pstmt.close();
@@ -615,6 +625,44 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			DBUtil.closeResource(pstmt);
 		}
 		
+	}
+
+	@Override
+	public List<RecipeBoard> findByMemberId(Long memberId) {
+		// 사용자의 글 목록 (제목, 조회 수, 날짜, 글 아이디)
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<RecipeBoard> list = new ArrayList<>();
+		RecipeBoard board = null;
+		
+		try {
+			sql = "SELECT r.id, subject, hit_count, r.created_date FROM recipe_board r JOIN member m ON m.id = r.member_id WHERE r.member_id = ? ORDER BY r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				board.setHitCount(rs.getInt("hit_count"));
+				board.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(board);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 }

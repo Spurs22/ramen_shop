@@ -13,6 +13,7 @@ public interface ProductRepository {
 
 	void deleteProduct(Product product);
 
+	// 등록 여부 까지 반환해야함
 	List<Product> findAllProduct();
 
 	Integer getProductQuantity(Long productId);
@@ -20,4 +21,6 @@ public interface ProductRepository {
 	Product findProductByProductId(Long productId);
 
 	List<Product> findProductByName(String name);
+
+	List<Product> findNotRegisteredProduct();
 }

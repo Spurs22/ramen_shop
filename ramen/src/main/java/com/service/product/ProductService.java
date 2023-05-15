@@ -20,4 +20,5 @@ public interface ProductService {
 
 	List<Product> findProductByName(String name);
 
+	List<Product> findNotRegistedProduct();
 }
