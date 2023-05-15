@@ -12,7 +12,6 @@ public class RecipeBoard {
 	private String ipAddress;
 	private Long recipeId;
 	private String nickname;
-	
 	private List<RecipeProduct> recipeProduct;
 	
 	private int recipeLikeCount;

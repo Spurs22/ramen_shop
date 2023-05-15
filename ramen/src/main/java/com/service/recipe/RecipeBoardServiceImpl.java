@@ -78,4 +78,24 @@ public class RecipeBoardServiceImpl implements RecipeBoardService {
 	public List<RecipeBoard> findByMemberId(Long memberId) {
 		return recipeBoardRepository.findByMemberId(memberId);
 	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByHitCount() {
+		return recipeBoardRepository.readRecipeByHitCount();
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByHitCount(String condition, String keyword) {
+		return recipeBoardRepository.readRecipeByHitCount(condition, keyword);
+	}
+	
+	@Override
+	public List<RecipeBoard> readRecipeByLike() {
+		return recipeBoardRepository.readRecipeByLike();
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByLike(String condition, String keyword) {
+		return recipeBoardRepository.readRecipeByLike(condition, keyword);
+	}
 }
