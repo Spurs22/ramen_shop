@@ -12,6 +12,7 @@ public class Member {
 	private String address2;
     private String createdDate;
     private int enabled;
+    private Long roll;
     
     
 	public Long getMemberId() {
@@ -80,8 +81,14 @@ public class Member {
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
+	public Long getRoll() {
+		return roll;
+	}
+	public void setRoll(Long roll) {
+		this.roll = roll;
+	}
     
-    
+  
     
     
 }

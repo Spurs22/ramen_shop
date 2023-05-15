@@ -130,7 +130,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 	        while(rs.next()) {
 	            Member dto = new Member();
 				
-	            dto.setMemberId(null);
+	            dto.setMemberId(rs.getLong("id"));
 	            dto.setName(rs.getString("name"));
 	            dto.setNickName(rs.getString("nickname"));         
 	            dto.setPassword(rs.getString("password"));
@@ -205,14 +205,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 	        pstmt.executeUpdate();
 	        
 	        pstmt.close();
-	        pstmt = null;
-	        
-	        sql = "DELETE FROM member WHERE user_id = ?";
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setLong(1, userId);
-	        int deletedRows = pstmt.executeUpdate();
-	        
-	        return deletedRows;
+
 	    }  catch (SQLException e) {
 			e.printStackTrace();
 	
@@ -272,16 +265,24 @@ public class MemberRepositoryImpl implements MemberRepository{
 	}
 
 	// 회원 / 관리자 구분 
+	
 	@Override
 	public Member Roll(Member member) throws SQLException {
-
-
+		PreparedStatement pstmt = null;
+	    String sql;
+	    ResultSet rs = null;
+	    
+	   try {
+		   
+		 //  sql = "SELECT roll FROM member WHERE roll = 1 "
+		   
+		   
+		   
 		
-		
-		return null;
+	} finally {
+		DBUtil.closeResource(pstmt);
 	}
-	
-	
+	return member;
 
-
+	}
 }
