@@ -1,5 +1,6 @@
 package com.repository.product;
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -228,6 +229,38 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 				rs.getFloat("rating" ),
 				rs.getInt("price")
 		);
+	}
+
+	@Override
+	public List<ProductBoard> findByCategoryAndKeyword(ProductCategory category, String keyword) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<ProductBoard> result = new ArrayList<>();
+
+		try {
+			sql = "SELECT pb.id, member_id, NAME, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+					"FROM PRODUCT_BOARD pb " +
+					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
+					"    FROM product_comment " +
+					"    GROUP BY product_board_id) " +
+					"    pc ON pb.id = pc.product_board_id " +
+					"JOIN product p ON pb.id = p.id " +
+					"ORDER BY ID DESC";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				result.add(getProductBoard(rs));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return result;
 	}
 }
 

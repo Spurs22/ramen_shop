@@ -1,6 +1,7 @@
 package com.repository.product;
 
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 
 import java.util.List;
 
@@ -20,5 +21,10 @@ public interface ProductBoardRepository {
 	void registPicture(Long productId, String path);
 
 	Float getAverageRateByPost(Long productId);
+
+	// 카테고리 + 키워드로 찾기
+	List<ProductBoard> findByCategoryAndKeyword(ProductCategory category, String keyword);
+
+	// 카테고리로 찾기
 
 }

@@ -161,7 +161,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 	}
 
 	@Override
-	public List<Product> findNotRegistedProduct() {
+	public List<Product> findNotRegisteredProduct() {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;

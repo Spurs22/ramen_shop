@@ -74,7 +74,7 @@
                 상품
             </span>
         </div>
-        <div class="menubar-item" onclick="">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do'">
             <span>
                 레시피
             </span>

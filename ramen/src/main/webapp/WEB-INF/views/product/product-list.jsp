@@ -15,13 +15,16 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
+
+
+
         .product-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-auto-rows: 300px;
             padding: 20px;
             gap: 30px;
-            height: 100%;
+            height: 90%;
 			overflow: auto;
         }
 
@@ -64,7 +67,7 @@
             flex-direction: row;
             gap: 5px;
             justify-content: space-between;
-			margin-bottom: 10px;
+			margin-bottom: 20px;
 			padding: 0 20px;
         }
 
@@ -95,6 +98,19 @@
 	<div class="main-container shadow-lg">
 
 		<div class="sub-menu">
+
+			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+				<label class="btn btn-outline-primary" for="btnradio1">봉지 라면</label>
+
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+				<label class="btn btn-outline-primary" for="btnradio2">컵 라면</label>
+
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+				<label class="btn btn-outline-primary" for="btnradio3">토핑</label>
+
+			</div>
+
 			<div style="display: flex; flex-direction: row; gap: 5px" >
 				<input type="text" class="search-box">
 				<button class="btn btn-primary">검색</button>
