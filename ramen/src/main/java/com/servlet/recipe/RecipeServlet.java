@@ -20,12 +20,28 @@ import com.repository.recipe.RecipeBoardRepository;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
 import com.repository.recipe.RecipeCommentRepository;
 import com.repository.recipe.RecipeCommentRepositoryImpl;
+import com.repository.recipe.RecipeLikeRepository;
+import com.repository.recipe.RecipeLikeRepositoryImpl;
+import com.service.recipe.RecipeBoardService;
+import com.service.recipe.RecipeBoardServiceImpl;
+import com.service.recipe.RecipeCommentService;
+import com.service.recipe.RecipeCommentServiceImpl;
+import com.service.recipe.RecipeLikeService;
+import com.service.recipe.RecipeLikeServiceImpl;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
 @WebServlet("/recipe/*")
 public class RecipeServlet extends MyUploadServlet {
 	private static final long serialVersionUID = 1L;
+	
+	RecipeBoardRepository recipeBoardRepository = new RecipeBoardRepositoryImpl();
+	RecipeCommentRepository recipeCommentRepository = new RecipeCommentRepositoryImpl();
+	RecipeLikeRepository recipeLikeRepository = new RecipeLikeRepositoryImpl();
+	
+	RecipeBoardService recipeBoardService = new RecipeBoardServiceImpl(recipeBoardRepository);
+	RecipeCommentService recipeCommentService = new RecipeCommentServiceImpl(recipeCommentRepository);
+	RecipeLikeService recipeLikeService = new RecipeLikeServiceImpl(recipeLikeRepository);
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -78,7 +94,6 @@ public class RecipeServlet extends MyUploadServlet {
 	}
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		RecipeBoardRepository board = new RecipeBoardRepositoryImpl();
 		
 		String cp = req.getContextPath();
 		
@@ -98,9 +113,9 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			List<RecipeBoard> list = null;
 			if(keyword.length() == 0) {
-				list = board.readRecipe();
+				list = recipeBoardService.readRecipe();
 			} else {
-				list = board.readRecipe(condition, keyword);
+				list = recipeBoardService.readRecipe(condition, keyword);
 			}
 			
 			String query = "";
@@ -110,7 +125,7 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			// 검색 페이지
 			String listUrl = cp + "/recipe/list.do"; // 수정
-			String recipeUrl = cp + ""; // 수정
+			String recipeUrl = cp + "/recipe/recipe.do"; // 수정
 			if(query.length() != 0) {
 				listUrl += "?" + query;
 				recipeUrl += "?" + query;
@@ -138,7 +153,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void writeRecipeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 저장
-		RecipeBoardRepository board = new RecipeBoardRepositoryImpl();
 		List<RecipeProduct> list = new ArrayList<>();
 		
 		HttpSession session = req.getSession();
@@ -163,7 +177,7 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			dto.setRecipeProduct(list);
 			
-			board.insertRecipe(dto);
+			recipeBoardService.insertRecipe(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,8 +188,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정
-		RecipeBoardRepository recipeBoard = new RecipeBoardRepositoryImpl();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
 		
@@ -184,7 +196,7 @@ public class RecipeServlet extends MyUploadServlet {
 		try {
 			Long recipe_id = Long.parseLong(req.getParameter("")); // 수정
 			
-			RecipeBoard board = recipeBoard.readRecipe(recipe_id);
+			RecipeBoard board = recipeBoardService.readRecipe(recipe_id);
 			if(board == null || ( ! board.getNickname().equals(info.getUserNickname()))) {
 				resp.sendRedirect(cp + "");
 				return;
@@ -205,8 +217,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void updateRecipeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정 완료
-		RecipeBoardRepository recipeBoard = new RecipeBoardRepositoryImpl();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
 		
@@ -228,7 +238,7 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			board.setMemberId(info.getMemberId());
 			
-			recipeBoard.updateRecipe(board);
+			recipeBoardService.updateRecipe(board);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -239,7 +249,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void deleteRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 삭제
-		RecipeBoardRepository recipeBoard = new RecipeBoardRepositoryImpl();
 		String cp = req.getContextPath();
 		
 		HttpSession session = req.getSession();
@@ -262,7 +271,7 @@ public class RecipeServlet extends MyUploadServlet {
 				query += "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 			}
 			
-			RecipeBoard board = recipeBoard.readRecipe(recipe_id);
+			RecipeBoard board = recipeBoardService.readRecipe(recipe_id);
 			
 			if(board == null) {
 				resp.sendRedirect(cp + "" + query); // 수정
@@ -274,7 +283,7 @@ public class RecipeServlet extends MyUploadServlet {
 				return;
 			}
 			
-			recipeBoard.deleteRecipe(recipe_id, info.getMemberId());
+			recipeBoardService.deleteRecipe(recipe_id, info.getMemberId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -285,7 +294,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void recipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 상세 보기
-		RecipeBoardRepository board = new RecipeBoardRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
 		String cp = req.getContextPath();
@@ -293,12 +301,13 @@ public class RecipeServlet extends MyUploadServlet {
 		String query = "";
 		
 		try {
-			Long id = Long.parseLong(req.getParameter("postId"));
+			Long id = Long.parseLong(req.getParameter("id"));
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			if(condition == null) {
 				condition = "all";
 				keyword = "";
+				query += "?condition=" + condition;
 			}
 			
 			keyword = URLDecoder.decode(keyword, "utf-8");
@@ -308,9 +317,9 @@ public class RecipeServlet extends MyUploadServlet {
 			}
 			
 			// 조회수 증가
-			board.updateHitCount(id);
+			recipeBoardService.updateHitCount(id);
 			
-			RecipeBoard dto = board.readRecipe(id);
+			RecipeBoard dto = recipeBoardService.readRecipe(id);
 			if(dto == null) {
 				resp.sendRedirect(cp + "" + query);
 				return;
@@ -319,8 +328,8 @@ public class RecipeServlet extends MyUploadServlet {
 			dto.setContent(util.htmlSymbols(dto.getContent()));
 			
 			// 이전글 다음글
-			RecipeBoard preReadDto = board.preReadRecipe(dto.getId(), condition, keyword);
-			RecipeBoard nextReadDto = board.nextReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard preReadDto = recipeBoardService.preReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard nextReadDto = recipeBoardService.nextReadRecipe(dto.getId(), condition, keyword);
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("query", query);
@@ -339,8 +348,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void writeRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 댓글 달기
-		RecipeCommentRepository recipeComment = new RecipeCommentRepositoryImpl();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
 		
@@ -372,7 +379,7 @@ public class RecipeServlet extends MyUploadServlet {
 			comment.setBoardId(Long.parseLong(req.getParameter("")));
 			comment.setCotent(req.getParameter(""));
 			
-			recipeComment.createComment(comment);
+			recipeCommentService.createComment(comment);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -395,8 +402,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void deleteRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 댓글 삭제
-		RecipeCommentRepository recipeComment = new RecipeCommentRepositoryImpl();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
 		
@@ -421,7 +426,7 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			Long memberId = info.getMemberId();
 			
-			RecipeComment comment = recipeComment.readComment(commentId, memberId);
+			RecipeComment comment = recipeCommentService.readComment(commentId, memberId);
 			
 			if(comment == null) {
 				resp.sendRedirect(cp + "" + query); // 수정
@@ -433,7 +438,7 @@ public class RecipeServlet extends MyUploadServlet {
 				return;
 			}
 			
-			recipeComment.deleteComment(memberId, commentId);
+			recipeCommentService.deleteComment(memberId, commentId);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

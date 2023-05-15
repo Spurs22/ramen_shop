@@ -189,7 +189,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " LEFT OUTER JOIN ( "
@@ -233,7 +233,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id ";
 			if(condition.equals("all")) {
@@ -361,7 +361,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT subject, content, hit_count, r.created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " LEFT OUTER JOIN ( "

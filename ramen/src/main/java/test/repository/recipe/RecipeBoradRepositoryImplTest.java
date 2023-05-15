@@ -18,8 +18,8 @@ public class RecipeBoradRepositoryImplTest {
 		RecipeBoard reci = new RecipeBoard();
 		reci.setMemberId(1L);
 		// reci.setId(5);
-		reci.setSubject("제목1");
-		reci.setContent("내용1");
+		reci.setSubject("제목2");
+		reci.setContent("내용2");
 		reci.setIpAddress("127.0.0.1");
 		
 		List<RecipeProduct> list = new ArrayList<>();
