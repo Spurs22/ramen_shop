@@ -131,6 +131,9 @@ public class OrderServlet extends MyServlet{
 				orderRepositoryImpl.createOrderList(order2);
 			}
 			
+			long totalPrice = orderRepositoryImpl.orderAllPrice(order_id);
+			
+			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId",order_id);
 			
 		} catch (Exception e) {

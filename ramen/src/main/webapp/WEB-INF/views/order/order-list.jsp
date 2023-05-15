@@ -50,7 +50,6 @@
 							<td>상품사진</td>
 							<td>${cart.quantity}</td>
 							<td>${cart.createdDate}</td>
-							
 							<input type="hidden" name="items" value="${cart.productId}">
 						</tr>
 					</c:forEach>

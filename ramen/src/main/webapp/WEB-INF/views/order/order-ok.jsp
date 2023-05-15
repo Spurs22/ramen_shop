@@ -27,6 +27,9 @@
 				<tr>
 					<td>주문 번호 : ${orderId} </td>
 				</tr>
+				<tr>
+					<td>총 가격 : ${totalPrice} </td>
+				</tr>
 			</table>
 		</div>
 	</div>
