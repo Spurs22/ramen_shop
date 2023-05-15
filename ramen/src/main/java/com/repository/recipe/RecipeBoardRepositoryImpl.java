@@ -627,4 +627,42 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		
 	}
 
+	@Override
+	public List<RecipeBoard> findByMemberId(Long memberId) {
+		// 사용자의 글 목록 (제목, 조회 수, 날짜, 글 아이디)
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<RecipeBoard> list = new ArrayList<>();
+		RecipeBoard board = null;
+		
+		try {
+			sql = "SELECT r.id, subject, hit_count, r.created_date FROM recipe_board r JOIN member m ON m.id = r.member_id WHERE r.member_id = ? ORDER BY r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				board.setHitCount(rs.getInt("hit_count"));
+				board.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(board);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
 }

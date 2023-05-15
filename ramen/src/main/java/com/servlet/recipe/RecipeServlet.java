@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import com.repository.recipe.RecipeCommentRepositoryImpl;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
+@WebServlet("/recipe/*")
 public class RecipeServlet extends MyUploadServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -32,13 +34,13 @@ public class RecipeServlet extends MyUploadServlet {
 		String uri = req.getRequestURI();
 
 		// 세션 정보
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
-
-		if (info == null) {
-			forward(req, resp, "/WEB-INF/"); // 수정
-			return;
-		}
+//		HttpSession session = req.getSession();
+//		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+//
+//		if (info == null) {
+//			forward(req, resp, "/WEB-INF/recipe/"); // 수정 로그인으로
+//			return;
+//		}
 
 		// 파일을 저장할 경로
 		
@@ -107,7 +109,7 @@ public class RecipeServlet extends MyUploadServlet {
 			}
 			
 			// 검색 페이지
-			String listUrl = cp + ""; // 수정
+			String listUrl = cp + "/recipe/list.do"; // 수정
 			String recipeUrl = cp + ""; // 수정
 			if(query.length() != 0) {
 				listUrl += "?" + query;
@@ -125,7 +127,7 @@ public class RecipeServlet extends MyUploadServlet {
 		}
 		
 		// JSP로 포워딩
-		forward(req, resp, "/WEB-INF/"); // 수정
+		forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
 	}
 
 	protected void writeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
