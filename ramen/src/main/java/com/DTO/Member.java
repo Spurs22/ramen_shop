@@ -81,6 +81,7 @@ public class Member {
 		this.enabled = enabled;
 	}
     
-
+    
+    
     
 }
