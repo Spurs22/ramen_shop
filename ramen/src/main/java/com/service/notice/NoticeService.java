@@ -1,12 +1,13 @@
-package com.repository.notice;
+package com.service.notice;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import com.DTO.Notice;
 
-public interface NoticeRepository {
-	void insertNotice(Notice dto) throws SQLException;
+public interface NoticeService {
+
+void insertNotice(Notice dto) throws SQLException;
 	
 	int dataCount(int category);
 	

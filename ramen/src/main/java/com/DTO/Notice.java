@@ -1,8 +1,8 @@
 package com.DTO;
 
 public class Notice {
-	private long id;
-	private long member_id;
+	private Long id;
+	private Long memberId;
 	private String subject;
 	private String content;
 	private String ip_address;
@@ -10,18 +10,19 @@ public class Notice {
 	private int hit_count;
 	private int notice;
 	private String create_date;
+	private Long gap;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public long getMember_id() {
-		return member_id;
+	public Long getmemberId() {
+		return memberId;
 	}
-	public void setMember_id(long member_id) {
-		this.member_id = member_id;
+	public void setmemberId(Long memberId) {
+		this.memberId = memberId;
 	}
 	public String getSubject() {
 		return subject;
@@ -66,6 +67,14 @@ public class Notice {
 		this.create_date = create_date;
 	}
 	
+	public Long getGap() {
+		return gap;
+	}
+	public void setGap(Long gap) {
+		this.gap = gap;
+	}
+	
+
 
 	
 	
