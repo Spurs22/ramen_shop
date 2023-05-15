@@ -7,15 +7,11 @@ public class Order {
 	
 	private String statusName;
 	
-	private Long memberId;
-	private Long deliveryId;
-	private String createdDate;
-
-	private Long receiveName;
-	private Long tel;
-	private Long postNum;
-	private Long address1;
-	private Long address2;
+	private String receiveName;
+	private String tel;
+	private String postNum;
+	private String address1;
+	private String address2;
 	
 	private Long productId;
 	private Long orderId;
@@ -24,6 +20,41 @@ public class Order {
 	private Long price;
 	private Long finalPrice;
 	
+	private Long memberId;
+	private Long deliveryId;
+	private String createdDate;
+	
+
+	public String getReceiveName() {
+		return receiveName;
+	}
+	public void setReceiveName(String receiveName) {
+		this.receiveName = receiveName;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	public String getPostNum() {
+		return postNum;
+	}
+	public void setPostNum(String postNum) {
+		this.postNum = postNum;
+	}
+	public String getAddress1() {
+		return address1;
+	}
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
+	public String getAddress2() {
+		return address2;
+	}
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
 	
 	public Long getOrderBundleId() {
 		return orderBundleId;
@@ -103,35 +134,6 @@ public class Order {
 	public void setFinalPrice(Long finalPrice) {
 		this.finalPrice = finalPrice;
 	}
-	public Long getReceiveName() {
-		return receiveName;
-	}
-	public void setReceiveName(Long receiveName) {
-		this.receiveName = receiveName;
-	}
-	public Long getTel() {
-		return tel;
-	}
-	public void setTel(Long tel) {
-		this.tel = tel;
-	}
-	public Long getPostNum() {
-		return postNum;
-	}
-	public void setPostNum(Long postNum) {
-		this.postNum = postNum;
-	}
-	public Long getAddress1() {
-		return address1;
-	}
-	public void setAddress1(Long address1) {
-		this.address1 = address1;
-	}
-	public Long getAddress2() {
-		return address2;
-	}
-	public void setAddress2(Long address2) {
-		this.address2 = address2;
-	}
+	
 	
 }
