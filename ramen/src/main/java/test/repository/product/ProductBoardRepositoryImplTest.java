@@ -28,9 +28,15 @@ public class ProductBoardRepositoryImplTest {
 
 
 		// insert
-		System.out.println("productBoard create test");
-		productBoardRepository.createProductPost(productBoard);
-		productBoardRepository.createProductPost(productBoard2);
+//		System.out.println("productBoard create test");
+//		productBoardRepository.createProductPost(productBoard);
+//		productBoardRepository.createProductPost(productBoard2);
+
+		List<ProductBoard> list = productBoardRepository.findByCategoryAndKeyword(ProductCategory.CUP, null);
+
+		for (ProductBoard board : list) {
+			System.out.println(board);
+		}
 
 
 		// 조회

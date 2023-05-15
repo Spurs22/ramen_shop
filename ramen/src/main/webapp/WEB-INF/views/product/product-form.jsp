@@ -55,7 +55,7 @@
             width: 100%;
             height: 50px;
             display: grid;
-			grid-template-columns: 30% 20% 35% 15%;
+            grid-template-columns: 45% 40% 15%;
             border-radius: 5px;
 			text-align: center;
 			padding: 0 5px;
@@ -68,7 +68,7 @@
             width: 100%;
             height: 50px;
             display: grid;
-            grid-template-columns: 30% 20% 35% 15%;
+            grid-template-columns: 45% 40% 15%;
             border-radius: 5px;
             text-align: center;
             padding: 0 5px;
@@ -188,7 +188,6 @@
 					 	<div class="shadow-sm product-card-menu bg-secondary">
 							<div>상품명</div>
 							<div>카테고리</div>
-							<div>가격</div>
 							<div>재고</div>
 						</div>
 

@@ -2,6 +2,7 @@ package com.service.product;
 
 
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 
 import java.util.List;
 
@@ -21,4 +22,8 @@ public interface ProductBoardService {
 	void registPicture(Long productId, String path);
 
 	Float getAverageRateByPost(Long productId);
+
+	List<ProductBoard> findByCategoryAndKeyword(ProductCategory category, String keyword);
+
 }
+

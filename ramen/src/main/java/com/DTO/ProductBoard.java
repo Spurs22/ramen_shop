@@ -35,6 +35,20 @@ public class ProductBoard {
 		this.price = price;
 	}
 
+	@Override
+	public String toString() {
+		return "ProductBoard{" +
+				"product=" + product +
+				", writerId=" + writerId +
+				", imgList=" + imgList +
+				", content='" + content + '\'' +
+				", createdDate='" + createdDate + '\'' +
+				", hitCount=" + hitCount +
+				", rating=" + rating +
+				", price=" + price +
+				'}';
+	}
+
 	public Product getProduct() {
 		return product;
 	}

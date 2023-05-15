@@ -2,6 +2,7 @@ package com.service.product;
 
 
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 import com.repository.product.ProductBoardRepository;
 
 import java.util.List;
@@ -52,5 +53,10 @@ public class ProductBoardServiceImpl implements ProductBoardService {
 	@Override
 	public Float getAverageRateByPost(Long productId) {
 		return productBoardRepository.getAverageRateByPost(productId);
+	}
+
+	@Override
+	public List<ProductBoard> findByCategoryAndKeyword(ProductCategory category, String keyword) {
+		return productBoardRepository.findByCategoryAndKeyword(category, keyword);
 	}
 }

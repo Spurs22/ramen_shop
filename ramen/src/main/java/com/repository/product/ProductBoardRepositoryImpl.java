@@ -237,10 +237,34 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 					"    GROUP BY product_board_id) " +
 					"    cm ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
-					"JOIN product_category pc ON p.category_id = pc.id " +
-					"WHERE category_id = ? AND INSTR(name, ?) > 0 " +
-					"ORDER BY ID DESC";
+					"JOIN product_category pc ON p.category_id = pc.id ";
+
+			// 카테고리가 없을 때
+			if (category != null && keyword != null) {
+				sql += "WHERE category_id = ? AND INSTR(name, ?) > 0 " +
+						"ORDER BY ID DESC";
+			} else if (category == null && keyword == null) {
+				sql += "ORDER BY ID DESC";
+			} else if (category == null) {
+				sql += "WHERE INSTR(name, ?) > 0 " +
+						"ORDER BY ID DESC";
+			} else if (keyword == null) {
+				sql += "WHERE category_id = ? " +
+						"ORDER BY ID DESC";
+			}
+
 			pstmt = conn.prepareStatement(sql);
+
+			if (category != null && keyword != null) {
+				pstmt.setInt(1, category.getValue());
+				pstmt.setString(2, keyword);
+			} else if (category == null && keyword == null) {
+
+			} else if (category == null) {
+				pstmt.setString(1, keyword);
+			} else if (keyword == null) {
+				pstmt.setInt(1, category.getValue());
+			}
 
 			rs = pstmt.executeQuery();
 
