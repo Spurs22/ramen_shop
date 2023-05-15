@@ -98,7 +98,7 @@
 
 				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; justify-content: space-between">
 					<div class="product-createdDate">${post.createdDate}</div>
-					<div class="product-name">${post.productName}</div>
+					<div class="product-name">${post.product.productName}</div>
 					<div class="product-price">${post.price}<span>원</span></div>
 					<div class="product-rating">${post.rating}</div>
 

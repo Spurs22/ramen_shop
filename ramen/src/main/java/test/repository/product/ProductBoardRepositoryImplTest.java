@@ -1,6 +1,8 @@
 package test.repository.product;
 
+import com.DTO.Product;
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 import com.repository.product.ProductBoardRepository;
 
 import java.util.List;
@@ -9,36 +11,26 @@ public class ProductBoardRepositoryImplTest {
 	public static void main(String[] args) {
 		ProductBoardRepository productBoardRepository = new com.repository.product.ProductBoardRepositoryImpl();
 		ProductBoard productBoard = new ProductBoard(
-				7L,
+				new Product(7L),
 				1L,
 				null,
-				null,
 				"상품 상세 설명입니다.",
-				null,
-				null,
-				4.2f,
-				null
+				1600
 		);
 
 		ProductBoard productBoard2 = new ProductBoard(
-				8L,
+				new Product(15L),
 				1L,
 				null,
-				"상품 상세 설명입니다."
+				"상품 상세 설명입니다.",
+				1600
 		);
 
-		ProductBoard productBoard3 = new ProductBoard(
-				9L,
-				1L,
-				null,
-				"상품 상세 설명입니다."
-		);
 
 		// insert
 		System.out.println("productBoard create test");
 		productBoardRepository.createProductPost(productBoard);
 		productBoardRepository.createProductPost(productBoard2);
-		productBoardRepository.createProductPost(productBoard3);
 
 
 		// 조회

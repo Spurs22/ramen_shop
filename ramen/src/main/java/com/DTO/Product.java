@@ -4,18 +4,27 @@ public class Product {
 	private Long productId;
 	private ProductCategory category;
 	private String name;
-	private int price;
 	private int remainQuantity;
 	private String picture;
 
 	public Product() {
 	}
 
-	public Product(Long productId, ProductCategory category, String name, int price, int remainQuantity, String picture) {
+	public Product(Long productId) {
+		this.productId = productId;
+	}
+
+	public Product(ProductCategory category, String name, int remainQuantity, String picture) {
+		this.category = category;
+		this.name = name;
+		this.remainQuantity = remainQuantity;
+		this.picture = picture;
+	}
+
+	public Product(Long productId, ProductCategory category, String name, int remainQuantity, String picture) {
 		this.productId = productId;
 		this.category = category;
 		this.name = name;
-		this.price = price;
 		this.remainQuantity = remainQuantity;
 		this.picture = picture;
 	}
@@ -42,14 +51,6 @@ public class Product {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
 	}
 
 	public int getRemainQuantity() {

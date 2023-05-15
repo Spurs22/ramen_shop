@@ -9,6 +9,7 @@ import com.util.DBUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +23,14 @@ public class ProductRepositoryImpl implements ProductRepository {
 		String sql;
 
 		try {
-			sql = "insert INTO product (id, category_id, name, price, remain_quantity, picture) " +
-					"VALUES (product_seq.nextval, ?, ?, ?, ?, ?) ";
+			sql = "insert INTO product (id, category_id, name, remain_quantity, picture) " +
+					"VALUES (product_seq.nextval, ?, ?, ?, ?) ";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, product.getCategory().getValue());
 			pstmt.setString(2, product.getName());
-			pstmt.setInt(3, product.getPrice());
-			pstmt.setInt(4, product.getRemainQuantity());
-			pstmt.setString(5, product.getPicture());
+			pstmt.setInt(3, product.getRemainQuantity());
+			pstmt.setString(4, product.getPicture());
 
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -46,13 +46,12 @@ public class ProductRepositoryImpl implements ProductRepository {
 		String sql;
 
 		try {
-			sql = "UPDATE product SET CATEGORY_ID = ?, NAME = ?, PRICE = ?, REMAIN_QUANTITY = ?, PICTURE = ? " +
+			sql = "UPDATE product SET CATEGORY_ID = ?, NAME = ?, REMAIN_QUANTITY = ?, PICTURE = ? " +
 					"WHERE id = ? ";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, product.getCategory().getValue());
 			pstmt.setString(2, product.getName());
-			pstmt.setInt(3, product.getPrice());
 			pstmt.setInt(4, product.getRemainQuantity());
 			pstmt.setString(5, product.getPicture());
 			pstmt.setLong(6, productId);
@@ -78,19 +77,12 @@ public class ProductRepositoryImpl implements ProductRepository {
 		List<Product> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT id, category_id, name, price, remain_quantity, picture FROM PRODUCT ORDER BY ID DESC ";
+			sql = "SELECT id, category_id, name, remain_quantity, picture FROM PRODUCT ORDER BY ID DESC ";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				result.add(new Product(
-						rs.getLong("id"),
-						ProductCategory.getByValue(rs.getInt("category_id")),
-						rs.getString("name"),
-						rs.getInt("price"),
-						rs.getInt("remain_quantity"),
-						rs.getString("picture")
-				));
+				result.add(getProduct(rs));
 			}
 
 		} catch (Exception e) {
@@ -136,20 +128,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 		Product result = null;
 
 		try {
-			sql = "SELECT id, category_id, name, price, remain_quantity, picture FROM PRODUCT ORDER BY ID DESC ";
+			sql = "SELECT id, category_id, name, remain_quantity, picture FROM PRODUCT ORDER BY ID DESC ";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				result = new Product(
-						rs.getLong("id"),
-						ProductCategory.getByValue(rs.getInt("category_id")),
-						rs.getString("name"),
-						rs.getInt("price"),
-						rs.getInt("remain_quantity"),
-						rs.getString("picture")
-				);
+				result = getProduct(rs);
 			}
 
 		} catch (Exception e) {
@@ -168,7 +153,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 		List<Product> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT p.id, category_id, name, price, remain_quantity, picture, pc.ID category_id " +
+			sql = "SELECT p.id, category_id, name, remain_quantity, picture, pc.ID category_id " +
 					"FROM PRODUCT p " +
 					"LEFT OUTER JOIN product_board pb ON p.id = pb.id " +
 					"JOIN product_category pc ON p.category_id = pc.id " +
@@ -178,14 +163,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				result.add(new Product(
-						rs.getLong("id"),
-						ProductCategory.getByValue(rs.getInt("category_id")),
-						rs.getString("name"),
-						rs.getInt("price"),
-						rs.getInt("remain_quantity"),
-						rs.getString("picture")
-				));
+				result.add(getProduct(rs));
 			}
 
 		} catch (Exception e) {
@@ -194,6 +172,16 @@ public class ProductRepositoryImpl implements ProductRepository {
 			DBUtil.closeResource(pstmt, rs);
 		}
 		return result;
+	}
+
+	private static Product getProduct(ResultSet rs) throws SQLException {
+		return new Product(
+				rs.getLong("id"),
+				ProductCategory.getByValue(rs.getInt("category_id")),
+				rs.getString("name"),
+				rs.getInt("remain_quantity"),
+				rs.getString("picture")
+		);
 	}
 
 	@Override

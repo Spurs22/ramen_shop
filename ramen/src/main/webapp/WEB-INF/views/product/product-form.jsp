@@ -193,7 +193,7 @@
 						</div>
 
 						<c:forEach var="product" items="${products}">
-							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.price}, ${product.remainQuantity}, '${product.category.label}')">
+							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.remainQuantity}, '${product.category.label}')">
 								<div>${product.name}</div>
 								<div>${product.category.label}</div>
 								<div>${product.price}</div>
@@ -222,10 +222,9 @@
         keyboard: false
     })
 
-    function selectProduct(productId, name, price, remainQuantity, category) {
+    function selectProduct(productId, name, remainQuantity, category) {
         // alert(productId + '' + name + '' + price + '' + remainQuantity + '' + category)
         productIdInput.value = productId;
-
         categoryInput.value = category;
         productNameInput.value = name;
         quantityInput.value = remainQuantity;

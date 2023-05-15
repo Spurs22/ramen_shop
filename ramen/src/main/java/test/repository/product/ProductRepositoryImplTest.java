@@ -11,39 +11,18 @@ public class ProductRepositoryImplTest {
 
 		// 샘플 데이터
 		Product product = new Product(
-				null,
 				ProductCategory.CUP,
-				"치즈불닭볶음면",
-				1200,
-				5,
+				"코다리 볶음면",
+				11,
 				null
 		);
 
-		Product product2 = new Product(
-				null,
-				ProductCategory.CUP,
-				"꼬꼬면",
-				1200,
-				2,
-				null
-		);
 
-		Product productEdit = new Product(
-				null,
-				ProductCategory.BONGJI,
-				"무파마",
-				1300,
-				5,
-				null
-		);
 
 //		// 상품 생성
 		System.out.println("createProduct test");
 		productRepository.createProduct(product);
 //
-
-		productRepository.createProduct(product2);
-		productRepository.createProduct(productEdit);
 
 
 		// 상품 찾기
