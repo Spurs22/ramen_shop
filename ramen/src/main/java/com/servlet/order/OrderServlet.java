@@ -131,6 +131,8 @@ public class OrderServlet extends MyServlet{
 				orderRepositoryImpl.createOrderList(order2);
 			}
 			
+			req.setAttribute("orderId",order_id);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
