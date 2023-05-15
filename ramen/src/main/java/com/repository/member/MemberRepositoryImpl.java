@@ -271,6 +271,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 		
 	}
 
+	// 회원 / 관리자 구분 
 	@Override
 	public Member Roll(Member member) throws SQLException {
 
