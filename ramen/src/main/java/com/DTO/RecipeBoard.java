@@ -12,8 +12,17 @@ public class RecipeBoard {
 	private String ipAddress;
 	private Long recipeId;
 	private String nickname;
+	
 	private List<RecipeProduct> recipeProduct;
 	
+	private int recipeLikeCount;
+	
+	public int getRecipeLikeCount() {
+		return recipeLikeCount;
+	}
+	public void setRecipeLikeCount(int recipeLikeCount) {
+		this.recipeLikeCount = recipeLikeCount;
+	}
 	public Long getId() {
 		return id;
 	}
