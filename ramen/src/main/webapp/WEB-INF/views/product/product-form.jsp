@@ -196,7 +196,6 @@
 							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.remainQuantity}, '${product.category.label}')">
 								<div>${product.name}</div>
 								<div>${product.category.label}</div>
-								<div>${product.price}</div>
 								<div>${product.remainQuantity}</div>
 							</div>
 						</c:forEach>
