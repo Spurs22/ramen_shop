@@ -2,6 +2,7 @@ package com.repository.product;
 
 
 import com.DTO.Product;
+import com.DTO.ProductCategory;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -25,7 +26,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 					"VALUES (product_seq.nextval, ?, ?, ?, ?, ?) ";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, product.getCategory());
+			pstmt.setInt(1, product.getCategory().getValue());
 			pstmt.setString(2, product.getName());
 			pstmt.setInt(3, product.getPrice());
 			pstmt.setInt(4, product.getRemainQuantity());
@@ -49,7 +50,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 					"WHERE id = ? ";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, product.getCategory());
+			pstmt.setInt(1, product.getCategory().getValue());
 			pstmt.setString(2, product.getName());
 			pstmt.setInt(3, product.getPrice());
 			pstmt.setInt(4, product.getRemainQuantity());
@@ -84,7 +85,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 			while (rs.next()) {
 				result.add(new Product(
 						rs.getLong("id"),
-						rs.getInt("category_id"),
+						ProductCategory.getByValue(rs.getInt("category_id")),
 						rs.getString("name"),
 						rs.getInt("price"),
 						rs.getInt("remain_quantity"),
@@ -143,12 +144,48 @@ public class ProductRepositoryImpl implements ProductRepository {
 			if (rs.next()) {
 				result = new Product(
 						rs.getLong("id"),
-						rs.getInt("category_id"),
+						ProductCategory.getByValue(rs.getInt("category_id")),
 						rs.getString("name"),
 						rs.getInt("price"),
 						rs.getInt("remain_quantity"),
 						rs.getString("picture")
 				);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return result;
+	}
+
+	@Override
+	public List<Product> findNotRegistedProduct() {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<Product> result = new ArrayList<>();
+
+		try {
+			sql = "SELECT p.id, category_id, name, price, remain_quantity, picture, pc.ID category_id " +
+					"FROM PRODUCT p " +
+					"LEFT OUTER JOIN product_board pb ON p.id = pb.id " +
+					"JOIN product_category pc ON p.category_id = pc.id " +
+					"WHERE pb.id is NULL " +
+					"ORDER BY p.ID DESC ";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result.add(new Product(
+						rs.getLong("id"),
+						ProductCategory.getByValue(rs.getInt("category_id")),
+						rs.getString("name"),
+						rs.getInt("price"),
+						rs.getInt("remain_quantity"),
+						rs.getString("picture")
+				));
 			}
 
 		} catch (Exception e) {

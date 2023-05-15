@@ -1,6 +1,7 @@
 package test.repository.product;
 
 import com.DTO.Product;
+import com.DTO.ProductCategory;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
 
@@ -11,7 +12,7 @@ public class ProductRepositoryImplTest {
 		// 샘플 데이터
 		Product product = new Product(
 				null,
-				3,
+				ProductCategory.CUP,
 				"치즈불닭볶음면",
 				1200,
 				5,
@@ -20,7 +21,7 @@ public class ProductRepositoryImplTest {
 
 		Product product2 = new Product(
 				null,
-				2,
+				ProductCategory.CUP,
 				"꼬꼬면",
 				1200,
 				2,
@@ -29,7 +30,7 @@ public class ProductRepositoryImplTest {
 
 		Product productEdit = new Product(
 				null,
-				1,
+				ProductCategory.BONGJI,
 				"무파마",
 				1300,
 				5,

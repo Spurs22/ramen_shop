@@ -24,7 +24,7 @@
             height: 70%;
             width: 150px;
             /*background: #f6e5cc;*/
-            border: 1px solid black;
+            border: 1px solid #DFE2E6;
             border-bottom: none;
             border-radius: 8px 8px 0 0;
             background: #eeeeee;
@@ -35,6 +35,7 @@
             filter: brightness(80%);
             background: #eeeeee;
             transition: 0.5s;
+            height: 80%;
         }
 
         .menubar-item:hover {
@@ -59,7 +60,7 @@
 <!--    <img class="logo" src="../../static/picture/logo.png">-->
 
     <div class="menubar">
-        <div class="menubar-item" onclick="">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/home/'">
             <div>
                 메인
             </div>

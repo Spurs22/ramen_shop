@@ -180,7 +180,7 @@
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="selectProductLabel">Modal title</h5>
+					<h5 class="modal-title" id="selectProductLabel">상품 선택</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body" style="height: 400px; overflow: auto">
@@ -193,9 +193,9 @@
 						</div>
 
 						<c:forEach var="product" items="${products}">
-							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.price}, ${product.remainQuantity}, ${product.category})">
+							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.price}, ${product.remainQuantity}, '${product.category.label}')">
 								<div>${product.name}</div>
-								<div>${product.category}</div>
+								<div>${product.category.label}</div>
 								<div>${product.price}</div>
 								<div>${product.remainQuantity}</div>
 							</div>

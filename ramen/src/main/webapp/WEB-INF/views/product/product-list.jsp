@@ -37,7 +37,7 @@
             padding: 15px;
             transition: 0.5s;
             background: #ffffff;
-            border: 1px solid black;
+            border: 1px solid #DFE2E6;
         }
 
         .product-img {
@@ -72,6 +72,14 @@
 			text-decoration: none;
 			color: black;
 		}
+
+        .search-box {
+            border: 1px solid #DFE2E6;
+            border-radius: 5px;
+            width: 150px;
+            padding: 0 5px;
+
+        }
 	</style>
 </head>
 <script>
@@ -88,7 +96,7 @@
 
 		<div class="sub-menu">
 			<div style="display: flex; flex-direction: row; gap: 5px" >
-				<input type="text" style="width: 150px; padding: 0 5px">
+				<input type="text" class="search-box">
 				<button class="btn btn-primary">검색</button>
 			</div>
 

@@ -54,7 +54,7 @@ public class ProductServlet extends MyServlet {
 		System.out.println("ProductServlet.postForm" );
 
 		try {
-			List<Product> products = productService.findAllProduct();
+			List<Product> products = productService.findNotRegistedProduct();
 			req.setAttribute("products", products);
 
 			String path = "/WEB-INF/views/product/product-form.jsp";

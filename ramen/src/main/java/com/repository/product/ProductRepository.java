@@ -22,4 +22,6 @@ public interface ProductRepository {
 
 	// 등록 여부 까지 반환해야함
 	List<Product> findProductByName(String name);
+
+	List<Product> findNotRegistedProduct();
 }

@@ -11,7 +11,6 @@ public class ProductBoard {
 	private String createdDate;
 	private Integer hitCount;
 	private Float rating;
-
 	private Integer price;
 
 	public ProductBoard() {
