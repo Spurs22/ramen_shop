@@ -22,13 +22,11 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
+			<h3> 결제가 완료되었습니다. 감사합니다 :) <h3>
 			<table>
-				<thead>
 				<tr>
-					<th>결제됐음.</th>
+					<td>주문 번호 : ${orderId} </td>
 				</tr>
-				</thead>
-				
 			</table>
 		</div>
 	</div>
