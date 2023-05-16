@@ -68,8 +68,14 @@ public class OrderServlet extends MyServlet{
 					// 아이디 ..
 					long memberId = (long)1;
 					List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
+					Long totalPrice = 0L;
+					
+					for(Cart c : list) {
+						totalPrice += c.getPrice()*c.getQuantity();
+					}
 					
 					req.setAttribute("list", list);
+					req.setAttribute("totalPrice", totalPrice);
 					
 				}  catch (Exception e) {
 					e.printStackTrace();
