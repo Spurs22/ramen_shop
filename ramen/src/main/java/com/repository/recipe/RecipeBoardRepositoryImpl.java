@@ -187,9 +187,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
+		RecipeBoard recipe = null;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " LEFT OUTER JOIN ( "
@@ -203,7 +204,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				RecipeBoard recipe = new RecipeBoard();
+				recipe = new RecipeBoard();
 				
 				recipe.setId(rs.getLong("id"));
 				recipe.setNickname(rs.getString("nickname"));
@@ -233,7 +234,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, r.created_date "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id ";
 			if(condition.equals("all")) {
@@ -361,7 +362,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT subject, content, hit_count, r.created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " LEFT OUTER JOIN ( "
@@ -379,6 +380,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			if(rs.next()) {
 				recipeBoard = new RecipeBoard();
 				
+				recipeBoard.setId(rs.getLong("id"));
 				recipeBoard.setSubject(rs.getString("subject"));
 				recipeBoard.setContent(rs.getString("content"));
 				recipeBoard.setHitCount(rs.getInt("hit_count"));
@@ -392,7 +394,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt = null;
 			rs = null;
 			
-			sql = "SELECT product_id, quantity FROM recipe_product WHERE recipe_id = ?";
+			sql = "SELECT product_id, quantity, name "
+					+ " FROM recipe_product "
+					+ " JOIN product ON recipe_product.product_id = product.id "
+					+ " WHERE recipe_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -404,6 +409,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeProduct = new RecipeProduct();
 				
 				recipeProduct.setProductId(rs.getLong("product_id"));
+				recipeProduct.setName(rs.getString("name"));
 				recipeProduct.setQuantity(rs.getInt("quantity"));
 				
 				list.add(recipeProduct);
@@ -480,6 +486,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			rs = null;
 			
 			sql = " SELECT product_id, quantity "
+					+ " FROM recipe_product "
 					+ " WHERE recipe_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -569,6 +576,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			rs = null;
 			
 			sql = " SELECT product_id, quantity "
+					+ " FROM recipe_product "
 					+ " WHERE recipe_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -605,7 +613,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 
 	@Override
 	public void updateHitCount(Long id) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO 조회 수 증가
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -625,6 +633,301 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			DBUtil.closeResource(pstmt);
 		}
 		
+	}
+
+	@Override
+	public List<RecipeBoard> findByMemberId(Long memberId) {
+		// 사용자의 글 목록 (제목, 조회 수, 날짜, 글 아이디)
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<RecipeBoard> list = new ArrayList<>();
+		RecipeBoard board = null;
+		
+		try {
+			sql = "SELECT r.id, subject, hit_count, r.created_date FROM recipe_board r JOIN member m ON m.id = r.member_id WHERE r.member_id = ? ORDER BY r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				board.setHitCount(rs.getInt("hit_count"));
+				board.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(board);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByHitCount() {
+		// 조회수 순 정렬
+		List<RecipeBoard> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeBoard recipe = null;
+		
+		try {
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id "
+					+ " ORDER BY hit_count DESC, r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				
+				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByHitCount(String condition, String keyword) {
+		// 조회수 순 정렬 검색
+		List<RecipeBoard> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeBoard recipe = null;
+		
+		try {
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id ";
+			if(condition.equals("all")) {
+				sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
+			} else if (condition.equals("created_date")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ?";
+			} else {
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+			}
+			sql += " ORDER BY hit_count DESC, r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(condition.equals("all")) {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+			} else {
+				pstmt.setString(1, keyword);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByLike() {
+		// TODO Auto-generated method stub
+		List<RecipeBoard> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeBoard recipe = null;
+		
+		try {
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id "
+					+ " ORDER BY recipeLikeCount DESC, hit_count DESC, r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				
+				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByLike(String condition, String keyword) {
+		// TODO Auto-generated method stub
+		List<RecipeBoard> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeBoard recipe = null;
+		
+		try {
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id ";
+			if(condition.equals("all")) {
+				sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
+			} else if (condition.equals("created_date")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ?";
+			} else {
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+			}
+			sql += " ORDER BY hit_count DESC, r.id DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(condition.equals("all")) {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+			} else {
+				pstmt.setString(1, keyword);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> findByMemberId(Long memberId, int offset, int size) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<RecipeBoard> list = new ArrayList<>();
+		RecipeBoard board = null;
+		
+		try {
+			sql = "SELECT r.id, subject, hit_count, r.created_date "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON m.id = r.member_id "
+					+ " WHERE r.member_id = ? "
+					+ " ORDER BY r.id DESC"
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				board.setHitCount(rs.getInt("hit_count"));
+				board.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(board);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 }

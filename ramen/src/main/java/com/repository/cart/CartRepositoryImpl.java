@@ -126,9 +126,10 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT c.product_id, member_id, quantity, created_date, picture "
-					+ "	FROM cart c JOIN product p ON  c.product_id = p.id "
-					+ " WHERE member_id = ? ";
+			sql = "SELECT c.product_id, c.member_id, c.quantity, c.created_date, p.picture, pb.price "
+					+ "FROM cart c JOIN product p ON  c.product_id = p.id "
+					+ "JOIN product_board pb ON pb.id = p.id "
+					+ "WHERE c.member_id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, memberId);
@@ -137,10 +138,12 @@ public class CartRepositoryImpl implements CartRepository{
 			while(rs.next()) {
 				Cart cart = new Cart();
 				
-				cart.setProductId(rs.getLong("product_id"));
-				cart.setMemberId(rs.getLong("member_id"));
-				cart.setQuantity(rs.getInt("quantity"));
-				cart.setCreatedDate(rs.getString("created_date"));
+				cart.setProductId(rs.getLong(1));
+				cart.setMemberId(rs.getLong(2));
+				cart.setQuantity(rs.getInt(3));
+				cart.setCreatedDate(rs.getString(4));
+				// cart.setPicture(rs.getString(5));
+				cart.setPrice(rs.getLong(6));
 				
 				list.add(cart);
 			}
@@ -160,13 +163,14 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 
 		try {
-			sql = "SELECT c.product_id, member_id, quantity, created_date, picture "
-					+ " FROM cart c JOIN product p ON  c.product_id = p.id  "
+			sql = "SELECT c.product_id, c.member_id, c.quantity, c.created_date, p.picture, pb.price "
+					+ " FROM cart c JOIN product p ON  c.product_id = p.id "
+					+ " JOIN product_board pb ON pb.id = p.id  "
 					+ " WHERE c.product_id IN (";
 			for (int i = 0; i < productId.length; i++) {
 				sql += "?,";
 			}
-			sql = sql.substring(0, sql.length() - 1) + ") AND member_id=?";
+			sql = sql.substring(0, sql.length() - 1) + ") AND c.member_id=?";
 
 			pstmt = conn.prepareStatement(sql);
 			
@@ -179,10 +183,12 @@ public class CartRepositoryImpl implements CartRepository{
 			while(rs.next()) {
 				Cart cart = new Cart();
 				
-				cart.setProductId(rs.getLong("product_id"));
-				cart.setMemberId(rs.getLong("member_id"));
-				cart.setQuantity(rs.getInt("quantity"));
-				cart.setCreatedDate(rs.getString("created_date"));
+				cart.setProductId(rs.getLong(1));
+				cart.setMemberId(rs.getLong(2));
+				cart.setQuantity(rs.getInt(3));
+				cart.setCreatedDate(rs.getString(4));
+				// cart.setPicture(rs.getString(5));
+				cart.setPrice(rs.getLong(6));
 				
 				list.add(cart);
 			}

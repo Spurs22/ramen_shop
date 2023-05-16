@@ -35,13 +35,10 @@ public class CartServlet extends MyServlet{
 		*/
 		
 		// 1) 장바구니를 본다. - 30일 이후 지나면 삭제
-		// 2) 장바구니의 물건을 선택 > 주문
-		// 3) 장바구니의 물건 리스트를 취소한다.
-		// 4) 장바구니의 물건을 취소한다.
+		// 2) 장바구니의 물건 리스트를 취소한다.
+		// 3) 장바구니의 물건을 취소한다.
 		if(uri.indexOf("list.do")!= -1) {
 			cartList(req,resp);
-		} else if(uri.indexOf("submit.do")!= -1) {
-			cartSubmit(req,resp);
 		} else if(uri.indexOf("list-delete.do")!= -1) {
 			cartListDelete(req,resp);
 		} else if(uri.indexOf("delete.do")!= -1) {
@@ -80,43 +77,10 @@ public class CartServlet extends MyServlet{
 		
 		forward(req, resp, "/WEB-INF/views/cart/cart-list.jsp");
 	}
-	
-	protected void cartSubmit(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
-		// 2) 장바구니의 물건을 선택 > 주문
-		System.out.println("장바구니 물건 선택 > 주문");
-		
-		//HttpSession session = req.getSession();
-		//SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
-		String cp = req.getContextPath();
-		
-		try {
-			String[] pi = req.getParameterValues("productIds");
-			long[] products = null;
-			products = new long[pi.length];
-			for(int i=0; i<pi.length; i++) {
-				products[i] = Long.parseLong(pi[i]);
-			}
-			
-			CartRepositoryImpl cri = new CartRepositoryImpl();
-			
-			// 아이디 ..
-			long memberId = (long)1;
-			List<Cart> list = cri.transferCartList(memberId, products);
-			
-			req.setAttribute("list", list);
-			
-		}  catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// order 창으로 forward
-		forward(req, resp, "/WEB-INF/views/order/order-list.jsp");
 
-	}
 	
 	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
-		// 3) 장바구니의 물건 리스트를 취소한다.
+		// 2) 장바구니의 물건 리스트를 취소한다.
 		System.out.println("장바구니 리스트 취소");
 		
 		// HttpSession session = req.getSession();
@@ -149,7 +113,7 @@ public class CartServlet extends MyServlet{
 	}
 	
 	protected void cartDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
-		// 4) 장바구니의 물건을 취소한다.
+		// 3) 장바구니의 물건을 취소한다.
 		System.out.println("장바구니 아이템 취소");
 		
 		CartRepositoryImpl cri = new CartRepositoryImpl();

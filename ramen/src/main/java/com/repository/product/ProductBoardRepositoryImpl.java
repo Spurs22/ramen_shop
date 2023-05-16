@@ -1,5 +1,7 @@
 package com.repository.product;
+import com.DTO.Product;
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -22,12 +24,13 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "insert INTO product_board (id, MEMBER_ID, content, created_date, hit_count)" +
-					" VALUES (?, ?, ?, sysdate, 0)";
+			sql = "insert INTO product_board (id, MEMBER_ID, content, PRICE, created_date, hit_count)" +
+					" VALUES (?, ?, ?, ?, sysdate, 0)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setLong(1, productBoard.getProductId());
+			pstmt.setLong(1, productBoard.getProduct().getProductId());
 			pstmt.setLong(2, productBoard.getWriterId());
 			pstmt.setString(3, productBoard.getContent());
+			pstmt.setInt(4, productBoard.getPrice());
 			pstmt.executeUpdate();
 
 			if (productBoard.getImgList() != null) {
@@ -38,7 +41,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 				List<String> imgList = productBoard.getImgList();
 
 				for (String img : imgList) {
-					pstmt.setLong(1, productBoard.getProductId());
+					pstmt.setLong(1, productBoard.getProduct().getProductId());
 					pstmt.setString(2, img);
 					pstmt.executeUpdate();
 				}
@@ -69,7 +72,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 					"WHERE id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, productBoard.getContent());
-			pstmt.setLong(2, productBoard.getProductId());
+			pstmt.setLong(2, productBoard.getProduct().getProductId());
 			pstmt.executeUpdate();
 
 			// 이미 있던 이미지는?
@@ -112,13 +115,15 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT pb.id, member_id, name, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, NVL(cm.rating, 0) as rating, category_id " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
-					"    GROUP BY product_board_id) pc ON pb.id = pc.product_board_id " +
+					"    GROUP BY product_board_id) " +
+					"    cm ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
-					"WHERE member_id = ? " +
+					"JOIN product_category pc ON p.category_id = pc.id " +
+					"WHERE MEMBER_ID = ? " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, memberId);
@@ -145,13 +150,14 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		ProductBoard result = null;
 
 		try {
-			sql = "SELECT pb.id, member_id, NAME, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, NVL(cm.rating, 0) as rating, category_id " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
 					"    GROUP BY product_board_id) " +
-					"pc ON pb.id = pc.product_board_id " +
+					"    cm ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
+					"JOIN product_category pc ON p.category_id = pc.id " +
 					"WHERE pb.id = ? " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
@@ -181,13 +187,14 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT pb.id, member_id, NAME, PRICE, content, created_date, hit_count, NVL(pc.rating, 0) as rating " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, NVL(cm.rating, 0) as rating, category_id " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
 					"    GROUP BY product_board_id) " +
-					"    pc ON pb.id = pc.product_board_id " +
+					"    cm ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
+					"JOIN product_category pc ON p.category_id = pc.id " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
 
@@ -216,11 +223,74 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		return null;
 	}
 
+	@Override
+	public List<ProductBoard> findByCategoryAndKeyword(ProductCategory category, String keyword) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<ProductBoard> result = new ArrayList<>();
+
+		try {
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, NVL(cm.rating, 0) as rating, category_id " +
+					"FROM PRODUCT_BOARD pb " +
+					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
+					"    FROM product_comment " +
+					"    GROUP BY product_board_id) " +
+					"    cm ON pb.id = cm.product_board_id " +
+					"JOIN product p ON pb.id = p.id " +
+					"JOIN product_category pc ON p.category_id = pc.id ";
+
+			// 카테고리가 없을 때
+			if (category != null && keyword != null) {
+				sql += "WHERE category_id = ? AND INSTR(name, ?) > 0 " +
+						"ORDER BY ID DESC";
+			} else if (category == null && keyword == null) {
+				sql += "ORDER BY ID DESC";
+			} else if (category == null) {
+				sql += "WHERE INSTR(name, ?) > 0 " +
+						"ORDER BY ID DESC";
+			} else if (keyword == null) {
+				sql += "WHERE category_id = ? " +
+						"ORDER BY ID DESC";
+			}
+
+			pstmt = conn.prepareStatement(sql);
+
+			if (category != null && keyword != null) {
+				pstmt.setInt(1, category.getValue());
+				pstmt.setString(2, keyword);
+			} else if (category == null && keyword == null) {
+
+			} else if (category == null) {
+				pstmt.setString(1, keyword);
+			} else if (keyword == null) {
+				pstmt.setInt(1, category.getValue());
+			}
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				result.add(getProductBoard(rs));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return result;
+	}
+
 	private static ProductBoard getProductBoard(ResultSet rs) throws SQLException {
 		return new ProductBoard(
-				rs.getLong("id" ),
+				new Product(
+						rs.getLong("id"),
+						ProductCategory.getByValue(rs.getInt("category_id")),
+						rs.getString("name"),
+						rs.getInt("remain_quantity"),
+						null
+				),
 				rs.getLong("member_id" ),
-				rs.getString("name" ),
 				null,
 				rs.getString("content" ),
 				rs.getString("created_date" ),

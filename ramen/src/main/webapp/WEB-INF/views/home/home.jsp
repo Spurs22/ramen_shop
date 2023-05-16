@@ -14,14 +14,18 @@
 			font-weight: 700;
 			font-size: 30px;
 			text-align: center;
+			border: 1px solid #DFE2E6;
+			border-radius: 5px;
         }
 
         .today-recipe {
             width: 100%;
             min-height: 300px;
-            background: #fffadd;
+            border: 1px solid #DFE2E6;
+            border-radius: 5px;
 			display: flex;
 			flex-direction: column;
+			margin-bottom: 20px;
         }
 
 		.content-container {
@@ -41,13 +45,14 @@
 			flex: 1;
         }
 		.recipe {
-			background: #c5c5c5;
 			width: 20%;
 			height: 120px;
 			border-radius: 5px;
 			text-align: center;
 			transition: 0.3s;
 			position: relative;
+            /*border: 1px solid #a7a7a8;*/
+			background: lightgray;
 		}
 
 		/*.selected-recipe {*/
@@ -69,14 +74,16 @@
         }
 
 		.rank-label {
-			width: 45px;
-            height: 45px;
-			background: #f1a899;
+			width: 50%;
+            height: 35px;
+			background: #ffffff;
 			position: absolute;
 			bottom: 0px;
-			right: 0px;
+			right: 50%;
 			border-radius: 5px;
+            border: 1px solid #a7a7a8;
 			text-align: center;
+            transform: translate(50%, 50%);
         }
         
           .header-right {
@@ -103,7 +110,8 @@
 		<div class="content-container">
 			<%--	내용	 --%>
 			<div class="main-banner">
-				배너
+				<div class="container-label">배너</div>
+
 			</div>
 
 			<div class="today-recipe">
@@ -131,15 +139,15 @@
 			</div>
 
 			<div class="main-banner">
-				배너
+				<div class="container-label">배너</div>
 			</div>
 
 			<div class="main-banner">
-				배너
+				<div class="container-label">배너</div>
 			</div>
 
 			<div class="main-banner">
-				배너
+				<div class="container-label">배너</div>
 			</div>
 		</div>
 	</div>

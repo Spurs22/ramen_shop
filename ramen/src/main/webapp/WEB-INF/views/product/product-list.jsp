@@ -15,13 +15,16 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
+
+
+
         .product-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-auto-rows: 300px;
             padding: 20px;
             gap: 30px;
-            height: 100%;
+            height: 90%;
 			overflow: auto;
         }
 
@@ -64,7 +67,7 @@
             flex-direction: row;
             gap: 5px;
             justify-content: space-between;
-			margin-bottom: 10px;
+			margin-bottom: 20px;
 			padding: 0 20px;
         }
 
@@ -93,11 +96,24 @@
 	</header>
 
 	<div class="main-container shadow-lg">
-
 		<div class="sub-menu">
+			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+				<input type="radio" class="btn-check" name="category" id="btnradio1" autocomplete="off" value="1"
+					   onclick="clickCategory(this)" checked>
+				<label class="btn btn-outline-primary" for="btnradio1">봉지 라면</label>
+
+				<input type="radio" class="btn-check" name="category" id="btnradio2" autocomplete="off" value="2"
+					   onclick="clickCategory(this)">
+				<label class="btn btn-outline-primary" for="btnradio2">컵 라면</label>
+
+				<input type="radio" class="btn-check" name="category" id="btnradio3" autocomplete="off" value="3"
+					   onclick="clickCategory(this)">
+				<label class="btn btn-outline-primary" for="btnradio3">토핑</label>
+			</div>
+
 			<div style="display: flex; flex-direction: row; gap: 5px" >
-				<input type="text" class="search-box">
-				<button class="btn btn-primary">검색</button>
+				<input type="text" class="search-box" id="searchInput">
+				<button class="btn btn-primary" id="searchButton">검색</button>
 			</div>
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
@@ -106,11 +122,11 @@
 			</div>
 		</div>
 
-		<div class="product-container">
+		<div class="product-container" id="resultForm">
 			<c:forEach var="post" items="${posts}">
-				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=${post.productId}">
+				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=${post.product.productId}">
 					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
-					<div style="margin-top: 5px; font-weight: 750">${post.productName}</div>
+					<div style="margin-top: 5px; font-weight: 750">${post.product.name}</div>
 					<div style="color: #5d5d5d">${post.price}원</div>
 					<div>${post.rating}</div>
 				</a>
@@ -135,6 +151,63 @@
     $(document).ready(function () {
         selectMenu(menuIndex)
     })
+</script>
+
+<script>
+    let category = document.getElementsByName('category');
+
+    let selectedCategory = 1
+
+    function clickCategory(button) {
+        selectedCategory = button.value
+		getList()
+    }
+
+    $(document).ready(function() {
+        $("#searchInput").on("input", function() {
+            getList()
+        });
+    });
+
+    function getList() {
+        let keyword = $('#searchInput').val();
+        // let keyword = $(this).val();
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/product/search",
+            type: "GET",
+            dataType: "json",
+            data: { keyword: keyword, category: selectedCategory },
+            success: function(data) {
+                // 조회된 회원 정보 출력
+                console.log(data);
+                // let posts = data;
+                let resultForm = $('#resultForm');
+                resultForm.empty();
+
+                console.log(Array.isArray(data));
+
+                // resultForm2.css('display','none')
+
+                $.each(data, function(i, post) {
+                    let userCardTemplate = `
+                            <a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=` + post.productId + `">
+								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
+								<div style="margin-top: 5px; font-weight: 750">` + post.productName + `</div>
+								<div style="color: #5d5d5d">` + post.price + `원</div>
+								<div>` + post.rating + `</div>
+							</a>
+                        `;
+
+                    resultForm.append(userCardTemplate);
+                });
+
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
 </script>
 </body>
 </html>

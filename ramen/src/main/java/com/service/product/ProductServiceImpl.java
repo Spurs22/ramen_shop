@@ -51,6 +51,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> findNotRegistedProduct() {
-		return productRepository.findNotRegistedProduct();
+		return productRepository.findNotRegisteredProduct();
 	}
 }

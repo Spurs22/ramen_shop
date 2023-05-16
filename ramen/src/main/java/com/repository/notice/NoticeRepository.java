@@ -23,24 +23,24 @@ public interface NoticeRepository {
 	List<Notice> listNotice(int category);
 	
 	// 해당 공지글 보기
-	Notice readNotice(long id);
+	Notice readNotice(Long id);
 	
 	// 이전 글
-	Notice preReadNotice(int category, long id, String condition, String keyword);
+	Notice preReadNotice(int category, Long id, String condition, String keyword);
 	
 	// 다음 글
-	Notice nextReadNotice(int category,long id, String condition, String keyword);
+	Notice nextReadNotice(int category, Long id, String condition, String keyword);
 	
 	// 조회수 증가
-	void updateHitCount(long id) throws SQLException;
+	void updateHit_count(Long id) throws SQLException;
 	
 	// 공지글 수정
 	void updateNotice(Notice dto) throws SQLException;
 	
 	// 공지글 삭제
-	void deleteNotice(long id) throws SQLException;
+	void deleteNotice(Long id) throws SQLException;
 	
 	
-	void deleteNoticeList(long [] ids) throws SQLException;
+	void deleteNoticeList(Long [] ids) throws SQLException;
 	
 }

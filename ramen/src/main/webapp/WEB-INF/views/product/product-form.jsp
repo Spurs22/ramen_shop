@@ -55,7 +55,7 @@
             width: 100%;
             height: 50px;
             display: grid;
-			grid-template-columns: 30% 20% 35% 15%;
+            grid-template-columns: 45% 40% 15%;
             border-radius: 5px;
 			text-align: center;
 			padding: 0 5px;
@@ -68,7 +68,7 @@
             width: 100%;
             height: 50px;
             display: grid;
-            grid-template-columns: 30% 20% 35% 15%;
+            grid-template-columns: 45% 40% 15%;
             border-radius: 5px;
             text-align: center;
             padding: 0 5px;
@@ -152,10 +152,19 @@
 			</div>
 
 			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" action="${pageContext.request.contextPath}/product/post" id="form">
-				<div class="input-group">
-					<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
-						   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/post" id="form">
+
+				<div style="display: flex; flex-direction: row; gap: 15px">
+					<div class="input-group" style="flex: 1">
+						<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
+							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture">
+					</div>
+
+					<div class="input-group" style="width: 50%">
+						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">가격</span></div>
+						<input class="form-control product-info" id="price" name="price">
+					</div>
+
 				</div>
 
 				<div class="input-group">
@@ -188,15 +197,13 @@
 					 	<div class="shadow-sm product-card-menu bg-secondary">
 							<div>상품명</div>
 							<div>카테고리</div>
-							<div>가격</div>
 							<div>재고</div>
 						</div>
 
 						<c:forEach var="product" items="${products}">
-							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.price}, ${product.remainQuantity}, '${product.category.label}')">
+							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.remainQuantity}, '${product.category.label}')">
 								<div>${product.name}</div>
 								<div>${product.category.label}</div>
-								<div>${product.price}</div>
 								<div>${product.remainQuantity}</div>
 							</div>
 						</c:forEach>
@@ -222,10 +229,9 @@
         keyboard: false
     })
 
-    function selectProduct(productId, name, price, remainQuantity, category) {
+    function selectProduct(productId, name, remainQuantity, category) {
         // alert(productId + '' + name + '' + price + '' + remainQuantity + '' + category)
         productIdInput.value = productId;
-
         categoryInput.value = category;
         productNameInput.value = name;
         quantityInput.value = remainQuantity;

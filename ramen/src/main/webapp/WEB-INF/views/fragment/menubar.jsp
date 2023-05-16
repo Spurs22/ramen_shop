@@ -43,7 +43,10 @@
         }
 
         .logo {
-            height: 150px;
+            width: 100%;
+
+            height: 50px;
+            margin-bottom: 80px;
         }
 
         .selected-menu {
@@ -51,6 +54,22 @@
             z-index: 3;
             height: 90%;
             background: white;
+        }
+
+        .header-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            height: 80px;
+            gap: 15px;
+        }
+        .header-menu div {
+            height: 25px;
+        }
+
+        .header-menu div:hover {
+            cursor: pointer;
         }
 
     </style>
@@ -61,7 +80,19 @@
    <div class = "header-right">
        <jsp:include page="/WEB-INF/views/fragment/header.jsp" />
    </div>
-    
+
+    <div class="header-menu">
+        <div>
+            Login
+        </div>
+        <div>
+            Join
+        </div>
+    </div>
+
+    <div class="logo">
+        <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo.png">
+    </div>
     <div class="menubar">
         <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/home/'">
             <div>
@@ -77,9 +108,21 @@
                 상품
             </span>
         </div>
-        <div class="menubar-item" onclick="">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do'">
             <span>
                 레시피
+            </span>
+        </div>
+
+        <div class="menubar-item" onclick="">
+            <span>
+                마이페이지
+            </span>
+        </div>
+
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do'">
+            <span>
+                게시판
             </span>
         </div>
     </div>

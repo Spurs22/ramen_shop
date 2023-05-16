@@ -2,39 +2,79 @@ package com.repository.order;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.List;
+import java.sql.ResultSet;
 
-import com.DTO.Order;
+import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
 import com.util.DBConn;
 import com.util.DBUtil;
 
-public class OrderRepositoryImpl implements OrderRepository{
 
-private Connection conn = DBConn.getConnection();
+public class OrderRepositoryImpl implements OrderRepository{
+	private Connection conn = DBConn.getConnection();
 	
-	// 주문
+	// 주문 bundle 생성
 	@Override
-	public void createOrder(Order order) {
+	public long createOrderBundle(OrderBundle orderBundle) {
+		PreparedStatement pstmt = null;
+		String sql;
+		ResultSet rs = null;
+		long order_id = 0L;
+		try {
+			sql = "INSERT INTO order_bundle(id, member_id, created_date,receive_name,tel,post_num,address1,address2) "
+					+ " VALUES (order_bundle_seq.NEXTVAL, ?, SYSDATE, ?, ?, ?, ?,? ) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, orderBundle.getMemberId());
+			pstmt.setString(2, orderBundle.getReceiveName());
+			pstmt.setString(3, orderBundle.getTel());
+			pstmt.setString(4, orderBundle.getPostNum());
+			pstmt.setString(5, orderBundle.getAddress1());
+			pstmt.setString(6, orderBundle.getAddress2());
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "SELECT LAST_NUMBER id FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = 'ORDER_BUNDLE_SEQ'";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				order_id = rs.getLong(1)-1;
+				System.out.println(order_id);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+		
+		return order_id;
+	}
+	
+	// 주문 item 추가
+	@Override
+	public void createOrderList(OrderItem orderItem) {
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "INSERT ALL "
-					+ " INTO order_bundle(id, member_id, delivery_id, created_date) VALUES (order_bundle_seq.NEXTVAL, ?, ?, SYSDATE) "
-					+ " INTO order_item(id, product_id, order_id, status_id, quantity, price, final_price ) "
-					+ " VALUES(order_item_seq.NEXTVAL, ?, order_bundle_seq.CURRVAL, ?, ?, ?, ?)"
-					+ " SELECT * FROM dual ";
+			sql = "INSERT INTO order_item(id, product_id, order_id, status_id, quantity, price, final_price ) "
+					+ " VALUES(order_item_seq.NEXTVAL, ?, ?, 1, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, order.getMemberId());
-			pstmt.setLong(2, order.getDeliveryId());
-			
-			pstmt.setLong(3, order.getProductId());
-			pstmt.setLong(4, order.getStatusId());
-			pstmt.setLong(5, order.getQuantity());
-			pstmt.setLong(6, order.getPrice());
-			pstmt.setLong(7, order.getFinalPrice());
+			pstmt.setLong(1, orderItem.getProductId());
+			pstmt.setLong(2, orderItem.getOrderId());
+			pstmt.setInt(3, orderItem.getQuantity());					
+			pstmt.setLong(4, orderItem.getPrice());
+			pstmt.setLong(5, orderItem.getFinalPrice());
 			
 			pstmt.executeUpdate();
 			
@@ -50,7 +90,7 @@ private Connection conn = DBConn.getConnection();
 	public void cancelOrder(Long orderId) {
 		PreparedStatement pstmt = null;
 		String sql;
-		
+
 		try {
 			sql = "UPDATE order_status SET status_name = '주문취소'  "
 					+ "	WHERE EXISTS( SELECT order_id, os.id, status_name  "
@@ -94,39 +134,64 @@ private Connection conn = DBConn.getConnection();
 			DBUtil.closeResource(pstmt);
 		}
 	}
-
-	// 송장번호 만들기
-	@Override
-	public void setDeliveryNumber(Long orderId, Long deliveryNumber) {
-		
-	}
-
-	// 회원 > 주문내역 확인
-	@Override
-	public List<Order> findOrderByMemberId(Long memberId) {
-		return null;
-	}
 	
-	// 상태별 주문내역 확인
+	// 상품의 가격 구하기 ( 품목 ) (product 매개변수로 받아서)
 	@Override
-	public List<Order> findOrderByMemberId(String statusName) {
-		// TODO Auto-generated method stub
-		return null;
+	public long orderPrice(Long productId) {
+		long price = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT price FROM product_board "
+					+ " WHERE id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, productId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				price = rs.getLong(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return price;
 	}
 
-
-	// 주문번호 > 주문내역 확인
+	
+	
+	// sum(finalPrice) >> 전체 가격
 	@Override
-	public Order findOrderByOrderId(Long orderId) {
-		return null;
-	}
-
-
-	// 전체 주문내역 확인
-	@Override
-	public List<Order> findOrderByMemberId() {
-		// TODO Auto-generated method stub
-		return null;
+	public long orderAllPrice(Long orderId) {
+		long totalPrice = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT sum(price) totalPrice FROM order_item "
+					+ " WHERE order_id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, orderId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				totalPrice = rs.getLong(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return totalPrice;
 	}
 
 }
+

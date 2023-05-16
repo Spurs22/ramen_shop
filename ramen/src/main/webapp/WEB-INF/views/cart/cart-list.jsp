@@ -46,7 +46,7 @@
 			
 			if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
 				const f = document.listForm;
-				f.action="${pageContext.request.contextPath}/cart/submit.do";
+				f.action="${pageContext.request.contextPath}/order/order.do";
 				f.submit();
 			}
 		});
@@ -73,6 +73,7 @@
 					<th>상품사진</th>
 					<th>상품개수</th>
 					<th>상품 추가 날짜</th>
+					<th>가격</th>
 				</tr>
 				</thead>
 				
@@ -86,6 +87,7 @@
 							<td>상품사진</td>
 							<td>${cart.quantity}</td>
 							<td>${cart.createdDate}</td>
+							<td>${cart.price*cart.quantity}</td>
 						</tr>
 					</c:forEach>
 					
