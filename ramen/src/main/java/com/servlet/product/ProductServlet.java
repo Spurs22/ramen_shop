@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+@MultipartConfig
 @WebServlet("/product/*")
 public class ProductServlet extends MyServlet {
 
@@ -93,9 +95,12 @@ public class ProductServlet extends MyServlet {
 //		req.getParameter("picture");
 
 		System.out.println("content");
+		System.out.println("contetnt = " + content + ", price = " + price + ", productId = " + productId);
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), 1L, null, content, price);
 		productBoardService.createProductPost(productBoard);
+
+
 
 		resp.sendRedirect(req.getContextPath() + "/product/list");
 	}

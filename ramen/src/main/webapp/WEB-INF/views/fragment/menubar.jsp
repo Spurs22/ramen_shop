@@ -43,7 +43,10 @@
         }
 
         .logo {
-            height: 150px;
+            width: 100%;
+
+            height: 50px;
+            margin-bottom: 80px;
         }
 
         .selected-menu {
@@ -58,7 +61,7 @@
             display: flex;
             flex-direction: row;
             justify-content: end;
-            height: 100px;
+            height: 80px;
             gap: 15px;
         }
         .header-menu div {
@@ -81,6 +84,10 @@
         <div>
             Join
         </div>
+    </div>
+
+    <div class="logo">
+        <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo.png">
     </div>
 
     <div class="menubar">

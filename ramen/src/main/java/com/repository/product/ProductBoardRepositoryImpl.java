@@ -24,12 +24,13 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "insert INTO product_board (id, MEMBER_ID, content, created_date, hit_count)" +
-					" VALUES (?, ?, ?, sysdate, 0)";
+			sql = "insert INTO product_board (id, MEMBER_ID, content, PRICE, created_date, hit_count)" +
+					" VALUES (?, ?, ?, ?, sysdate, 0)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, productBoard.getProduct().getProductId());
 			pstmt.setLong(2, productBoard.getWriterId());
 			pstmt.setString(3, productBoard.getContent());
+			pstmt.setInt(4, productBoard.getPrice());
 			pstmt.executeUpdate();
 
 			if (productBoard.getImgList() != null) {

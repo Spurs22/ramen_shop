@@ -152,10 +152,19 @@
 			</div>
 
 			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" action="${pageContext.request.contextPath}/product/post" id="form">
-				<div class="input-group">
-					<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
-						   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/post" id="form">
+
+				<div style="display: flex; flex-direction: row; gap: 15px">
+					<div class="input-group" style="flex: 1">
+						<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
+							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture">
+					</div>
+
+					<div class="input-group" style="width: 50%">
+						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">가격</span></div>
+						<input class="form-control product-info" id="price" name="price">
+					</div>
+
 				</div>
 
 				<div class="input-group">
