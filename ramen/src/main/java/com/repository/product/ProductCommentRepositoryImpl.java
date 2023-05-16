@@ -80,10 +80,11 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 		List<ProductComment> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT member_id, m.nickname, product_board_id, rating, product_board_comment, TO_CHAR(pc.created_date, 'yyyy/mm/dd') AS created_date " +
-					"FROM PRODUCT_COMMENT pc " +
-					"JOIN member m ON m.id = pc.member_id " +
-					"WHERE PRODUCT_BOARD_ID = ? ";
+			sql = "SELECT member_id, nickname, rating, product_board_comment, TO_CHAR(pc.created_date, 'yyyy/mm/dd') AS created_date , product_id " +
+					"FROM product_comment pc " +
+					"JOIN order_item oi on oi.id = pc.order_item_id " +
+					"JOIN member m ON m.id = pc.member_id\n" +
+					"WHERE product_id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, productId);
 
@@ -92,7 +93,7 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 			while (rs.next()) {
 				result.add(new ProductComment(
 						rs.getLong("member_id"),
-						rs.getLong("product_board_id"),
+						rs.getLong("product_id"),
 						rs.getString("nickname"),
 						rs.getDouble("rating"),
 						rs.getString("created_date"),

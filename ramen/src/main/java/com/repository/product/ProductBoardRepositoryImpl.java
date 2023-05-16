@@ -152,12 +152,12 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		try {
 			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
 					"FROM PRODUCT_BOARD pb " +
-					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
-					"    FROM product_comment " +
-					"    GROUP BY product_board_id) " +
-					"    cm ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
-					"JOIN product_category pc ON p.category_id = pc.id " +
+					"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
+					"FROM product_comment pc " +
+					"JOIN order_item oi on oi.id = order_item_id " +
+					"GROUP BY oi.product_id) " +
+					"cm ON p.id = cm.product_id " +
 					"WHERE pb.id = ? " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
@@ -189,12 +189,12 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		try {
 			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
 					"FROM PRODUCT_BOARD pb " +
-					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
-					"    FROM product_comment " +
-					"    GROUP BY product_board_id) " +
-					"    cm ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
-					"JOIN product_category pc ON p.category_id = pc.id " +
+					"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
+					"FROM product_comment pc " +
+					"JOIN order_item oi on oi.id = order_item_id " +
+					"GROUP BY oi.product_id) " +
+					"cm ON p.id = cm.product_id " +
 					"ORDER BY ID DESC";
 			pstmt = conn.prepareStatement(sql);
 
@@ -231,14 +231,14 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
-					"FROM PRODUCT_BOARD pb " +
-					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
-					"    FROM product_comment " +
-					"    GROUP BY product_board_id) " +
-					"    cm ON pb.id = cm.product_board_id " +
-					"JOIN product p ON pb.id = p.id " +
-					"JOIN product_category pc ON p.category_id = pc.id ";
+				sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
+						"FROM PRODUCT_BOARD pb " +
+						"JOIN product p ON pb.id = p.id " +
+						"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
+						"FROM product_comment pc " +
+						"JOIN order_item oi on oi.id = order_item_id " +
+						"GROUP BY oi.product_id) " +
+						"cm ON p.id = cm.product_id ";
 
 			// 카테고리가 없을 때
 			if (category != null && keyword != null) {
