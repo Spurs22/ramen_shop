@@ -58,14 +58,10 @@ public class MemberRepositoryImpl implements MemberRepository{
 	
 	// 로그인 
 	@Override
-	public Member loginMember(Member member) throws SQLException {
-		
-	
+	public Member loginMember(Member member) throws SQLException {	
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql;
-		
-		
+		String sql;		
 		try {
 			
 			 sql ="SELECT * FROM member WHERE email=? AND password=? AND enabled=1";
@@ -76,17 +72,9 @@ public class MemberRepositoryImpl implements MemberRepository{
 		     if (rs.next()) {
 		            // 로그인 성공 처리
 		            Member loginMember = new Member();
-		            loginMember.setEmail(rs.getString("email"));
-		            
-		            
-		            loginMember.setMemberId(rs.getLong("id"));
-		            loginMember.setName(rs.getString("name"));
-		            loginMember.setNickName(rs.getString("nickname"));
-		            loginMember.setTel(rs.getString("tel"));
-		            loginMember.setPostNum(rs.getString("post_num"));
-		            loginMember.setAddress1(rs.getString("address1"));
-		            loginMember.setAddress2(rs.getString("address2"));
-		            return loginMember;
+		            loginMember.setEmail(rs.getString("email"));	            
+		            loginMember.setMemberId(rs.getLong("password"));
+		           
 		     } else {
 		            // 로그인 실패 처리
 		            return null;
@@ -98,6 +86,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 			} finally {
 				DBUtil.closeResource(pstmt);
 			}
+		return member;
 			
 		}
 	
