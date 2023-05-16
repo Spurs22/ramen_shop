@@ -10,6 +10,7 @@
         .main-banner {
 			width: 100%;
 			min-height: 200px;
+			background: #ffeadd;	
 			font-weight: 700;
 			font-size: 30px;
 			text-align: center;
@@ -84,6 +85,16 @@
 			text-align: center;
             transform: translate(50%, 50%);
         }
+        
+          .header-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .header-right a {
+        margin-left: 10px;
+    }
 	</style>
 </head>
 <script>
@@ -91,8 +102,7 @@
 </script>
 <body>
 <div class="whole-container">
-
-	<header>
+	<header>	
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 

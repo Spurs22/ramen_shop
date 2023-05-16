@@ -77,6 +77,10 @@
 
 
 <!--    <img class="logo" src="../../static/picture/logo.png">-->
+   <div class = "header-right">
+       <jsp:include page="/WEB-INF/views/fragment/header.jsp" />
+   </div>
+
     <div class="header-menu">
         <div>
             Login
@@ -89,7 +93,6 @@
     <div class="logo">
         <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo.png">
     </div>
-
     <div class="menubar">
         <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/home/'">
             <div>
