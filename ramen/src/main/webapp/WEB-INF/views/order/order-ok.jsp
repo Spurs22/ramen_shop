@@ -11,7 +11,7 @@
 	</style>
 </head>
 <script>
-	let menuIndex = 5
+	// let menuIndex = 5
 </script>
 <body>
 <div class="whole-container">

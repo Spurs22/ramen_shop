@@ -12,7 +12,7 @@
 	</style>
 </head>
 <script>
-    let menuIndex = 5
+    // let menuIndex = 5
     
 	$(function(){
 		$("#btnOrder").click(function(){
