@@ -23,7 +23,7 @@ body {
   max-width: 360px;
   margin: 0 auto;
   background: #fefeff;
-  padding: 30px 25px;
+  padding: 50px 30px 20px;
   box-shadow: 0 0 15px 0 rgba(2, 59, 109, 0.1);
 }
 
@@ -42,11 +42,11 @@ body {
 .members-form input {
   display: block;
   width: 100%;
-  padding: 7px 5px;
+  padding: 6px 4px;
 }
 
 .members-form button {
-  padding: 8px 30px;
+  padding: 10px 30px;
   font-size: 15px;
   width: 97%;
   background-color: #FFBB00;
@@ -75,6 +75,28 @@ body {
 .btit{
   color: #000000;
   text-align: center;
+}
+.divider {
+  margin: 0;
+  padding: 0;
+  color: #FFBB00;
+}
+
+.link-btn {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 0 0 5px;
+  font-size: 14px;
+  color: #FFBB00;
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.link-btn:first-child {
+  margin-left: 0;
 }
 </style>
 
@@ -122,7 +144,7 @@ function sendLogin() {
 			<form name="loginForm" method="post">
 				<div class="members-form">
 					<div class="row text-center">
-  						<h3 class = "btit" >오늘도 반갑습니다!</h3>
+  						<h3 class = "btit" >LOGIN</h3>
 					</div>
 					<div class="row">
 						<label for="login-userId"> </label>
@@ -137,10 +159,15 @@ function sendLogin() {
 						<button type="button" class="btn btn-primary" onclick="sendLogin();">Login</button>
 					</div>
 					<p class="text-center">
-						<a href="${pageContext.request.contextPath}/member/member.do" >회원가입</a> <span>|</span>
-						<a href="${pageContext.request.contextPath}/">아이디 찾기</a> <span>|</span>
-						<a href="${pageContext.request.contextPath}/">패스워드 찾기</a>
-					</p>
+					 <p class="text-center">
+						  <span style="display: flex; justify-content: center;">
+						    <a href="${pageContext.request.contextPath}/" class="link-btn">비밀번호 찾기</a>
+						    <span class="divider">|</span>
+						    <a href="${pageContext.request.contextPath}/" class="link-btn">아이디 찾기</a>
+						    <span class="divider">|</span>
+						    <a href="${pageContext.request.contextPath}/member/member.do" class="link-btn">회원가입</a>
+						  </span>
+						</p>
 				</div>
 			</form>
 			<div class="members-message">

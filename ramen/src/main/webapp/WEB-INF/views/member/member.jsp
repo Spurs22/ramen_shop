@@ -133,7 +133,7 @@ function changeEmail() {
 <main>
 	<div class="container body-container">
 	    <div class="body-title">
-			<h2><i class="fas fa-user"></i> ${title} </h2>
+			<h2><i class="fas fa-user" style = "text-align: center;"></i> 회원가입 </h2>
 	    </div>
 	    
 	    <div class="body-main mx-auto">
