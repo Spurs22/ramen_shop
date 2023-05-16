@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ import com.service.recipe.RecipeLikeServiceImpl;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
+@MultipartConfig
 @WebServlet("/recipe/*")
 public class RecipeServlet extends MyUploadServlet {
 	private static final long serialVersionUID = 1L;
@@ -328,7 +330,7 @@ public class RecipeServlet extends MyUploadServlet {
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			
-			System.out.println(keyword + ", " + condition);
+			System.out.println(id+", " + keyword + ", " + condition);
 			
 			if(condition == null) {
 				condition = "all";
@@ -481,6 +483,10 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void likeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 좋아요
+		RecipeComment comment = new RecipeComment();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("");
 	}
 
 	protected void dislikeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

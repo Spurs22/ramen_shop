@@ -48,12 +48,10 @@
 				</tr>
 				<tr>
 					<td colspan=3>
-					<%--
 						<c:forEach var="recipe" items="${list}">
-							${list.productId} <br>
-							${list.quantity} <br>
+							${recipe.productId} <br>
+							${recipe.quantity} <br>
 						</c:forEach>
-						 --%>
 					</td>
 				</tr>
 				<tr>
@@ -61,7 +59,6 @@
 						${dto.content}
 					</td>
 				</tr>
-				<tfoot>
 				<tr>
 					<td colspan=2 style="text-align: left">
 						<button>수정</button>
@@ -71,7 +68,16 @@
 						${dto.createdDate}
 					</td>
 				</tr>
-				</tfoot>
+				<tr>
+					<td style="text-align: left;">
+						<a href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${preReadDto.id}">&lt;&nbsp;${preReadDto.subject}</a>
+					</td>
+					<td>
+					</td>
+					<td style="text-align: right;">
+						<a href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${nextReadDto.id}">${nextReadDto.subject}&nbsp;&gt;</a>
+					</td>
+				</tr>
 			</table>
 			
 		</div>

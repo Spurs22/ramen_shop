@@ -362,7 +362,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " LEFT OUTER JOIN ( "
@@ -380,6 +380,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			if(rs.next()) {
 				recipeBoard = new RecipeBoard();
 				
+				recipeBoard.setId(rs.getLong("id"));
 				recipeBoard.setSubject(rs.getString("subject"));
 				recipeBoard.setContent(rs.getString("content"));
 				recipeBoard.setHitCount(rs.getInt("hit_count"));
@@ -481,6 +482,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			rs = null;
 			
 			sql = " SELECT product_id, quantity "
+					+ " FROM recipe_product "
 					+ " WHERE recipe_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -570,6 +572,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			rs = null;
 			
 			sql = " SELECT product_id, quantity "
+					+ " FROM recipe_product "
 					+ " WHERE recipe_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
