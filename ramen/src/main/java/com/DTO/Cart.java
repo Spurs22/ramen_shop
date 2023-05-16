@@ -6,6 +6,7 @@ public class Cart {
 	private int quantity;
 	private String createdDate;
 	private String picture;
+	private Long price;
 
 	public Long getProductId() {
 		return productId;
@@ -36,5 +37,11 @@ public class Cart {
 	}
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	public Long getPrice() {
+		return price;
+	}
+	public void setPrice(Long price) {
+		this.price = price;
 	}
 }

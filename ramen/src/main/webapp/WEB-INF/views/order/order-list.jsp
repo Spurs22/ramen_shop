@@ -38,8 +38,9 @@
 				<tr>
 					<th>상품코드</th>
 					<th>상품사진</th>
+					<th>상품금액</th>
 					<th>상품개수</th>
-					<th>상품 추가 날짜</th>
+					<th>상품합산금액</th>
 				</tr>
 				</thead>
 				
@@ -48,11 +49,13 @@
 						<tr>
 							<td>${cart.productId}</td>
 							<td>상품사진</td>
+							<td>${cart.price}</td>
 							<td>${cart.quantity}</td>
-							<td>${cart.createdDate}</td>
+							<td>${cart.price*cart.quantity}</td>
 							<input type="hidden" name="items" value="${cart.productId}">
 						</tr>
 					</c:forEach>
+					
 					
 					<tr>
 						<td>받는 사람</td>
@@ -105,9 +108,11 @@
 						  <input type="text" name="tel3" maxlength="4" class="form-control" value="${dto.tel3}" style="width: 33%;">
 					</td>
 				</tr>
+				
 				</tbody>
 			</table>
 
+			<div> 총 주문 금액 ${totalPrice} </div>
 			
 			<button type="button" class="btn" id="btnOrder">결제</button>
 			</form>
