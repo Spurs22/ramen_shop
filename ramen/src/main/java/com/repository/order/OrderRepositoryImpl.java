@@ -9,7 +9,6 @@ import com.util.DBConn;
 import com.util.DBUtil;
 
 
-
 public class OrderRepositoryImpl implements OrderRepository{
 	private Connection conn = DBConn.getConnection();
 	
@@ -192,7 +191,6 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 		return totalPrice;
 	}
-	
 
 }
 

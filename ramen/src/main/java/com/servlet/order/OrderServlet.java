@@ -142,6 +142,7 @@ public class OrderServlet extends MyServlet{
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId",order_id);
 			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
