@@ -3,14 +3,9 @@ package com.servlet.product;
 import com.DTO.Product;
 import com.DTO.ProductBoard;
 import com.DTO.ProductCategory;
-import com.repository.product.ProductBoardRepository;
-import com.repository.product.ProductBoardRepositoryImpl;
-import com.repository.product.ProductRepository;
-import com.repository.product.ProductRepositoryImpl;
-import com.service.product.ProductBoardService;
-import com.service.product.ProductBoardServiceImpl;
-import com.service.product.ProductService;
-import com.service.product.ProductServiceImpl;
+import com.DTO.ProductComment;
+import com.repository.product.*;
+import com.service.product.*;
 import com.util.MyServlet;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,9 +26,12 @@ public class ProductServlet extends MyServlet {
 
 	ProductRepository productRepository = new ProductRepositoryImpl();
 	ProductBoardRepository productBoardRepository = new ProductBoardRepositoryImpl();
+	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
 
 	ProductService productService = new ProductServiceImpl(productRepository);
 	ProductBoardService productBoardService = new ProductBoardServiceImpl(productBoardRepository);
+	ProductCommentService productCommentService = new ProductCommentServiceImpl(productCommentRepository);
+
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, UnsupportedEncodingException {
 		req.setCharacterEncoding("UTF-8");
@@ -78,8 +76,10 @@ public class ProductServlet extends MyServlet {
 		Long productId = Long.valueOf(req.getParameter("id" ));
 		try {
 			ProductBoard post = productBoardService.findPostsByProductId(productId);
+			List<ProductComment> comments = productCommentService.findCommentsByProductId(productId);
 
 			req.setAttribute("post", post);
+			req.setAttribute("comments", comments);
 
 			String path = "/WEB-INF/views/product/product-info.jsp";
 			forward(req, resp, path);
@@ -99,8 +99,6 @@ public class ProductServlet extends MyServlet {
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), 1L, null, content, price);
 		productBoardService.createProductPost(productBoard);
-
-
 
 		resp.sendRedirect(req.getContextPath() + "/product/list");
 	}

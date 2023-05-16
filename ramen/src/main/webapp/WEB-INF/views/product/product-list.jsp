@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%--
   Created by IntelliJ IDEA.
@@ -83,6 +84,17 @@
             padding: 0 5px;
 
         }
+
+        .starBundle-comment {
+            display: grid;
+            font-size: 17px;
+            width: 140px;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #F0974E;
+        }
 	</style>
 </head>
 <script>
@@ -128,7 +140,37 @@
 					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 					<div style="margin-top: 5px; font-weight: 750">${post.product.name}</div>
 					<div style="color: #5d5d5d">${post.price}원</div>
-					<div>${post.rating}</div>
+					<div class="starBundle-comment">
+						<c:set var="rating" value="${post.rating}"/>
+						<c:set var="first" value="${fn:substringBefore(rating, '.')}"/>
+						<c:set var="second" value="${fn:substringAfter(rating, '.')}"/>
+
+						<!-- 3.4라면 1~3자리까지 꽉찬 별로 채움 -->
+						<c:if test="${!first.equals('0')}">
+							<c:forEach begin="1" end="${first}">
+								<i class="fa-solid fa-star"></i>
+							</c:forEach>
+						</c:if>
+
+						<c:if test="${!first.equals('5')}">
+							<!-- 소숫점 숫자가 0이 아니라면 반별 -->
+							<c:if test="${!second.equals('0')}">
+								<i class="fa-solid fa-star-half-stroke"></i>
+							</c:if>
+							<!-- 0이라면 빈별 -->
+							<c:if test="${second.equals('0')}">
+								<i class="fa-regular fa-star"></i>
+							</c:if>
+
+							<!-- 5 - (앞자리+1) -->
+							<c:if test="${!first.equals('4')}">
+								<c:forEach begin="1" end="${4-first}">
+									<i class="fa-regular fa-star"></i>
+								</c:forEach>
+							</c:if>
+						</c:if>
+
+					</div>
 				</a>
 			</c:forEach>
 		</div>
