@@ -38,12 +38,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			rs = null;
 			pstmt = null;
 			
-			sql = "INSERT INTO notice_board(id, member_id, subject, content, ip_address, category, hitCount, notice, create_date) "
+			sql = "INSERT INTO notice_board(id, member_id, subject, content, ip_address, category, hit_count, notice, create_date) "
 					+ "  VALUES (notice_board_seq.nextVAL, ?, ?, ?, ?, ?, 0, ?, SYSDATE) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, dto.getMember_id());
+			pstmt.setLong(1, dto.getmemberId());
 			pstmt.setString(2, dto.getSubject());
 			pstmt.setString(3, dto.getContent());
 			pstmt.setString(4, dto.getIp_address());
@@ -148,7 +148,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT id, member_id, subject, hitCount, TO_CHAR(create_date, 'YYYY-MM-DD') create_date  ");
+			sb.append("  SELECT id, member_id, subject, hit_count, TO_CHAR(create_date, 'YYYY-MM-DD') create_date  ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
 			sb.append("  WHERE category = ? ");
 			sb.append("  ORDER BY id DESC ");
@@ -166,9 +166,9 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				Notice dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setMember_id(rs.getLong("member_id"));
+				dto.setmemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setHit_count(rs.getInt("hit_count"));
 				dto.setCreate_date(rs.getString("create_date"));
 				
 				list.add(dto);
@@ -192,7 +192,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT id, member_id, subject, hitCount, TO_CHAR(create_date, 'YYYY-MM-DD') create_date  ");
+			sb.append("  SELECT id, member_id, subject, hit_count, TO_CHAR(create_date, 'YYYY-MM-DD') create_date  ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
 			sb.append("  WHERE category = ? ");
 			
@@ -230,10 +230,10 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				Notice dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setMember_id(rs.getLong("member_id"));
+				dto.setmemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
-				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setHit_count(rs.getInt("hit_count"));
 				dto.setCreate_date(rs.getString("create_date"));
 				
 				list.add(dto);
@@ -257,7 +257,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT n.id, member_id, subject, content, ip_address, category, hitCount,");
+			sb.append("  SELECT n.id, member_id, subject, content, ip_address, category, hit_count,");
 			sb.append("       notice,  TO_CHAR(create_date, 'YYYY-MM-DD')create_date ");
 			sb.append("  FROM notice_board n");
 			sb.append("  JOIN member m ON m.id=n.member_id ");
@@ -274,12 +274,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				Notice dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setMember_id(rs.getLong("member_id"));
+				dto.setmemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
 				dto.setIp_address(rs.getString("ip_address"));
 				dto.setCategory(rs.getInt("category"));
-				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setHit_count(rs.getInt("hit_count"));
 				dto.setNotice(rs.getInt("notice"));
 				dto.setCreate_date(rs.getString("create_date"));
 				
@@ -298,14 +298,14 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 
 	// 해당 공지글 보기 
 	@Override
-	public Notice readNotice(long id) {
+	public Notice readNotice(Long id) {
 		Notice dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = " SELECT n.id, member_id, subject, content, ip_address, category, hitCount, notice, create_date "
+			sql = " SELECT n.id, member_id, subject, content, ip_address, category, hit_count, notice, create_date "
 					+ "  FROM notice_board n "
 					+ "  JOIN member m ON m.id=n.member_id "
 					+ "  WHERE id = ? ";
@@ -320,12 +320,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setMember_id(rs.getLong("member_id"));
+				dto.setmemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
 				dto.setIp_address(rs.getString("ip_address"));
 				dto.setCategory(rs.getInt("category"));
-				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setHit_count(rs.getInt("hit_count"));
 				dto.setNotice(rs.getInt("notice"));
 				dto.setCreate_date(rs.getString("create_date"));
 			}
@@ -341,7 +341,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public Notice preReadNotice(int category, long id, String condition, String keyword) {
+	public Notice preReadNotice(int category, Long id, String condition, String keyword) {
 		Notice dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -406,7 +406,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public Notice nextReadNotice(int category, long id, String condition, String keyword) {
+	public Notice nextReadNotice(int category, Long id, String condition, String keyword) {
 		Notice dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -468,12 +468,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public void updateHitCount(long id) throws SQLException {
+	public void updateHit_count(Long id) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "  UPDATE notice_board SET hitCount=hitCount+1 WHERE id = ? ";
+			sql = "  UPDATE notice_board SET hit_count=hit_count+1 WHERE id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -519,7 +519,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public void deleteNotice(long id) throws SQLException {
+	public void deleteNotice(Long id) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -542,7 +542,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public void deleteNoticeList(long[] ids) throws SQLException {
+	public void deleteNoticeList(Long[] ids) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		

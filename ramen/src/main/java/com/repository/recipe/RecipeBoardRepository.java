@@ -32,4 +32,12 @@ public interface RecipeBoardRepository {
 	void registPicture(Long postId, String path);
 	
 	List<RecipeBoard> findByMemberId(Long memberId);
+	
+	List<RecipeBoard> readRecipeByHitCount();
+	
+	List<RecipeBoard> readRecipeByHitCount(String condition, String keyword);
+	
+	List<RecipeBoard> readRecipeByLike();
+	
+	List<RecipeBoard> readRecipeByLike(String condition, String keyword);
 }

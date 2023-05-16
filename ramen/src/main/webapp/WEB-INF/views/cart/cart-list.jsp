@@ -46,7 +46,7 @@
 			
 			if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
 				const f = document.listForm;
-				f.action="${pageContext.request.contextPath}/cart/submit.do";
+				f.action="${pageContext.request.contextPath}/order/order.do";
 				f.submit();
 			}
 		});
