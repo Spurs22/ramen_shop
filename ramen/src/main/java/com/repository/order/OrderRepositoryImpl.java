@@ -71,7 +71,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, orderItem.getProductId());
-			pstmt.setLong(2, orderItem.getOrderId());
+			pstmt.setLong(2, orderItem.getOrderBundleId());
 			pstmt.setInt(3, orderItem.getQuantity());					
 			pstmt.setLong(4, orderItem.getPrice());
 			pstmt.setLong(5, orderItem.getFinalPrice());
@@ -110,7 +110,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 	}
 
-	// 주문상태 변경 - 매개변수:상태(결제완료 - 배송중 - 배송완료 + 주문취소)
+	//  주문상태 변경 - (1:결제완료 - 2:배송중 - 3:배송완료 - 4:주문취소)
 	@Override
 	public void confirmOrder(Long orderId, String statusName) {
 		PreparedStatement pstmt = null;
@@ -135,7 +135,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 	}
 	
-	// 상품의 가격 구하기 ( 품목 ) (product 매개변수로 받아서)
+	// 상품의 가격 구하기 ( 품목 ) 
 	@Override
 	public long orderPrice(Long productId) {
 		long price = 0;

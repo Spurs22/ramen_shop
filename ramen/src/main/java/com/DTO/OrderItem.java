@@ -2,10 +2,9 @@ package com.DTO;
 
 public class OrderItem {
 	private Long orderItemId;
-	private Long orderStatusId;
 	
 	private Long productId;
-	private Long orderId;
+	private Long orderBundleId;
 	private Long statusId;
 	private int quantity;
 	private Long price;
@@ -22,14 +21,6 @@ public class OrderItem {
 		this.orderItemId = orderItemId;
 	}
 
-	public Long getOrderStatusId() {
-		return orderStatusId;
-	}
-
-	public void setOrderStatusId(Long orderStatusId) {
-		this.orderStatusId = orderStatusId;
-	}
-
 	public Long getProductId() {
 		return productId;
 	}
@@ -38,12 +29,12 @@ public class OrderItem {
 		this.productId = productId;
 	}
 
-	public Long getOrderId() {
-		return orderId;
+	public Long getOrderBundleId() {
+		return orderBundleId;
 	}
 
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
+	public void setOrderBundleId(Long orderBundleId) {
+		this.orderBundleId = orderBundleId;
 	}
 
 	public Long getStatusId() {

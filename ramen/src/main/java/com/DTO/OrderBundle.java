@@ -17,6 +17,8 @@ public class OrderBundle {
 	private String userEmail;
 	private Long totalPrice;
 
+	private List<OrderItem> orderItems;
+	
 	public Long getTotalPrice() {
 		return totalPrice;
 	}
@@ -25,7 +27,6 @@ public class OrderBundle {
 		this.totalPrice = totalPrice;
 	}
 
-	private List<OrderItem> orderItems;
 
 	public Long getOrderBundleId() {
 		return orderBundleId;

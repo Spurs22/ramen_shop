@@ -30,6 +30,7 @@
             	<a href="#" title="알림"><i class="fa-regular fa-bell"></i></a>
             	&nbsp;
 				<a href="${pageContext.request.contextPath}/member/logout.do" title="로그아웃"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            	<a href="${pageContext.request.contextPath}/cart/list.do" title="장바구니"><i class="fa-solid fa-cart-shopping"></i></a>
             </c:if>
             <c:if test="${sessionScope.member.userRoll == 1}">
             	&nbsp;
