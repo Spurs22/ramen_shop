@@ -127,7 +127,7 @@ function changeEmail() {
 <body>
 
 <header>
-    <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/></jsp:include>
+    <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 </header>
 	
 <main>
@@ -334,10 +334,5 @@ function changeEmail() {
     }
 </script>
 
-<footer>
-    <jsp:include page="/WEB-INF/views/fragment/footer.jsp"></jsp:include>
-</footer>
-
-<jsp:include page="/WEB-INF/views/fragment/footer.jsp">
 </body>
 </html>
