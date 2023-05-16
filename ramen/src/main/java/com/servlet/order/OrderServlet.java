@@ -20,6 +20,9 @@ import com.util.MyServlet;
 @WebServlet("/order/*")
 public class OrderServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
+	private final CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
+	private final OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
+
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,7 +61,6 @@ public class OrderServlet extends MyServlet {
 				products[i] = Long.parseLong(pi[i]);
 			}
 
-			CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
 
 			long memberId = info.getMemberId();
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
@@ -85,7 +87,6 @@ public class OrderServlet extends MyServlet {
 
 		OrderBundle orderBundle = new OrderBundle();
 
-		OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
 		try {
 
 			long memberId = info.getMemberId();
@@ -100,8 +101,11 @@ public class OrderServlet extends MyServlet {
 			orderBundle.setAddress1(req.getParameter("zip1"));
 			orderBundle.setAddress2(req.getParameter("zip2"));
 
+			System.out.println(orderBundle);
+			
 			// 주문 bundle 생성
 			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle);
+			
 
 			String[] pi = req.getParameterValues("items");
 			long[] products = null;
@@ -110,7 +114,6 @@ public class OrderServlet extends MyServlet {
 				products[i] = Long.parseLong(pi[i]);
 			}
 
-			CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
 
 			for (Cart c : list) {
@@ -118,6 +121,7 @@ public class OrderServlet extends MyServlet {
 				long oneprice = orderRepositoryImpl.orderPrice(c.getProductId());
 				long price = oneprice * c.getQuantity();
 
+				
 				orderItem.setOrderBundleId(order_id);
 				orderItem.setProductId(c.getProductId());
 				orderItem.setQuantity(c.getQuantity());
@@ -125,7 +129,7 @@ public class OrderServlet extends MyServlet {
 				orderItem.setFinalPrice(price);
 
 				// orderItem 추가
-				orderRepositoryImpl.createOrderList(orderItem);
+				orderRepositoryImpl.createOrderList(orderItem, order_id);
 				
 				// 장바구니에서 결제한 물품 초기화
 				cartRepositoryImpl.deleteCart(memberId, c.getProductId());

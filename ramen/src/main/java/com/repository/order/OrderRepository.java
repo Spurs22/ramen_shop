@@ -6,7 +6,7 @@ import com.DTO.OrderItem;
 public interface OrderRepository {
 
 	/**
-	 * [ 주문 bundle 생성 ] 
+	 * [ 주문 bundle 생성 ]
 	 * @param orderBundle	orderBundle
 	 * @return				주문번호 ( orderId )
 	 */
@@ -15,8 +15,9 @@ public interface OrderRepository {
 	/**
 	 * [ 주문 item 추가 ]
 	 * @param orderItem		orderItem
+	 * @param orderId		주문번호
 	 */						
-	void createOrderList(OrderItem orderItem);
+	void createOrderList(OrderItem orderItem,  Long orderId);
 	
 	/**
 	 * [ 주문취소 ]

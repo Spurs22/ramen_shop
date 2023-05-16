@@ -10,6 +10,7 @@ public class OrderItem {
 	private Long price;
 	private Long finalPrice;
 	
+	
 	private String productName;
 	private String statusName;
 

@@ -59,7 +59,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 	
 	// 주문 item 추가
 	@Override
-	public void createOrderList(OrderItem orderItem) {
+	public void createOrderList(OrderItem orderItem, Long orderId) {
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -70,7 +70,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, orderItem.getProductId());
-			pstmt.setLong(2, orderItem.getOrderBundleId());
+			pstmt.setLong(2, orderId);
 			pstmt.setInt(3, orderItem.getQuantity());					
 			pstmt.setLong(4, orderItem.getPrice());
 			pstmt.setLong(5, orderItem.getFinalPrice());

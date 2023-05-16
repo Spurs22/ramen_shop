@@ -19,6 +19,16 @@ public class OrderBundle {
 
 	private List<OrderItem> orderItems;
 	
+	
+	
+	@Override
+	public String toString() {
+		return "OrderBundle [orderBundleId=" + orderBundleId + ", memberId=" + memberId + ", deliveryId=" + deliveryId
+				+ ", createdDate=" + createdDate + ", receiveName=" + receiveName + ", tel=" + tel + ", postNum="
+				+ postNum + ", address1=" + address1 + ", address2=" + address2 + ", userEmail=" + userEmail
+				+ ", totalPrice=" + totalPrice + ", orderItems=" + orderItems + "]";
+	}
+
 	public Long getTotalPrice() {
 		return totalPrice;
 	}
