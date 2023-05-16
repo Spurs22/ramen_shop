@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import com.service.notice.NoticeServiceImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
+@WebServlet("/notice/*")
 public class NoticeServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -40,7 +42,7 @@ public class NoticeServlet extends MyServlet {
 		String cp = req.getContextPath();
 		
 		if(info == null && uri.indexOf("list.do") == -1) {
-			resp.sendRedirect(cp+ "/member/login.do");
+			resp.sendRedirect(cp+ "/member/login.jsp");
 			return;
 		}
 		
@@ -126,8 +128,7 @@ public class NoticeServlet extends MyServlet {
 			}
 			
 			// 공지글
-			List<Notice> listNotice = null;
-			listNotice = dao.listNotice(category);
+			List<Notice> listNotice = dao.listNotice(category);
 			for(Notice notice : listNotice) {
 				notice.setCreate_date(notice.getCreate_date().substring(0, 10));
 			}
@@ -136,12 +137,12 @@ public class NoticeServlet extends MyServlet {
 			Date curDate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-			for(Notice notice : list) {
-				Date date = sdf.parse(notice.getCreate_date());
+			for(Notice dto : list) {
+				Date date = sdf.parse(dto.getCreate_date());
 				gap = (curDate.getTime() - date.getTime()) / (1000 * 60 * 60);
-				notice.setGap(gap);
+				dto.setGap(gap);
 				
-				notice.setCreate_date(notice.getCreate_date().substring(0, 10));
+				dto.setCreate_date(dto.getCreate_date().substring(0, 10));
 			}
 			
 			String query = "";
@@ -187,7 +188,7 @@ public class NoticeServlet extends MyServlet {
 		String size = req.getParameter("size");
 		
 		// 관리자만 글 등록 가능
-		Long manager = (long)99;
+		Long manager = (long)1;
 		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp + "/notice/list.do?category=" +category+ "&size=" +size);
 			return;
@@ -216,7 +217,7 @@ public class NoticeServlet extends MyServlet {
 			return;
 		}
 		
-		Long manager = (long)99;
+		Long manager = (long)1;
 		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp + "/notice/list.do?category=" +category+ "&size=" +size);
 			return;
@@ -314,7 +315,7 @@ public class NoticeServlet extends MyServlet {
 		String page = req.getParameter("page");
 		String size = req.getParameter("size");
 		
-		Long manager = (long)99;
+		Long manager = (long)1;
 		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
 			return;
@@ -361,7 +362,7 @@ public class NoticeServlet extends MyServlet {
 			return;
 		}
 		
-		Long manager = (long)99;
+		Long manager = (long)1;
 		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp+ "/notice/list.do");
 			return;
@@ -404,7 +405,7 @@ public class NoticeServlet extends MyServlet {
 		String query = "category=" +category+ "&page=" +page+ "&size=" +size;
 		
 		// 관리자만 삭제 가능
-		Long manager = (long)99;
+		Long manager = (long)1;
 		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
 			return;
@@ -454,7 +455,7 @@ public class NoticeServlet extends MyServlet {
 		String query = "category=" +category+ "&size=" +size+ "&page=" +page;
 		
 		// 관리자만 삭제 가능
-		Long manager = (long)99;
+		Long manager = (long)1;
 		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp+ "/notice/list.do?category=" +category);
 			return;
