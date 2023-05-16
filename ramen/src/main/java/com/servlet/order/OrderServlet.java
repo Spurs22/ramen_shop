@@ -52,8 +52,6 @@ public class OrderServlet extends MyServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		String cp = req.getContextPath();
-
 		try {
 			String[] pi = req.getParameterValues("productIds");
 			long[] products = null;
@@ -122,7 +120,7 @@ public class OrderServlet extends MyServlet {
 				long oneprice = orderRepositoryImpl.orderPrice(c.getProductId());
 				long price = oneprice * c.getQuantity();
 
-				orderItem.setOrderId(order_id);
+				orderItem.setOrderBundleId(order_id);
 				orderItem.setProductId(c.getProductId());
 				orderItem.setQuantity(c.getQuantity());
 				orderItem.setPrice(price);
