@@ -75,16 +75,18 @@ public class MemberRepositoryImpl implements MemberRepository{
 		     
 		     if (rs.next()) {
 		            // 로그인 성공 처리
-		            Member loggedMember = new Member();
-		            loggedMember.setMemberId(rs.getLong("id"));
-		            loggedMember.setName(rs.getString("name"));
-		            loggedMember.setNickName(rs.getString("nickname"));
-		            loggedMember.setEmail(rs.getString("email"));
-		            loggedMember.setTel(rs.getString("tel"));
-		            loggedMember.setPostNum(rs.getString("post_num"));
-		            loggedMember.setAddress1(rs.getString("address1"));
-		            loggedMember.setAddress2(rs.getString("address2"));
-		            return loggedMember;
+		            Member loginMember = new Member();
+		            loginMember.setEmail(rs.getString("email"));
+		            
+		            
+		            loginMember.setMemberId(rs.getLong("id"));
+		            loginMember.setName(rs.getString("name"));
+		            loginMember.setNickName(rs.getString("nickname"));
+		            loginMember.setTel(rs.getString("tel"));
+		            loginMember.setPostNum(rs.getString("post_num"));
+		            loginMember.setAddress1(rs.getString("address1"));
+		            loginMember.setAddress2(rs.getString("address2"));
+		            return loginMember;
 		     } else {
 		            // 로그인 실패 처리
 		            return null;
