@@ -31,7 +31,7 @@
             	&nbsp;
 				<a href="${pageContext.request.contextPath}/member/logout.do" title="로그아웃"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
             </c:if>
-            <c:if test="${sessionScope.member.userId == 'admin'}">
+            <c:if test="${sessionScope.member.userRoll == 1}">
             	&nbsp;
 				<a href="#" title="관리자"><i class="fa-solid fa-gear"></i></a>
             </c:if>

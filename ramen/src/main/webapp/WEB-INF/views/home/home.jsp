@@ -95,16 +95,9 @@
 </script>
 <body>
 <div class="whole-container">
-    <div class = "header-right">
-       <jsp:include page="/WEB-INF/views/fragment/header.jsp" />
-    </div>
- 
 	<header>	
-
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
-	
-
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">

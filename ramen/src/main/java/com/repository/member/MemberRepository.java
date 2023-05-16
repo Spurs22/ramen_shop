@@ -14,7 +14,7 @@ public interface MemberRepository {
 		Member findById(Long id) throws SQLException;
 		
 		// 로그인 	
-		public Member loginMember(Member member) throws SQLException;
+		public Member loginMember(String email, String password) throws SQLException; 
 		
 		// read Member
 		Member readMember(Member member) throws SQLException;

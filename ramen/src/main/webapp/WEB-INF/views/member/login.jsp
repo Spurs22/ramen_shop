@@ -2,6 +2,8 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,22 +82,25 @@ body {
 function sendLogin() {
     const f = document.loginForm;
 
-	let str = f.userId.value;
+	let str = f.email.value;
     if(!str) {
-        alert("아이디를 입력하세요. ");
-        f.userId.focus();
+        alert("이메일을 입력하세요. ");
+        f.email.focus();
         return;
     }
 
-    str = f.userPwd.value;
+    str = f.pwd.value;
     if(!str) {
         alert("패스워드를 입력하세요. ");
-        f.userPwd.focus();
+        f.pwd.focus();
         return;
     }
 
     f.action = "${pageContext.request.contextPath}/member/login_ok.do";
     f.submit();
+    
+    
+    
 }
 </script>
 
@@ -121,20 +126,20 @@ function sendLogin() {
 					</div>
 					<div class="row">
 						<label for="login-userId"> </label>
-						<input name="userId" type="text" class="form-control" id="login-userId" placeholder="EMAIL">
+						<input name="email" type="text" class="form-control" id="login-userId" placeholder="EMAIL">
 					</div>
 					<div class="row">
 						<label for="login-password"> </label>
-						<input name="userPwd" type="password" class="form-control" id="login-password" autocomplete="off"
+						<input name="pwd" type="password" class="form-control" id="login-password" autocomplete="off"
 							placeholder="PASSWORD">
 					</div>
 					<div class="row text-center">
 						<button type="button" class="btn btn-primary" onclick="sendLogin();">Login</button>
 					</div>
 					<p class="text-center">
-						<a href="${pageContext.request.contextPath}/views/member/member.jsp" >회원가입</a> <span>|</span>
-						<a href="${pageContext.request.contextPath}/views/member/findid.jsp">아이디 찾기</a> <span>|</span>
-						<a href="${pageContext.request.contextPath}/views/member/pwd.jsp">패스워드 찾기</a>
+						<a href="${pageContext.request.contextPath}/member/member.do" >회원가입</a> <span>|</span>
+						<a href="${pageContext.request.contextPath}/">아이디 찾기</a> <span>|</span>
+						<a href="${pageContext.request.contextPath}/">패스워드 찾기</a>
 					</p>
 				</div>
 			</form>

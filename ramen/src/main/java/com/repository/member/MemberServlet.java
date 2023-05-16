@@ -55,67 +55,55 @@ public class MemberServlet extends MyServlet{
 	// 로그인 처리
 	protected void loginSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 	
-	
 		HttpSession session = req.getSession();
 
 		MemberRepositoryImpl repository = new MemberRepositoryImpl();
 		String cp = req.getContextPath();
 
+		
+		try {
 		if (req.getMethod().equalsIgnoreCase("GET")) {
 			resp.sendRedirect(cp + "/");
 			return;
 		}
 
 		String userEmail = req.getParameter("email");
-		String userPwd = req.getParameter("password");
+		String userPwd = req.getParameter("pwd");
 
-		Member dto = new Member();
-		dto.setEmail(userEmail);
-		dto.setPassword(userPwd);
-		
-		Member loggedMember = null;
-		
-		try {
+		Member dto = repository.loginMember(userEmail, userPwd);
+	     
+		if (dto != null) {
 			
-			loggedMember = repository.loginMember(dto);
 			
-			if (loggedMember != null) {
-				
-				// 로그인 성공 : 로그인정보를 서버에 저장
-				// 세션의 유지시간을 20분설정(기본 30분)
-				session.setMaxInactiveInterval(20 * 60);
+	            // 로그인 성공 : 로그인 정보를 서버에 저장
+	            // 세션의 유지 시간을 20분으로 설정 (기본 30분)
+	            session.setMaxInactiveInterval(20 * 60);
 
-				// 세션에 저장할 내용
-				SessionInfo info = new SessionInfo();
-				info.setMemberId(loggedMember.getMemberId());
-			    info.setUserNickname(loggedMember.getNickName());
-			    
-			
-			    // info.setRoll(loggedMember.getRoll());
-			 
+	            // 세션에 저장할 내용
+	            SessionInfo info = new SessionInfo();
+	            info.setMemberId(dto.getMemberId());
+	            info.setUserNickname(dto.getNickName());
 
-			    // 세션에 member이라는 이름으로 저장
-			    session.setAttribute("member", info);
+	            info.setUserRoll(dto.getRoll());
 
-			    // 메인화면으로 리다이렉트
-			    resp.sendRedirect(cp + "/");
-			    return;
-			}
-			}
-			catch (Exception e) {
-			e.printStackTrace();
-			}
-		
-		// 로그인 실패인 경우(다시 로그인 폼으로)
-		
+	            // 세션에 member라는 이름으로 저장
+	            session.setAttribute("member", info);
 
-	    String msg = "아이디 또는 패스워드가 일치하지 않습니다.";
-		req.setAttribute("message", msg);
+	            // 메인 화면으로 리다이렉트
+	            resp.sendRedirect(cp + "/");
+	        } else {
+	            // 로그인 실패인 경우 (다시 로그인 폼으로)
 
-		forward(req, resp, "/WEB-INF/views/member/login.jsp");
-		
+	            String msg = "아이디 또는 패스워드가 일치하지 않습니다.";
+	            req.setAttribute("message", msg);
+
+	            forward(req, resp, "/WEB-INF/views/member/login.jsp");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        // 예외 처리
+	    }
 	}
-
 	// 로그아웃
 	protected void logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	

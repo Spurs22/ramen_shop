@@ -3,7 +3,7 @@ package com.DTO;
 	public class SessionInfo {
 		private Long memberId;
 		private String userNickname;
-		private int userRoll;
+		private long userRoll;
 		
 		public String getUserNickname() {
 			return userNickname;
@@ -17,10 +17,10 @@ package com.DTO;
 		public void setMemberId(Long memberId) {
 			this.memberId = memberId;
 		}
-		public int getUserRoll() {
+		public long getUserRoll() {
 			return userRoll;
 		}
-		public void setUserRoll(int userRoll) {
+		public void setUserRoll(long userRoll) {
 			this.userRoll = userRoll;
 		}
 	}

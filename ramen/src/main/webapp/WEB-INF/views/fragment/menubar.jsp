@@ -58,7 +58,10 @@
 
 
 <!--    <img class="logo" src="../../static/picture/logo.png">-->
-
+   <div class = "header-right">
+       <jsp:include page="/WEB-INF/views/fragment/header.jsp" />
+   </div>
+    
     <div class="menubar">
         <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/home/'">
             <div>
