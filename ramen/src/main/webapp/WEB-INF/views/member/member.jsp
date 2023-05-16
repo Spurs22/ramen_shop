@@ -16,7 +16,7 @@
    justify-content: center;
    border: 1px solid #fff;
    height: 700px;
-   width:2000px;
+   width: 100%;
    background-color: #fff; 
 }
 .sign-up form {
