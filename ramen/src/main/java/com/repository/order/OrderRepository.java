@@ -29,7 +29,7 @@ public interface OrderRepository {
 	 * @param orderId		주문번호
 	 * @param statusName	주문상태
 	 */
-	void confirmOrder(Long orderId, String statusName);
+	void confirmOrder(Long orderId, Long statusId);
 	
 	/**
 	 * [ 상품의 가격 구하기( 품목 ) ]

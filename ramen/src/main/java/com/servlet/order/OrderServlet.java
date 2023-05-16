@@ -126,7 +126,11 @@ public class OrderServlet extends MyServlet {
 				orderItem.setPrice(price);
 				orderItem.setFinalPrice(price);
 
+				// orderItem 추가
 				orderRepositoryImpl.createOrderList(orderItem);
+				
+				// 장바구니에서 결제한 물품 초기화
+				orderRepositoryImpl.cancelOrder(order_id);
 			}
 
 			long totalPrice = orderRepositoryImpl.orderAllPrice(order_id);

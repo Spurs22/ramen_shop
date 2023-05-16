@@ -85,17 +85,20 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 	}
 
-	// 주문취소 - status_name를 '주문취소'로 변경
+	// 주문취소 - status_id를 4('주문취소')로 변경
 	@Override
 	public void cancelOrder(Long orderId) {
 		PreparedStatement pstmt = null;
 		String sql;
 
 		try {
-			sql = "UPDATE order_status SET status_name = '주문취소'  "
+			/*sql = "UPDATE order_item SET status_id = 4  "
 					+ "	WHERE EXISTS( SELECT order_id, os.id, status_name  "
 					+ "	FROM order_status os JOIN order_item oi ON os.id = oi.status_id "
 					+ "	WHERE order_id = ?)" ;
+			*/
+			sql = "UPDATE order_item SET status_id = 4 "
+					+ " WHERE order_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -112,18 +115,16 @@ public class OrderRepositoryImpl implements OrderRepository{
 
 	//  주문상태 변경 - (1:결제완료 - 2:배송중 - 3:배송완료 - 4:주문취소)
 	@Override
-	public void confirmOrder(Long orderId, String statusName) {
+	public void confirmOrder(Long orderId, Long statusId) {
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "UPDATE order_status SET status_name = ?  "
-					+ "	WHERE EXISTS( SELECT order_id, os.id, status_name  "
-					+ "	FROM order_status os JOIN order_item oi ON os.id = oi.status_id "
-					+ "	WHERE order_id = ?)" ;
+			sql = "UPDATE order_item SET status_id = ? "
+					+ " WHERE order_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, statusName);
+			pstmt.setLong(1, statusId);
 			pstmt.setLong(2, orderId);
 			
 			pstmt.executeUpdate();
