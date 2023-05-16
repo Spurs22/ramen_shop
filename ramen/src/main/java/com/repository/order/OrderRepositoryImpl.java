@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.DTO.Order;
+import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
 import com.util.DBConn;
 import com.util.DBUtil;
-
 
 
 public class OrderRepositoryImpl implements OrderRepository{
@@ -15,7 +15,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 	
 	// 주문 bundle 생성
 	@Override
-	public long createOrderBundle(Order order) {
+	public long createOrderBundle(OrderBundle orderBundle) {
 		PreparedStatement pstmt = null;
 		String sql;
 		ResultSet rs = null;
@@ -26,12 +26,12 @@ public class OrderRepositoryImpl implements OrderRepository{
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, order.getMemberId());
-			pstmt.setString(2, order.getReceiveName());
-			pstmt.setString(3, order.getTel());
-			pstmt.setString(4, order.getPostNum());
-			pstmt.setString(5, order.getAddress1());
-			pstmt.setString(6, order.getAddress2());
+			pstmt.setLong(1, orderBundle.getMemberId());
+			pstmt.setString(2, orderBundle.getReceiveName());
+			pstmt.setString(3, orderBundle.getTel());
+			pstmt.setString(4, orderBundle.getPostNum());
+			pstmt.setString(5, orderBundle.getAddress1());
+			pstmt.setString(6, orderBundle.getAddress2());
 			
 			pstmt.executeUpdate();
 			
@@ -60,7 +60,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 	
 	// 주문 item 추가
 	@Override
-	public void createOrderList(Order order) {
+	public void createOrderList(OrderItem orderItem) {
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -70,11 +70,11 @@ public class OrderRepositoryImpl implements OrderRepository{
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, order.getProductId());
-			pstmt.setLong(2, order.getOrderId());
-			pstmt.setInt(3, order.getQuantity());					
-			pstmt.setLong(4, order.getPrice());
-			pstmt.setLong(5, order.getFinalPrice());
+			pstmt.setLong(1, orderItem.getProductId());
+			pstmt.setLong(2, orderItem.getOrderId());
+			pstmt.setInt(3, orderItem.getQuantity());					
+			pstmt.setLong(4, orderItem.getPrice());
+			pstmt.setLong(5, orderItem.getFinalPrice());
 			
 			pstmt.executeUpdate();
 			
@@ -192,7 +192,6 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 		return totalPrice;
 	}
-	
 
 }
 

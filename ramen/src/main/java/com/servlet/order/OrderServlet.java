@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.DTO.Cart;
-import com.DTO.Order;
+import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
 import com.repository.cart.CartRepositoryImpl;
 import com.repository.order.OrderRepositoryImpl;
 import com.util.MyServlet;
@@ -89,7 +90,7 @@ public class OrderServlet extends MyServlet{
 	private void orderSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 2) 주문 완료
 		System.out.println("주문완료했다.");
-		Order order = new Order();
+		OrderBundle orderBundle = new OrderBundle();
 		
 		OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
 		try {	
@@ -98,18 +99,18 @@ public class OrderServlet extends MyServlet{
 			long memberId = 1L;
 			
 			// 파라미터
-			order.setMemberId(memberId);
-			order.setReceiveName(req.getParameter("receiveName"));
+			orderBundle.setMemberId(memberId);
+			orderBundle.setReceiveName(req.getParameter("receiveName"));
 			
 			String tel = req.getParameter("tel1") + "-" + req.getParameter("tel2") + "-" +  req.getParameter("tel1");
-			order.setTel(tel);
+			orderBundle.setTel(tel);
 			
-			order.setPostNum(req.getParameter("zip"));
-			order.setAddress1(req.getParameter("zip1"));
-			order.setAddress2(req.getParameter("zip2"));
+			orderBundle.setPostNum(req.getParameter("zip"));
+			orderBundle.setAddress1(req.getParameter("zip1"));
+			orderBundle.setAddress2(req.getParameter("zip2"));
 			
 			// 주문 bundle 생성
-			long order_id = orderRepositoryImpl.createOrderBundle(order);
+			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle);
 			
 			String[] pi = req.getParameterValues("items");
 			long[] products = null;
@@ -123,24 +124,25 @@ public class OrderServlet extends MyServlet{
 			
 			
 			for(Cart c : list) {
-				Order order2 = new Order();
+				OrderItem orderItem = new OrderItem();
 				long oneprice = orderRepositoryImpl.orderPrice(c.getProductId());
 				long price = oneprice * c.getQuantity();
 				
-				order2.setOrderId(order_id);
-				order2.setProductId(c.getProductId());
-				order2.setQuantity(c.getQuantity());
-				order2.setPrice(price);
-				order2.setFinalPrice(price);
+				orderItem.setOrderId(order_id);
+				orderItem.setProductId(c.getProductId());
+				orderItem.setQuantity(c.getQuantity());
+				orderItem.setPrice(price);
+				orderItem.setFinalPrice(price);
 				
 				// 주문 item 추가
-				orderRepositoryImpl.createOrderList(order2);
+				orderRepositoryImpl.createOrderList(orderItem);
 			}
 			
 			long totalPrice = orderRepositoryImpl.orderAllPrice(order_id);
 			
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId",order_id);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

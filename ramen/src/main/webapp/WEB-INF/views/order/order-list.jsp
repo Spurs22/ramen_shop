@@ -7,7 +7,8 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-
+	
+	
 	</style>
 </head>
 <script>

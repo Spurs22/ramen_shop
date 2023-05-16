@@ -1,17 +1,15 @@
 package com.repository.order;
 
-import com.DTO.Order;
-
-import java.util.List;
-
+import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
 
 public interface OrderRepository {
 
 	// 주문 bundle 생성
-	long createOrderBundle(Order order);
+	long createOrderBundle(OrderBundle orderBundle);
 
 	// 주문 item 추가
-	void createOrderList(Order order);
+	void createOrderList(OrderItem orderItem);
 	
 	// 주문취소
 	void cancelOrder(Long orderId);
@@ -25,7 +23,6 @@ public interface OrderRepository {
 	// sum(finalPrice) >> 전체 가격
 	long orderAllPrice(Long orderId);
 	
-	// 주문완료된 사람중에서 리뷰를 남기지 않은 사람.
 }
 
 
