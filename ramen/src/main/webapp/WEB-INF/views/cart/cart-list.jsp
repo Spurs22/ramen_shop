@@ -9,7 +9,37 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-
+	
+	table{
+		width:100%;
+	}
+	
+	th{
+		font-size: 20px;
+		width: 40px;
+		padding-bottom: 20px;
+	}
+	
+	td{
+		border-top: 2px solid gray;
+		border-right: 1px solid #eee;
+		border-bottom: 1px solid gray;
+	}
+	
+	.btn {
+		border-radius: 10px;
+		background: lightgray;
+	}
+	
+	.btn:hover{
+		background: gray;
+	}
+	
+	.main-container{
+		overflow: auto;
+	}
+	
+	
 	</style>
 	
 	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
@@ -69,11 +99,7 @@
 					<th class="chk">
 						<input type="checkbox" name="chkAll" id="chkAll">        
 					</th>
-					<th>상품코드</th>
-					<th>상품사진</th>
-					<th>상품개수</th>
-					<th>상품 추가 날짜</th>
-					<th>가격</th>
+					<th>전체 선택</th>
 				</tr>
 				</thead>
 				
@@ -83,10 +109,10 @@
 							<td>
 								<input type="checkbox" name="productIds" value="${cart.productId}">
 							</td>
+							<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png"></td>
 							<td>${cart.productId}</td>
-							<td>상품사진</td>
 							<td>${cart.quantity}</td>
-							<td>${cart.createdDate}</td>
+							<td>상품금액<br> ${cart.createdDate}</td>
 							<td>${cart.price*cart.quantity}</td>
 						</tr>
 					</c:forEach>
@@ -98,6 +124,7 @@
 					</c:if>
 				</tbody>
 			</table>
+					<br>
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
 					<button type="button" class="btn" id="btnOrder">결제</button>
 			</form>
