@@ -36,7 +36,7 @@ body {
   font-weight: 500;
   margin-bottom: 0.5rem;
   font-family: Verdana, sans-serif;
-  color: #023b6d;
+  color: #FFCD12;
 }
 
 .members-form input {
