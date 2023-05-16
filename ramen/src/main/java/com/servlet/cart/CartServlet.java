@@ -20,7 +20,6 @@ public class CartServlet extends MyServlet {
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
 		req.setCharacterEncoding("utf-8");
 
 		String uri = req.getRequestURI();
@@ -74,8 +73,6 @@ public class CartServlet extends MyServlet {
 	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// 2) 장바구니의 물건 리스트를 취소한다.
-		System.out.println("장바구니 리스트 취소");
-
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		String cp = req.getContextPath();

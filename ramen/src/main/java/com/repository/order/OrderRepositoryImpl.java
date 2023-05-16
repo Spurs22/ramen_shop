@@ -45,7 +45,6 @@ public class OrderRepositoryImpl implements OrderRepository{
 			
 			if(rs.next()) {
 				order_id = rs.getLong(1)-1;
-				System.out.println(order_id);
 			}
 			
 			
@@ -84,6 +83,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 			DBUtil.closeResource(pstmt);
 		}
 	}
+	
 
 	// 주문취소 - status_id를 4('주문취소')로 변경
 	@Override
@@ -92,11 +92,6 @@ public class OrderRepositoryImpl implements OrderRepository{
 		String sql;
 
 		try {
-			/*sql = "UPDATE order_item SET status_id = 4  "
-					+ "	WHERE EXISTS( SELECT order_id, os.id, status_name  "
-					+ "	FROM order_status os JOIN order_item oi ON os.id = oi.status_id "
-					+ "	WHERE order_id = ?)" ;
-			*/
 			sql = "UPDATE order_item SET status_id = 4 "
 					+ " WHERE order_id = ?";
 			

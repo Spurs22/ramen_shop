@@ -47,8 +47,6 @@ public class OrderServlet extends MyServlet {
 
 	private void orderForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 1) 주문 폼
-		System.out.println("장바구니 물건 선택 > 주문");
-
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
@@ -130,7 +128,7 @@ public class OrderServlet extends MyServlet {
 				orderRepositoryImpl.createOrderList(orderItem);
 				
 				// 장바구니에서 결제한 물품 초기화
-				orderRepositoryImpl.cancelOrder(order_id);
+				cartRepositoryImpl.deleteCart(memberId, c.getProductId());
 			}
 
 			long totalPrice = orderRepositoryImpl.orderAllPrice(order_id);
