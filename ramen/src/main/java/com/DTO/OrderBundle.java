@@ -15,6 +15,7 @@ public class OrderBundle {
 	private String address2;
 	
 	private String userEmail;
+	private Long totalPrice;
 
 	private List<OrderItem> orderItems;
 
