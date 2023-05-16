@@ -48,12 +48,12 @@ public class orderDetailServlet extends MyServlet{
 		if(uri.indexOf("admin_main.do") != -1) { 
 			// 관리자 메인 화면
 			adminMain(req,resp);
-		} else if(uri.indexOf("deliverynumber.do") != -1) {
-			// 주문 처리
-			deliveryNumber(req,resp);
-		} else if(uri.indexOf("orderlist.do") != -1) {
+		} else if(uri.indexOf("deliverymanagement.do") != -1) {
+			// 배송관리
+			deliverymanagement(req,resp);
+		} else if(uri.indexOf("ordermanagement.do") != -1) {
 			// 주문리스트
-			orderList(req,resp);
+			ordermanagement(req,resp);
 		} else if(uri.indexOf("sales.do") != -1) {
 			// 매출통계 메인화면
 			sales(req,resp);
@@ -72,13 +72,13 @@ public class orderDetailServlet extends MyServlet{
 		//String cp = req.getContextPath();
 	}
 	
-	protected void deliveryNumber(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void deliverymanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 처리
 		//OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
 		//String cp = req.getContextPath();
 	}
 	
-	protected void orderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void ordermanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문리스트
 		OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
 		MyUtil util = new MyUtil();

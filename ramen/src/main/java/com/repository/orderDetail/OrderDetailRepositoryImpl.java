@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.DTO.Order;
+import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
+import com.DTO.OrderStatistics;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -42,67 +44,63 @@ private Connection conn = DBConn.getConnection();
 		}
 	}
 
-	// 전체 주문내역 확인
+	// 전체 주문내역 확인 >> orderBundle 데이터만 출력
 	@Override
-	public List<Order> findOrderAll() {
-		List<Order> list = new ArrayList<Order>();
+	public List<OrderBundle> findOrderAll() {
+		List<OrderBundle> OrderBundleList = new ArrayList<OrderBundle>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			// 주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
-			sb.append("SELECT TOb.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
-			sb.append(" c.quantity, c.price, c.final_price, a.email, b.delivery_id, ");
-			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2 ");
-			sb.append(" FROM member a, order_bundle b, order_item c, order_status d, product e");
-			sb.append(" WHERE a.id = b.member_id");
-			sb.append(" AND b.id = c.order_id");
-			sb.append(" AND c.status_id = d.id");
-			sb.append(" AND c.product_id = e.id");
+			// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2
+			sb.append("SELECT b.id, a.id, b.delivery_id, b.created_date, ");
+			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email ");
+			sb.append(" FROM member a, order_bundle b ");
+			sb.append(" WHERE a.id = b.member_id ");
 			sb.append(" ORDER BY b.created_date DESC ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
-			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				Order odto = new Order();
-				// 주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일
-				odto.setOrderBundleId(rs.getLong("b.id"));
-				odto.setMemberId(rs.getLong("a.email"));
-				odto.setProductId(rs.getLong("product_id"));
-				odto.setQuantity(rs.getInt("quantity"));
-				odto.setFinalPrice(rs.getLong("price"));
-				odto.setFinalPrice(rs.getLong("final_price"));
-				odto.setStatusId(rs.getLong("status_id"));
-				odto.setCreatedDate(rs.getString("created_date"));
-				odto.setDeliveryId(rs.getLong("delivery_id"));
+				OrderBundle ob = new OrderBundle();
 				
-				list.add(odto);
-			}
+				// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2
+				ob.setOrderBundleId(rs.getLong("b.id"));
+				ob.setMemberId(rs.getLong("a.id"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setCreatedDate(rs.getString("created_date"));
+				ob.setReceiveName(rs.getString("receive_name"));
+				ob.setTel(rs.getString("tel"));
+				ob.setPostNum(rs.getString("post_num"));
+				ob.setAddress1(rs.getString("address1"));
+				ob.setAddress2(rs.getString("address2"));
+				ob.setUserEmail(rs.getString("email"));
+				
+				OrderBundleList.add(ob);
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt,rs);
 		}
-		
-		return list;
+		return OrderBundleList;
 	}
 
 	// 회원 > 주문내역 확인
 	@Override
-	public List<Order> findOrderByMemberId(Long memberId) {
+	public List<OrderBundle> findOrderByMemberId(Long memberId) {
 		// 회원 > 주문내역 확인
 		// 맴버아이디를 받아와서 맴버별 주문내역 확인하기(마이페이지에 보이는 내역)
-		List<Order> list = new ArrayList<Order>();
+		List<OrderBundle> list = new ArrayList<OrderBundle>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			// 주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
-			sb.append("SELECT TOb.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
+			//주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
+			sb.append("SELECT b.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
 			sb.append(" c.quantity, c.price, c.final_price, a.email, b.delivery_id, ");
 			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2 ");
 			sb.append(" FROM member a, order_bundle b, order_item c, order_status d, product e");
@@ -114,23 +112,34 @@ private Connection conn = DBConn.getConnection();
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setLong(1, memberId);
+			pstmt.setLong(1, memberId); // 이메일 받아서 회원주문리스트만 출력하기
 			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				Order odto = new Order();
+				/*
+				OrderBundle odto = new OrderBundle();
 				
-				odto.setMemberId(memberId);
+				//주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
 				odto.setOrderBundleId(rs.getLong("b.id"));
-				odto.setProductId(rs.getLong("product_id"));
-				odto.setStatusId(rs.getLong("status_id"));
-				odto.setQuantity(rs.getInt("quantity"));
-				odto.setFinalPrice(rs.getLong("final_price"));
+				//odto.setStatusName(rs.getLong("status_name"));
 				odto.setCreatedDate(rs.getString("created_date"));
+				odto.setOrderItemId(rs.getLong("c.id"));
+				odto.setProductId(rs.getLong("product_id"));
+				//odto.setProductName(rs.getLong("name"));
+				odto.setQuantity(rs.getInt("quantity"));
+				odto.setPrice(rs.getLong("price"));
+				odto.setFinalPrice(rs.getLong("final_price"));
+				//odto.setEmail(rs.getLong("email")); // 유저 이메일
 				odto.setDeliveryId(rs.getLong("delivery_id"));
+				odto.setReceiveName(rs.getString("receive_name"));
+				odto.setTel(rs.getString("tel"));
+				odto.setPostNum(rs.getString("post_num"));
+				odto.setAddress1(rs.getString("address1"));
+				odto.setAddress2(rs.getString("address2"));
 				
 				list.add(odto);
+				*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -142,17 +151,17 @@ private Connection conn = DBConn.getConnection();
 	
 	// 상태별 주문내역 확인
 	@Override
-	public List<Order> findOrderByStatusId(Long orderStatusId) {
+	public List<OrderBundle> findOrderByStatusId(Long orderStatusId) {
 		// 상태(1.결제완료 2.배송중 3.배송완료 4.주문취소) > 주문내역 확인
 		// 주문상태 받아와서 주문내역 확인하기(관리자페이지에서 확인 가능)
-		List<Order> list = new ArrayList<Order>();
+		List<OrderBundle> list = new ArrayList<OrderBundle>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			// 주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
-			sb.append("SELECT TOb.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
+			//주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
+			sb.append("SELECT b.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
 			sb.append(" c.quantity, c.price, c.final_price, a.email, b.delivery_id, ");
 			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2 ");
 			sb.append(" FROM member a, order_bundle b, order_item c, order_status d, product e");
@@ -168,19 +177,32 @@ private Connection conn = DBConn.getConnection();
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				Order odto = new Order();
+				/*
+				OrderBundle odto = new OrderBundle();
 				
-				odto.setMemberId(rs.getLong("a.id"));
 				odto.setOrderBundleId(rs.getLong("b.id"));
-				odto.setProductId(rs.getLong("product_id"));
-				odto.setStatusId(rs.getLong("status_id"));
-				odto.setQuantity(rs.getInt("quantity"));
-				odto.setFinalPrice(rs.getLong("final_price"));
+				//odto.setStatusName(rs.getLong("status_name"));
 				odto.setCreatedDate(rs.getString("created_date"));
+				odto.setOrderItemId(rs.getLong("c.id"));
+				odto.setProductId(rs.getLong("product_id"));
+				//odto.setProductName(rs.getLong("name"));
+				odto.setQuantity(rs.getInt("quantity"));
+				odto.setPrice(rs.getLong("price"));
+				odto.setFinalPrice(rs.getLong("final_price"));
+				//odto.setEmail(rs.getLong("email")); // 유저 이메일
 				odto.setDeliveryId(rs.getLong("delivery_id"));
+				odto.setReceiveName(rs.getString("receive_name"));
+				odto.setTel(rs.getString("tel"));
+				odto.setPostNum(rs.getString("post_num"));
+				odto.setAddress1(rs.getString("address1"));
+				odto.setAddress2(rs.getString("address2"));
 				
 				list.add(odto);
+				*/
 			}
+			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -192,16 +214,16 @@ private Connection conn = DBConn.getConnection();
 
 	// 주문번호 > 주문내역 확인
 	@Override
-	public Order findOrderByOrderId(Long orderId) {
+	public OrderBundle findOrderByOrderId(Long orderId) {
 		// 주문번호 > 주문내역 확인
-		Order odto = null;
+		OrderBundle odto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			// 주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
-			sb.append("SELECT TOb.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
+			//주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
+			sb.append("SELECT b.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
 			sb.append(" c.quantity, c.price, c.final_price, a.email, b.delivery_id, ");
 			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2 ");
 			sb.append(" FROM member a, order_bundle b, order_item c, order_status d");
@@ -217,18 +239,27 @@ private Connection conn = DBConn.getConnection();
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				odto = new Order();
+				/*
+				odto = new OrderBundle();
 				
-				odto.setOrderId(rs.getLong("c.order_id"));
-				odto.setMemberId(rs.getLong("a.id"));
+				
 				odto.setOrderBundleId(rs.getLong("b.id"));
-				odto.setProductId(rs.getLong("product_id"));
-				odto.setStatusId(rs.getLong("status_id"));
-				odto.setQuantity(rs.getInt("quantity"));
-				odto.setFinalPrice(rs.getLong("final_price"));
+				//odto.setStatusName(rs.getLong("status_name"));
 				odto.setCreatedDate(rs.getString("created_date"));
+				odto.setOrderItemId(rs.getLong("c.id"));
+				odto.setProductId(rs.getLong("product_id"));
+				//odto.setProductName(rs.getLong("name"));
+				odto.setQuantity(rs.getInt("quantity"));
+				odto.setPrice(rs.getLong("price"));
+				odto.setFinalPrice(rs.getLong("final_price"));
+				//odto.setEmail(rs.getLong("email")); // 유저 이메일
 				odto.setDeliveryId(rs.getLong("delivery_id"));
-				
+				odto.setReceiveName(rs.getString("receive_name"));
+				odto.setTel(rs.getString("tel"));
+				odto.setPostNum(rs.getString("post_num"));
+				odto.setAddress1(rs.getString("address1"));
+				odto.setAddress2(rs.getString("address2"));
+				*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -317,12 +348,17 @@ private Connection conn = DBConn.getConnection();
 	
 	// 검색에서의 주문리스트
 	@Override
-	public List<Order> listBoard(int offset, int size, String condition, String keyword) {
-		List<Order> list = new ArrayList<Order>();
+	public List<OrderBundle> listBoard(int offset, int size, String condition, String keyword) {
+		List<OrderBundle> list = new ArrayList<OrderBundle>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-
+/*  
+  1) 전체 주문리스트
+  2) 회원 주문리스트  -- 회원 검색
+  3) 주문상태별 주문리스트 -- 주문상태별 검색
+  4) 주문번호별 내역 -- 주문번호별 검색
+*/
 		try {
 			// 주문번호, 처리상태, 주문일자, 주문상세번호, 상품아이디, 상품명, 수량, 정가, 최종가격, 유저이메일, 송장번호, 받는 분, 전화번호, 우편번호, 주소1, 주소2
 			sb.append("SELECT TOb.id, d.status_name, b.created_date, c.id, c.product_id, e.name, ");
@@ -361,15 +397,17 @@ private Connection conn = DBConn.getConnection();
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
-				Order dto = new Order();
 				/*
+				Order dto = new Order();
+				
 					dto.setNum(rs.getLong("num"));
 					dto.setUserName(rs.getString("userName"));
 					dto.setSubject(rs.getString("subject"));
 					dto.setHitCount(rs.getInt("hitCount"));
 					dto.setReg_date(rs.getString("reg_date"));
-				 */
+				 
 				list.add(dto);
+				*/
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -382,13 +420,12 @@ private Connection conn = DBConn.getConnection();
 	
 	// 기간별 매출 통계
 	@Override
-	public Order SalesStatisticsByPeriod(String createdDate) {
+	public OrderStatistics SalesStatisticsByPeriod(String createdDate) {
 		// 1일 | 1개월 | 6개월 | 1년 | 전체
-		Order odto = null;
+		OrderStatistics odto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-		Long price = null;
 
 		try {
 			// 결제완료, 배송중, 배송완료인 경우에만 출력하기 (주문취소일 때는 불러오지 않기!)
@@ -418,7 +455,8 @@ private Connection conn = DBConn.getConnection();
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				odto = new Order();
+				/*
+				odto = new OrderBundle();
 				
 				odto.setOrderId(rs.getLong("c.order_id"));
 				odto.setMemberId(rs.getLong("a.id"));
@@ -429,7 +467,7 @@ private Connection conn = DBConn.getConnection();
 				odto.setFinalPrice(rs.getLong("final_price"));
 				odto.setCreatedDate(rs.getString("created_date"));
 				odto.setDeliveryId(rs.getLong("delivery_id"));
-				
+				*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -442,12 +480,13 @@ private Connection conn = DBConn.getConnection();
 
 	// 상품별 매출 통계
 	@Override
-	public Order SalesStatisticsByProduct(Long finalprice, Long productId) {
+	public OrderStatistics SalesStatisticsByProduct(Long finalprice, Long productId) {
 		// 품목별 아이디 받아오기
-		Order odto = null;
+		OrderStatistics odto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
+		
 		try {
 			// 
 			sb.append("SELECT b.product_id, a.name, sum(b.quantity) as 판매수량, ");
@@ -463,13 +502,15 @@ private Connection conn = DBConn.getConnection();
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				odto = new Order();
+				/*
+				odto = new OrderBundle();
 				
 				odto.setOrderId(rs.getLong("b.product_id"));
 				odto.setMemberId(rs.getLong("a.name"));
 				odto.setOrderBundleId(rs.getLong("b.quantity"));
 				odto.setProductId(rs.getLong("b.price"));
 				odto.setStatusId(rs.getLong("b.final_price"));
+				*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
