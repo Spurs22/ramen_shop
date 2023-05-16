@@ -14,12 +14,22 @@ public class NoticeRepositoryTest {
 		NoticeRepository noticeRepository = new NoticeRepositoryImpl();
 		
 		Notice notice = new Notice();
+		/*
 		notice.setId((long) 1);
 		notice.setmemberId((long)1);
 		notice.setSubject("공지사항");
 		notice.setContent("공지사항임");
 		notice.setIp_address("127.0.0.1");
 		notice.setCategory(1);
+		notice.setNotice(1);
+		*/
+		
+		notice.setId((long) 2);
+		notice.setmemberId((long)1);
+		notice.setSubject("FAQ");
+		notice.setContent("FAQ임");
+		notice.setIp_address("127.0.0.1");
+		notice.setCategory(2);
 		notice.setNotice(1);
 		
 		List<Notice> list = new ArrayList<>();

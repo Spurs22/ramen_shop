@@ -6,11 +6,25 @@
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
-	<style>
+<style type="text/css">
+.table-list thead > tr:first-child { background: #f8f8f8; }
+.table-list th, .table-list td { text-align: center; }
 
-	</style>
+.table-list .notice { display: inline-block; padding:1px 3px; background: #ed4c00; color: #fff; }
+.table-list .hit { width: 70px; color: #787878; }
+
+.table-list .chk { width: 40px; color: #787878; }
+.table-list .num { width: 60px; color: #787878; }
+.table-list .subject { color: #787878; }
+.table-list .name { width: 100px; color: #787878; }
+.table-list .date { width: 100px; color: #787878; }
+.table-list .hit { width: 70px; color: #787878; }
+
+.table-list input[type=checkbox] { vertical-align: middle; }
+</style>
+
 </head>
-<script>
+<script type="text/javascript">
     let menuIndex = 8
     
     function changeList() {
@@ -25,7 +39,7 @@
     	f.submit();
     }
     
-    <c:if test="${sessionScope.member.memberId=='admin'}">
+    <c:if test="${sessionScope.member.memberId=='1'}">
     	$(function(){
     		$("#chkAll").click(function(){
     			if($(this).is(":checked")) {
@@ -59,16 +73,18 @@
 	</header>
 
 	<div class="main-container shadow-lg">
-		<div class="content-container">
-			<button type="button" class="btn" id="btnCategory"> ${category==1 ? "공지사항" : (category==2? "FAQ" : "문의사항")} </button> 
+		<div>
+			<h2>${category==1 ? "공지사항" : (category==2? "FAQ" : "문의사항")} </h2>
+			<button type="button">${category==1 ? "공지사항" : (category==2? "FAQ" : "문의사항")} </button> 
+			
 			<form name="listForm" method="post">
 				<table>
 					<tr>
-						<td>
-							<c:if test="${sessioninfoScope.member.memberId=='admin'}">
+						<td width="50%">
+							<c:if test="${sessioninfoScope.member.memberId=='1'}">
 								<button type="button" class="btn" id="btnDeleteList">삭제</button>
 							</c:if>
-							<c:if test="${sessioninfoScope.member.memberId=='admin'}">
+							<c:if test="${sessioninfoScope.member.memberId=='1'}">
 								${dataCount}개(${page}/${total_page} 페이지)
 							</c:if>
 						</td>
@@ -92,23 +108,86 @@
 				<table>
 					<thead>
 						<tr>
-							<c:if test="${sessionScope.member.memberId=='admin'}">
+							<c:if test="${sessionScope.member.memberId=='1'}">
 								<th class="chk">
 									<input type="checkbox" name="chkAll" id="chkAll">        
 								</th>
 							</c:if>
 							<th class="num">번호</th>
 							<th class="subject">제목</th>
-							<th class="name">작성자</th>
 							<th class="date">작성일</th>
 							<th class="hit">조회수</th>
 						</tr>
 					</thead>
 					
-					
+					<tbody>
+						<c:forEach var="dto" items="${listNotice}">
+						<tr>
+							<c:if test="${sessionScope.member.memberId=='1'}">
+							<td>
+								<input type="checkbox" name="ids" value="${dto.id}">
+							</td> 
+							</c:if>
+							<td><span class="notice">공지</span></td>
+							<td>${dataCount - (page-1) * size - status.index}</td>
+							<td class="left">
+								<a href="${articleUrl}&id=${dto.id}">${dto.subject}</a>
+							</td>
+							<td>${dto.create_date}</td>
+							<td>${dto.hit_count}</td>
+						</tr>
+						</c:forEach>
+						
+						<c:forEach var="dto" items="${list}" varStatus="status">
+							<tr>
+								<c:if test="${sessionScope.member.userId=='1'}">
+								<td>
+									<input type="checkbox" name="ids" value="${dto.id}">
+								</td>
+								</c:if>
+								<td>${dataCount - (page-1) * size - status.index}</td>
+								<td class="left">
+									<a href="${articleUrl}&id=${dto.id}">${dto.subject}</a>
+									<c:if test="${dto.gap<1}"><img src="${pageContext.request.contextPath}/resource/picture/new.gif"></c:if>
+								</td>
+								<td>${dto.create_date}&nbsp;&nbsp;</td>
+								<td>${dto.hit_count}&nbsp;&nbsp;</td>
+							</tr>						
+						</c:forEach>
+					</tbody>
 				</table>
-				
 			</form>
+			
+			<div class="page-navigation">
+				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+			</div>
+			
+			<table class="table">
+				<tr>
+					<td>
+						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/notice/list.do?category=${category}';" title="새로고침"></button>
+					</td>
+					<td align="center">
+						<form name="searchForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+							<select name="condition" class="form-select">
+								<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
+								<option value="create_date"  ${condition=="create_date"?"selected='selected'":"" }>등록일</option>
+								<option value="subject"  ${condition=="subject"?"selected='selected'":"" }>제목</option>
+								<option value="content"  ${condition=="content"?"selected='selected'":"" }>내용</option>
+							</select>
+							<input type="text" name="keyword" value="${keyword}" class="form-control">
+							<input type="hidden" name="size" value="${size}">
+							<input type="hidden" name="category" value="${category}">
+							<button type="button" class="btn" onclick="searchList();">검색</button>
+						</form>
+					</td>
+					<td align="right">
+						<c:if test="${sessionScope.member.memberId=='1'}">
+							<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/notice/write.do?size=${size}';">글올리기</button>
+						</c:if>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </div>

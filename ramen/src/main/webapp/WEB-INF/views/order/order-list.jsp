@@ -7,8 +7,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-	
-	
+
 	</style>
 </head>
 <script>
@@ -85,8 +84,8 @@
 					<table>
 						<thead>
 							<tr>
-								<th>상품코드</th>
 								<th>상품사진</th>
+								<th>상품코드</th>
 								<th>상품금액</th>
 								<th>상품개수</th>
 								<th>상품합산금액</th>
@@ -96,8 +95,8 @@
 						<tbody>
 							<c:forEach var="cart" items="${list}">
 								<tr>
-									<td>${cart.productId}</td>
 									<td>상품사진</td>
+									<td>${cart.productId}</td>
 									<td>${cart.price}</td>
 									<td>${cart.quantity}</td>
 									<td>${cart.price*cart.quantity}</td>

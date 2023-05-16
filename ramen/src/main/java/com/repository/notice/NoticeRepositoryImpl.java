@@ -148,7 +148,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT id, member_id, subject, hit_count, TO_CHAR(create_date, 'YYYY-MM-DD') create_date  ");
+			sb.append("  SELECT n.id, member_id, subject, hit_count, create_date ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
 			sb.append("  WHERE category = ? ");
 			sb.append("  ORDER BY id DESC ");
@@ -192,7 +192,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT id, member_id, subject, hit_count, TO_CHAR(create_date, 'YYYY-MM-DD') create_date  ");
+			sb.append("  SELECT n.id, member_id, subject, hit_count, create_date  ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
 			sb.append("  WHERE category = ? ");
 			
@@ -349,7 +349,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		
 		try {
 			if(keyword != null && keyword.length() != 0) {
-				sb.append("  SELECT id, subject ");
+				sb.append("  SELECT n.id, subject ");
 				sb.append("  FROM notice_board n ");
 				sb.append("  JOIN member m ON m.id=n.member_id ");
 				sb.append("  WHERE category = ? AND ( id > ? ) ");
@@ -375,7 +375,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				}
 				
 			} else {
-				sb.append("  SELECT id, subject FROM notice_board ");
+				sb.append("  SELECT n.id, subject FROM notice_board n ");
 				sb.append("  WHERE category=? AND id > ? ");
 				sb.append("  ORDER BY id ASC");
 				sb.append("  FETCH FIRST 1 ROWS ONLY ");
@@ -414,7 +414,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		
 		try {
 			if(keyword != null && keyword.length() != 0) {
-				sb.append("  SELECT id, subject ");
+				sb.append("  SELECT n.id, subject ");
 				sb.append("  FROM  notice_board n ");
 				sb.append("  JOIN member m ON m.id=n.member_id ");
 				sb.append("  WHERE category=? AND id < ? ");
@@ -438,7 +438,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 					pstmt.setString(4, keyword);
 				}
 			} else {
-				sb.append("  SELECT id, subject FROM notice_board ");
+				sb.append("  SELECT n.id, subject FROM notice_board n ");
 				sb.append("  WHERE category=?  AND  id < ? ");
 				sb.append("  ORDER BY id DESC ");
 				sb.append("  FETCH FIRST 1 ROWS ONLY ");
