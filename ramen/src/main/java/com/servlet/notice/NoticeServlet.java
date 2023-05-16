@@ -10,9 +10,10 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-// import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
 import com.DTO.Notice;
+import com.DTO.SessionInfo;
 import com.repository.notice.NoticeRepository;
 import com.repository.notice.NoticeRepositoryImpl;
 import com.service.notice.NoticeService;
@@ -33,14 +34,16 @@ public class NoticeServlet extends MyServlet {
 		
 		String uri = req.getRequestURI();
 		
-		/*
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
 		if(info == null && uri.indexOf("list.do") == -1) {
 			resp.sendRedirect(cp+ "/member/login.do");
 			return;
 		}
-		*/
+		
 		
 		if(uri.indexOf("list.do") != -1 ) {
 			list(req, resp);
@@ -63,7 +66,7 @@ public class NoticeServlet extends MyServlet {
 	
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 게시글 리스트
-		NoticeRepositoryImpl noticerep = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
 		String cp = req.getContextPath();
@@ -100,9 +103,9 @@ public class NoticeServlet extends MyServlet {
 			int dataCount, total_page;
 			
 			if(keyword.length() != 0) {
-				dataCount = noticerep.dataCount(category, condition, keyword);
+				dataCount = dao.dataCount(category, condition, keyword);
 			} else {
-				dataCount = noticerep.dataCount(category);
+				dataCount = dao.dataCount(category);
 			}
 			total_page = util.pageCount(dataCount, size);
 			
@@ -117,14 +120,14 @@ public class NoticeServlet extends MyServlet {
 			List<Notice> list;
 			
 			if(keyword.length() != 0) {
-				list = noticerep.listNotice(category, offset, size, condition, keyword);
+				list = dao.listNotice(category, offset, size, condition, keyword);
 			} else {
-				list = noticerep.listNotice(category, offset, size);
+				list = dao.listNotice(category, offset, size);
 			}
 			
 			// 공지글
 			List<Notice> listNotice = null;
-			listNotice = noticerep.listNotice(category);
+			listNotice = dao.listNotice(category);
 			for(Notice notice : listNotice) {
 				notice.setCreate_date(notice.getCreate_date().substring(0, 10));
 			}
@@ -144,7 +147,6 @@ public class NoticeServlet extends MyServlet {
 			String query = "";
 			String listUrl = cp + "/notice/list.do?category=" +category+ "&size=" +size;
 			String articleUrl = cp + "/notice/article.do?category=" +category+ "&page=" +current_page+ "&size=" +size;
-			
 			
 			if(keyword.length() != 0 ) {
 				query = "condition=" +condition+ "&keyword=" +URLEncoder.encode(keyword, "utf-8");
@@ -175,22 +177,21 @@ public class NoticeServlet extends MyServlet {
 	}
 	
 	protected void writeForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 
+		// 글 쓰기 폼
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
-		// String cp = req.getContextPath();
+		String cp = req.getContextPath();
 		
 		String category = req.getParameter("category");
 		String size = req.getParameter("size");
 		
-		/*
-		if(! info.getMemberId().equals("admin")) {
-			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
+		// 관리자만 글 등록 가능
+		Long manager = (long)99;
+		if(! info.getMemberId().equals(manager)) {
+			resp.sendRedirect(cp + "/notice/list.do?category=" +category+ "&size=" +size);
 			return;
 		}
-		*/
 		
 		req.setAttribute("category", category);
 		req.setAttribute("mode", "write");
@@ -201,33 +202,31 @@ public class NoticeServlet extends MyServlet {
 
 	protected void writeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 글 저장
-		NoticeRepositoryImpl noticerep = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
 		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		String cp = req.getContextPath();
 		String category = req.getParameter("category");
+		String size = req.getParameter("size");
 		
 		if (req.getMethod().equalsIgnoreCase("GET")) {
 			resp.sendRedirect(cp+ "/notice/list.do?category=" +category);
 			return;
 		}
 		
-		/*
-		if(! info.getMemberId().equals("admin")) {
+		Long manager = (long)99;
+		if(! info.getMemberId().equals(manager)) {
 			resp.sendRedirect(cp + "/notice/list.do?category=" +category+ "&size=" +size);
 			return;
 		}
-		*/
-		
-		String size = req.getParameter("size");
 		
 		try {
 			Notice dto = new Notice();
 			
 			dto.setCategory(Integer.parseInt(category));
-			// dto.setmemberId(info.getMemberId());
+			dto.setmemberId(info.getMemberId());
 			
 			if(req.getParameter("notice") != null) {
 				dto.setNotice(Integer.parseInt(req.getParameter("notice")));
@@ -236,7 +235,7 @@ public class NoticeServlet extends MyServlet {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 			
-			noticerep.insertNotice(dto);
+			dao.insertNotice(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -247,8 +246,8 @@ public class NoticeServlet extends MyServlet {
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 글보기
 		String cp = req.getContextPath();
-		NoticeRepositoryImpl noticeRep = new NoticeRepositoryImpl();
-		// MyUtil util = new MyUtil();
+		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
+		MyUtil util = new MyUtil();
 		
 		String category = req.getParameter("category");
 		String page = req.getParameter("page");
@@ -271,22 +270,22 @@ public class NoticeServlet extends MyServlet {
 			}
 			
 			// 조회수 증가
-			noticeRep.updateHit_count(id);
+			dao.updateHit_count(id);
 			
 			// 게시물 가져오기
-			Notice dto = noticeRep.readNotice(id);
+			Notice dto = dao.readNotice(id);
 			if(dto == null) {
 				resp.sendRedirect(cp+ "/notice/list.do?" +query);
 				return;
 			}
-			// dto.setContent(util.htmlSymbols(dto.getContent()));
+			dto.setContent(util.htmlSymbols(dto.getContent()));
 			
 			dto.setContent(dto.getContent().replaceAll("/n", "<br>"));
 			
 			// 이전글, 다음글
 			int _category = Integer.parseInt(category);
-			Notice preReadDto = noticeRep.preReadNotice(_category, dto.getId(), condition, keyword);
-			Notice nextReadDto = noticeRep.nextReadNotice(_category, dto.getId(), condition, keyword);
+			Notice preReadDto = dao.preReadNotice(_category, dto.getId(), condition, keyword);
+			Notice nextReadDto = dao.nextReadNotice(_category, dto.getId(), condition, keyword);
 			
 			req.setAttribute("category", category);
 			req.setAttribute("dto", dto);
@@ -307,29 +306,26 @@ public class NoticeServlet extends MyServlet {
 	
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정 폼
-		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 				
 		String cp = req.getContextPath();
-		
-		/*
-		if(! info.getMemberId().equals("admin")) {
-			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
-			return;
-		}
-		*/
-		
-		NoticeRepositoryImpl noticeRep = new NoticeRepositoryImpl();
-		
 		String category = req.getParameter("category");
 		String page = req.getParameter("page");
 		String size = req.getParameter("size");
 		
+		Long manager = (long)99;
+		if(! info.getMemberId().equals(manager)) {
+			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
+			return;
+		}
+		
+		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
+		
 		try {
 			long id = Long.parseLong(req.getParameter("id"));
 			
-			Notice dto = noticeRep.readNotice(id);
+			Notice dto = dao.readNotice(id);
 			
 			if(dto == null) {
 				resp.sendRedirect(cp+ "/notice/list.do?category=" +category+ "&page=" +page+ "&size=" +size );
@@ -354,8 +350,8 @@ public class NoticeServlet extends MyServlet {
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정완료
 		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		String cp = req.getContextPath();
 		String category = req.getParameter("category");
@@ -365,10 +361,16 @@ public class NoticeServlet extends MyServlet {
 			return;
 		}
 		
+		Long manager = (long)99;
+		if(! info.getMemberId().equals(manager)) {
+			resp.sendRedirect(cp+ "/notice/list.do");
+			return;
+		}
+		
 		String page = req.getParameter("page");
 		String size = req.getParameter("size");
 		
-		NoticeRepositoryImpl noticeRep = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
 		
 		try {
 			Notice dto = new Notice();
@@ -380,7 +382,7 @@ public class NoticeServlet extends MyServlet {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 
-			noticeRep.updateNotice(dto);
+			dao.updateNotice(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -390,24 +392,24 @@ public class NoticeServlet extends MyServlet {
 	}
 	
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		NoticeRepositoryImpl noticeRep = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
 		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 						
 		String cp = req.getContextPath();
-		
-		/*
-		if(! info.getMemberId().equals("admin")) {
-			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
-			return;
-		}
-		*/
-		
 		String category = req.getParameter("category");
 		String page = req.getParameter("page");
 		String size = req.getParameter("size");
 		String query = "category=" +category+ "&page=" +page+ "&size=" +size;
+		
+		// 관리자만 삭제 가능
+		Long manager = (long)99;
+		if(! info.getMemberId().equals(manager)) {
+			resp.sendRedirect(cp + "/notice/list.do?category=" +category);
+			return;
+		}
+		
 		
 		try {
 			long id = Long.parseLong(req.getParameter("id"));
@@ -423,22 +425,15 @@ public class NoticeServlet extends MyServlet {
 				query += "&condition=" +condition+ "&keyword=" +URLEncoder.encode(keyword, "utf-8");
 			}
 			
-			Notice dto = noticeRep.readNotice(id);
+			Notice dto = dao.readNotice(id);
 			
 			if (dto == null) {
 				resp.sendRedirect(cp+ "/notice/list.do?" +query);
 				return;
 			}
 			
-			/*
-			// admin만 삭제 가능
-			if(! info.getMemberId().equals("admin")) {
-				resp.sendRedirect(cp + "/notice/list.do?" +query);
-				return;
-			}
-			*/
-			
-			// noticeRep.deleteNotice(id, info.getMemberId());
+	
+			dao.deleteNotice(id);
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -448,22 +443,22 @@ public class NoticeServlet extends MyServlet {
 	}
 	
 	protected void deleteList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		String cp = req.getContextPath();
-		
-		/*
-		if(! info.getMemberId().equals("admin")) {
-			resp.sendRedirect(cp+ "/notice/list.do?category=" +category);
-			return;
-		}
-		*/
 		
 		String category = req.getParameter("category");
 		String page = req.getParameter("page");
 		String size = req.getParameter("size");
 		String query = "category=" +category+ "&size=" +size+ "&page=" +page;
+		
+		// 관리자만 삭제 가능
+		Long manager = (long)99;
+		if(! info.getMemberId().equals(manager)) {
+			resp.sendRedirect(cp+ "/notice/list.do?category=" +category);
+			return;
+		}
 		
 		String condition = req.getParameter("condition");
 		String keyword = req.getParameter("keyword");

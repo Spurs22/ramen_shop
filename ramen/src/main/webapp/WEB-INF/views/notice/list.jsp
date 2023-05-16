@@ -60,7 +60,7 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<h2>${category==1 ? "공지사항" : (category==2? "FAQ" : "문의사항")}</h2>
+			<button type="button" class="btn" id="btnCategory"> ${category==1 ? "공지사항" : (category==2? "FAQ" : "문의사항")} </button> 
 			<form name="listForm" method="post">
 				<table>
 					<tr>
