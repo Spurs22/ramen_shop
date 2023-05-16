@@ -17,4 +17,6 @@ public interface RecipeCommentService {
 	List<RecipeComment> findCommentsByPostId(Long RecipePostId);
 	
 	RecipeComment readComment(Long commentId, Long memberId);
+	
+	int countComment(Long RecipePostId);
 }

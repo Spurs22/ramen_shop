@@ -44,4 +44,9 @@ public class RecipeCommentServiceImpl implements RecipeCommentService {
 		return recipeCommentRepository.readComment(commentId, memberId);
 	}
 
+	@Override
+	public int countComment(Long RecipePostId) {
+		return recipeCommentRepository.countComment(RecipePostId);
+	}
+
 }

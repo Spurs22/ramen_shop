@@ -99,7 +99,10 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT id, board_id, content, created_date FROM recipe_comment WHERE member_id = ?";
+			sql = "SELECT nickname, r.id, board_id, content, r.created_date "
+					+ " FROM recipe_comment r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " WHERE member_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -110,6 +113,7 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 			while(rs.next()) {
 				RecipeComment recipeComment = new RecipeComment();
 				
+				recipeComment.setNickname(rs.getString("nickname"));
 				recipeComment.setId(rs.getLong("id"));
 				recipeComment.setBoardId(rs.getLong("board_id"));
 				recipeComment.setCotent(rs.getString("content"));
@@ -136,7 +140,10 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT id, member_id, content, created_date FROM recipe_comment WHERE board_id = ?";
+			sql = "SELECT nickname, r.id, member_id, content, r.created_date "
+					+ " FROM recipe_comment r"
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " WHERE board_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -147,6 +154,7 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 			while(rs.next()) {
 				RecipeComment recipeComment = new RecipeComment();
 				
+				recipeComment.setNickname(rs.getString("nickname"));
 				recipeComment.setId(rs.getLong("id"));
 				recipeComment.setMemberId(rs.getLong("member_id"));
 				recipeComment.setCotent(rs.getString("content"));
@@ -196,6 +204,36 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 		}
 		
 		return comment;
+	}
+
+	@Override
+	public int countComment(Long RecipePostId) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM recipe_comment WHERE board_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, RecipePostId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return result;
 	}
 
 }

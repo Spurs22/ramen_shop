@@ -7,7 +7,24 @@ public class RecipeComment {
 	private String content;
 	private String createdDate;
 	private int rating;
+	private String nickname;
+	private Long answer;
 	
+	public Long getAnswer() {
+		return answer;
+	}
+	public void setAnswer(Long answer) {
+		this.answer = answer;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
 	public int getRating() {
 		return rating;
 	}

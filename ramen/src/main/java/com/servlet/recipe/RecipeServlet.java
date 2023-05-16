@@ -56,13 +56,13 @@ public class RecipeServlet extends MyUploadServlet {
 		String uri = req.getRequestURI();
 
 		// 세션 정보
-//		HttpSession session = req.getSession();
-//		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
-//
-//		if (info == null) {
-//			forward(req, resp, "/WEB-INF/recipe/"); // 수정 로그인으로
-//			return;
-//		}
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member"); // 수정
+
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp"); // 수정 로그인으로
+			return;
+		}
 
 		// 파일을 저장할 경로
 		
@@ -185,7 +185,7 @@ public class RecipeServlet extends MyUploadServlet {
 		List<RecipeProduct> list = new ArrayList<>();
 		
 		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		SessionInfo info = (SessionInfo)session.getAttribute("member"); // 수정
 		
 		String cp = req.getContextPath();
 		
@@ -334,8 +334,6 @@ public class RecipeServlet extends MyUploadServlet {
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			
-			System.out.println(id+", " + keyword + ", " + condition);
-			
 			if(condition == null) {
 				condition = "all";
 				keyword = "";
@@ -365,12 +363,18 @@ public class RecipeServlet extends MyUploadServlet {
 			dto.setContent(util.htmlSymbols(dto.getContent()));
 			
 			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo)session.getAttribute("");
-			boolean isUserLike = recipeLikeService.isLike(1L, id);
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			boolean isUserLike = recipeLikeService.isLike(info.getMemberId(), id);
 			
 			// 이전글 다음글
 			RecipeBoard preReadDto = recipeBoardService.preReadRecipe(dto.getId(), condition, keyword);
 			RecipeBoard nextReadDto = recipeBoardService.nextReadRecipe(dto.getId(), condition, keyword);
+			
+			int replyCount = recipeCommentService.countComment(id);
+			
+			req.setAttribute("replyCount", replyCount);
+			System.out.println(id + ", " + replyCount);
+
 			
 			req.setAttribute("list", list);
 			req.setAttribute("dto", dto);
@@ -395,47 +399,55 @@ public class RecipeServlet extends MyUploadServlet {
 	protected void writeRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 댓글 달기
 		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-		String query = "";
-		
-		String cp = req.getContextPath();
-		if(req.getMethod().equalsIgnoreCase("GET")) {
-			resp.sendRedirect(cp + ""); // 수정
-			return;
-		}
+		String state = "false";
 		
 		try {
-			String condition = req.getParameter("condition");
-			String keyword = req.getParameter("keyword");
-			if(condition == null) {
-				condition = "all";
-				keyword = "";
-			}
-			
-			keyword = URLDecoder.decode(keyword, "utf-8");
-			
-			if(keyword.length() != 0) {
-				query += "?condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-			}
-			
 			RecipeComment comment = new RecipeComment();
 			
+			Long id = Long.parseLong(req.getParameter("id"));
+			comment.setId(id);
+			comment.setNickname(info.getUserNickname());
+			comment.setCotent(req.getParameter("content"));
 			comment.setMemberId(info.getMemberId());
-			comment.setBoardId(Long.parseLong(req.getParameter("")));
-			comment.setCotent(req.getParameter(""));
 			
 			recipeCommentService.createComment(comment);
+			
+			state = "true";
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "" + query); // 수정
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
 	}
 
 	protected void writeRecipeCommentSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 레시피 댓글 달기 완료 - 없어도 될거 같음
+		// 레시피 리스트
+		try {
+			Long id = Long.parseLong(req.getParameter("id"));
+			
+			List<RecipeComment> listReply = recipeCommentService.findCommentsByPostId(id);
+			
+			for(RecipeComment dto : listReply) {
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			}
+			
+			req.setAttribute("listReply", listReply);
+			forward(req, resp, "/WEB-INF/views/recipe/listReply.jsp");
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendError(400);
 	}
 
 	protected void updateRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

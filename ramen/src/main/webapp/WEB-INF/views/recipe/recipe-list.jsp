@@ -100,8 +100,8 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<div class="sub-menu">
-				<div class="btn-group" role="sort" aria-label="Basic radio toggle button group">
-					<form name="radioForm" action="${pageContext.request.contextPath}/recipe/list.do" method="post">
+				<form name="radioForm" action="${pageContext.request.contextPath}/recipe/list.do" method="post">
+					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="btnradio1" autocomplete="off" onclick="sendRadio();" checked>
 						<label class="btn btn-outline-primary" for="btnradio1">최신순</label>
 		
@@ -110,8 +110,8 @@
 						
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="btnradio3" autocomplete="off" onclick="sendRadio();">
 						<label class="btn btn-outline-primary" for="btnradio3">좋아요순</label>
-					</form>
-				</div>
+					</div>
+				</form>
 				
 				<div>
 					<button type="button" class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/recipe/write-recipe.do';">글올리기</button>

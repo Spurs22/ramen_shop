@@ -10,15 +10,28 @@
 		tr > td {text-align: center;}
 		tr > th {background-color: #DFE2E6; }
 		.content-table > tr {padding: 15px;}
-		
+		.right {text-align: right;}
 		.content-text {
 			width: 100%; min-height: 200px; padding: 10px;
 			resize: none;
-			border-radius: 5px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			border-left: none;
+			border-right: none;
 		}
 		
 		.content-text:focus {
  			 outline: none;
+		}
+		
+		.content-reply {
+			width: 100%; height: 70px; padding: 10px;
+			resize: none;
+			border-radius: 5px;
+		}
+		
+		.content-reply {
+			outline:none;
 		}
 		
 		.pnbtn {
@@ -33,12 +46,45 @@
 		.pnbtn:active {
 			color: #777;
 		}
+		.btn {
+			border: 1px solid black;
+		}
+		.btn:hover {
+			border: 1px solid black;
+		}
+		
 	</style>
 </head>
 <script>
     let menuIndex = 3
 </script>
 <script>
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) { 
+			jqXHR.setRequestHeader("AJAX", true); // 사용자 정의 헤더
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+			}
+		console.log(jqXHR.responseText);
+		}
+	});
+}
+	
+	// 게시물 좋아요
     $(function(){
    	   $(".btnSendRecipeLike").click(function(){
    	      const $i = $(this).find("i");
@@ -72,6 +118,31 @@
    	      ajaxFun(url, "post", qs, "json", fn);
    	   });
    	});
+	
+	// 댓글 등록
+	$(function() {
+		$(".btnSendReply").click(function() {
+			let num = "${comment.id}";
+			const $tb = $(this).closest("table");
+			let content = $tb.find("textarea").val().trim();
+			
+			if(! content) {
+				$tb.find("textarea").focus();
+				return false;
+			}
+			
+			content = encodeURIComponent(content);
+			
+			let url = "${pageContext.request.contextPath}/recipe/write-recipe-comment.do";
+			let qs = "id=" + id + "&content=" + content;
+			
+			const fn = function() {
+				$tb.find("textarea").val("");
+				
+			}
+			ajaxFun(url, "post", qs, "json", fn);
+		});
+	});
 
 </script>
 <body>
@@ -85,24 +156,26 @@
 		<div class="content-container">
 			<table class="content-table" style="width: 100%">
 				<tr>
-					<th style="width: 60%; padding-left: 20px">
+					<th style="width: 55%; padding-left: 20px">
 						${dto.nickname}
 					</th>
-					<th style="text-align: right">
+					<th style="text-align: right; width: 30%">
 						조회수 : ${dto.hitCount} 회
 					</th>
-					<th style="text-align: right; padding-right: 20px">
-						<button type="button" class="btn btnSendRecipeLike" title="좋아요"> <i class="fa-solid fa-heart" style="color:${isUserLike?'red':'black'}"></i>&nbsp;&nbsp;<span id="recipeLikeCount">${dto.recipeLikeCount}</span></button>
+					<th style="text-align: right; padding-right: 20px; width: 15%">
+						<button type="button" class="btn btnSendRecipeLike" title="좋아요" style="border: none;"> <i class="fa-solid fa-heart" style="color:${isUserLike?'red':'black'}"></i>&nbsp;&nbsp;<span id="recipeLikeCount">${dto.recipeLikeCount}</span></button>
 					</th>
 				</tr>
 				<tr>
-					<td colspan=3>
+					<td colspan=3 style="font-size: 25px; font-weight: bold; padding-top: 20px;">
 						${dto.subject}
 					</td>
 				</tr>
 				<tr>
 					<td colspan=3>
+						<hr>
 						<img src="${pageContext.request.contextPath}/resource/picture/1.png">
+						<hr>
 					</td>
 				</tr>
 				<tr>
@@ -118,9 +191,9 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2 style="text-align: left">
+					<td style="text-align: left">
 						<c:choose>
-		                     <c:when test="${sessionScope.member.nickname==dto.nickname}">
+		                     <c:when test="${sessionScope.member.userNickname==dto.nickname}">
 		                        <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/recipe/update-recipe.do?id=${dto.id}';">수정</button>
 		                     </c:when>
 		                     <c:otherwise>
@@ -128,7 +201,7 @@
 		                     </c:otherwise>
 		                  </c:choose>
 						<c:choose>
-		                      <c:when test="${sessionScope.member.nickname==dto.nickname || sessionScope.member.userId=='admin'}">
+		                      <c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
 		                         <button type="button" class="btn" onclick="deleteBoard();">삭제</button>
 		                      </c:when>
 		                      <c:otherwise>
@@ -136,8 +209,8 @@
 		                      </c:otherwise>
 		                   </c:choose>
 					</td>
-					<td>
-						${dto.createdDate}
+					<td colspan=2 style="width: 30%; text-align: right; padding: 10px;">
+						등록일 : ${dto.createdDate}
 					</td>
 				</tr>
 				<tr>
@@ -155,7 +228,29 @@
 					</td>
 				</tr>
 			</table>
-			
+			<hr>
+			<div class="reply">
+				<form name="replyForm" method="post">
+					<div class="form-header">
+						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 ${replyCount}개</span>
+					</div>
+					
+					<table style="width: 100%">
+						<tr>
+							<td>
+								<textarea name="content" class="content-reply" placeholder="댓글을 입력해주세요."></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class='right'>
+								<button type='button' class='btn btnSendReply'>댓글 등록</button>
+							</td>
+						</tr>
+					</table>
+					
+				</form>
+				<div id="listReply"></div>
+			</div>
 		</div>
 	</div>
 </div>
