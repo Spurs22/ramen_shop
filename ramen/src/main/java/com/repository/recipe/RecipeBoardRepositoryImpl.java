@@ -394,7 +394,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt = null;
 			rs = null;
 			
-			sql = "SELECT product_id, quantity FROM recipe_product WHERE recipe_id = ?";
+			sql = "SELECT product_id, quantity, name "
+					+ " FROM recipe_product "
+					+ " JOIN product ON recipe_product.product_id = product.id "
+					+ " WHERE recipe_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -406,6 +409,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeProduct = new RecipeProduct();
 				
 				recipeProduct.setProductId(rs.getLong("product_id"));
+				recipeProduct.setName(rs.getString("name"));
 				recipeProduct.setQuantity(rs.getInt("quantity"));
 				
 				list.add(recipeProduct);
@@ -870,6 +874,51 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipe.setCreatedDate(rs.getString("created_date"));
 				
 				list.add(recipe);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> findByMemberId(Long memberId, int offset, int size) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<RecipeBoard> list = new ArrayList<>();
+		RecipeBoard board = null;
+		
+		try {
+			sql = "SELECT r.id, subject, hit_count, r.created_date "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON m.id = r.member_id "
+					+ " WHERE r.member_id = ? "
+					+ " ORDER BY r.id DESC"
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				board.setHitCount(rs.getInt("hit_count"));
+				board.setCreatedDate(rs.getString("created_date"));
+				
+				list.add(board);
 			}
 			
 		} catch (Exception e) {

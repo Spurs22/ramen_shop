@@ -98,4 +98,9 @@ public class RecipeBoardServiceImpl implements RecipeBoardService {
 	public List<RecipeBoard> readRecipeByLike(String condition, String keyword) {
 		return recipeBoardRepository.readRecipeByLike(condition, keyword);
 	}
+
+	@Override
+	public List<RecipeBoard> findByMemberId(Long memberId, int offset, int size) {
+		return recipeBoardRepository.findByMemberId(memberId, offset, size);
+	}
 }

@@ -5,7 +5,14 @@ public class RecipeProduct {
 	private int quantity;
 	private Long productId;
 	private String imgName;
+	private String name;
 	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Long getRecipeId() {
 		return recipeId;
 	}
