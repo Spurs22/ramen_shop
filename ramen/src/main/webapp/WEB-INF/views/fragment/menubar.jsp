@@ -114,15 +114,15 @@
             </span>
         </div>
 
-        <div class="menubar-item" onclick="">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/Mypage/recipeBoardMyList.do'">
             <span>
                 마이페이지
             </span>
         </div>
 
-        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do'">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/notice/list.do'">
             <span>
-                게시판
+                고객센터
             </span>
         </div>
     </div>
