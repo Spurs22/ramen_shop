@@ -17,6 +17,14 @@ public class OrderBundle {
 	private String userEmail;
 	private Long totalPrice;
 
+	public Long getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Long totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
 	private List<OrderItem> orderItems;
 
 	public Long getOrderBundleId() {
