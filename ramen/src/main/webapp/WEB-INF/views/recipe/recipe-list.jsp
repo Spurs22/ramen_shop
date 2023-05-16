@@ -142,7 +142,7 @@
 						<div>${recipe.subject}</div>
 						<div>${recipe.nickname}</div>
 						<div>조회 수 : ${recipe.hitCount}</div>
-						<div>❤ ${recipe.recipeLikeCount}</div>
+						<div><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
 						<div>${recipe.createdDate}</div>
 					</a>
 				</c:forEach>

@@ -32,6 +32,8 @@ public interface RecipeBoardService {
 	
 	List<RecipeBoard> findByMemberId(Long memberId);
 	
+	List<RecipeBoard> findByMemberId(Long memberId, int offset, int size);
+	
 	List<RecipeBoard> readRecipeByHitCount();
 	
 	List<RecipeBoard> readRecipeByHitCount(String condition, String keyword);

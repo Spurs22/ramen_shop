@@ -1,8 +1,10 @@
 package com.servlet.recipe;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
 
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeComment;
@@ -88,9 +92,9 @@ public class RecipeServlet extends MyUploadServlet {
 			updateRecipeCommentSubmit(req, resp);
 		} else if (uri.indexOf("delete-recipe-comment.do") != -1) {
 			deleteRecipeComment(req, resp);
-		} else if (uri.indexOf("like-comment.do") != -1) {
+		} else if (uri.indexOf("like-recipe.do") != -1) {
 			likeRecipe(req, resp);
-		} else if (uri.indexOf("dislike-comment.do") != -1) {
+		} else if (uri.indexOf("dislike-recipe.do") != -1) {
 			dislikeRecipe(req, resp);
 		}
 	}
@@ -354,11 +358,15 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			List<RecipeProduct> list = dto.getRecipeProduct();
 			for(RecipeProduct product : list) {
-				System.out.println(product.getProductId());
-				System.out.println(product.getQuantity());
+				product.setName(product.getName());
+				product.setQuantity(product.getQuantity());
 			}
 			
 			dto.setContent(util.htmlSymbols(dto.getContent()));
+			
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo)session.getAttribute("");
+			boolean isUserLike = recipeLikeService.isLike(1L, id);
 			
 			// 이전글 다음글
 			RecipeBoard preReadDto = recipeBoardService.preReadRecipe(dto.getId(), condition, keyword);
@@ -370,9 +378,13 @@ public class RecipeServlet extends MyUploadServlet {
 			req.setAttribute("preReadDto", preReadDto);
 			req.setAttribute("nextReadDto", nextReadDto);
 			
+			req.setAttribute("isUserLike", isUserLike);
+			
 			forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
 			return;
 			
+		} catch (NullPointerException e) {
+			System.out.println("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -483,10 +495,37 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void likeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 좋아요
-		RecipeComment comment = new RecipeComment();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("");
+		
+		String state = "false";
+		int recipeLikeCount = 0;
+		
+		try {
+			Long id = Long.parseLong(req.getParameter("id"));
+			String isNoLike = req.getParameter("isNoLike");
+			
+			if(isNoLike.equals("true")) {
+				recipeLikeService.likePost(info.getMemberId(), id); // 공강
+			} else {
+				recipeLikeService.cancelLikePost(info.getMemberId(), id); // 공감취소
+			}
+			
+			// 공감 개수
+			recipeLikeCount = recipeLikeService.CountLike(id);
+			
+			state="true";
+		} catch (SQLException e) {
+			state = "liked";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		job.put("recipeLikeCount", recipeLikeCount);
+		
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
 	}
 
 	protected void dislikeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
