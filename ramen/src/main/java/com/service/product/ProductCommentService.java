@@ -1,11 +1,10 @@
-package com.repository.product;
-
+package com.service.product;
 
 import com.DTO.ProductComment;
 
 import java.util.List;
 
-public interface ProductCommentRepository {
+public interface ProductCommentService {
 	void createComment(ProductComment productComment);
 
 	void editComment(ProductComment productComment);
@@ -15,6 +14,5 @@ public interface ProductCommentRepository {
 	List<ProductComment> findCommentsByMemberId(Long memberId);
 
 	List<ProductComment> findCommentsByProductId(Long productId);
-
 
 }

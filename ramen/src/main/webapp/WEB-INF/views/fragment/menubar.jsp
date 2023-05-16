@@ -44,9 +44,9 @@
 
         .logo {
             width: 100%;
-
             height: 50px;
             margin-bottom: 80px;
+            cursor: pointer;
         }
 
         .selected-menu {

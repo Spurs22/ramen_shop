@@ -59,6 +59,9 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 		}
 	}
 
+	/**
+	 * 미구현
+	 */
 	@Override
 	public void deleteComment(Long memberId, Long commentId) {
 
