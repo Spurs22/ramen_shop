@@ -80,16 +80,17 @@
 function memberOk() {
 	const f = document.memberForm;
 	let str;
-
+		 
+ 
 	str = f.name.value;
-	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
+	if( !/^[가-힣]{2,5}$/i.test(str) ) { 
 		alert("이름를 다시 입력 하세요. ");
 		f.name.focus();
 		return;
 	}
 
 	str = f.nickName.value;
-	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
+	if( !str ) { 
 		alert("닉네임를 다시 입력 하세요. ");
 		f.nickName.focus();
 		return;
@@ -102,67 +103,26 @@ function memberOk() {
 		return;
 	}
 
-    str = f.tel1.value;
+	  str = f.email.value.trim();
+	   if( !str ) {
+	        alert("이메일을 입력하세요. ");
+	        f.email.focus();
+	        return;
+	    }
+	    
+
+    str = f.tel.value;
     if( !str ) {
         alert("전화번호를 입력하세요. ");
-        f.tel1.focus();
+        f.tel.focus();
         return;
     }
 
-    str = f.tel2.value;
-    if( !/^\d{3,4}$/.test(str) ) {
-        alert("숫자만 가능합니다. ");
-        f.tel2.focus();
-        return;
-    }
-
-    str = f.tel3.value;
-    if( !/^\d{4}$/.test(str) ) {
-    	alert("숫자만 가능합니다. ");
-        f.tel3.focus();
-        return;
-    }
     
-    str = f.email.value.trim();
-    if( !str ) {
-        alert("이메일을 입력하세요. ");
-        f.email1.focus();
-        return;
-    }
-
-    str = f.address1.value.trim();
-    if( !str ) {
-        alert("주소1을 입력하세요. ");
-        f.address1.focus();
-        return;
-    }
- 
-    str = f.address2.value.trim();
-    if( !str ) {
-        alert("이메일을 입력하세요. ");
-        f.address2.focus();
-        return;
-    }
-
+   
 
    	f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
     f.submit();
-}
-
-function changeEmail() {
-    const f = document.memberForm;
-	    
-    let str = f.selectEmail.value;
-    if(str !== "direct") {
-        f.email2.value = str; 
-        f.email2.readOnly = true;
-        f.email1.focus(); 
-    }
-    else {
-        f.email2.value = "";
-        f.email2.readOnly = false;
-        f.email1.focus();
-    }
 }
 
 </script>
@@ -176,7 +136,7 @@ function changeEmail() {
 <main>
 	   <div id="content" style="display: flex; justify-content: center;">
         <div class="container sign-up">
-          <form action="/member/login.do" method="POST">
+          <form name="memberForm" method="POST">   
             <div class="form-group">
               <label for="name">이름</label>
               <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value = "${dto.name}">
@@ -184,17 +144,22 @@ function changeEmail() {
             </div>
             <div class="form-group">
               <label for="nickname">닉네임</label>
-              <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" value = "${dto.nickName}">
+              <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value = "${dto.nickName}">
               <p class="error-message"></p>
             </div>
             <div class="form-group">
               <label for="password">비밀번호</label>
-              <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요" value = "${dto.password}">
+              <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요" autocomplete="off" value = "${dto.password}">
               <p class="error-message"></p>
             </div>
             <div class="form-group">
+              <label for="email">이메일</label>
+              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" value = "${dto.email}">
+              <p class="error-message"></p>
+            </div>  
+            <div class="form-group">
               <label for="tell">전화번호</label>
-              <input type="text" id="tell" name="tell" placeholder="전화번호를 입력하세요" value = "${dto.tel}">
+              <input type="text" id="tel" name="tel" placeholder="전화번호를 입력하세요" value = "${dto.tel}">
               <p class="error-message"></p>
             </div>
              <div class="form-group">
