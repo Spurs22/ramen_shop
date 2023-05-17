@@ -115,13 +115,14 @@
 			<form name="listForm" method="post">
 				<table>
 					<thead>
+					<c:if test="${dataCount != 0}">
 						<tr>
 							<th class="chk" >
 								<input type="checkbox" name="chkAll" id="chkAll">        
 							</th>
 							<th>전체 선택 ( 총 : ${dataCount} 개 ) </th>
 						</tr>
-	
+					</c:if>
 					</thead>
 					
 					<tbody>
@@ -139,9 +140,7 @@
 						</c:forEach>
 						
 						<c:if test="${dataCount == 0}">
-							<tr>		
-								<td>등록된 게시물이 없습니다.</td>
-							</tr>		
+							<p> 등록된 게시물이 없습니다.</p>
 						</c:if>
 					</tbody>
 				</table>

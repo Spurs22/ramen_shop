@@ -168,6 +168,12 @@ public class OrderServlet extends MyServlet {
 			}
 			
 			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle, itemlist);
+			
+			for(Cart c: list) {
+				// 장바구니에서 결제한 물품 초기화
+				cartRepositoryImpl.deleteCart(memberId, c.getProductId());
+			}
+
 			resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,13 +182,14 @@ public class OrderServlet extends MyServlet {
 	
 	
 	private void orderComplete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 3) 주문 완료 -> order_ok로 이동
+		// // 3) 주문 완료 -> order_ok로 이동
 		try {
 			long orderId = Long.parseLong(req.getParameter("order_id"));
 			long totalPrice = orderRepositoryImpl.orderAllPrice(orderId);
 
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId", orderId);
+
 			
 		}  catch (Exception e) {
 			e.printStackTrace();
