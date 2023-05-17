@@ -81,40 +81,27 @@ function memberOk() {
 	const f = document.memberForm;
 	let str;
 
-	str = f.userId.value;
+	str = f.name.value;
 	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
-		alert("아이디를 다시 입력 하세요. ");
-		f.userId.focus();
+		alert("이름를 다시 입력 하세요. ");
+		f.name.focus();
 		return;
 	}
 
-	str = f.userPwd.value;
+	str = f.nickName.value;
+	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
+		alert("닉네임를 다시 입력 하세요. ");
+		f.nickName.focus();
+		return;
+	}
+
+	str = f.password.value;
 	if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
 		alert("패스워드를 다시 입력 하세요. ");
-		f.userPwd.focus();
+		f.password.focus();
 		return;
 	}
 
-	if( str !== f.userPwd2.value ) {
-        alert("패스워드가 일치하지 않습니다. ");
-        f.userPwd.focus();
-        return;
-	}
-	
-    str = f.userName.value;
-    if( !/^[가-힣]{2,5}$/.test(str) ) {
-        alert("이름을 다시 입력하세요. ");
-        f.userName.focus();
-        return;
-    }
-
-    str = f.birth.value;
-    if( !str ) {
-        alert("생년월일를 입력하세요. ");
-        f.birth.focus();
-        return;
-    }
-    
     str = f.tel1.value;
     if( !str ) {
         alert("전화번호를 입력하세요. ");
@@ -136,19 +123,27 @@ function memberOk() {
         return;
     }
     
-    str = f.email1.value.trim();
+    str = f.email.value.trim();
     if( !str ) {
         alert("이메일을 입력하세요. ");
         f.email1.focus();
         return;
     }
 
-    str = f.email2.value.trim();
+    str = f.address1.value.trim();
     if( !str ) {
-        alert("이메일을 입력하세요. ");
-        f.email2.focus();
+        alert("주소1을 입력하세요. ");
+        f.address1.focus();
         return;
     }
+ 
+    str = f.address2.value.trim();
+    if( !str ) {
+        alert("이메일을 입력하세요. ");
+        f.address2.focus();
+        return;
+    }
+
 
    	f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
     f.submit();
@@ -181,40 +176,43 @@ function changeEmail() {
 <main>
 	   <div id="content" style="display: flex; justify-content: center;">
         <div class="container sign-up">
-          <form action="#" method="POST">
+          <form action="/member/login.do" method="POST">
             <div class="form-group">
               <label for="name">이름</label>
-              <input type="text" id="name" name="id" placeholder="이름을 입력하세요">
+              <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value = "${dto.name}">
               <p class="error-message"></p>
             </div>
             <div class="form-group">
               <label for="nickname">닉네임</label>
-              <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요">
+              <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" value = "${dto.nickName}">
               <p class="error-message"></p>
             </div>
             <div class="form-group">
               <label for="password">비밀번호</label>
-              <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요">
+              <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요" value = "${dto.password}">
               <p class="error-message"></p>
             </div>
             <div class="form-group">
               <label for="tell">전화번호</label>
-              <input type="text" id="tell" name="tell" placeholder="전화번호를 입력하세요">
+              <input type="text" id="tell" name="tell" placeholder="전화번호를 입력하세요" value = "${dto.tel}">
               <p class="error-message"></p>
             </div>
              <div class="form-group">
-              <label for="tell">우편번호</label>
-              <input type="text" id="tell" name="tell" placeholder="우편번호를 입력하세요">
+            
+            
+               <button type="button" class="btn" onclick="daumPostcode();">우편번호검색</button>
+                  &nbsp;&nbsp;
+              <input type="text" id="postNum" name="postNum"  placeholder="우편번호를 입력하세요"value = "${dto.postNum}" readonly="readonly">
               <p class="error-message"></p>
             </div>
                 <div class="form-group">
               <label for="tell">주소1</label>
-              <input type="text" id="tell" name="tell" placeholder="주소1를 입력하세요">
+              <input type="text" id="address1" name="address1"  placeholder="주소를 입력하세요"value = "${dto.address1}"readonly="readonly">
               <p class="error-message"></p>
             </div>
                 <div class="form-group">
               <label for="tell">주소2</label>
-              <input type="text" id="tell" name="tell" placeholder="주소2를 입력하세요">
+              <input type="text" id="address2" name="address2"  placeholder="주소를 입력하세요"value = "${dto.addtess2}" >
               <p class="error-message"></p>
             </div>
     
@@ -262,11 +260,11 @@ function changeEmail() {
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('zip').value = data.zonecode; //5자리 새우편번호 사용
-                document.getElementById('addr1').value = fullAddr;
+                document.getElementById('postNum').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('address1').value = fullAddr;
 
                 // 커서를 상세주소 필드로 이동한다.
-                document.getElementById('addr2').focus();
+                document.getElementById('address2').focus();
             }
         }).open();
     }
