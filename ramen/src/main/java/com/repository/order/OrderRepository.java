@@ -1,23 +1,20 @@
 package com.repository.order;
 
+import java.util.List;
+
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
 
 public interface OrderRepository {
 
 	/**
-	 * [ 주문 bundle 생성 ]
+	 * [ 주문 bundle, item 생성 ]
 	 * @param orderBundle	orderBundle
+	 * @param list			orderItem 리스트
 	 * @return				주문번호 ( orderId )
 	 */
-	long createOrderBundle(OrderBundle orderBundle);
+	long createOrderBundle(OrderBundle orderBundle,  List<OrderItem> list);
 
-	/**
-	 * [ 주문 item 추가 ]
-	 * @param orderItem		orderItem
-	 * @param orderId		주문번호
-	 */						
-	void createOrderList(OrderItem orderItem,  Long orderId);
 	
 	/**
 	 * [ 주문취소 ]

@@ -10,14 +10,26 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.DTO.Cart;
+import com.DTO.Product;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepositoryImpl;
+import com.repository.order.OrderRepositoryImpl;
+import com.repository.product.ProductRepository;
+import com.repository.product.ProductRepositoryImpl;
+import com.service.product.ProductService;
+import com.service.product.ProductServiceImpl;
 import com.util.MyServlet;
 
 @WebServlet("/cart/*")
 public class CartServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
-
+	private final ProductRepository productRepository = new ProductRepositoryImpl();
+	
+	private final CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
+	private final OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
+	private final ProductService productService = new ProductServiceImpl(productRepository);
+	
+	
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -36,7 +48,7 @@ public class CartServlet extends MyServlet {
 		// 2) 장바구니의 물건을 취소한다.
 		if (uri.indexOf("list.do") != -1) {
 			cartList(req, resp);
-		} else if (uri.indexOf("list-delete.do") != -1) {
+		} else if (uri.indexOf("list_delete.do") != -1) {
 			cartListDelete(req, resp);
 		} 
 	}
@@ -47,7 +59,9 @@ public class CartServlet extends MyServlet {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		CartRepositoryImpl cri = new CartRepositoryImpl();
-
+		String cp = req.getContextPath();
+		String message = "";
+		
 		try {
 			// 장바구니 30일 이후 품목 삭제
 			cri.deleteAutoCart();
@@ -67,7 +81,7 @@ public class CartServlet extends MyServlet {
 			e.printStackTrace();
 		}
 
-		forward(req, resp, "/WEB-INF/views/cart/cart-list.jsp");
+		forward(req, resp, "/WEB-INF/views/cart/cart_list.jsp");
 	}
 
 	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp)

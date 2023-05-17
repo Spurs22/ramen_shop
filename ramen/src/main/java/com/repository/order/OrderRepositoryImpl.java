@@ -3,6 +3,8 @@ package com.repository.order;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
@@ -13,14 +15,16 @@ import com.util.DBUtil;
 public class OrderRepositoryImpl implements OrderRepository{
 	private Connection conn = DBConn.getConnection();
 	
-	// 주문 bundle 생성
+	// 주문 bundle, item 생성
 	@Override
-	public long createOrderBundle(OrderBundle orderBundle) {
+	public long createOrderBundle(OrderBundle orderBundle, List<OrderItem> list) {
 		PreparedStatement pstmt = null;
 		String sql;
 		ResultSet rs = null;
 		long order_id = 0L;
 		try {
+			conn.setAutoCommit(false);
+			
 			sql = "INSERT INTO order_bundle(id, member_id, created_date,receive_name,tel,post_num,address1,address2) "
 					+ " VALUES (order_bundle_seq.NEXTVAL, ?, SYSDATE, ?, ?, ?, ?,? ) ";
 			
@@ -38,6 +42,26 @@ public class OrderRepositoryImpl implements OrderRepository{
 			pstmt.close();
 			pstmt = null;
 			
+			
+			sql = "INSERT INTO order_item(id, product_id, order_id, status_id, quantity, price, final_price ) "
+					+ " VALUES(order_item_seq.NEXTVAL, ?, order_bundle_seq.CURRVAL, 1, ?, ?, ?)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			for(OrderItem orderItem : list) {
+				pstmt.setLong(1, orderItem.getProductId());
+				pstmt.setLong(2, orderItem.getQuantity());
+				pstmt.setLong(3, orderItem.getPrice());
+				pstmt.setLong(4, orderItem.getFinalPrice());
+				
+				pstmt.executeUpdate();
+			}
+			conn.commit();
+			
+			
+			pstmt.close();
+			pstmt = null;
+			
 			sql = "SELECT LAST_NUMBER id FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = 'ORDER_BUNDLE_SEQ'";
 			pstmt = conn.prepareStatement(sql);
 			
@@ -47,17 +71,25 @@ public class OrderRepositoryImpl implements OrderRepository{
 				order_id = rs.getLong(1)-1;
 			}
 			
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e2) {
+			}
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt);
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+			}
 		}
-		
 		return order_id;
 	}
 	
 	// 주문 item 추가
+	/*
 	@Override
 	public void createOrderList(OrderItem orderItem, Long orderId) {
 		PreparedStatement pstmt = null;
@@ -83,7 +115,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 			DBUtil.closeResource(pstmt);
 		}
 	}
-	
+	*/
 
 	// 주문취소 - status_id를 4('주문취소')로 변경
 	@Override

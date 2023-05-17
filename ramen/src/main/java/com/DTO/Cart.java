@@ -1,6 +1,7 @@
 package com.DTO;
 
 public class Cart {
+	private String productName;
 	private Long productId;
 	private Long memberId;
 	private int quantity;
@@ -8,6 +9,12 @@ public class Cart {
 	private String picture;
 	private Long price;
 
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 	public Long getProductId() {
 		return productId;
 	}

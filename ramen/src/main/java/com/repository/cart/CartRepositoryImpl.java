@@ -126,7 +126,7 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT c.product_id, c.member_id, c.quantity, c.created_date, p.picture, pb.price "
+			sql = "SELECT c.product_id, c.member_id, c.quantity, c.created_date, p.picture, pb.price, p.name "
 					+ "FROM cart c JOIN product p ON  c.product_id = p.id "
 					+ "JOIN product_board pb ON pb.id = p.id "
 					+ "WHERE c.member_id = ? ";
@@ -144,6 +144,7 @@ public class CartRepositoryImpl implements CartRepository{
 				cart.setCreatedDate(rs.getString(4));
 				// cart.setPicture(rs.getString(5));
 				cart.setPrice(rs.getLong(6));
+				cart.setProductName(rs.getString(7));
 				
 				list.add(cart);
 			}

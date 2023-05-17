@@ -1,6 +1,7 @@
 package com.servlet.order;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,17 +13,25 @@ import javax.servlet.http.HttpSession;
 import com.DTO.Cart;
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
+import com.DTO.Product;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepositoryImpl;
 import com.repository.order.OrderRepositoryImpl;
+import com.repository.product.ProductRepository;
+import com.repository.product.ProductRepositoryImpl;
+import com.service.product.ProductService;
+import com.service.product.ProductServiceImpl;
 import com.util.MyServlet;
 
 @WebServlet("/order/*")
 public class OrderServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private final ProductRepository productRepository = new ProductRepositoryImpl();
+	
 	private final CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
 	private final OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
-
+	private final ProductService productService = new ProductServiceImpl(productRepository);
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,10 +49,13 @@ public class OrderServlet extends MyServlet {
 
 		// 1) 주문 폼
 		// 2) 주문 완료
+		// 3) 주문 완료 -> order_ok로 이동
 		if (uri.indexOf("order.do") != -1) {
 			orderForm(req, resp);
-		} else if (uri.indexOf("order-ok.do") != -1) {
+		} else if (uri.indexOf("order_ok.do") != -1) {
 			orderSubmit(req, resp);
+		} else if(uri.indexOf("order_complete.do")!= -1) {
+			orderComplete(req,resp);
 		}
 
 	}
@@ -52,7 +64,9 @@ public class OrderServlet extends MyServlet {
 		// 1) 주문 폼
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-
+		String cp = req.getContextPath();
+		String message = "";
+		
 		try {
 			String[] pi = req.getParameterValues("productIds");
 			long[] products = null;
@@ -61,15 +75,25 @@ public class OrderServlet extends MyServlet {
 				products[i] = Long.parseLong(pi[i]);
 			}
 
-
 			long memberId = info.getMemberId();
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
 			Long totalPrice = 0L;
 
+			
 			for (Cart c : list) {
+				// 잔여수량 체크
+				/*
+				Product product =productService.findProductByProductId(c.getProductId());
+				if(product.getRemainQuantity() < c.getQuantity()) {
+					message = "상품이 품절되었습니다.";
+				}
+				*/
+				
 				totalPrice += c.getPrice() * c.getQuantity();
 			}
+			
 
+			req.setAttribute("message", message);
 			req.setAttribute("list", list);
 			req.setAttribute("totalPrice", totalPrice);
 
@@ -77,7 +101,7 @@ public class OrderServlet extends MyServlet {
 			e.printStackTrace();
 		}
 
-		forward(req, resp, "/WEB-INF/views/order/order-list.jsp");
+		forward(req, resp, "/WEB-INF/views/order/order_list.jsp");
 	}
 
 	private void orderSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -86,7 +110,8 @@ public class OrderServlet extends MyServlet {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		OrderBundle orderBundle = new OrderBundle();
-
+		String cp = req.getContextPath();
+		String message = null;
 		try {
 
 			long memberId = info.getMemberId();
@@ -101,11 +126,7 @@ public class OrderServlet extends MyServlet {
 			orderBundle.setAddress1(req.getParameter("zip1"));
 			orderBundle.setAddress2(req.getParameter("zip2"));
 
-			System.out.println(orderBundle);
-			
-			// 주문 bundle 생성
-			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle);
-			
+
 
 			String[] pi = req.getParameterValues("items");
 			long[] products = null;
@@ -116,34 +137,57 @@ public class OrderServlet extends MyServlet {
 
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
 
+			List <OrderItem> itemlist = new ArrayList<OrderItem>();
 			for (Cart c : list) {
 				OrderItem orderItem = new OrderItem();
 				long oneprice = orderRepositoryImpl.orderPrice(c.getProductId());
 				long price = oneprice * c.getQuantity();
-
 				
-				orderItem.setOrderBundleId(order_id);
 				orderItem.setProductId(c.getProductId());
 				orderItem.setQuantity(c.getQuantity());
 				orderItem.setPrice(price);
 				orderItem.setFinalPrice(price);
-
+				
+				itemlist.add(orderItem);
+				
+				/*
+				// 잔여수량 체크
+				Product product =productService.findProductByProductId(c.getProductId());
+				if(product.getRemainQuantity() < c.getQuantity()) {
+					message = c.getProductName() + " 상품이 품절되었습니다.";
+					// resp.sendRedirect(cp + "/cart/list.do");
+					// return;
+				}
+				*/
+				
 				// orderItem 추가
-				orderRepositoryImpl.createOrderList(orderItem, order_id);
+				//orderRepositoryImpl.createOrderList(orderItem, order_id);
 				
 				// 장바구니에서 결제한 물품 초기화
-				cartRepositoryImpl.deleteCart(memberId, c.getProductId());
+				// cartRepositoryImpl.deleteCart(memberId, c.getProductId());
 			}
-
-			long totalPrice = orderRepositoryImpl.orderAllPrice(order_id);
-
-			req.setAttribute("totalPrice", totalPrice);
-			req.setAttribute("orderId", order_id);
-
+			
+			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle, itemlist);
+			resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		forward(req, resp, "/WEB-INF/views/order/order-ok.jsp");
 	}
+	
+	
+	private void orderComplete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 3) 주문 완료 -> order_ok로 이동
+		try {
+			long orderId = Long.parseLong(req.getParameter("order_id"));
+			long totalPrice = orderRepositoryImpl.orderAllPrice(orderId);
 
+			req.setAttribute("totalPrice", totalPrice);
+			req.setAttribute("orderId", orderId);
+			
+		}  catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		forward(req, resp, "/WEB-INF/views/order/order_ok.jsp");
+	}
 }
