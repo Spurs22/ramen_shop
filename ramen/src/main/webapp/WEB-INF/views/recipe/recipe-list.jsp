@@ -131,9 +131,9 @@
 						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 						<div style="font-weight: bold;">${recipe.subject}</div>
 						<div>${recipe.nickname}</div>
-						<div>조회 수 : ${recipe.hitCount}</div>
-						<div><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
-						<div>${recipe.createdDate}</div>
+						<div style="font-size: 14px">조회 수 : ${recipe.hitCount} 회</div>
+						<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
+						<div style="font-size: 14px">${recipe.createdDate}</div>
 					</a>
 				</c:forEach>
 			</div>

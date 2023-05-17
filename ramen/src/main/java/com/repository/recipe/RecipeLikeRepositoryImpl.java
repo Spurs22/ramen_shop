@@ -147,7 +147,7 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 	@Override
 	public Boolean isLike(Long memberId, Long postId) {
 		// TODO Auto-generated method stub
-		int check = 0;
+		boolean result = false;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -163,13 +163,7 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				check = rs.getInt(1);
-			}
-			
-			if(check == 0) {
-				return true;
-			} else {
-				return false;
+				if (rs.getInt(1)==1) result = true;
 			}
 			
 		} catch (Exception e) {
@@ -178,7 +172,7 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 			DBUtil.closeResource(pstmt, rs);
 		}
 		
-		return false;
+		return result;
 	}
 
 	@Override

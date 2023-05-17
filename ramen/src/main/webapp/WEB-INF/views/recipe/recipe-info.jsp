@@ -59,6 +59,29 @@
     let menuIndex = 3
 </script>
 <script>
+
+let likeStatus = ${likeStatus};
+
+function changeLikeStatus() {
+	 if (likeStatus) {
+		 // 좋아요 취소
+		 
+		 // 1. 상태변경
+		 likeStatus = !likeStatus
+		 console.log(likeStatus + " 좋아요 취소")
+		 // 2. 색 변경
+		 
+	 } else {
+		 // 좋아요 요청
+		 
+		 // 1. 상태변경
+		 likeStatus = !likeStatus
+		 console.log(likeStatus + " 좋아요 요청")
+		 // 2. 색 변경
+		 
+	 }
+}
+
 function login() {
    location.href="${pageContext.request.contextPath}/recipe/login.do";
 }
@@ -83,17 +106,14 @@ function ajaxFun(url, method, query, dataType, fn) {
 				alert("요청 처리가 실패 했습니다.");
 				return false;
 			}
-			console.log(jqXHR.responseText);
 		}
 	});
 }
 	
 	// 게시물 좋아요
     $(function(){
-   	   $(".btnSendRecipeLike").click(function(){
-   	      const $i = $(this).find("i");
-   	 	  let isNoLike = $i.css("color") == "rgb(0, 0, 0)";
-   	      let msg = isNoLike ? "게시글에 공감하십니까 ?" : "게시글 공감을 취소하시겠습니까 ?";      
+   	   $(".btnSendRecipeLike").click(function(){   	   	  
+   	      let msg = likeStatus ? "게시글에 공감하십니까 ?" : "게시글 공감을 취소하시겠습니까 ?";      
    	      
    	      if(! confirm(msg)){
    	         return false;
@@ -101,16 +121,13 @@ function ajaxFun(url, method, query, dataType, fn) {
    	      
    	      let url = "${pageContext.request.contextPath}/recipe/like-recipe.do";
    	      let id = "${dto.id}";
-   	      let qs = "id=" + id + "&isNoLike=" + isNoLike;
+   	      let qs = "id=" + id;
+   	      
    	      
    	      const fn = function(data){
    	         let state = data.state;
    	         if(state === "true"){
-   	            let color = "black";
-   	            if( isNoLike ){
-   	               color = "red";
-   	            }
-   	            $i.css("color", color);
+   	            changeLikeStatus();
    	            
    	            let count = data.recipeLikeCount;
    	            $("#recipeLikeCount").text(count);
@@ -119,7 +136,7 @@ function ajaxFun(url, method, query, dataType, fn) {
    	         }
    	      };
    	      
-   	      ajaxFun(url, "post", qs, "json", fn);
+   	  	  ajaxFun(url, "post", qs, "json", fn);
    	   });
    	});
 	
@@ -173,7 +190,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 				</tr>
 				<tr>
 					<td colspan=3 style="font-size: 25px; font-weight: bold; padding-top: 20px;">
-						${dto.subject} ${dto.id }
+						${dto.subject}
 					</td>
 				</tr>
 				<tr>
