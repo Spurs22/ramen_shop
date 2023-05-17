@@ -39,7 +39,38 @@
 		overflow: auto;
 	}
 	
+	#chkAll{
+		width: 20px;
+		height: 20px;
+		border: 2px solid #bcbcbc;
+		cursor: pointer;
+	}
+	#chkAll2{
+		width: 15px;
+		height: 15px;
+		border: 2px solid #bcbcbc;
+		cursor: pointer;
+	}
+	.orderItem{
+		 text-align: center;
+	}
 	
+	.item1{
+		width:30%;
+	}
+	.item2{
+		width:10%;
+	}
+	.item3{
+		width:10%;
+	}
+	.item4{
+		width:30%;
+		
+	}
+	.item5{
+		width:10%;
+	}
 	</style>
 	
 	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
@@ -96,7 +127,7 @@
 			<table>
 				<thead>
 				<tr>
-					<th class="chk">
+					<th class="chk" >
 						<input type="checkbox" name="chkAll" id="chkAll">        
 					</th>
 					<th>전체 선택</th>
@@ -107,13 +138,13 @@
 					<c:forEach var="cart" items="${list}">
 						<tr>
 							<td>
-								<input type="checkbox" name="productIds" value="${cart.productId}">
+								<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll2" >
 							</td>
-							<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png"></td>
-							<td>${cart.productId}</td>
-							<td>${cart.quantity}</td>
-							<td>상품금액<br> ${cart.createdDate}</td>
-							<td>${cart.price*cart.quantity}</td>
+							<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png"></td>
+							<td class="item2 orderItem">${cart.productId}</td>
+							<td class="item3 orderItem">${cart.quantity}</td>
+							<td class="item4 orderItem">상품금액<br> ${cart.createdDate}</td>
+							<td class="item5 orderItem">${cart.price*cart.quantity}</td>
 						</tr>
 					</c:forEach>
 					
