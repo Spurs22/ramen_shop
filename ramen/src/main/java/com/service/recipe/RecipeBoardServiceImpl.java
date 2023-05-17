@@ -103,4 +103,9 @@ public class RecipeBoardServiceImpl implements RecipeBoardService {
 	public List<RecipeBoard> findByMemberId(Long memberId, int offset, int size) {
 		return recipeBoardRepository.findByMemberId(memberId, offset, size);
 	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByAll(String btnradio, String condition, String keyword) {
+		return recipeBoardRepository.readRecipeByAll(btnradio, condition, keyword);
+	}
 }

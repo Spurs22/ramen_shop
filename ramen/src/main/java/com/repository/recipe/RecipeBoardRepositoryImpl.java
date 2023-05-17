@@ -362,7 +362,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, r.member_id, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
 					+ " LEFT OUTER JOIN ( "
@@ -381,6 +381,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeBoard = new RecipeBoard();
 				
 				recipeBoard.setId(rs.getLong("id"));
+				recipeBoard.setMemberId(rs.getLong("member_id"));
 				recipeBoard.setSubject(rs.getString("subject"));
 				recipeBoard.setContent(rs.getString("content"));
 				recipeBoard.setHitCount(rs.getInt("hit_count"));
@@ -920,6 +921,111 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				
 				list.add(board);
 			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByAll(String btnradio, String condition, String keyword) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		List<RecipeBoard> list = new ArrayList<>();
+		System.out.println("repo : "+btnradio+","+condition+","+keyword);
+		try {
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+					+ " FROM recipe_board r "
+					+ " JOIN member m ON r.member_id = m.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id ";
+
+			if(btnradio.equals("btnradio1")) {
+				if(condition.equals("all")) {
+					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
+							+ " ORDER BY r.id DESC ";
+				} else if (condition.equals("created_date")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
+							+ " ORDER BY r.id DESC ";
+				} else {
+					sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
+							+ " ORDER BY r.id DESC ";
+				}
+			} else if (btnradio.equals("btnradio2")) {
+				if(condition.equals("all")) {
+					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
+							+ " ORDER BY hit_count DESC ";
+				} else if (condition.equals("created_date")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
+							+ " ORDER BY hit_count DESC ";
+				} else {
+					sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
+							+ " ORDER BY hit_count DESC ";
+				}
+			} else {
+				if(condition.equals("all")) {
+					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
+							+ " ORDER BY recipeLikeCount DESC ";
+				} else if (condition.equals("created_date")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
+							+ " ORDER BY recipeLikeCount DESC ";
+				} else {
+					sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
+							+ " ORDER BY recipeLikeCount DESC ";
+				}
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(btnradio.equals("btnradio1")) {
+				if(condition.equals("all")) {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, keyword);
+				} else {
+					pstmt.setString(1, keyword);
+				}
+			} else if (btnradio.equals("btnradio2")) {
+				if(condition.equals("all")) {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, keyword);
+				} else {
+					pstmt.setString(1, keyword);
+				}
+			} else {
+				if(condition.equals("all")) {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, keyword);
+				} else {
+					pstmt.setString(1, keyword);
+				}
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				RecipeBoard recipe = new RecipeBoard();
+				
+				recipe.setId(rs.getLong("id"));
+				recipe.setNickname(rs.getString("nickname"));
+				recipe.setSubject(rs.getString("subject"));
+				recipe.setContent(rs.getString("content"));
+				recipe.setHitCount(rs.getInt("hit_count"));
+				recipe.setCreatedDate(rs.getString("created_date"));
+				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				
+				list.add(recipe);
+			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

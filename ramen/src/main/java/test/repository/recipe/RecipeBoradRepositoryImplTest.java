@@ -38,7 +38,7 @@ public class RecipeBoradRepositoryImplTest {
 		try {
 			// recipe.insertRecipe(reci); // 레시피 등록
 			// recipe.updateRecipe(reci); // 레시피 수정
-			// recipe.deleteRecipe(1, 5); // 레시피 삭제
+			// recipe.deleteRecipe(1L, 10L); // 레시피 삭제
 			// recipe.readRecipe(); 
 			
 			// like.likePost(1L, 7L); // 좋아요 누르기

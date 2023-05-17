@@ -41,4 +41,6 @@ public interface RecipeBoardService {
 	List<RecipeBoard> readRecipeByLike();
 	
 	List<RecipeBoard> readRecipeByLike(String condition, String keyword);
+	
+	List<RecipeBoard> readRecipeByAll(String btnradio, String condition, String keyword);
 }
