@@ -19,8 +19,6 @@ public class OrderBundle {
 
 	private List<OrderItem> orderItems;
 	
-	
-	
 	@Override
 	public String toString() {
 		return "OrderBundle [orderBundleId=" + orderBundleId + ", memberId=" + memberId + ", deliveryId=" + deliveryId
