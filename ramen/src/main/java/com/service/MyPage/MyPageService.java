@@ -1,4 +1,4 @@
-package com.service.mypage;
+package com.service.MyPage;
 
 import java.util.List;
 

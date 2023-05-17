@@ -6,9 +6,18 @@
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
-	<style>
-
-	</style>
+<style>
+.sub-menu {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: space-between;
+			margin-bottom: 20px;
+			padding: 0 20px;
+        }
+</style>
 </head>
 <script>
     let menuIndex = 10
@@ -22,7 +31,38 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<%--	내용	 --%>
+			<div class="sub-menu">
+				<form name="radioForm" action="${pageContext.request.contextPath}/MyPage/productLikeList.do" method="post">
+					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="btnradio1" autocomplete="off" checked>
+						<label class="btn btn-outline-primary" for="btnradio1">
+							<a href="${pageContext.request.contextPath}/MyPage/productLikeList.do"> 내가 찜 한 상품 </a>
+						</label>
+		
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="btnradio2" autocomplete="off" onclick="clickBtnradio(this)">
+						<label class="btn btn-outline-primary" for="btnradio2">내가 좋아요 한 레시피
+							<a href="${pageContext.request.contextPath}/MyPage/recipeLikeList.do"> 내가 좋아요 한 레시피 </a>
+						</label>
+						
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="btnradio3" autocomplete="off" onclick="clickBtnradio(this)">
+						<label class="btn btn-outline-primary" for="btnradio3">
+							<a href="${pageContext.request.contextPath}/MyPage/recipeBoardMyList.do"> 내가 작성한 글 </a>
+						</label>
+						
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio4" value="btnradio4" autocomplete="off" onclick="clickBtnradio(this)">
+						<label class="btn btn-outline-primary" for="btnradio4">
+							<a href="${pageContext.request.contextPath}/MyPage/orderMyList.do"> 나의 주문내역 </a>
+						</label>
+					</div>
+				</form>
+		<table>
+			<tr>
+				<td width="50%">
+					${dataCount}개(${page}/${total_page} 페이지)
+				</td>
+			</tr>
+		</table>
+			</div>
 		</div>
 	</div>
 </div>
