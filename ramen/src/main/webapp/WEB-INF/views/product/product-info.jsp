@@ -143,6 +143,31 @@
             text-align: start;
             color: #F0974E;
         }
+
+        .flex-container {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			padding-left: 20px;
+        }
+
+        .like-full {
+            color: rgba(255, 132, 144, 0);
+            text-shadow: none;
+            transition: 0.3s;
+        }
+
+        .like-full:hover {
+            color: #CB444A;
+            cursor: pointer;
+        }
+
+        .like {
+            text-shadow: none;
+            color: rgba(197, 197, 197, 0.67);
+        }
 	</style>
 </head>
 <script>
@@ -177,7 +202,18 @@
 
 				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; justify-content: space-between">
 					<div class="product-createdDate">${post.createdDate}</div>
-					<div class="product-name">${post.product.name}</div>
+					<div class="flex-container">
+						<div style="position: relative">
+							<div style="position: absolute; right: -20px; text-align: center;">
+								<i class="fa-solid fa-heart fa-2xl like" id="like"></i>
+							</div>
+							<div style="position: absolute; right: -20px; text-align: center;">
+								<i class="fa-solid fa-heart fa-2xl like-full" id="likeBtn"></i>
+							</div>
+						</div>
+
+						<div class="product-name">${post.product.name}</div>
+					</div>
 					<div class="product-price">${post.price}<span>원</span></div>
 
 					<div class="starBundle-main">
@@ -316,5 +352,82 @@
         selectMenu(menuIndex)
     })
 </script>
+
+<script>
+    let likeStatus = null;
+    let likeBtn = document.getElementById('likeBtn');
+    let likeLine = document.getElementById('like')
+    let likeCnt = document.getElementById('likeCount');
+    const NONE_LIKE_COLOR = 'rgba(183,51,61,0)';
+    const LIKE_COLOR = '#CB444A';
+
+    window.onload = () => {
+        likeStatus = ${likeStatus}
+        changeBtn()
+    }
+
+    likeBtn.addEventListener('click', function () {
+        likePost()
+    });
+
+    function changeBtn() {
+        if (likeStatus) {
+            // 좋아요 상태일 때
+            likeBtn.style.color = LIKE_COLOR;
+            likeLine.style.color = NONE_LIKE_COLOR;
+        } else {
+            likeBtn.style.color = NONE_LIKE_COLOR;
+            likeLine.style.color = 'rgba(255, 255, 255, 0.67)';
+        }
+    }
+
+    likeBtn.addEventListener('mouseover', function () {
+        if (likeStatus) {
+            likeBtn.style.filter = 'brightness(80%)';
+        } else {
+            likeBtn.style.color = LIKE_COLOR;
+        }
+    })
+
+    likeBtn.addEventListener('mouseout', function () {
+        if (likeStatus) {
+            likeBtn.style.filter = 'brightness(100%)';
+            likeBtn.style.color = LIKE_COLOR;
+        } else {
+            likeBtn.style.color = NONE_LIKE_COLOR;
+        }
+    })
+
+
+
+    function likePost() {
+        if (likeStatus === false) {
+            // 서버에 좋아요 요청 전송
+            const request = new XMLHttpRequest();
+            let path = document.location.pathname + '/like'
+
+            request.open('post', path, 'true');
+            request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            request.send();
+
+            likeStatus = true;
+            likeCnt.innerText = Number(likeCnt.innerText) + 1
+            changeBtn()
+
+        } else {
+            // 서버에 좋아요 취소 요청 전송
+            const request = new XMLHttpRequest();
+
+            request.open('post', document.location.pathname + '/like', 'true');
+            request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            request.send();
+
+            likeStatus = false
+            likeCnt.innerText = Number(likeCnt.innerText) - 1
+            changeBtn()
+        }
+    }
+</script>
+
 </body>
 </html>

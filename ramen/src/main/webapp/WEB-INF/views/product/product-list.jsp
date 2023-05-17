@@ -169,7 +169,6 @@
 								</c:forEach>
 							</c:if>
 						</c:if>
-
 					</div>
 				</a>
 			</c:forEach>
@@ -237,7 +236,11 @@
 								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 								<div style="margin-top: 5px; font-weight: 750">` + post.productName + `</div>
 								<div style="color: #5d5d5d">` + post.price + `원</div>
-								<div>` + post.rating + `</div>
+
+								<div class="starBundle-comment">` +
+									generateStars(post.rating)
+								+ `</div>
+
 							</a>
                         `;
 
@@ -249,6 +252,30 @@
                 console.error(error);
             }
         });
+    }
+
+    function generateStars(rating) {
+        let starsHTML = '';
+        let first = Math.floor(rating);
+        let second = rating % 1;
+
+        for (let i = 1; i <= first; i++) {
+            starsHTML += `<i class="fa-solid fa-star"></i>`;
+        }
+
+        if (first !== 5) {
+            if (second !== 0) {
+                starsHTML += `<i class="fa-solid fa-star-half-stroke"></i>`;
+            } else {
+                starsHTML += `<i class="fa-regular fa-star"></i>`;
+            }
+
+            for (let i = 1; i <= 4 - first; i++) {
+                starsHTML += `<i class="fa-regular fa-star"></i>`;
+            }
+        }
+
+        return starsHTML;
     }
 </script>
 </body>

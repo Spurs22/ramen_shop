@@ -1,9 +1,6 @@
 package com.servlet.product;
 
-import com.DTO.Product;
-import com.DTO.ProductBoard;
-import com.DTO.ProductCategory;
-import com.DTO.ProductComment;
+import com.DTO.*;
 import com.repository.product.*;
 import com.service.product.*;
 import com.util.MyServlet;
@@ -15,6 +12,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -27,10 +25,12 @@ public class ProductServlet extends MyServlet {
 	ProductRepository productRepository = new ProductRepositoryImpl();
 	ProductBoardRepository productBoardRepository = new ProductBoardRepositoryImpl();
 	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
+	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
 
 	ProductService productService = new ProductServiceImpl(productRepository);
 	ProductBoardService productBoardService = new ProductBoardServiceImpl(productBoardRepository);
 	ProductCommentService productCommentService = new ProductCommentServiceImpl(productCommentRepository);
+	ProductLikeService productLikeService = new ProductLikeServiceImpl(productLikeRepository);
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, UnsupportedEncodingException {
@@ -53,7 +53,34 @@ public class ProductServlet extends MyServlet {
 			commentForm(req, resp);
 		} else if (uri.contains("search")) {
 			searchKeyword(req, resp);
+		} else if (uri.contains("like")) {
+			likeProductBoard(req, resp);
 		}
+	}
+
+	private void likeProductBoard(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("ProductServlet.postForm" );
+		HttpSession session = req.getSession();
+		SessionInfo member = (SessionInfo) session.getAttribute("member");
+		Long memberId = member.getMemberId();
+
+
+
+		String inputCategory = req.getParameter("category");
+		String keyword = req.getParameter("keyword");
+
+		resp.setContentType("application/json");
+
+		String status = "false";
+
+		JSONArray jsonArray = new JSONArray();
+
+
+		resp.setContentType("text/html;charset=utf-8");
+
+//		resp.getWriter().write(jsonArray.toString());
+
+		System.out.println(jsonArray.toString());
 	}
 
 	protected void postForm(HttpServletRequest req, HttpServletResponse resp) {
