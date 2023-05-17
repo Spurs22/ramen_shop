@@ -78,7 +78,7 @@ public class OrderServlet extends MyServlet {
 			long memberId = info.getMemberId();
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
 			Long totalPrice = 0L;
-
+			int dataCount = cartRepositoryImpl.getCnt(memberId);
 			
 			for (Cart c : list) {
 				// 잔여수량 체크
@@ -93,6 +93,7 @@ public class OrderServlet extends MyServlet {
 			}
 			
 
+			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("message", message);
 			req.setAttribute("list", list);
 			req.setAttribute("totalPrice", totalPrice);
@@ -186,10 +187,11 @@ public class OrderServlet extends MyServlet {
 		try {
 			long orderId = Long.parseLong(req.getParameter("order_id"));
 			long totalPrice = orderRepositoryImpl.orderAllPrice(orderId);
-
+			List<OrderItem> list2 = orderRepositoryImpl.ListItems(orderId);
+			
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId", orderId);
-
+			req.setAttribute("list2", list2);
 			
 		}  catch (Exception e) {
 			e.printStackTrace();

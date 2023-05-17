@@ -7,6 +7,109 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
+	hr{
+		border: 2px solid gray;
+	}
+	
+	table{
+		width:100%;
+		text-align: center;
+	}
+	
+	th{
+		font-size: 15px;
+		text-align: center;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-top: 2px solid gray;
+		border-bottom: 1px solid gray;
+	}
+
+	.itemtd{
+		border-bottom: 1px solid gray;
+		text-align: center;
+	}
+	
+	.title{
+		font-weight: bold;
+		font-size: 20px;
+		padding-top: 20px;
+	}
+	
+	.item1{
+		width: 30%;
+	}
+	.item2{
+		width: 20%;
+	}
+
+	.btn {
+		border-radius: 10px;
+		background: lightgray;
+	}
+	
+	.btn:hover{
+		background: gray;
+	}
+	
+	td{
+		text-align: left;
+	}
+	
+		
+   .final {
+           float: right;
+           width: 250px;
+           height: 340px;
+           padding: 10px;
+           margin-top: 12px;
+           background: #fff;
+           border: 1px solid #d3d3d3;
+           box-sizing: border-box;
+       }
+    
+    .final table tr > td{
+    	padding : 7px;
+    }
+    
+    .final button {
+		width: 100%;
+		height: 40px;
+		font-size: 15px;
+		border-width: 1px;
+		border-color: #d81818;
+		border-bottom-color: #9e1212;
+		background: #ed2f2f;
+		background-image: -webkit-linear-gradient(#ed2f2f, #dd0e0e);
+		color: #fff;
+		box-sizing: border-box;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		border-radius: 0;
+    }
+     
+     .final button:hover{
+    	 background: #d81818;
+     }  
+     
+    .delivery{
+    	float: left;
+     	width: 370px;
+     } 
+	.delivery table tr > td:nth-child(1) {
+		width: 100px;
+		background: #f2f2f2;
+		border-bottom: 1px solid lightgray;
+	     }
+     
+	.delivery table tr > td {
+		padding: 8px;
+		text-align: center;
+	  }
+
+  .postbtn{
+	font-size: 10px;
+  }
 
 	</style>
 </head>
@@ -82,34 +185,42 @@
 		<div class="main-container shadow-lg">
 			<div class="content-container">
 				<form name="orderForm" method="post">
+				<p class="title"> 주문 결제</p>
+				<hr>
 					<table>
 						<thead>
-							<tr>
-								<th>상품사진</th>
-								<th>상품코드</th>
-								<th>상품금액</th>
-								<th>상품개수</th>
-								<th>상품합산금액</th>
-							</tr>
+							<c:if test="${dataCount != 0}">
+								<tr>
+									<th class="item1">상품이미지</th>
+									<th class="item2">품명</th>
+									<th class="item2">판매가</th>
+									<th class="item2">총수량</th>
+									<th class="item1">소계</th>
+								</tr>
+							</c:if>
 						</thead>
 
 						<tbody>
 							<c:forEach var="cart" items="${list}">
 								<tr>
-									<td>상품사진</td>
-									<td>${cart.productId}</td>
-									<td>${cart.price}</td>
-									<td>${cart.quantity}</td>
-									<td>${cart.price*cart.quantity}</td>
+									<td class="itemtd"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+									<td class="itemtd">${cart.productName}</td>
+									<td class="itemtd">${cart.price}</td>
+									<td class="itemtd">${cart.quantity}</td>
+									<td class="itemtd">${cart.price*cart.quantity}</td>
 									<input type="hidden" name="items" value="${cart.productId}">
 								</tr>
 							</c:forEach>
-
-
+						</table>
+					<div class="delivery">
+						<p class="title">배송정보</p>
+						<hr>
+							
+						<table>
 							<tr>
 								<td>받는 사람</td>
-								<td><input type="text" name="receiveName" id="receiveName"
-									maxlength="7" class="form-control" style="width: 50%;">
+								<td colspan="2"><input type="text" name="receiveName" id="receiveName"
+									maxlength="7" class="form-control">
 								</td>
 							</tr>
 
@@ -117,19 +228,20 @@
 								<td>배송지</td>
 								<td><input type="text" name="zip" id="zip" maxlength="7"
 									class="form-control" value="${order.postNum}"
-									readonly="readonly" style="width: 50%;">
-									<button type="button" class="btn" onclick="daumPostcode();">우편번호검색</button>
+									readonly="readonly">
+								</td>
+								<td>
+									<button type="button" class="btn postbtn" onclick="daumPostcode();">우편번호검색</button>
 								</td>
 							</tr>
 							<tr>
 								<td>도로명 / 상세주소</td>
-								<td><input type="text" name="zip1" id="zip1" maxlength="7"
+								<td  colspan="2"><input type="text" name="zip1" id="zip1" maxlength="7"
 									class="form-control" value="${order.address1}"
-									readonly="readonly" style="width: 50%;"> 
+									readonly="readonly"> 
 									<input
 									type="text" name="zip2" id="zip2" maxlength="7"
-									class="form-control" value="${order.address2}"
-									style="width: 50%;"></td>
+									class="form-control" value="${order.address2}"></td>
 							</tr>
 
 							<tr>
@@ -174,19 +286,52 @@
 											${dto.tel1=="064" ? "selected='selected'" : ""}>064</option>
 										<option value="070"
 											${dto.tel1=="070" ? "selected='selected'" : ""}>070</option>
-								</select> <input type="text" name="tel2" maxlength="4"
-									class="form-control" value="${dto.tel2}" style="width: 33%;">
-									- <input type="text" name="tel3" maxlength="4"
-									class="form-control" value="${dto.tel3}" style="width: 33%;">
+									</select> 
 								</td>
-							</tr>
-
-						</tbody>
-					</table>
-
-					<div>총 주문 금액 ${totalPrice}</div>
-					<button type="reset" class="btn">다시입력</button>
-					<button type="button" class="btn" id="btnOrder">결제</button>
+								
+								<td>									
+									<input type="text" name="tel2" maxlength="4"
+									class="form-control" value="${dto.tel2}">
+								</td>
+								
+								<td>	
+									<input type="text" name="tel3" maxlength="4"
+									class="form-control" value="${dto.tel3}">
+								</td>
+								</tr>
+							</table>
+						<br>	
+						<button type="reset" class="btn">다시입력</button>
+					</div>
+					
+                    <div class="final">
+                        <p class="title">최종 결제 정보</p>
+                        <hr>
+                        <table>
+                            <tr>
+                                <td>총</td>
+                                <td>${dataCount} 건</td>
+                            </tr>
+                            <tr>
+                                <td>상품금액</td>
+                                <td>${totalPrice}</td>
+                            </tr>
+                            <tr>
+                                <td>할인금액</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>배송비</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>전체주문금액</td>
+                                <td>${totalPrice}</td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn" id="btnOrder">결제</button>
+                    </div>
+					
 				</form>
 			</div>
 		</div>

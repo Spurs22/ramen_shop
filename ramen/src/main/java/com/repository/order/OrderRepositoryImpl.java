@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.DTO.Cart;
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
 import com.util.DBConn;
@@ -87,35 +89,6 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 		return order_id;
 	}
-	
-	// 주문 item 추가
-	/*
-	@Override
-	public void createOrderList(OrderItem orderItem, Long orderId) {
-		PreparedStatement pstmt = null;
-		String sql;
-		
-		try {
-			sql = "INSERT INTO order_item(id, product_id, order_id, status_id, quantity, price, final_price ) "
-					+ " VALUES(order_item_seq.NEXTVAL, ?, ?, 1, ?, ?, ?)";
-			
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setLong(1, orderItem.getProductId());
-			pstmt.setLong(2, orderId);
-			pstmt.setInt(3, orderItem.getQuantity());					
-			pstmt.setLong(4, orderItem.getPrice());
-			pstmt.setLong(5, orderItem.getFinalPrice());
-			
-			pstmt.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.closeResource(pstmt);
-		}
-	}
-	*/
 
 	// 주문취소 - status_id를 4('주문취소')로 변경
 	@Override
@@ -219,6 +192,44 @@ public class OrderRepositoryImpl implements OrderRepository{
 			DBUtil.closeResource(pstmt, rs);
 		}
 		return totalPrice;
+	}
+
+	// 주문번호에 해당하는 물품리스트 조회
+	@Override
+	public List<OrderItem> ListItems(Long orderId) {
+		List<OrderItem> list = new ArrayList<OrderItem>();;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT oi.product_id, order_id, status_id, quantity, price, name "
+					+ " FROM order_item oi JOIN product p ON p.id = oi.product_id "
+					+ " WHERE order_id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, orderId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				OrderItem orderItem = new OrderItem();
+				orderItem.setProductId(rs.getLong(1));
+				orderItem.setOrderItemId(rs.getLong(2));
+				orderItem.setStatusId(rs.getLong(3));
+				orderItem.setQuantity(rs.getInt(4));
+				orderItem.setPrice(rs.getLong(5));
+				orderItem.setProductName(rs.getString(6));
+				
+				list.add(orderItem);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
 	}
 
 }

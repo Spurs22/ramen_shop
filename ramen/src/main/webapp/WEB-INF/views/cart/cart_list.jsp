@@ -15,14 +15,16 @@
 	}
 	
 	th{
-		font-size: 20px;
+		font-size: 15px;
 		width: 40px;
-		padding-bottom: 20px;
+		text-align: center;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-top: 2px solid gray;
+		border-bottom: 1px solid gray;
 	}
 	
 	td{
-		border-top: 2px solid gray;
-		border-right: 1px solid #eee;
 		border-bottom: 1px solid gray;
 	}
 	
@@ -36,12 +38,6 @@
 	}
 	
 	#chkAll{
-		width: 20px;
-		height: 20px;
-		border: 2px solid #bcbcbc;
-		cursor: pointer;
-	}
-	#chkAll2{
 		width: 15px;
 		height: 15px;
 		border: 2px solid #bcbcbc;
@@ -52,13 +48,12 @@
 		 text-align: center;
 		 height: 80px
 	}
+
 	.item1{
-		width:30%;
-	}
-	.item2{
-		width:10%;
+		width : 30%;
 	}
 	
+
 	</style>
 	
 	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
@@ -120,21 +115,23 @@
 							<th class="chk" >
 								<input type="checkbox" name="chkAll" id="chkAll">        
 							</th>
-							<th>전체 선택 ( 총 : ${dataCount} 개 ) </th>
+							<th>상품이미지</th>
+							<th>품명</th>
+							<th>총수량</th>
+							<th>소계</th>
 						</tr>
 					</c:if>
 					</thead>
 					
 					<tbody>
 						<c:forEach var="cart" items="${list}">
-							<tr style="">
-								<td>
-									<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll2" >
+							<tr>
+								<td class="orderItem">
+									<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll" >
 								</td>
 								<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
 								<td class="item2 orderItem">${cart.productName}</td>
 								<td class="item2 orderItem">${cart.quantity}</td>
-								<td class="item1 orderItem">상품금액<br> ${cart.createdDate}</td>
 								<td class="item2 orderItem">${cart.price*cart.quantity}</td>
 							</tr>
 						</c:forEach>
