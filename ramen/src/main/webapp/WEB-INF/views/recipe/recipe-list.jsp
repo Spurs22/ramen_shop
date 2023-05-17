@@ -10,7 +10,7 @@
 		.product-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 300px;
+            grid-auto-rows: 250px;
             padding: 20px;
             gap: 30px;
             height: 90%;
@@ -25,7 +25,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 3px;
             padding: 15px;
             transition: 0.5s;
             background: #ffffff;
@@ -88,7 +88,6 @@
 	</header>
 
 	<div class="main-container shadow-lg">
-		<div class="content-container">
 			<div class="sub-menu">
 				<form name="radioForm" action="${pageContext.request.contextPath}/recipe/list.do" method="post">
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -104,7 +103,7 @@
 				</form>
 				
 				<div>
-					<button type="button" class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/recipe/write-recipe.do';">글올리기</button>
+					<button type="button" class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/recipe/write.do';">글올리기</button>
 					
 				</div>
 				
@@ -120,11 +119,12 @@
 						<option value="subject" 		${condition=="subject"?"selected='selected'":"" }>제목</option>
 						<option value="content"			${condition=="content"?"selected='selected'":"" }>내용</option>
 					</select>
-					<input type="text" name="keyword" id="searchInput" value="${keyword}" class="form-control" style="width: 345px;">
+					<input type="text" name="keyword" id="searchInput" value="${keyword}" class="form-control" style="width: 400px;">
 					<button type="button" class="btn btn-primary">검색</button>
 				</form>
 			</div>
 			
+		<div class="content-container" style="height: 85%">
 			<div class="product-container" id="resultForm">
 				<c:forEach var="recipe" items="${list}">
 					<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=${recipe.id}" style="padding: 30px;"> 
@@ -189,15 +189,15 @@
 				
 				console.log(Array.isArray(data));
 				
-				$.each(data, function(i, post) {
+				$.each(data, function(i, list) {
 					 let userCardTemplate = `
-						<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=` + board.id + `" style="padding: 30px;"> 
+						<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=` + list.id + `" style="padding: 30px;"> 
 							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
-							<div style="font-weight: bold;">` + board.subject+ `</div>
-							<div>` + board.nickname + `</div>
-							<div>조회 수 : ` + board.hitCount + `</div>
-							<div><i class="fa-solid fa-heart" style="color: red;"></i> ` + board.recipeLikeCount + `</div>
-							<div>` + board.createdDate + `</div>
+							<div style="font-weight: bold;">` + list.subject+ `</div>
+							<div>` + list.nickname + `</div>
+							<div style="font-size: 14px">조회 수 : ` + list.hitCount + `</div>
+							<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ` + list.recipeLikeCount + `</div>
+							<div style="font-size: 14px">` + list.createdDate + `</div>
 						</a>
                      `;
 

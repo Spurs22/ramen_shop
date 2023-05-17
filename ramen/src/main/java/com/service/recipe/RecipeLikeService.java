@@ -28,7 +28,7 @@ public interface RecipeLikeService {
 	 * @param postId	레시피 게시글 아이디
 	 * @return			레시피 게시글에 대한 좋아요 수 반환
 	 */
-	int CountLike(Long postId);
+	int countLike(Long postId);
 
 	boolean likeRecipePost(Long memberId, Long postId) throws SQLException;
 }

@@ -172,7 +172,7 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 	}
 
 	@Override
-	public int CountLike(Long postId) {
+	public int countLike(Long postId) {
 		// 게시글 당 좋아요 수
 		int result = 0;
 		PreparedStatement pstmt = null;

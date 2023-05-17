@@ -481,6 +481,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeBoard.setSubject(rs.getString("subject"));
 			}
 			
+			if(recipeBoard == null) {
+				return null;
+			}
+			
 			pstmt.close();
 			rs.close();
 			pstmt = null;
@@ -569,6 +573,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				
 				recipeBoard.setId(rs.getLong("id"));
 				recipeBoard.setSubject(rs.getString("subject"));
+			}
+			
+			if(recipeBoard == null) {
+				return null;
 			}
 			
 			pstmt.close();
@@ -946,68 +954,82 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
 					+ "		GROUP BY recipe_id "
 					+ " ) bc ON bc.recipe_id = r.id ";
-
-			if(btnradio.equals("btnradio1")) {
-				if(condition.equals("all")) {
-					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
-							+ " ORDER BY r.id DESC ";
-				} else if (condition.equals("created_date")) {
-					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
-							+ " ORDER BY r.id DESC ";
+			
+			if(keyword != null) {
+				if(btnradio.equals("btnradio1")) {
+					if(condition.equals("all")) {
+						sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
+								+ " ORDER BY r.id DESC ";
+					} else if (condition.equals("created_date")) {
+						keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+						sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
+								+ " ORDER BY r.id DESC ";
+					} else {
+						sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
+								+ " ORDER BY r.id DESC ";
+					}
+				} else if (btnradio.equals("btnradio2")) {
+					if(condition.equals("all")) {
+						sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
+								+ " ORDER BY hit_count DESC ";
+					} else if (condition.equals("created_date")) {
+						keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+						sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
+								+ " ORDER BY hit_count DESC ";
+					} else {
+						sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
+								+ " ORDER BY hit_count DESC ";
+					}
 				} else {
-					sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
-							+ " ORDER BY r.id DESC ";
-				}
-			} else if (btnradio.equals("btnradio2")) {
-				if(condition.equals("all")) {
-					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
-							+ " ORDER BY hit_count DESC ";
-				} else if (condition.equals("created_date")) {
-					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
-							+ " ORDER BY hit_count DESC ";
-				} else {
-					sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
-							+ " ORDER BY hit_count DESC ";
+					if(condition.equals("all")) {
+						sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
+								+ " ORDER BY recipeLikeCount DESC ";
+					} else if (condition.equals("created_date")) {
+						keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+						sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
+								+ " ORDER BY recipeLikeCount DESC ";
+					} else {
+						sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
+								+ " ORDER BY recipeLikeCount DESC ";
+					}
 				}
 			} else {
-				if(condition.equals("all")) {
-					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 "
-							+ " ORDER BY recipeLikeCount DESC ";
-				} else if (condition.equals("created_date")) {
-					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sql += " WHERE TO_CHAR(r.created_date, 'YYYYMMDD') = ? "
-							+ " ORDER BY recipeLikeCount DESC ";
+				if(btnradio.equals("btnradio1")) {
+						sql += " ORDER BY r.id DESC ";
+				} else if (btnradio.equals("btnradio2")) {
+						sql += " ORDER BY hit_count DESC ";
 				} else {
-					sql += " WHERE INSTR(" + condition + ", ?) >= 1 "
-							+ " ORDER BY recipeLikeCount DESC ";
+						sql += " ORDER BY recipeLikeCount DESC ";
 				}
 			}
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			if(btnradio.equals("btnradio1")) {
-				if(condition.equals("all")) {
-					pstmt.setString(1, keyword);
-					pstmt.setString(2, keyword);
+			if(keyword != null) {
+				if(btnradio.equals("btnradio1")) {
+					if(condition.equals("all")) {
+						pstmt.setString(1, keyword);
+						pstmt.setString(2, keyword);
+					} else {
+						pstmt.setString(1, keyword);
+					}
+				} else if (btnradio.equals("btnradio2")) {
+					if(condition.equals("all")) {
+						pstmt.setString(1, keyword);
+						pstmt.setString(2, keyword);
+					} else {
+						pstmt.setString(1, keyword);
+					}
 				} else {
-					pstmt.setString(1, keyword);
-				}
-			} else if (btnradio.equals("btnradio2")) {
-				if(condition.equals("all")) {
-					pstmt.setString(1, keyword);
-					pstmt.setString(2, keyword);
-				} else {
-					pstmt.setString(1, keyword);
+					if(condition.equals("all")) {
+						pstmt.setString(1, keyword);
+						pstmt.setString(2, keyword);
+					} else {
+						pstmt.setString(1, keyword);
+					}
 				}
 			} else {
-				if(condition.equals("all")) {
-					pstmt.setString(1, keyword);
-					pstmt.setString(2, keyword);
-				} else {
-					pstmt.setString(1, keyword);
-				}
+				
 			}
 			
 			rs = pstmt.executeQuery();

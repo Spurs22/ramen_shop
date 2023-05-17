@@ -18,16 +18,21 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeComment;
 import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
+import com.repository.product.ProductBoardRepository;
+import com.repository.product.ProductBoardRepositoryImpl;
 import com.repository.recipe.RecipeBoardRepository;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
 import com.repository.recipe.RecipeCommentRepository;
 import com.repository.recipe.RecipeCommentRepositoryImpl;
 import com.repository.recipe.RecipeLikeRepository;
 import com.repository.recipe.RecipeLikeRepositoryImpl;
+import com.service.product.ProductBoardService;
+import com.service.product.ProductBoardServiceImpl;
 import com.service.recipe.RecipeBoardService;
 import com.service.recipe.RecipeBoardServiceImpl;
 import com.service.recipe.RecipeCommentService;
@@ -49,7 +54,10 @@ public class RecipeServlet extends MyUploadServlet {
 	RecipeBoardService recipeBoardService = new RecipeBoardServiceImpl(recipeBoardRepository);
 	RecipeCommentService recipeCommentService = new RecipeCommentServiceImpl(recipeCommentRepository);
 	RecipeLikeService recipeLikeService = new RecipeLikeServiceImpl(recipeLikeRepository);
-
+	
+	ProductBoardRepository productBoardRepository = new ProductBoardRepositoryImpl();
+	ProductBoardService productBoardService = new ProductBoardServiceImpl(productBoardRepository);
+	
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -64,27 +72,27 @@ public class RecipeServlet extends MyUploadServlet {
 			list(req, resp);
 		} else if (uri.contains("search.do")) {
 			search(req, resp);
-		} else if (uri.contains("write-recipe.do")) {
+		} else if (uri.contains("write.do")) {
 			writeRecipe(req, resp);
-		} else if (uri.contains("write-recipe_ok.do")) {
+		} else if (uri.contains("write_ok.do")) {
 			writeRecipeSubmit(req, resp);
-		} else if (uri.contains("update-recipe.do")) {
+		} else if (uri.contains("update.do")) {
 			updateRecipe(req, resp);
-		} else if (uri.contains("update-recipe_ok.do")) {
+		} else if (uri.contains("update_ok.do")) {
 			updateRecipeSubmit(req, resp);
-		} else if (uri.contains("delete-recipe.do")) {
+		} else if (uri.contains("delete.do")) {
 			deleteRecipe(req, resp);
 		} else if (uri.contains("recipe.do")) {
 			recipe(req, resp);
-		} else if (uri.contains("write-recipe-comment.do")) {
+		} else if (uri.contains("add-comment.do")) {
 			writeRecipeComment(req, resp);
-		} else if (uri.contains("write-recipe-comment_ok.do")) {
+		} else if (uri.contains("add-comment_ok.do")) {
 			writeRecipeCommentSubmit(req, resp);
-		} else if (uri.contains("update-recipe-comment.do")) {
+		} else if (uri.contains("fix-comment.do")) {
 			updateRecipeComment(req, resp);
-		} else if (uri.contains("update-recipe-comment_ok.do")) {
+		} else if (uri.contains("fix-comment_ok.do")) {
 			updateRecipeCommentSubmit(req, resp);
-		} else if (uri.indexOf("delete-recipe-comment.do") != -1) {
+		} else if (uri.indexOf("drop-comment.do") != -1) {
 			deleteRecipeComment(req, resp);
 		} else if (uri.contains("like")) {
 			likeRecipe(req, resp);
@@ -182,8 +190,7 @@ public class RecipeServlet extends MyUploadServlet {
 		
 		resp.setContentType("application/json");
 		
-		if(keyword.equals("")) keyword = "";
-		if(condition.equals("")) condition = "";
+		if(keyword.equals("")) keyword = null;
 		
 		System.out.println(btnradio +","+condition+","+keyword);
 		
@@ -223,6 +230,10 @@ public class RecipeServlet extends MyUploadServlet {
 		}
 		
 		req.setAttribute("mode", "write");
+		
+		List<ProductBoard> posts = productBoardService.findAllPosts();
+		req.setAttribute("posts", posts);
+
 		forward(req, resp, "/WEB-INF/views/recipe/recipe-write.jsp");
 	}
 
@@ -584,7 +595,7 @@ public class RecipeServlet extends MyUploadServlet {
 			System.out.println(result);
 
 			// 좋아요 개수
-			recipeLikeCount = recipeLikeService.CountLike(recipeId);
+			recipeLikeCount = recipeLikeService.countLike(recipeId);
 			
 		} catch (SQLException e) {
 

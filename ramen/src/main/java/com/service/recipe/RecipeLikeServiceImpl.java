@@ -31,8 +31,8 @@ public class RecipeLikeServiceImpl implements RecipeLikeService {
 	}
 
 	@Override
-	public int CountLike(Long postId) {
-		return recipeLikeRepository.CountLike(postId);
+	public int countLike(Long postId) {
+		return recipeLikeRepository.countLike(postId);
 	}
 
 	@Override

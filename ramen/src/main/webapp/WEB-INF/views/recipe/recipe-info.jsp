@@ -70,6 +70,10 @@
         .btn:hover {
             border: 1px solid black;
         }
+        
+        .btnSendRecipeLike:hover > i {
+        	color: #dc6c6a;
+        }
 
 	</style>
 </head>
@@ -181,7 +185,7 @@
 
             content = encodeURIComponent(content);
 
-            let url = "${pageContext.request.contextPath}/recipe/write-recipe-comment.do";
+            let url = "${pageContext.request.contextPath}/recipe/add-comment.do";
             let qs = "id=" + id + "&content=" + content;
 
             const fn = function () {
@@ -246,7 +250,7 @@
 						<c:choose>
 							<c:when test="${sessionScope.member.userNickname==dto.nickname}">
 								<button type="button" class="btn"
-										onclick="location.href='${pageContext.request.contextPath}/recipe/update-recipe.do?id=${dto.id}';">
+										onclick="location.href='${pageContext.request.contextPath}/recipe/update.do?id=${dto.id}';">
 									수정
 								</button>
 							</c:when>
@@ -257,7 +261,7 @@
 						<c:choose>
 							<c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
 								<button type="button" class="btn"
-										onclick="location.href='${pageContext.request.contextPath}/recipe/delete-recipe.do?id=${dto.id}';">
+										onclick="location.href='${pageContext.request.contextPath}/recipe/delete.do?id=${dto.id}';">
 									삭제
 								</button>
 							</c:when>
