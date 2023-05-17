@@ -35,10 +35,6 @@
 		background: gray;
 	}
 	
-	.main-container{
-		overflow: auto;
-	}
-	
 	#chkAll{
 		width: 20px;
 		height: 20px;
@@ -51,26 +47,18 @@
 		border: 2px solid #bcbcbc;
 		cursor: pointer;
 	}
+	
 	.orderItem{
 		 text-align: center;
+		 height: 80px
 	}
-	
 	.item1{
 		width:30%;
 	}
 	.item2{
 		width:10%;
 	}
-	.item3{
-		width:10%;
-	}
-	.item4{
-		width:30%;
-		
-	}
-	.item5{
-		width:10%;
-	}
+	
 	</style>
 	
 	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
@@ -93,13 +81,14 @@
 			
 			if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
 				const f = document.listForm;
-				f.action="${pageContext.request.contextPath}/cart/list-delete.do";
+				f.action="${pageContext.request.contextPath}/cart/list_delete.do";
 				f.submit();
 			}
 		});
 		
 		$("#btnOrder").click(function(){
 			let cnt = $("input[name=productIds]:checked").length;
+			
 			if(cnt === 0) {
 				alert("결제할 물품을 먼저 선택하세요.");
 				return false;
@@ -122,44 +111,49 @@
 	</header>
 
 	<div class="main-container shadow-lg">
-		<div class="product-container">
+		<div class="product-container" style="overflow:auto; height:680px; margin-bottom:20px">
 			<form name="listForm" method="post">
-			<table>
-				<thead>
-				<tr>
-					<th class="chk" >
-						<input type="checkbox" name="chkAll" id="chkAll">        
-					</th>
-					<th>전체 선택</th>
-				</tr>
-				</thead>
-				
-				<tbody>
-					<c:forEach var="cart" items="${list}">
+				<table>
+					<thead>
 						<tr>
-							<td>
-								<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll2" >
-							</td>
-							<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png"></td>
-							<td class="item2 orderItem">${cart.productId}</td>
-							<td class="item3 orderItem">${cart.quantity}</td>
-							<td class="item4 orderItem">상품금액<br> ${cart.createdDate}</td>
-							<td class="item5 orderItem">${cart.price*cart.quantity}</td>
+							<th class="chk" >
+								<input type="checkbox" name="chkAll" id="chkAll">        
+							</th>
+							<th>전체 선택 ( 총 : ${dataCount} 개 ) </th>
 						</tr>
-					</c:forEach>
+	
+					</thead>
 					
-					<c:if test="${dataCount == 0}">
-						<tr>		
-							<td>등록된 게시물이 없습니다.</td>
-						</tr>		
-					</c:if>
-				</tbody>
-			</table>
-					<br>
-					<button type="button" class="btn" id="btnDeleteList">삭제</button>
-					<button type="button" class="btn" id="btnOrder">결제</button>
+					<tbody>
+						<c:forEach var="cart" items="${list}">
+							<tr style="">
+								<td>
+									<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll2" >
+								</td>
+								<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+								<td class="item2 orderItem">${cart.productName}</td>
+								<td class="item2 orderItem">${cart.quantity}</td>
+								<td class="item1 orderItem">상품금액<br> ${cart.createdDate}</td>
+								<td class="item2 orderItem">${cart.price*cart.quantity}</td>
+							</tr>
+						</c:forEach>
+						
+						<c:if test="${dataCount == 0}">
+							<tr>		
+								<td>등록된 게시물이 없습니다.</td>
+							</tr>		
+						</c:if>
+					</tbody>
+				</table>
+			
 			</form>
 		</div>
+		<div>
+					<button type="button" class="btn" id="btnDeleteList">삭제</button>
+					<button type="button" class="btn" id="btnOrder">결제</button>
+			</div>
+		
+		
 	</div>
 
 

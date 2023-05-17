@@ -14,6 +14,7 @@
 	// let menuIndex = 5
 
 	$(function() {
+		
 		$("#btnOrder").click(function() {
 			const f = document.orderForm;
 
@@ -65,7 +66,7 @@
 
 			if (confirm("결제 하시겠습니까 ?")) {
 				const f = document.orderForm;
-				f.action = "${pageContext.request.contextPath}/order/order-ok.do";
+				f.action = "${pageContext.request.contextPath}/order/order_ok.do";
 				f.submit();
 			}
 		});
