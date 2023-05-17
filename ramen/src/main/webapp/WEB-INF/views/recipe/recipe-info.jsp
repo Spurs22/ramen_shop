@@ -202,7 +202,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 		                  </c:choose>
 						<c:choose>
 		                      <c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
-		                         <button type="button" class="btn" onclick="deleteBoard();">삭제</button>
+		                         <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/recipe/delete-recipe.do?id=${dto.id}';">삭제</button>
 		                      </c:when>
 		                      <c:otherwise>
 		                         <button type="button" class="btn" disabled="disabled">삭제</button>

@@ -22,7 +22,11 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			${mode} 화면
+		
+			<div style="display: flex; flex-direction: row; gap: 5px">
+				<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#selectProductModal">라면 선택</button>
+			</div>
+			
 		</div>
 	</div>
 </div>

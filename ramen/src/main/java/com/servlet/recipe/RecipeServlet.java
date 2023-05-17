@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.DTO.RecipeBoard;
@@ -70,6 +71,8 @@ public class RecipeServlet extends MyUploadServlet {
 		// uri에 따른 작업 구분
 		if (uri.indexOf("list.do") != -1) {
 			list(req, resp);
+		} else if (uri.indexOf("search.do") != -1) {
+			search(req, resp);
 		} else if (uri.indexOf("write-recipe.do") != -1) {
 			writeRecipe(req, resp);
 		} else if (uri.indexOf("write-recipe_ok.do") != -1) {
@@ -101,77 +104,123 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		String cp = req.getContextPath();
+//		String cp = req.getContextPath();
 		
-		try {
-			// 검색 
-			String condition = req.getParameter("condition");
-			String keyword = req.getParameter("keyword");
-			if(condition == null) {
-				condition = "all";
-				keyword = "";
-			}
+//		try {
+//			// 검색 
+//			String condition = req.getParameter("condition");
+//			String keyword = req.getParameter("keyword");
+//			if(condition == null) {
+//				condition = "all";
+//				keyword = "";
+//			}
+//			
+//			// GET 방식인 경우 디코딩
+//			if(req.getMethod().equalsIgnoreCase("GET")) {
+//				keyword = URLDecoder.decode(keyword, "utf-8");
+//			}
+//			
+//			
+//			String query = "";
+//			if(keyword.length() != 0) {
+//				query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+//			}
+//			
+//			// 검색 페이지
+//			String listUrl = cp + "/recipe/list.do";
+//			String recipeUrl = cp + "/recipe/recipe.do";
+//			if(query.length() != 0) {
+//				listUrl += "?" + query;
+//				recipeUrl += "?" + query;
+//			}
+//			
+//
+//			// 수정
+//			List<RecipeBoard> list = null;
+//
+//			String btnradio = String.valueOf(req.getParameter("btnradio"));
+//			
+//			if(btnradio.equals("btnradio2")) {
+//				if(keyword.length() == 0) {
+//					list = recipeBoardService.readRecipeByHitCount();
+//				} else {
+//					list = recipeBoardService.readRecipeByHitCount(condition, keyword);
+//				}
+//			} else if (btnradio.equals("btnradio1")){
+//				if(keyword.length() == 0) {
+//					list = recipeBoardService.readRecipe();
+//				} else {
+//					list = recipeBoardService.readRecipe(condition, keyword);
+//				}
+//			} else {
+//				if(keyword.length() == 0) {
+//					list = recipeBoardService.readRecipeByLike();
+//				} else {
+//					list = recipeBoardService.readRecipeByLike(condition, keyword);
+//				}
+//			}
+//			// 여기까지
+//			
+//			// 포워딩할 JSP로 넘길 속성
+//			req.setAttribute("listUrl", listUrl);
+//			req.setAttribute("list", list);
+//			req.setAttribute("recipeUrl", recipeUrl);
+//			req.setAttribute("condition", condition);
+//			req.setAttribute("keyword", keyword);
+//			req.setAttribute("btnrado", btnradio);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		// JSP로 포워딩
+//		forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
 			
-			// GET 방식인 경우 디코딩
-			if(req.getMethod().equalsIgnoreCase("GET")) {
-				keyword = URLDecoder.decode(keyword, "utf-8");
-			}
-			
-			
-			String query = "";
-			if(keyword.length() != 0) {
-				query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-			}
-			
-			// 검색 페이지
-			String listUrl = cp + "/recipe/list.do";
-			String recipeUrl = cp + "/recipe/recipe.do";
-			if(query.length() != 0) {
-				listUrl += "?" + query;
-				recipeUrl += "?" + query;
-			}
-			
-
-			// 수정
-			List<RecipeBoard> list = null;
-
-			String btnradio = String.valueOf(req.getParameter("btnradio"));
-			
-			if(btnradio.equals("btnradio2")) {
-				if(keyword.length() == 0) {
-					list = recipeBoardService.readRecipeByHitCount();
-				} else {
-					list = recipeBoardService.readRecipeByHitCount(condition, keyword);
-				}
-			} else if (btnradio.equals("btnradio1")){
-				if(keyword.length() == 0) {
-					list = recipeBoardService.readRecipe();
-				} else {
-					list = recipeBoardService.readRecipe(condition, keyword);
-				}
-			} else {
-				if(keyword.length() == 0) {
-					list = recipeBoardService.readRecipeByLike();
-				} else {
-					list = recipeBoardService.readRecipeByLike(condition, keyword);
-				}
-			}
-			// 여기까지
-			
-			// 포워딩할 JSP로 넘길 속성
-			req.setAttribute("listUrl", listUrl);
+			List<RecipeBoard> list = recipeBoardService.readRecipe();
 			req.setAttribute("list", list);
-			req.setAttribute("recipeUrl", recipeUrl);
-			req.setAttribute("condition", condition);
-			req.setAttribute("keyword", keyword);
-			req.setAttribute("btnrado", btnradio);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(list.get(1));
+			
+			forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
+	}
+	
+	protected void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 레시피 정렬
+		String btnradio = req.getParameter("btnradio");
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+		
+		
+		resp.setContentType("application/json");
+		
+		if(keyword.equals("")) keyword = "";
+		if(condition.equals("")) condition = "";
+		
+		System.out.println(btnradio +","+condition+","+keyword);
+		
+		List<RecipeBoard> list = recipeBoardService.readRecipeByAll(btnradio, condition, keyword);
+		
+		JSONArray jarr = new JSONArray();
+		for(RecipeBoard board : list) {
+			JSONObject json = new JSONObject();
+			
+			json.put("id", board.getId());
+			json.put("subject", board.getSubject());
+			json.put("hitCount", board.getHitCount());
+			json.put("createdDate", board.getCreatedDate());
+			json.put("nickname", board.getNickname());
+			json.put("recipeLikeCount", board.getRecipeLikeCount());
+			jarr.put(json);
+			
+			System.out.println(board.getId()+","+board.getSubject());
 		}
 		
-		// JSP로 포워딩
-		forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
+		resp.setContentType("text/html;charset=utf-8");
+
+		resp.getWriter().write(jarr.toString());
+		
+		System.out.println(jarr.toString());
+		
 	}
 
 	protected void writeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -218,12 +267,12 @@ public class RecipeServlet extends MyUploadServlet {
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정
 		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String cp = req.getContextPath();
 		
 		try {
-			Long recipe_id = Long.parseLong(req.getParameter("id")); // 수정
+			Long recipe_id = Long.parseLong(req.getParameter("id"));
 			
 			RecipeBoard board = recipeBoardService.readRecipe(recipe_id);
 			if(board == null || ( ! board.getNickname().equals(info.getUserNickname()))) {
@@ -247,7 +296,7 @@ public class RecipeServlet extends MyUploadServlet {
 	protected void updateRecipeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정 완료
 		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String cp = req.getContextPath();
 		
@@ -273,7 +322,7 @@ public class RecipeServlet extends MyUploadServlet {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.jsp"); // 수정
+		resp.sendRedirect(cp + "/recipe/recipe-list.jsp");
 	}
 
 	protected void deleteRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -281,12 +330,12 @@ public class RecipeServlet extends MyUploadServlet {
 		String cp = req.getContextPath();
 		
 		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String query = "";
 		
 		try {
-			Long recipe_id = Long.parseLong(req.getParameter("id")); // 수정
+			Long recipe_id = Long.parseLong(req.getParameter("id"));
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			if(condition == null) {
@@ -297,28 +346,28 @@ public class RecipeServlet extends MyUploadServlet {
 			keyword = URLDecoder.decode(keyword, "utf-8");
 			
 			if(keyword.length() != 0) {
-				query += "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+				query += "?condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 			}
-			
+
 			RecipeBoard board = recipeBoardService.readRecipe(recipe_id);
 			
 			if(board == null) {
-				resp.sendRedirect(cp + "/recipe/recipe-list?" + query); // 수정
+				resp.sendRedirect(cp + "/recipe/recipe-list.do" + query);
 				return;
 			}
 			
-			if(! info.getMemberId().equals(board.getMemberId()) && ! info.getUserNickname().equals("admin")) {
-				resp.sendRedirect(cp + "" + query); // 수정
+			if(info.getMemberId() != board.getMemberId() && ! info.getUserNickname().equals("admin")) {
+				resp.sendRedirect(cp + "/recipe/recipe-list.do" + query);
 				return;
 			}
-			
-			recipeBoardService.deleteRecipe(recipe_id, info.getMemberId());
+
+			recipeBoardService.deleteRecipe(info.getMemberId(), recipe_id);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "" + query); // 수정
+		resp.sendRedirect(cp + "/recipe/recipe-list.do" + query); // 수정
 	}
 
 	protected void recipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -491,7 +540,7 @@ public class RecipeServlet extends MyUploadServlet {
 				return;
 			}
 			
-			if(! comment.getMemberId().equals(info.getMemberId()) && ! info.getUserNickname().equals("admin")) {
+			if(comment.getMemberId() != info.getMemberId() && ! info.getUserNickname().equals("admin")) {
 				resp.sendRedirect(cp + "" + query); // 수정
 				return;
 			}
