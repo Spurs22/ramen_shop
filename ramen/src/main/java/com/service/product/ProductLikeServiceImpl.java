@@ -25,7 +25,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 	}
 
 	@Override
-	public List<ProductBoard> findLikePost(Long memberId) {
+	public List<ProductBoard> findLikePostById(Long memberId) {
 		return productLikeRepository.findLikePostById(memberId);
 	}
 
@@ -40,7 +40,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 	}
 
 	@Override
-	public List<Member> findLikePost(Long memberId, int offset, int size) {
+	public List<ProductBoard> findLikePostById(Long memberId, int offset, int size) {
 		return productLikeRepository.findLikePostById(memberId, offset, size);
 	}
 }

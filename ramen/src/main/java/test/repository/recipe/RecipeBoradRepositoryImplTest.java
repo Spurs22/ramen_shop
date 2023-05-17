@@ -41,7 +41,7 @@ public class RecipeBoradRepositoryImplTest {
 			// recipe.deleteRecipe(1L, 10L); // 레시피 삭제
 			// recipe.readRecipe(); 
 			
-			// like.likePost(1L, 7L); // 좋아요 누르기
+			 like.likePost(3L, 7L); // 좋아요 누르기
 			// like.cancelLikePost(1L, 7L); // 좋아요 취소
 //			int count = like.CountLike(7L); // 좋아요 수
 //			System.out.println(count); 

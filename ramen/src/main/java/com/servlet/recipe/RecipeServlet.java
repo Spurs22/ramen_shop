@@ -62,31 +62,31 @@ public class RecipeServlet extends MyUploadServlet {
 		// uri에 따른 작업 구분
 		if (uri.indexOf("list.do") != -1) {
 			list(req, resp);
-		} else if (uri.indexOf("search.do") != -1) {
+		} else if (uri.contains("search.do")) {
 			search(req, resp);
-		} else if (uri.indexOf("write-recipe.do") != -1) {
+		} else if (uri.contains("write-recipe.do")) {
 			writeRecipe(req, resp);
-		} else if (uri.indexOf("write-recipe_ok.do") != -1) {
+		} else if (uri.contains("write-recipe_ok.do")) {
 			writeRecipeSubmit(req, resp);
-		} else if (uri.indexOf("update-recipe.do") != -1) {
+		} else if (uri.contains("update-recipe.do")) {
 			updateRecipe(req, resp);
-		} else if (uri.indexOf("update-recipe_ok.do") != -1) {
+		} else if (uri.contains("update-recipe_ok.do")) {
 			updateRecipeSubmit(req, resp);
-		} else if (uri.indexOf("delete-recipe.do") != -1) {
+		} else if (uri.contains("delete-recipe.do")) {
 			deleteRecipe(req, resp);
-		} else if (uri.indexOf("recipe.do") != -1) {
+		} else if (uri.contains("recipe.do")) {
 			recipe(req, resp);
-		} else if (uri.indexOf("write-recipe-comment.do") != -1) {
+		} else if (uri.contains("write-recipe-comment.do")) {
 			writeRecipeComment(req, resp);
-		} else if (uri.indexOf("write-recipe-comment_ok.do") != -1) {
+		} else if (uri.contains("write-recipe-comment_ok.do")) {
 			writeRecipeCommentSubmit(req, resp);
-		} else if (uri.indexOf("update-recipe-romment.do") != -1) {
+		} else if (uri.contains("update-recipe-comment.do")) {
 			updateRecipeComment(req, resp);
-		} else if (uri.indexOf("update-recipe-comment_ok.do") != -1) {
+		} else if (uri.contains("update-recipe-comment_ok.do")) {
 			updateRecipeCommentSubmit(req, resp);
 		} else if (uri.indexOf("delete-recipe-comment.do") != -1) {
 			deleteRecipeComment(req, resp);
-		} else if (uri.indexOf("like-recipe.do") != -1) {
+		} else if (uri.contains("like")) {
 			likeRecipe(req, resp);
 		}
 	}
@@ -571,35 +571,32 @@ public class RecipeServlet extends MyUploadServlet {
 		System.out.println("레시피 좋아요 왔음");
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		String state = "false";
+		Long memberId = info.getMemberId();
+
 		int recipeLikeCount = 0;
+		boolean result = false;
 		
 		try {
-			Long id = Long.parseLong(req.getParameter("id"));
-			String isNoLike = req.getParameter("isNoLike");
-			System.out.println("멤버 : " + info.getMemberId() + ", 게시글 아이디" + id + ", isNoLike : "+ isNoLike);
-			if(isNoLike.equals("true")) {
-				recipeLikeService.likePost(info.getMemberId(), id); // 공강
-			} else {
-				recipeLikeService.cancelLikePost(info.getMemberId(), id); // 공감취소
-			}
-			
+			Long recipeId = Long.parseLong(req.getParameter("id"));
+			System.out.println("멤버 : " + memberId + ", 게시글 아이디" + recipeId);
+
+			result = recipeLikeService.likeRecipePost(memberId, recipeId);
+			System.out.println(result);
+
 			// 좋아요 개수
-			recipeLikeCount = recipeLikeService.CountLike(id);
+			recipeLikeCount = recipeLikeService.CountLike(recipeId);
 			
-			state="true";
 		} catch (SQLException e) {
-			state = "liked";
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		JSONObject job = new JSONObject();
-		job.put("state", state);
+		job.put("state", result);
 		job.put("recipeLikeCount", recipeLikeCount);
 		
 		PrintWriter out = resp.getWriter();
-		out.print(job.toString());
+		out.print(job);
 	}
 
 	protected void dislikeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -14,16 +14,6 @@ public class RecipeLikeServiceImpl implements RecipeLikeService {
 	public RecipeLikeServiceImpl(RecipeLikeRepository recipeLikeRepository) {
 		this.recipeLikeRepository = recipeLikeRepository;
 	}
-	
-	@Override
-	public void likePost(Long memberId, Long postId) throws SQLException {
-		recipeLikeRepository.likePost(memberId, postId);
-	}
-
-	@Override
-	public void cancelLikePost(Long memberId, Long postId) throws SQLException {
-		recipeLikeRepository.cancelLikePost(memberId, postId);
-	}
 
 	@Override
 	public List<Member> findLikeMembers(Long postId) {
@@ -44,5 +34,26 @@ public class RecipeLikeServiceImpl implements RecipeLikeService {
 	public int CountLike(Long postId) {
 		return recipeLikeRepository.CountLike(postId);
 	}
-	
+
+	@Override
+	public boolean likeRecipePost(Long memberId, Long postId) throws SQLException {
+
+		try {
+			Boolean isLike = recipeLikeRepository.isLike(memberId, postId);
+
+			if (isLike) {
+				recipeLikeRepository.cancelLikePost(memberId, postId); // 공감취소
+			} else {
+				recipeLikeRepository.likePost(memberId, postId); // 공강
+			}
+
+			return true;
+		} catch (SQLException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 }

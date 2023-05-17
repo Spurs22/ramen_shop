@@ -7,52 +7,70 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-		tr > td {text-align: center;}
-		tr > th {background-color: #DFE2E6; }
-		.content-table > tr {padding: 15px;}
-		.right {text-align: right;}
-		.content-text {
-			width: 100%; min-height: 200px; padding: 10px;
-			resize: none;
-			margin-top: 10px;
-			margin-bottom: 10px;
-			border-left: none;
-			border-right: none;
-		}
-		
-		.content-text:focus {
- 			 outline: none;
-		}
-		
-		.content-reply {
-			width: 100%; height: 70px; padding: 10px;
-			resize: none;
-			border-radius: 5px;
-		}
-		
-		.content-reply {
-			outline:none;
-		}
-		
-		.pnbtn {
-			color: black;
-			text-decoration: none;
-		}
-		
-		.pnbtn:hover {
-			cursor: pointer;
-		}
-		
-		.pnbtn:active {
-			color: #777;
-		}
-		.btn {
-			border: 1px solid black;
-		}
-		.btn:hover {
-			border: 1px solid black;
-		}
-		
+        tr > td {
+            text-align: center;
+        }
+
+        tr > th {
+            background-color: #DFE2E6;
+        }
+
+        .content-table > tr {
+            padding: 15px;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .content-text {
+            width: 100%;
+            min-height: 200px;
+            padding: 10px;
+            resize: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-left: none;
+            border-right: none;
+        }
+
+        .content-text:focus {
+            outline: none;
+        }
+
+        .content-reply {
+            width: 100%;
+            height: 70px;
+            padding: 10px;
+            resize: none;
+            border-radius: 5px;
+        }
+
+        .content-reply {
+            outline: none;
+        }
+
+        .pnbtn {
+            color: black;
+            text-decoration: none;
+        }
+
+        .pnbtn:hover {
+            cursor: pointer;
+        }
+
+        .pnbtn:active {
+            color: #777;
+        }
+
+        .btn {
+            border: 1px solid black;
+        }
+
+        .btn:hover {
+            border: 1px solid black;
+        }
+
 	</style>
 </head>
 <script>
@@ -60,111 +78,120 @@
 </script>
 <script>
 
-let likeStatus = ${likeStatus};
+    let likeStatus = ${likeStatus};
+    let likeBtn = document.getElementById('likeBtn');
 
-function changeLikeStatus() {
-	 if (likeStatus) {
-		 // 좋아요 취소
-		 
-		 // 1. 상태변경
-		 likeStatus = !likeStatus
-		 console.log(likeStatus + " 좋아요 취소")
-		 // 2. 색 변경
-		 
-	 } else {
-		 // 좋아요 요청
-		 
-		 // 1. 상태변경
-		 likeStatus = !likeStatus
-		 console.log(likeStatus + " 좋아요 요청")
-		 // 2. 색 변경
-		 
-	 }
-}
+    $(document).ready(function () {
+		if (!likeStatus) $('#likeBtn').css("color", likeColor)
+    });
 
-function login() {
-   location.href="${pageContext.request.contextPath}/recipe/login.do";
-}
-	
-function ajaxFun(url, method, query, dataType, fn) {
-	$.ajax({
-		type:method,
-		url:url,
-		data:query,
-		dataType:dataType,
-		success:function(data) {
-			fn(data);
-		},
-		beforeSend:function(jqXHR) { 
-			jqXHR.setRequestHeader("AJAX", true); // 사용자 정의 헤더
-		},
-		error:function(jqXHR) {
-			if(jqXHR.status === 403) {
-				login();
-				return false;
-			} else if(jqXHR.status === 400) {
-				alert("요청 처리가 실패 했습니다.");
-				return false;
-			}
-		}
-	});
-}
-	
-	// 게시물 좋아요
-    $(function(){
-   	   $(".btnSendRecipeLike").click(function(){   	   	  
-   	      let msg = likeStatus ? "게시글에 공감하십니까 ?" : "게시글 공감을 취소하시겠습니까 ?";      
-   	      
-   	      if(! confirm(msg)){
-   	         return false;
-   	      }
-   	      
-   	      let url = "${pageContext.request.contextPath}/recipe/like-recipe.do";
-   	      let id = "${dto.id}";
-   	      let qs = "id=" + id;
-   	      
-   	      
-   	      const fn = function(data){
-   	         let state = data.state;
-   	         if(state === "true"){
-   	            changeLikeStatus();
-   	            
-   	            let count = data.recipeLikeCount;
-   	            $("#recipeLikeCount").text(count);
-   	         } else if(state === "liked"){
-   	            alert("좋아요는 한번만 가능합니다.");            
-   	         }
-   	      };
-   	      
-   	  	  ajaxFun(url, "post", qs, "json", fn);
-   	   });
-   	});
-	
-	// 댓글 등록
-	$(function() {
-		$(".btnSendReply").click(function() {
-			let id = "${comment.id}";
-			const $tb = $(this).closest("table");
-			let content = $tb.find("textarea").val().trim();
-			
-			if(! content) {
-				$tb.find("textarea").focus();
-				return false;
-			}
-			
-			content = encodeURIComponent(content);
-			
-			let url = "${pageContext.request.contextPath}/recipe/write-recipe-comment.do";
-			let qs = "id=" + id + "&content=" + content;
-			
-			const fn = function() {
-				$tb.find("textarea").val("");
-				
-				let state = data.state;
-			}
-			ajaxFun(url, "post", qs, "json", fn);
-		});
-	});
+    let likeColor = '#dc6c6a';
+    let defaultColor = "#000000"
+
+    function changeLikeStatus() {
+        if (likeStatus) {
+            // 좋아요 취소
+            // 1. 상태변경
+            likeStatus = !likeStatus
+            // 2. 색 변경
+            $('#likeBtn').css("color", likeColor)
+            console.log(likeStatus + " 좋아요 취소")
+
+        } else {
+            // 좋아요 요청
+            // 1. 상태변경
+            likeStatus = !likeStatus
+            // 2. 색 변경
+            $('#likeBtn').css("color", defaultColor)
+            console.log(likeStatus + " 좋아요 요청")
+        }
+    }
+
+    function login() {
+        location.href = "${pageContext.request.contextPath}/recipe/login.do";
+    }
+
+    function ajaxFun(url, method, query, dataType, fn) {
+        $.ajax({
+            type: method,
+            url: url,
+            data: query,
+            dataType: dataType,
+            success: function (data) {
+                fn(data);
+            },
+            beforeSend: function (jqXHR) {
+                jqXHR.setRequestHeader("AJAX", true); // 사용자 정의 헤더
+            },
+            error: function (jqXHR) {
+                if (jqXHR.status === 403) {
+                    login();
+                    return false;
+                } else if (jqXHR.status === 400) {
+                    alert("요청 처리가 실패 했습니다.");
+                    return false;
+                }
+            }
+        });
+    }
+
+    // 게시물 좋아요
+    $(function () {
+        $(".btnSendRecipeLike").click(function () {
+            let msg = likeStatus ? "게시글에 공감하십니까 ?" : "게시글 공감을 취소하시겠습니까 ?";
+
+            if (!confirm(msg)) {
+                return false;
+            }
+
+            let url = "${pageContext.request.contextPath}/recipe/like";
+            let id = "${dto.id}";
+            let qs = "id=" + id;
+
+
+            const fn = function (data) {
+                let state = data.state;
+                if (state === true) {
+                    console.log(likeStatus)
+
+                    changeLikeStatus();
+
+                    let count = data.recipeLikeCount;
+                    $("#recipeLikeCount").text(count);
+                } else if (state === "liked") {
+                    alert("좋아요는 한번만 가능합니다.");
+                }
+            };
+
+            ajaxFun(url, "post", qs, "json", fn);
+        });
+    });
+
+    // 댓글 등록
+    $(function () {
+        $(".btnSendReply").click(function () {
+            let id = "${comment.id}";
+            const $tb = $(this).closest("table");
+            let content = $tb.find("textarea").val().trim();
+
+            if (!content) {
+                $tb.find("textarea").focus();
+                return false;
+            }
+
+            content = encodeURIComponent(content);
+
+            let url = "${pageContext.request.contextPath}/recipe/write-recipe-comment.do";
+            let qs = "id=" + id + "&content=" + content;
+
+            const fn = function () {
+                $tb.find("textarea").val("");
+
+                let state = data.state;
+            }
+            ajaxFun(url, "post", qs, "json", fn);
+        });
+    });
 
 </script>
 <body>
@@ -185,7 +212,9 @@ function ajaxFun(url, method, query, dataType, fn) {
 						조회수 : ${dto.hitCount} 회
 					</th>
 					<th style="text-align: right; padding-right: 20px; width: 15%">
-						<button type="button" class="btn btnSendRecipeLike" title="좋아요" style="border: none;"> <i class="fa-solid fa-heart" style="color:${isUserLike?'red':'black'}"></i>&nbsp;&nbsp;<span id="recipeLikeCount">${dto.recipeLikeCount}</span></button>
+						<button type="button" class="btn btnSendRecipeLike" title="좋아요" style="border: none;"><i
+								class="fa-solid fa-heart" id="likeBtn"></i>&nbsp;&nbsp;<span
+								id="recipeLikeCount">${dto.recipeLikeCount}</span></button>
 					</th>
 				</tr>
 				<tr>
@@ -203,7 +232,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 				<tr>
 					<td colspan=3>
 						<c:forEach var="recipe" items="${list}">
-							${recipe.name} ${recipe.quantity} 개 <br> 
+							${recipe.name} ${recipe.quantity} 개 <br>
 						</c:forEach>
 					</td>
 				</tr>
@@ -215,21 +244,27 @@ function ajaxFun(url, method, query, dataType, fn) {
 				<tr>
 					<td style="text-align: left">
 						<c:choose>
-		                     <c:when test="${sessionScope.member.userNickname==dto.nickname}">
-		                        <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/recipe/update-recipe.do?id=${dto.id}';">수정</button>
-		                     </c:when>
-		                     <c:otherwise>
-		                        <button type="button" class="btn" disabled="disabled">수정</button>
-		                     </c:otherwise>
-		                  </c:choose>
+							<c:when test="${sessionScope.member.userNickname==dto.nickname}">
+								<button type="button" class="btn"
+										onclick="location.href='${pageContext.request.contextPath}/recipe/update-recipe.do?id=${dto.id}';">
+									수정
+								</button>
+							</c:when>
+							<c:otherwise>
+								<button type="button" class="btn" disabled="disabled">수정</button>
+							</c:otherwise>
+						</c:choose>
 						<c:choose>
-		                      <c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
-		                         <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/recipe/delete-recipe.do?id=${dto.id}';">삭제</button>
-		                      </c:when>
-		                      <c:otherwise>
-		                         <button type="button" class="btn" disabled="disabled">삭제</button>
-		                      </c:otherwise>
-		                   </c:choose>
+							<c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
+								<button type="button" class="btn"
+										onclick="location.href='${pageContext.request.contextPath}/recipe/delete-recipe.do?id=${dto.id}';">
+									삭제
+								</button>
+							</c:when>
+							<c:otherwise>
+								<button type="button" class="btn" disabled="disabled">삭제</button>
+							</c:otherwise>
+						</c:choose>
 					</td>
 					<td colspan=2 style="width: 30%; text-align: right; padding: 10px;">
 						등록일 : ${dto.createdDate}
@@ -238,15 +273,19 @@ function ajaxFun(url, method, query, dataType, fn) {
 				<tr>
 					<td style="text-align: left;">
 						<c:if test="${not empty preReadDto}">
-							<a class="pnbtn" href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${preReadDto.id}"><i class="fa-solid fa-caret-left"></i>&nbsp;${preReadDto.subject}</a>
+							<a class="pnbtn"
+							   href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${preReadDto.id}"><i
+									class="fa-solid fa-caret-left"></i>&nbsp;${preReadDto.subject}</a>
 						</c:if>
 					</td>
 					<td>
 					</td>
 					<td style="text-align: right;">
 						<c:if test="${not empty nextReadDto}">
-							<a class="pnbtn" href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${nextReadDto.id}">${nextReadDto.subject}&nbsp;<i class="fa-solid fa-caret-right"></i></a>
-						</c:if>	
+							<a class="pnbtn"
+							   href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${nextReadDto.id}">${nextReadDto.subject}&nbsp;<i
+									class="fa-solid fa-caret-right"></i></a>
+						</c:if>
 					</td>
 				</tr>
 			</table>
@@ -256,7 +295,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 					<div class="form-header">
 						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 ${replyCount}개</span>
 					</div>
-					
+
 					<table style="width: 100%">
 						<tr>
 							<td>
@@ -269,7 +308,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 							</td>
 						</tr>
 					</table>
-					
+
 				</form>
 				<div id="listReply"></div>
 			</div>

@@ -24,7 +24,7 @@ public interface ProductLikeService {
 	 * @param memberId  멤버 아이디
 	 * @return          찜 누른 포스트 리스트
 	 */
-	List<ProductBoard> findLikePost(Long memberId);
+	List<ProductBoard> findLikePostById(Long memberId);
 
 	/**
 	 * @param memberId          멤버 아이디
@@ -35,5 +35,5 @@ public interface ProductLikeService {
 
 	int getCntLikePost(Long memberId);
 
-	List<Member> findLikePost(Long memberId, int offset, int size);
+	List<ProductBoard> findLikePostById(Long memberId, int offset, int size);
 }

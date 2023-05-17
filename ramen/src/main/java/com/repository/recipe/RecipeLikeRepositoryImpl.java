@@ -21,10 +21,6 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 		PreparedStatement pstmt = null;
 		String sql;
 		
-		if(isLike(memberId, postId) == false) {
-			return;
-		}
-		
 		try {
 			sql = "INSERT INTO recipe_like (recipe_id, member_id) VALUES (?, ?)";
 			
