@@ -53,7 +53,9 @@
 		width : 30%;
 	}
 	
-
+	.sold-out{
+		background:#eee;
+	}
 	</style>
 	
 	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
@@ -95,7 +97,45 @@
 				f.submit();
 			}
 		});
+		
+		//수량 옵션
+		$('.count :button').on({
+		    'click' : function(e){
+		        e.preventDefault();
+		        var $count = $(this).parent('.count').find('.quantitys');
+		        var now = parseInt($count.val());
+		        var min = 1;
+		        var max = 999;
+		        var num = now;
+		        if($(this).hasClass('minus')){
+		            var type = 'm';
+		        }else if($(this).hasClass('plus')){
+		            var type = 'p';
+		        }
+		        if(type=='m'){
+		            if(now>min){
+		                num = now - 1;
+		            }
+		        }else if(type=='p'){
+		            if(now<max){
+		                num = now + 1;
+		            }
+		        }
+		        if(num != now){
+		            $count.val(num);
+		        }
+		    }
+		});
+		
+		// 수량 변경
+		$("#numBtn").click(function(){
+			const f = document.numForm;
+			f.action = "${pageContext.request.contextPath}/num_update.do";
+			f.submit();
+		});
 	});
+	
+
 	</script>
 </head>
 <body>
@@ -126,13 +166,16 @@
 					<tbody>
 						<c:forEach var="cart" items="${list}">
 							<tr>
-								<td class="orderItem">
-									<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll" >
-								</td>
-								<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
-								<td class="item2 orderItem">${cart.productName}</td>
-								<td class="item2 orderItem">${cart.quantity}</td>
-								<td class="item2 orderItem">${cart.price*cart.quantity}</td>
+								<form name="numForm" method="post">
+									<td class="orderItem">
+										<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll" >
+									</td>
+									<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+									<td class="item2 orderItem">${cart.productName}</td>
+									<td class="item2 orderItem count"><button type="button" class="minus">-</button> <input type="text" class="quantitys" name= "quantitys" value="${cart.quantity}" style="width:50px; text-align: center"> <button type="button" class="plus">+</button>
+									<button type="button" id="numBtn">수량변경</button></td>
+									<td class="item2 orderItem">${cart.price*cart.quantity}</td>
+								</form>
 							</tr>
 						</c:forEach>
 						

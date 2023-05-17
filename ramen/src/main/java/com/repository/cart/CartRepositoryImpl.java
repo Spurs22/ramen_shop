@@ -44,16 +44,14 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = "UPDATE cart SET quantity=(SELECT quantity From cart WHERE product_id = ? AND member_id = ?) + ? ,"
+			sql = " UPDATE cart SET quantity= ?, "
 					+ " created_date = SYSDATE "
-					+ " WHERE product_id =? AND member_id = ? ";
+					+ " WHERE product_id = ? AND member_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, productId);
-			pstmt.setLong(2, memberId);
-			pstmt.setInt(3, num);
-			pstmt.setLong(4, productId);
-			pstmt.setLong(5, memberId);
+			pstmt.setInt(1, num);
+			pstmt.setLong(2, productId);
+			pstmt.setLong(3, memberId);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {

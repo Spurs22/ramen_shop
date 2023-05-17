@@ -68,6 +68,7 @@ public class OrderServlet extends MyServlet {
 		String message = "";
 		
 		try {
+			
 			String[] pi = req.getParameterValues("productIds");
 			long[] products = null;
 			products = new long[pi.length];
@@ -76,6 +77,7 @@ public class OrderServlet extends MyServlet {
 			}
 
 			long memberId = info.getMemberId();
+			
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
 			Long totalPrice = 0L;
 			int dataCount = cartRepositoryImpl.getCnt(memberId);
@@ -187,11 +189,11 @@ public class OrderServlet extends MyServlet {
 		try {
 			long orderId = Long.parseLong(req.getParameter("order_id"));
 			long totalPrice = orderRepositoryImpl.orderAllPrice(orderId);
-			List<OrderItem> list2 = orderRepositoryImpl.ListItems(orderId);
+			// List<OrderItem> list2 = orderRepositoryImpl.ListItems(orderId);
 			
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId", orderId);
-			req.setAttribute("list2", list2);
+			// req.setAttribute("list2", list2);
 			
 		}  catch (Exception e) {
 			e.printStackTrace();
