@@ -140,7 +140,7 @@
 						</c:forEach>
 						
 						<c:if test="${dataCount == 0}">
-							<p> 등록된 게시물이 없습니다.</p>
+							<p> 등록된 물품이 존재하지 않습니다. </p>
 						</c:if>
 					</tbody>
 				</table>
