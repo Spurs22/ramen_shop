@@ -19,7 +19,7 @@ public class MyPageServiceImpl implements MyPageService {
 	
 	@Override
 	public List<RecipeBoard> findLikePost(Long memberId) {
-		productLikeRepository.findLikePost(memberId);
+		productLikeRepository.findLikePostById(memberId);
 		recipeLikeRepository.findLikePost(memberId);
 		
 		return recipeLikeRepository.findLikePost(memberId);

@@ -2,6 +2,7 @@ package com.repository.product;
 
 
 import com.DTO.Member;
+import com.DTO.ProductBoard;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface ProductLikeRepository {
 	 * @param memberId  멤버 아이디
 	 * @return          찜 누른 포스트 리스트
 	 */
-	List<Member> findLikePost(Long memberId);
+	List<ProductBoard> findLikePostById(Long memberId);
 
 	/**
 	 * @param memberId          멤버 아이디
@@ -34,6 +35,6 @@ public interface ProductLikeRepository {
 
 	int getCntLikePost(Long memberId);
 
-	List<Member> findLikePost(Long memberId, int offset, int size);
+	List<ProductBoard> findLikePostById(Long memberId, int offset, int size);
 
 }
