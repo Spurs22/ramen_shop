@@ -67,6 +67,7 @@
     	});
     </c:if>
     
+    
     $(function(){
     	$(".btn-checkList").click(function(){
     		let category = "${category}";
