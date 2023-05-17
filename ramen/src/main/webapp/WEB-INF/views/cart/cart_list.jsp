@@ -147,9 +147,11 @@
 			
 			</form>
 		</div>
-		<div>
+		<div>	
+					<c:if test="${dataCount != 0}">
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
 					<button type="button" class="btn" id="btnOrder">결제</button>
+					</c:if>
 			</div>
 		
 		
