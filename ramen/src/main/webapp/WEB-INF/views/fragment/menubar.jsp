@@ -111,7 +111,7 @@
             </span>
         </div>
         
-        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/main.do'">
             <span>
                 마이페이지
             </span>

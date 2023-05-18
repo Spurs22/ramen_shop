@@ -11,9 +11,9 @@
 .table-list th, .table-list td { text-align: center; }
 .table-list .left { text-align: left; padding-left: 5px; }
 
-.table-list .subject { color: #787878; }
-.table-list .name { width: 100px; color: #787878; }
-.table-list .date { width: 100px; color: #787878; }
+.table-list .num { width: 50px; color: #787878; }
+.table-list .subject { width: 150px; color: #787878; }
+.table-list .date { width: 200px; color: #787878; }
 .table-list .hit { width: 70px; color: #787878; }
 .table-list .heart { width: 70px; color: #787878; }
 </style>
@@ -50,6 +50,7 @@
 				<table>
 					<thead>
 					<tr class="table-list">
+						<th class="num"> 글 번호 </th>
 						<th class="subject"> 제목 </th>
 						<th class="date"> 작성일 </th>
 						<th class="hit"> 조회수 </th>
@@ -58,13 +59,13 @@
 					</thead>
 					
 					<tbody>
-						<c:forEach var="dto" items="${recipeBoardMyList}" varStatus="status">
+						<c:forEach var="dto" items="${list}" varStatus="status">
 						<tr>
 							<td>${dataCount - (page-1) * size - status.index} </td>
 							<td class="left">
 								<a href="${articleUrl}&id=${dto.id}">${dto.subject}</a>
 							</td>
-							<td>${dto.createDate}</td>
+							<td>${dto.createdDate}</td>
 							<td>${dto.hitCount}</td>
 							<td><i class="fa-solid fa-heart" style="color: red;"></i>${dto.recipeLikeCount}</td>
 						</tr>
@@ -72,10 +73,10 @@
 					</tbody>
 				</table>
 				
-				<div class="page-navigation">
-				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
-				</div>
+			
 				
+				
+			
 				
 			</div>
 		</div>

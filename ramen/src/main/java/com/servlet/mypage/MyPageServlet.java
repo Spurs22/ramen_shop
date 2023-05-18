@@ -14,7 +14,7 @@ import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.SessionInfo;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
-// import com.repository.recipe.RecipeLikeRepositoryImpl;
+//import com.repository.recipe.RecipeLikeRepositoryImpl;
 import com.repository.product.ProductLikeRepositoryImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
@@ -37,7 +37,10 @@ public class MyPageServlet extends MyServlet {
 			return;
 		}
 		
-		if(uri.indexOf("productLikeList.do") != -1) {
+		
+		if(uri.indexOf("main.do") != -1 ) {
+			main(req, resp);
+		} else if(uri.indexOf("productLikeList.do") != -1) {
 			// 내가 찜한 상품 리스트
 			productLikeList(req, resp);
 		} else if (uri.indexOf("productArticle.do") != -1) {
@@ -62,9 +65,13 @@ public class MyPageServlet extends MyServlet {
 		
 	}
 	
+	protected void main(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		forward(req, resp, "/WEB-INF/views/mypage/main.jsp");
+	}
+	
+	
 	protected void productLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내가 찜한 상품리스트
-		
 		ProductLikeRepositoryImpl dao = new ProductLikeRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
@@ -75,8 +82,8 @@ public class MyPageServlet extends MyServlet {
 			
 			
 		try {
-			Product dto = new Product();
-			String page = req.getParameter("pageNo");
+			// Product dto = new Product();
+			String page = req.getParameter("page");
 			int current_page = 1;
 			if(page != null) 
 				current_page = Integer.parseInt(page);
@@ -94,12 +101,7 @@ public class MyPageServlet extends MyServlet {
 			if(offset < 0) offset = 0;
 			
 			
-			List<ProductBoard> list;
-			if(dao.isLike(info.getMemberId(), dto.getProductId())) {
-				list = dao.findLikePostById(info.getMemberId(), offset, size);
-			} else {
-				list = null;
-			}
+			List<ProductBoard> list = dao.findLikePostById(info.getMemberId(), offset, size);
 			
 			String listUrl = cp+ "/mypage/productLikeList.do";
 			String articleUrl = cp + "/mypage/productArticle.do?page=" +current_page;
@@ -187,6 +189,8 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void recipeArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 상세 페이지
+		
+		
 		forward(req, resp, "/WEB-INF/views/mypage/recipeArticle.jsp");
 	}
 	
@@ -238,6 +242,7 @@ public class MyPageServlet extends MyServlet {
 			req.setAttribute("size", size);
 			req.setAttribute("articleUrl", articleUrl);
 			req.setAttribute("paging", paging);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
