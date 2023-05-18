@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<title>상품별 매출통계</title>
+	<title>기간별 매출통계</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
@@ -22,6 +22,21 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
+			<div> 
+				<button type='button' class='btn btnperiod'>전체</button>
+				<button type='button' class='btn btnperiod'>1일</button>
+				<button type='button' class='btn btnperiod'>1개월</button>
+				<button type='button' class='btn btnperiod'>6개월</button>
+				<button type='button' class='btn btnperiod'>1년</button>
+			</div>
+			<div>
+				${os.sumquantity}
+				${os.sumprice}
+				${os.sumfinal_price}
+				${os.productid}
+				${os.productname}
+			</div>
+			
 			<div>
 				${os.sumquantity}
 				${os.sumprice}

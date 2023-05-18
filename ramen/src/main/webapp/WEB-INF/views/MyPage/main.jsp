@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<title>기간별 매출통계</title>
+	<title>Title</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
@@ -11,7 +11,7 @@
 	</style>
 </head>
 <script>
-    let menuIndex = 9
+    let menuIndex = 10
 </script>
 <body>
 <div class="whole-container">
@@ -22,20 +22,15 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<div> 
-				<button type='button' class='btn btnperiod'>전체</button>
-				<button type='button' class='btn btnperiod'>1일</button>
-				<button type='button' class='btn btnperiod'>1개월</button>
-				<button type='button' class='btn btnperiod'>6개월</button>
-				<button type='button' class='btn btnperiod'>1년</button>
-			</div>
-			<div>
-				${os.sumquantity}
-				${os.sumprice}
-				${os.sumfinal_price}
-				${os.productid}
-				${os.productname}
-			</div>
+			<h3>마이페이지</h3>
+			<table>
+				<tr> 
+					<td> <a href="${pageContext.request.contextPath}/MyPage/productLikeList.do"> 내가 찜 한 상품 </a> </td>
+					<td> <a href="${pageContext.request.contextPath}/MyPage/recipeLikeList.do"> 내가 좋아요 한 레시피 </a> </td>
+					<td> <a href="${pageContext.request.contextPath}/MyPage/recipeBoardMyList.do"> 내가 작성한 글 </a> </td>
+					<td> <a href="${pageContext.request.contextPath}/MyPage/orderMyList.do"> 나의 주문내역 </a> </td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </div>

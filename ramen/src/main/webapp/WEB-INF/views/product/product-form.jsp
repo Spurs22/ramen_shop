@@ -136,18 +136,18 @@
 			<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
-					<input class="form-control product-info" id="productName" disabled>
+					<input class="form-control product-info" id="productName" disabled value="${editBoard.product.productId}">
 				</div>
 
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
-					<input class="form-control product-info" id="category" disabled>
+					<input class="form-control product-info" id="category" disabled value="${editBoard.product.category}">
 				</div>
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
-					<input class="form-control product-info" id="quantity" disabled>
+					<input class="form-control product-info" id="quantity" disabled value="${editBoard.product.remainQuantity}">
 				</div>
 			</div>
 
@@ -194,7 +194,7 @@
 				</div>
 				<div class="modal-body" style="height: 400px; overflow: auto">
 					<div class="product-card-container">
-					 	<div class="shadow-sm product-card-menu bg-secondary">
+						<div class="shadow-sm product-card-menu bg-secondary">
 							<div>상품명</div>
 							<div>카테고리</div>
 							<div>재고</div>

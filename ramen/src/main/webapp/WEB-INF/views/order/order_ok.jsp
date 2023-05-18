@@ -38,10 +38,7 @@
 		padding-top:5px;
 	}
 	
-	table{
-		border-top: 1.8px solid #A2A2A2;
-	}
-	
+
 	tr{
 		border-bottom: 1px solid #B4B4B4; 
 	}
@@ -57,6 +54,14 @@
 		padding:10px;
 	}
 	
+	hr{
+		border: 2px solid gray;
+	}
+	.title{
+		font-weight: bold;
+		font-size: 20px;
+		padding-top:40px;
+	}	
 	
 	</style>
 </head>
@@ -79,21 +84,42 @@
 			</div>	
 			<br>
 			
-			<div> 주문 요약 정보  </div>
-			<br>
+			<p class="title"> 주문 정보 </p>
+			<hr>
 			<table>
-				
-				
 				<tr>
-					<td class="tdname"> 주문 번호 </td>
+					<td class="tdname"> 주문 번호 </td> 
 					<td class="tdvalue">${orderId} </td>
 				</tr>
 				<tr>
 					<td class="tdname"> 총 가격 </td>
 					<td class="tdvalue"> ${totalPrice} </td>
 				</tr>
-				
 			</table>
+			
+			<!-- 
+			<p class="title"> 주문 결제</p>
+				<hr>
+					<table>
+						<thead>
+								<tr>
+									<th class="item1">상품이미지</th>
+									<th class="item2">품명</th>
+									<th class="item2">수량</th>
+									<th class="item2">소계</th>
+								</tr>
+						</thead>
+
+							<c:forEach var="order" items="${list2}">
+								<tr>
+									<td class="itemtd"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+									<td class="itemtd">${order.productName}</td>
+									<td class="itemtd">${order.quantity}</td>
+									<td class="itemtd">${order.price}</td>
+								</tr>
+							</c:forEach>
+						</table>
+						-->
 		</div>
 	</div>
 </div>

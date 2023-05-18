@@ -81,7 +81,6 @@
     let menuIndex = 3
 </script>
 <script>
-
     let likeStatus = ${likeStatus};
     let likeBtn = document.getElementById('likeBtn');
 

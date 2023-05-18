@@ -8,19 +8,6 @@ import java.util.List;
 public interface ProductLikeService {
 
 	/**
-	 *
-	 * @param memberId          멤버 아이디
-	 * @param ProductPostId     찜 할 누를 포스트 아이디
-	 */
-	void likePost(Long memberId, Long ProductPostId);
-
-	/**
-	 * @param memberId          멤버 아이디
-	 * @param ProductPostId     찜 취소 할 포스트 아이디
-	 */
-	void cancelLikePost(Long memberId, Long ProductPostId);
-
-	/**
 	 * @param memberId  멤버 아이디
 	 * @return          찜 누른 포스트 리스트
 	 */
@@ -36,4 +23,6 @@ public interface ProductLikeService {
 	int getCntLikePost(Long memberId);
 
 	List<ProductBoard> findLikePostById(Long memberId, int offset, int size);
+
+	Boolean likeProduct(Long memberId, Long productId);
 }

@@ -43,6 +43,13 @@ public interface OrderRepository {
 	 */
 	long orderAllPrice(Long orderId);
 	
+	/**
+	 * [ 주문번호에 해당하는 물품리스트 조회 ]
+	 * @param orderId		주문번호
+	 * @return				주문번호에 해당하는 물품리스트 조회
+	 */
+	List<OrderItem> ListItems(Long orderId); 
+
 }
 
 

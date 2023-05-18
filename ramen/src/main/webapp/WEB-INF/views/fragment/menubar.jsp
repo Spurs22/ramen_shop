@@ -114,7 +114,7 @@
             </span>
         </div>
 
-        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/Mypage/recipeBoardMyList.do'">
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/MyPage/productLikeList.do'">
             <span>
                 마이페이지
             </span>
