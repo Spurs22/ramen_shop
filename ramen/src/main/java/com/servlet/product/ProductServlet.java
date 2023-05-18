@@ -57,7 +57,11 @@ public class ProductServlet extends MyServlet {
 		} else if (uri.contains("like")) {
 			likeProductBoard(req, resp);
 		} else if (uri.contains("edit")) {
-			editProductBoard(req, resp);
+			if (req.getMethod().equals("POST")) {
+				editPost(req, resp);
+			} else {
+				editPostForm(req, resp);
+			}
 		}
 	}
 
@@ -101,7 +105,12 @@ public class ProductServlet extends MyServlet {
 		try {
 			List<Product> products = productService.findNotRegisteredProduct();
 
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+			System.out.println(memberId);
+
 			req.setAttribute("products", products);
+			req.setAttribute("mode", "post");
 //			req.setAttribute("editBoardPost", null);
 
 			String path = "/WEB-INF/views/product/product-form.jsp";
@@ -206,7 +215,7 @@ public class ProductServlet extends MyServlet {
 		System.out.println(jsonArray);
 	}
 
-	protected void editProductBoard(HttpServletRequest req, HttpServletResponse resp) {
+	protected void editPostForm(HttpServletRequest req, HttpServletResponse resp) {
 		System.out.println("ProductServlet.editProductBoard");
 
 		Long productId = Long.valueOf(req.getParameter("id"));
@@ -218,8 +227,31 @@ public class ProductServlet extends MyServlet {
 			List<Product> products = productService.findNotRegisteredProduct();
 			req.setAttribute("products", products);
 			req.setAttribute("editBoard", editBoard);
+			req.setAttribute("mode", "edit");
+
 			String path = "/WEB-INF/views/product/product-form.jsp";
 			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void editPost(HttpServletRequest req, HttpServletResponse resp) {
+		String content = req.getParameter("content");
+		int price = Integer.parseInt(req.getParameter("price"));
+		Long productId = Long.valueOf(req.getParameter("productId"));
+//		req.getParameter("picture");
+
+		Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+		try {
+			System.out.println("content");
+			System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
+
+			ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
+			productBoardService.editPost(productBoard);
+
+			resp.sendRedirect(req.getContextPath() + "/product/post?id" + productId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -128,7 +128,6 @@
 			<div style="display: flex; flex-direction: row; gap: 5px">
 				<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#selectProductModal">상품 선택</button>
 			</div>
-
 		</div>
 
 		<div class="content-container" style="flex: 1; justify-content: end">
@@ -152,7 +151,7 @@
 			</div>
 
 			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/post" id="form">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/${mode}" id="form">
 
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">
@@ -174,7 +173,7 @@
 					</textarea>
 				</div>
 
-<%--				<input type="hidden" name="formType" value="">--%>
+				<input type="hidden" name="formType" value="{mode}">
 				<input type="hidden" name="productId" id="productId" value="${editBoard == null ? "" : editBoard.product.productId}">
 				<div class="selected-product">
 				</div>
@@ -242,12 +241,22 @@
     }
 
     submitBtn.addEventListener('click', function () {
-        if (confirm("등록 하시겠습니까?")) {
-            if (productIdInput.value) {
-                form.submit();
-            } else {
-                alert('상품을 선택하세요.')
-			}
+        if (${editBoard == null}) {
+            if (confirm("등록 하시겠습니까?")) {
+                if (productIdInput.value) {
+                    form.submit();
+                } else {
+                    alert('상품을 선택하세요.')
+                }
+            }
+        } else {
+            if (confirm("수정 하시겠습니까?")) {
+                if (productIdInput.value) {
+                    form.submit();
+                } else {
+                    alert('상품을 선택하세요.')
+                }
+            }
         }
     });
 

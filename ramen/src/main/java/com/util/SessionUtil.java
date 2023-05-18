@@ -1,19 +1,20 @@
 package com.util;
 
 import com.DTO.Member;
+import com.DTO.SessionInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class SessionUtil {
-	public static Member getMemberFromSession(HttpServletRequest req) {
+	public static SessionInfo getSessionFromSession(HttpServletRequest req) {
 		Object sessionMember = getSessionMember(req);
 
-		Member member = null;
+		SessionInfo sessionInfo = null;
 		if (sessionMember != null) {
-			member = ((Member) sessionMember);
+			sessionInfo = ((SessionInfo) sessionMember);
 		}
-		return member;
+		return sessionInfo;
 	}
 
 	public static Long getMemberRollFromSession(HttpServletRequest req) {
@@ -21,7 +22,7 @@ public class SessionUtil {
 
 		Long memberRoll = null;
 		if (sessionMember != null) {
-			memberRoll = ((Member) sessionMember).getRoll();
+			memberRoll = ((SessionInfo) sessionMember).getUserRoll();
 		}
 		return memberRoll;
 	}
@@ -31,7 +32,7 @@ public class SessionUtil {
 
 		Long memberId = null;
 		if (sessionMember != null) {
-			memberId = ((Member) sessionMember).getMemberId();
+			memberId = ((SessionInfo) sessionMember).getMemberId();
 		}
 		return memberId;
 	}
@@ -41,7 +42,7 @@ public class SessionUtil {
 
 		String memberNickName = null;
 		if (sessionMember != null) {
-			memberNickName = ((Member) sessionMember).getNickName();
+			memberNickName = ((SessionInfo) sessionMember).getUserNickname();
 		}
 		return memberNickName;
 	}
