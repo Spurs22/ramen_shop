@@ -112,7 +112,7 @@
 			<div class="sub-menu">
 				<form name="searchForm" action="${pageContext.request.contextPath}/recipe/list.do" method="post" style="display: flex; flex-direction: row; height: 100%; width: 100%; gap: 8px;">
 					<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do';" title="새로고침" style="height: 100%;"><i class="fa-solid fa-arrow-rotate-right"></i></button>
-					<select name="condition" id="condition" class="form-select" style="width: 125px;" onchange="getList()">
+					<select name="condition" id="conditionval" class="form-select" style="width: 125px;" onchange="clickCondition();">
 						<option value="all"  			${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 						<option value="nickname" 	    ${condition=="nickname"?"selected='selected'":"" }>작성자</option>
 						<option value="created_date"	${condition=="createdDate"?"selected='selected'":"" }>등록일</option>
@@ -161,8 +161,8 @@
 		getList()
 	}
 	
-	function clikcCondition(onchange) {
-		selectedCondition = onchange.value
+	function clickCondition() {
+		selectedCondition = document.getElementById("condition").value;
 		getList()
 	}
 	
@@ -174,7 +174,7 @@
 	
 	function getList() {
 		let keyword = $('#searchInput').val();
-		var condition = document.getElementById("condition").value;
+		var condition = document.getElementById("conditionval").value;
 		
 		$.ajax({
 			url: "${pageContext.request.contextPath}/recipe/search.do",

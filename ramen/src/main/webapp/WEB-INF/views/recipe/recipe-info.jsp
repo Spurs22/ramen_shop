@@ -227,7 +227,7 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<table class="content-table" style="width: 100%">
+			<table class="content-table" style="width: 100%;">
 				<tr>
 					<th style="width: 55%; padding-left: 20px">
 						${dto.nickname}
