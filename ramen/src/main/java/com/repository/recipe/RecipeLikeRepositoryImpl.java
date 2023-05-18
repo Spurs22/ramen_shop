@@ -200,4 +200,81 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 		return result;
 	}
 
+	@Override
+	public List<RecipeBoard> findLikePost(Long memberId, int offset, int size) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		RecipeBoard board = null;
+		List<RecipeBoard> list = new ArrayList<>();
+		
+		try { // 좋아요 수 작성일 조회수
+			sql = "SELECT r.id, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+					+ " FROM recipe_board r "
+					+ " JOIN recipe_like l ON r.id = l.recipe_id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id "
+					+ " WHERE l.member_id = ? "
+					+ " ORDER BY r.id DESC "
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board = new RecipeBoard();
+				
+				board.setId(rs.getLong("id"));
+				board.setSubject(rs.getString("subject"));
+				board.setHitCount(rs.getInt("hit_count"));
+				board.setCreatedDate(rs.getString("created_date"));
+				board.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				
+				list.add(board);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int dataCount() {
+		// 
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT COUNT(*) FROM recipe_board";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return result;
+	}
+
 }
