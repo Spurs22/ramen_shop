@@ -37,7 +37,6 @@
 		font-size:13px;
 		padding-top:5px;
 	}
-	
 
 	tr{
 		border-bottom: 1px solid #B4B4B4; 

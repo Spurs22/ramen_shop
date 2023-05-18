@@ -14,7 +14,6 @@ import com.util.DBUtil;
 public class CartRepositoryImpl implements CartRepository{
 	private Connection conn = DBConn.getConnection();
 	
-	
 	@Override	// 장바구니 아이템 생성( 존재하지 않을 시 )
 	public void createItem(Long productId, Long memberId, int quantity) {
 		PreparedStatement pstmt = null;
@@ -174,7 +173,7 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT c.product_id, c.member_id, c.quantity, c.created_date, p.picture, pb.price, p.name "
+			sql = "SELECT c.product_id, c.member_id, c.quantity, c.created_date, p.picture, pb.price, p.name, p.remain_quantity "
 					+ "FROM cart c JOIN product p ON  c.product_id = p.id "
 					+ "JOIN product_board pb ON pb.id = p.id "
 					+ "WHERE c.member_id = ? ";
@@ -193,6 +192,7 @@ public class CartRepositoryImpl implements CartRepository{
 				// cart.setPicture(rs.getString(5));
 				cart.setPrice(rs.getLong(6));
 				cart.setProductName(rs.getString(7));
+				cart.setRemainQuantity(rs.getInt(8));
 				
 				list.add(cart);
 			}

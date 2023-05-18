@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-	
+
 	table{
 		width:100%;
 	}
@@ -28,19 +28,27 @@
 		border-bottom: 1px solid gray;
 	}
 	
+	hr{
+		border: 2px solid gray;
+	}
+	
+	.title{
+		font-weight: bold;
+		font-size: 20px;
+	}	
+	
 	.btn {
 		border-radius: 0.5;
 		border : 1px solid lightgray;
 	}
 	
 	.btn:hover{
-		background: gray;
+		background: lightgray;
 	}
 	
 	.btnchangeNum{
 		font-size: 5px;
 	}
-
 	
 	#chkAll{
 		width: 15px;
@@ -55,8 +63,13 @@
 	}
 
 	.item1{
-		width : 30%;
+		width : 25%;
 	}
+	
+	.item2{
+		width : 15%;
+	}
+	
 	
 	.sold-out{
 		background:#eee;
@@ -158,6 +171,7 @@
 	<div class="main-container shadow-lg">
 		<div class="product-container" style="overflow:auto; height:680px; margin-bottom:20px">
 			<form name="listForm" method="post">
+				<p class="title">장바구니</p>
 				<table>
 					<thead>
 					<c:if test="${dataCount != 0}">
@@ -168,8 +182,12 @@
 							<th>상품이미지</th>
 							<th>품명</th>
 							<th>총수량</th>
+							<th>남은수량</th>
 							<th>소계</th>
 						</tr>
+					</c:if>
+					<c:if test="${dataCount == 0}">
+					<h4 style="text-align: center"> 장바구니가 비어있습니다 🗑</h4>
 					</c:if>
 					</thead>
 					
@@ -181,8 +199,9 @@
 								</td>
 								<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
 								<td class="item2 orderItem">${cart.productName}</td>
-								<td class="item2 orderItem count"><button type="button" class="minus btn">-</button> <input type="text" class="quantitys" name= "quantitys" value="${cart.quantity}" style="width:50px; text-align: center" > <button type="button" class="plus btn">+</button>
+								<td class="item1 orderItem count"><button type="button" class="minus btn">-</button> <input type="text" class="quantitys" name= "quantitys" value="${cart.quantity}" style="width:50px; text-align: center" > <button type="button" class="plus btn">+</button>
 								<button type="button" class= "btnchangeNum btn">수량변경</button></td>
+								<td class="item2 orderItem count">${cart.remainQuantity}</td>
 								<td class="item2 orderItem">${cart.price*cart.quantity}</td>
 							</tr>
 						</c:forEach>
@@ -201,11 +220,7 @@
 					<button type="button" class="btn" id="btnOrder">결제</button>
 					</c:if>
 			</div>
-		
-		
 	</div>
-
-
 </div>
 </body>
 </html>

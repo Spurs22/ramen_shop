@@ -105,34 +105,7 @@ public class CartServlet extends MyServlet {
 
 		try {
 			Long memberId = info.getMemberId();
-
-			/*
-			String[] pi = req.getParameterValues("productIds");
-			long[] products = null;
-			products = new long[pi.length];
-			for (int i = 0; i < pi.length; i++) {
-				products[i] = Long.parseLong(pi[i]);
-			}
-			*/
 			
-			/*
-			// 수량 변경
-			String[] num = req.getParameterValues("quantitys");
-			int[] quantitys = null;
-			quantitys = new int[num.length];
-			for (int i = 0; i < num.length; i++) {
-				quantitys[i] = Integer.parseInt(num[i]);
-			}
-			
-			// 수정
-			for(Long product : products) {
-				for(int quantity : quantitys) {
-					cartRepositoryImpl.editItemNum(product, memberId, quantity);
-					System.out.println(product);
-					System.out.println(quantity);
-				}
-			}
-			*/
 			int num = Integer.parseInt(req.getParameter("quantity"));
 			Long productId = Long.parseLong(req.getParameter("productId"));
 			

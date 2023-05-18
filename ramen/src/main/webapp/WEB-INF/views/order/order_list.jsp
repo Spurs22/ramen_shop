@@ -60,7 +60,7 @@
    .final {
            float: right;
            width: 250px;
-           height: 340px;
+           height: 380px;
            padding: 10px;
            margin-top: 12px;
            background: #fff;
@@ -89,7 +89,7 @@
     }
      
      .final button:hover{
-    	 background: #d81818;
+    	background: #d81818;
      }  
      
     .delivery{
@@ -331,6 +331,7 @@
                                 <td>${totalPrice}</td>
                             </tr>
                         </table>
+                        <br>
                         <button type="button" class="btn" id="btnOrder">결제</button>
                     </div>
 					

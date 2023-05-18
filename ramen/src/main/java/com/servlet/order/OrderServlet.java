@@ -152,22 +152,6 @@ public class OrderServlet extends MyServlet {
 				orderItem.setFinalPrice(price);
 				
 				itemlist.add(orderItem);
-				
-				/*
-				// 잔여수량 체크
-				Product product =productService.findProductByProductId(c.getProductId());
-				if(product.getRemainQuantity() < c.getQuantity()) {
-					message = c.getProductName() + " 상품이 품절되었습니다.";
-					// resp.sendRedirect(cp + "/cart/list.do");
-					// return;
-				}
-				*/
-				
-				// orderItem 추가
-				//orderRepositoryImpl.createOrderList(orderItem, order_id);
-				
-				// 장바구니에서 결제한 물품 초기화
-				// cartRepositoryImpl.deleteCart(memberId, c.getProductId());
 			}
 			
 			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle, itemlist);
@@ -175,6 +159,12 @@ public class OrderServlet extends MyServlet {
 			for(Cart c: list) {
 				// 장바구니에서 결제한 물품 초기화
 				cartRepositoryImpl.deleteCart(memberId, c.getProductId());
+				
+				// 잔여수량 체크 
+				
+				
+				// 품목 삭제
+				productService.editQuantity(c.getProductId(), c.getQuantity());
 			}
 
 			resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);

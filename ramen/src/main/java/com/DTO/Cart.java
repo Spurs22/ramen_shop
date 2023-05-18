@@ -4,11 +4,19 @@ public class Cart {
 	private String productName;
 	private Long productId;
 	private Long memberId;
-	private int quantity;
+	private int quantity;	
+	private int	remainQuantity;		// 남은 개수
 	private String createdDate;
 	private String picture;
 	private Long price;
+	
 
+	public int getRemainQuantity() {
+		return remainQuantity;
+	}
+	public void setRemainQuantity(int remainQuantity) {
+		this.remainQuantity = remainQuantity;
+	}
 	public String getProductName() {
 		return productName;
 	}
