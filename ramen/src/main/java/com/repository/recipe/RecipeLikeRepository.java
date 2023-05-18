@@ -49,5 +49,5 @@ public interface RecipeLikeRepository {
 	
 	List<RecipeBoard> findLikePost(Long memberId, int offset, int size);
 	
-	int dataCount();
+	int dataCount(Long memberId);
 }

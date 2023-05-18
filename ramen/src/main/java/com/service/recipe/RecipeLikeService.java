@@ -34,5 +34,5 @@ public interface RecipeLikeService {
 	
 	List<RecipeBoard> findLikePost(Long memberId, int offset, int size);
 	
-	int dataCount();
+	int dataCount(Long memberId);
 }

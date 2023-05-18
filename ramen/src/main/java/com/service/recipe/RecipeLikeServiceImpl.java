@@ -63,7 +63,7 @@ public class RecipeLikeServiceImpl implements RecipeLikeService {
 	}
 
 	@Override
-	public int dataCount() {
-		return recipeLikeRepository.dataCount();
+	public int dataCount(Long memberId) {
+		return recipeLikeRepository.dataCount(memberId);
 	}
 }

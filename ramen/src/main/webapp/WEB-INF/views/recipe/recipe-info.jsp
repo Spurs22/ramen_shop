@@ -254,8 +254,8 @@
 				<tr>
 					<td colspan="3">
 						<c:choose>
-							<c:when test="${sessionScope.member!=null}">
-								<br>장바구니에 담기 <button type="button" class="btn" onclick=""><i class="fa-solid fa-cart-arrow-down"></i></button>
+							<c:when test="${empty sessionScope.member}">
+								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled" onclick=""><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:when>
 							<c:when test="${empty list}">
 								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled"><i class="fa-solid fa-cart-arrow-down"></i></button>
@@ -287,7 +287,7 @@
 						<c:choose>
 							<c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
 								<button type="button" class="btn"
-										onclick="location.href='${pageContext.request.contextPath}/recipe/delete.do?id=${dto.id}';">
+										onclick="deleteRecipe();">
 									삭제
 								</button>
 							</c:when>
@@ -350,6 +350,13 @@
     $(document).ready(function () {
         selectMenu(menuIndex)
     })
+    
+    function deleteRecipe() {
+		if(confirm("게시글을 삭제하시겠습니까 ? ")) {
+	    	location.href='${pageContext.request.contextPath}/recipe/delete.do?id=${dto.id}';
+		}
+    	
+	}
 </script>
 </body>
 </html>

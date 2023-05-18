@@ -251,7 +251,7 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 	}
 
 	@Override
-	public int dataCount() {
+	public int dataCount(Long memberId) {
 		// 
 		int result = 0;
 		PreparedStatement pstmt = null;
@@ -259,8 +259,10 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT COUNT(*) FROM recipe_board";
+			sql = "SELECT COUNT(*) FROM recipe_board WHERE member_id = ?";
 			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, memberId);
 			
 			rs = pstmt.executeQuery();
 			

@@ -16,33 +16,27 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-
-
-
         .product-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-auto-rows: 170px;
             padding: 20px;
-            gap: 10px;
             height: 50%;
+			gap: 3px;            
 			overflow: auto;
-			border: 2px solid black;
         }
 
         .product-item {
             width: 100%;
             height: 100%;
-            border-radius: 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 2px;
             padding: 15px;
             transition: 0.5s;
             background: #ffffff;
-            border: 1px solid black;
+            border: 0.3px solid gray;
         }
 
         .product-img {
@@ -132,7 +126,7 @@
 				</div>
 	
 				<div style="display: flex; flex-direction: row; gap: 5px">
-					<button class="btn btn-success" onclick="">다음</button>
+					<button class="btn btn-success btnwrite1toggle" onclick="">다음</button>
 				</div>
 			</div>
 	
@@ -159,19 +153,22 @@
 			
 		</div>
 		
-		<hr style="border: 5px solid black;">
+		<!-- 구분 -->
 		
-		<div class="write-step2">
+		<div class="write-step2" style="display: none;">
 			<table>
 				<tr>
 					<td>
 						<div style="display: flex; flex-direction: row; gap: 5px">
-							<button class="btn btn-success">이전</button>
+							<button class="btn btn-success btnwrite2toggle">이전</button>
 						</div>
 					</td>
 					<td>
 						<div style="display: flex; flex-direction: row; gap: 5px">
-							<button class="btn btn-primary">등록</button>
+							<button class="btn btn-primary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
+							<c:if test="${mode == 'update' }">
+								<input type="hidden" name="id" value="">
+							</c:if>
 						</div>
 					</td>
 				</tr>
@@ -179,13 +176,13 @@
 					<td colspan="2">제목</td>
 				</tr>
 				<tr>
-					<td colspan="2"><input></td>
+					<td colspan="2"><input type="text" name="subject" value=""></td>
 				</tr>
 				<tr>
 					<td colspan="2">내용</td>
 				</tr>
 				<tr>
-					<td colspan="2"><textarea></textarea></td>
+					<td colspan="2"><textarea name="content" id="content"></textarea></td>
 				</tr>
 			</table>
 			<table>
@@ -261,6 +258,20 @@
             }
         });
     }
+    
+    $(function() {
+        $(".btnwrite1toggle").on("click", function() {
+          $(".write-step1").hide();
+          $(".write-step2").show();
+        });
+
+        $(".btnwrite2toggle").on("click", function() {
+          $(".write-step2").hide();
+          $(".write-step1").show();
+        });
+      });
+    
+    
 </script>
 </body>
 </html>
