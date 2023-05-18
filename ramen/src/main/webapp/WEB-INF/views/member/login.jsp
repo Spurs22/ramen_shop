@@ -148,12 +148,12 @@ function sendLogin() {
 					</div>
 					<div class="row">
 						<label for="login-userId"> </label>
-						<input name="email" type="text" class="form-control" id="login-userId" placeholder="EMAIL">
+						<input name="email" type="text" class="form-control" id="login-userId" placeholder="이메일">
 					</div>
 					<div class="row">
 						<label for="login-password"> </label>
 						<input name="pwd" type="password" class="form-control" id="login-password" autocomplete="off"
-							placeholder="PASSWORD">
+							placeholder="비밀번호">
 					</div>
 					<div class="row text-center">
 						<button type="button" class="btn btn-primary" onclick="sendLogin();">Login</button>
