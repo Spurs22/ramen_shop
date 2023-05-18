@@ -4,6 +4,7 @@ import com.DTO.Member;
 import com.DTO.ProductBoard;
 import com.repository.product.ProductLikeRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ProductLikeServiceImpl implements ProductLikeService {
@@ -12,16 +13,6 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 
 	public ProductLikeServiceImpl(ProductLikeRepository productLikeRepository) {
 		this.productLikeRepository = productLikeRepository;
-	}
-
-	@Override
-	public void likePost(Long memberId, Long ProductPostId) {
-		productLikeRepository.likePost(memberId, ProductPostId);
-	}
-
-	@Override
-	public void cancelLikePost(Long memberId, Long ProductPostId) {
-		productLikeRepository.cancelLikePost(memberId, ProductPostId);
 	}
 
 	@Override
@@ -43,4 +34,24 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 	public List<ProductBoard> findLikePostById(Long memberId, int offset, int size) {
 		return productLikeRepository.findLikePostById(memberId, offset, size);
 	}
+
+	@Override
+	public Boolean likeProduct(Long memberId, Long productId) {
+
+		try {
+			Boolean isLike = productLikeRepository.isLike(memberId, productId);
+
+			if (isLike) {
+				productLikeRepository.cancelLikePost(memberId, productId); // 공감취소
+			} else {
+				productLikeRepository.likePost(memberId, productId); // 공강
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 }

@@ -54,7 +54,6 @@ public class RecipeLikeRepositoryImpl implements RecipeLikeRepository {
 			pstmt.setLong(2, memberId);
 			
 			pstmt.executeUpdate();
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;

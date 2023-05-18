@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.List;
 
 @MultipartConfig
@@ -55,32 +56,42 @@ public class ProductServlet extends MyServlet {
 			searchKeyword(req, resp);
 		} else if (uri.contains("like")) {
 			likeProductBoard(req, resp);
+		} else if (uri.contains("edit")) {
+			editProductBoard(req, resp);
 		}
 	}
 
 	private void likeProductBoard(HttpServletRequest req, HttpServletResponse resp) {
+
 		System.out.println("ProductServlet.postForm" );
 		HttpSession session = req.getSession();
-		SessionInfo member = (SessionInfo) session.getAttribute("member");
-		Long memberId = member.getMemberId();
+		Boolean result = false;
+
+		try {
+			Object sessionMember = session.getAttribute("member");
+			if (sessionMember == null) {
+				// 로그인 안한상태로 좋아요 클릭시
+				resp.sendRedirect(req.getContextPath() + "/product/list");
+			}
+
+			Long memberId = ((SessionInfo) sessionMember).getMemberId();
 
 
+			Long recipeId = Long.parseLong(req.getParameter("id"));
+			System.out.println("멤버 : " + memberId + ", 게시글 아이디" + recipeId);
 
-		String inputCategory = req.getParameter("category");
-		String keyword = req.getParameter("keyword");
+			result = productLikeService.likeProduct(memberId, recipeId);
+			System.out.println(result);
 
-		resp.setContentType("application/json");
+			JSONObject job = new JSONObject();
+			job.put("state", result);
 
-		String status = "false";
+			PrintWriter out = resp.getWriter();
+			out.print(job);
 
-		JSONArray jsonArray = new JSONArray();
-
-
-		resp.setContentType("text/html;charset=utf-8");
-
-//		resp.getWriter().write(jsonArray.toString());
-
-		System.out.println(jsonArray.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void postForm(HttpServletRequest req, HttpServletResponse resp) {
@@ -88,6 +99,7 @@ public class ProductServlet extends MyServlet {
 
 		try {
 			List<Product> products = productService.findNotRegistedProduct();
+
 			req.setAttribute("products", products);
 
 			String path = "/WEB-INF/views/product/product-form.jsp";
@@ -102,11 +114,24 @@ public class ProductServlet extends MyServlet {
 
 		Long productId = Long.valueOf(req.getParameter("id" ));
 		try {
+			HttpSession session = req.getSession();
+
+			Object sessionMember = session.getAttribute("member");
+			Long memberId = null;
+			Boolean likeStatus = false;
+			if (sessionMember != null) {
+				memberId = ((SessionInfo) sessionMember).getMemberId();
+				likeStatus = productLikeService.isLike(memberId, productId);
+			}
+
 			ProductBoard post = productBoardService.findPostsByProductId(productId);
 			List<ProductComment> comments = productCommentService.findCommentsByProductId(productId);
 
+			req.setAttribute("likeStatus", likeStatus);
 			req.setAttribute("post", post);
 			req.setAttribute("comments", comments);
+
+			System.out.println(likeStatus);
 
 			String path = "/WEB-INF/views/product/product-info.jsp";
 			forward(req, resp, path);
@@ -122,7 +147,7 @@ public class ProductServlet extends MyServlet {
 //		req.getParameter("picture");
 
 		System.out.println("content");
-		System.out.println("contetnt = " + content + ", price = " + price + ", productId = " + productId);
+		System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), 1L, null, content, price);
 		productBoardService.createProductPost(productBoard);
@@ -177,6 +202,19 @@ public class ProductServlet extends MyServlet {
 		System.out.println(jsonArray.toString());
 	}
 
+	protected void editProductBoard(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("ProductServlet.editProductBoard");
+
+		try {
+			List<Product> products = productService.findNotRegistedProduct();
+			req.setAttribute("products", products);
+			String path = "/WEB-INF/views/product/product-form.jsp";
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) {
 
 	}
@@ -184,6 +222,5 @@ public class ProductServlet extends MyServlet {
 	protected void commentForm(HttpServletRequest req, HttpServletResponse resp) {
 
 	}
-
 
 }

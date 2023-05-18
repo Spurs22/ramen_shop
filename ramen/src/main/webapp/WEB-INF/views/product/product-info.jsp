@@ -154,7 +154,7 @@
         }
 
         .like-full {
-            color: rgba(255, 132, 144, 0);
+            /*color: rgba(255, 132, 144, 0);*/
             text-shadow: none;
             transition: 0.3s;
         }
@@ -166,7 +166,7 @@
 
         .like {
             text-shadow: none;
-            color: rgba(197, 197, 197, 0.67);
+            /*color: rgba(197, 197, 197, 0.67);*/
         }
 	</style>
 </head>
@@ -354,31 +354,41 @@
 </script>
 
 <script>
-    let likeStatus = null;
-    let likeBtn = document.getElementById('likeBtn');
     let likeLine = document.getElementById('like')
     let likeCnt = document.getElementById('likeCount');
-    const NONE_LIKE_COLOR = 'rgba(183,51,61,0)';
+    const NONE_LIKE_COLOR = 'rgba(197, 197, 197, 0.67)';
     const LIKE_COLOR = '#CB444A';
 
-    window.onload = () => {
-        likeStatus = ${likeStatus}
-        changeBtn()
-    }
+    let likeStatus = ${likeStatus};
+    let likeBtn = document.getElementById('likeBtn');
+    let currentColor;
 
-    likeBtn.addEventListener('click', function () {
-        likePost()
+    $('#likeBtn').mouseout(function () {
+        $('#likeBtn').css("color", currentColor)
     });
 
-    function changeBtn() {
+
+    $(document).ready(function () {
+        if (likeStatus) {
+            currentColor = LIKE_COLOR;
+        } else {
+            currentColor = NONE_LIKE_COLOR;
+		}
+
+        $('#likeBtn').css("color", currentColor)
+    });
+
+
+    function changeLikeStatus() {
         if (likeStatus) {
             // 좋아요 상태일 때
-            likeBtn.style.color = LIKE_COLOR;
-            likeLine.style.color = NONE_LIKE_COLOR;
+			likeStatus = !likeStatus
+            currentColor = LIKE_COLOR;
         } else {
-            likeBtn.style.color = NONE_LIKE_COLOR;
-            likeLine.style.color = 'rgba(255, 255, 255, 0.67)';
+            likeStatus = !likeStatus
+            currentColor = NONE_LIKE_COLOR;
         }
+        likeBtn.style.color = currentColor;
     }
 
     likeBtn.addEventListener('mouseover', function () {
@@ -398,35 +408,55 @@
         }
     })
 
-
-
-    function likePost() {
-        if (likeStatus === false) {
-            // 서버에 좋아요 요청 전송
-            const request = new XMLHttpRequest();
-            let path = document.location.pathname + '/like'
-
-            request.open('post', path, 'true');
-            request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            request.send();
-
-            likeStatus = true;
-            likeCnt.innerText = Number(likeCnt.innerText) + 1
-            changeBtn()
-
-        } else {
-            // 서버에 좋아요 취소 요청 전송
-            const request = new XMLHttpRequest();
-
-            request.open('post', document.location.pathname + '/like', 'true');
-            request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            request.send();
-
-            likeStatus = false
-            likeCnt.innerText = Number(likeCnt.innerText) - 1
-            changeBtn()
-        }
+    function ajaxFun(url, method, query, dataType, fn) {
+        $.ajax({
+            type: method,
+            url: url,
+            data: query,
+            dataType: dataType,
+            success: function (data) {
+                fn(data);
+            },
+            beforeSend: function (jqXHR) {
+                jqXHR.setRequestHeader("AJAX", true); // 사용자 정의 헤더
+            },
+            error: function (jqXHR) {
+                if (jqXHR.status === 403) {
+                    login();
+                    return false;
+                } else if (jqXHR.status === 400) {
+                    alert("요청 처리가 실패 했습니다.");
+                    return false;
+                }
+            }
+        });
     }
+
+    // 게시물 좋아요
+    $(function () {
+        $("#likeBtn").click(function () {
+            let msg = likeStatus ? "상품을 찜목록에서 제거합니다." : "상품을 찜목록에 추가합니다.";
+
+            if (!confirm(msg)) {
+                return false;
+            }
+
+            let url = "${pageContext.request.contextPath}/product/like";
+            let id = "${post.product.productId}";
+            let qs = "id=" + id;
+
+            const fn = function (data) {
+                let state = data.state;
+                if (state === true) {
+                    console.log(likeStatus)
+                    changeLikeStatus();
+                }
+            };
+
+            ajaxFun(url, "post", qs, "json", fn);
+        });
+    });
+
 </script>
 
 </body>
