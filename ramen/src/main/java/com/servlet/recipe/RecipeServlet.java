@@ -96,6 +96,8 @@ public class RecipeServlet extends MyUploadServlet {
 			deleteRecipeComment(req, resp);
 		} else if (uri.contains("like")) {
 			likeRecipe(req, resp);
+		} else if (uri.contains("count-comment.do")) {
+			countComment(req, resp);
 		}
 	}
 
@@ -263,6 +265,7 @@ public class RecipeServlet extends MyUploadServlet {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setMemberId(info.getMemberId());
 			dto.setContent(req.getParameter("content"));
+			dto.setIpAddress("127.0.0.1");
 			
 			// 어케하누 json list 반환 // 수정
 			
@@ -274,7 +277,7 @@ public class RecipeServlet extends MyUploadServlet {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.jsp");
+		resp.sendRedirect(cp + "/recipe/recipe-list.do");
 	}
 
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -476,7 +479,7 @@ public class RecipeServlet extends MyUploadServlet {
 			RecipeComment comment = new RecipeComment();
 			
 			Long id = Long.parseLong(req.getParameter("id"));
-			comment.setId(id);
+			comment.setBoardId(id);
 			comment.setNickname(info.getUserNickname());
 			comment.setCotent(req.getParameter("content"));
 			comment.setMemberId(info.getMemberId());
@@ -500,17 +503,24 @@ public class RecipeServlet extends MyUploadServlet {
 	}
 
 	protected void writeRecipeCommentSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 레시피 댓글 완료
+		// 레시피 리스트
+		
 		try {
 			Long id = Long.parseLong(req.getParameter("id"));
 			
+			int replyCount = 0;
+			
+			replyCount = recipeCommentService.countComment(id);
+			
 			List<RecipeComment> listReply = recipeCommentService.findCommentsByPostId(id);
 			
-			for(RecipeComment dto : listReply) {
-				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			for(RecipeComment comment : listReply) {
+				comment.setContent(comment.getContent().replaceAll("\n", "<br>"));
 			}
 			
 			req.setAttribute("listReply", listReply);
+			req.setAttribute("replyCount", replyCount);
+			
 			forward(req, resp, "/WEB-INF/views/recipe/listReply.jsp");
 			return;
 			
@@ -610,7 +620,8 @@ public class RecipeServlet extends MyUploadServlet {
 		out.print(job);
 	}
 
-	protected void dislikeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 레시피 좋아요 취소
+	protected void countComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 댓글 개수
+		
 	}
 }

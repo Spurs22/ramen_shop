@@ -156,6 +156,7 @@
 		<!-- 구분 -->
 		
 		<div class="write-step2" style="display: none;">
+		<form name="recipeForm" method="post">
 			<table>
 				<tr>
 					<td>
@@ -192,6 +193,7 @@
 					<td>2</td>
 				</tr>
 			</table>
+		</form>
 		</div>
 		
 	</div>
@@ -271,7 +273,27 @@
         });
       });
     
-    
+    function sendOk() {
+		const f = document.recipeForm;
+		let str;
+		
+		str = f.subject.value.trim();
+		if(!str) {
+			alert("제목을 입력하세요.");
+			f.subject.focus();
+			return;
+		}
+		
+		str = f.content.value.trim();
+		if(!str) {
+			alert("내용을 입력하세요.");
+			f.content.focus();
+			return;
+		}
+		
+		f.action = "${pageContext.request.contextPath}/recipe/${mode}_ok.do";
+		f.submit();
+	}
 </script>
 </body>
 </html>

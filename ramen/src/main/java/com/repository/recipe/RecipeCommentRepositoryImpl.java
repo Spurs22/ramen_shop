@@ -143,7 +143,8 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 			sql = "SELECT nickname, r.id, member_id, content, r.created_date "
 					+ " FROM recipe_comment r"
 					+ " JOIN member m ON r.member_id = m.id "
-					+ " WHERE board_id = ?";
+					+ " WHERE board_id = ?"
+					+ " ORDER BY r.id ";
 			
 			pstmt = conn.prepareStatement(sql);
 			

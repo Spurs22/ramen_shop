@@ -169,15 +169,19 @@
             ajaxFun(url, "post", qs, "json", fn);
         });
     });
+    
+    let replyNum = $(this).attr("data-replyNum");
+    listReplyAnswer(replyNum);
 
     // 댓글 등록
     $(function () {
         $(".btnSendReply").click(function () {
-            let id = "${comment.id}";
+            let id = "${dto.id}";
             const $tb = $(this).closest("table");
             let content = $tb.find("textarea").val().trim();
 
             if (!content) {
+            	alert("댓글을 입력해주세요.");
                 $tb.find("textarea").focus();
                 return false;
             }
@@ -187,14 +191,31 @@
             let url = "${pageContext.request.contextPath}/recipe/add-comment.do";
             let qs = "id=" + id + "&content=" + content;
 
-            const fn = function () {
+            const fn = function (data) {
                 $tb.find("textarea").val("");
 
                 let state = data.state;
+                if(state === "true") {
+                	listReplyAnswer(replyNum);
+                } else if (state === "false") {
+                	alert('댓글 등록 실패');
+                }
             }
             ajaxFun(url, "post", qs, "json", fn);
         });
     });
+    
+    function listReplyAnswer(replyNum) {
+		let url = "${pageContext.request.contextPath}/recipe/add-comment_ok.do";
+		let query = "id=${dto.id}";
+		let selector = "#listReply";
+		
+		const fn = function(data) {
+			$(selector).html(data);
+		};
+		
+		ajaxFun(url, "get", query, "text", fn);
+	}
 
 </script>
 <body>
@@ -323,7 +344,7 @@
 			<div class="reply">
 				<form name="replyForm" method="post">
 					<div class="form-header">
-						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 ${replyCount}개</span>
+						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 ${vo.replyCount}개</span>
 					</div>
 
 					<table style="width: 100%">
@@ -334,7 +355,12 @@
 						</tr>
 						<tr>
 							<td class='right'>
-								<button type='button' class='btn btnSendReply'>댓글 등록</button>
+								<c:if test="${empty sessionScope.member}">
+									<button type='button' class='btn btnSendReply' disabled="disabled">댓글 등록</button>
+								</c:if>
+								<c:if test="${not empty sessionScope.member}">
+									<button type='button' class='btn btnSendReply'>댓글 등록</button>
+								</c:if>
 							</td>
 						</tr>
 					</table>
