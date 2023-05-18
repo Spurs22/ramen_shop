@@ -81,15 +81,6 @@
        <jsp:include page="/WEB-INF/views/fragment/header.jsp" />
    </div>
 
-    <div class="header-menu">
-        <div>
-            Login
-        </div>
-        <div>
-            Join
-        </div>
-    </div>
-
     <div class="logo">
         <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo.png">
     </div>
