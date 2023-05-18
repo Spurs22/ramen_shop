@@ -3,6 +3,7 @@ package com.servlet.admin;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -16,13 +17,16 @@ import com.DTO.OrderItem;
 import com.DTO.OrderStatistics;
 import com.DTO.SessionInfo;
 import com.repository.admin.OrderDetailRepositoryImpl;
+import com.repository.order.OrderRepositoryImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
 @WebServlet("/admin/*")
 public class orderDetailServlet extends MyServlet{
 	private static final long serialVersionUID = 1L;
-
+	OrderRepositoryImpl ori = new OrderRepositoryImpl();
+	OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
+	
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -32,7 +36,8 @@ public class orderDetailServlet extends MyServlet{
 		// 세션 정보
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-
+		
+		// 로그인이 안되어있으면 로그인 화면으로 포워드
 		if (info == null) {
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
@@ -40,20 +45,20 @@ public class orderDetailServlet extends MyServlet{
 		
 		/*
 		1. 관리자페이지 메인화면 ----> admin_main
+		  1) 매출 현황(그래프) --- 추후에 할 것
 		2. 송장번호 등록하기(주문처리)  ----> deliverymanagement
 		  1) 결제완료인 주문리스트만 불러와서 등록하기
 		3. 주문내역 확인하기 ----> ordermanagement
-		  1-1) 전체 주문리스트 --> ordermanagement
-		  1-1) 전체 >> 주문 상세리스트 --> ordermanagementDetail 
+		  1-1) 전체 주문리스트 ---> ordermanagement
+		  1-1) 전체 >> 주문 상세리스트 ---> ordermanagementDetail 
 		  2-1) 회원 주문리스트(회원 검색)
 		  2-2) 회원 >> 주문 상세리스트
 		  3-1) 주문상태별 주문리스트(주문상태 검색)
 		  3-2) 주문상태 >> 주문 상세리스트
 		  4-1) 주문번호별 주문리스트(주문번호 검색)
 		  4-2) 주문번호 >> 주문 상세리스트
-		4. 매출 통계  ----> sales
-		  1) 기간별 매출 ---> periodsales
-		  2) 상품별 매출 ---> productsales
+		4. 매출 통계  ----> sales_statistics
+		  1) 기간별 + 상품별 매출
 		*/
 		
 		// uri에 따른 작업 구분
@@ -66,30 +71,33 @@ public class orderDetailServlet extends MyServlet{
 		} else if(uri.indexOf("ordermanagement.do") != -1) {
 			// 주문관리(전체)
 			ordermanagement(req,resp);
-		} else if(uri.indexOf("ordermanagement.do") != -1) {
+		} else if(uri.indexOf("ordermanagement_detail.do") != -1) {
 			// 주문관리(상세)
 			ordermanagementDetail(req,resp);
-		} else if(uri.indexOf("sales.do") != -1) {
+		} else if(uri.indexOf("sales_statistics.do") != -1) {
 			// 매출통계 메인화면
-			sales(req,resp);
-		} else if(uri.indexOf("periodsales.do") != -1) {
-			// 매출통계 - 기간별 매출통계 페이지
-			periodsales(req,resp);
-		} else if(uri.indexOf("productsales.do") != -1) {
-			// 매출통계 - 상품별 매출통계 페이지
-			productSales(req,resp);
-		}
+			salesStatistics(req,resp);
+		} 
 	}
 	
 	protected void adminMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 관리자 메인 화면
-		//OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
-		//String cp = req.getContextPath();
+		// 버튼 눌러서 이동(배송관리 | 주문관리 | 매출통계)
+
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		
+		forward(req, resp, "/WEB-INF/views/admin/main.jsp"); // 안되면 jsp로
+
 	}
 	
 	protected void deliverymanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 처리(송장번호 등록하면 배송중으로 바뀜)
-		OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
 		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -158,7 +166,6 @@ public class orderDetailServlet extends MyServlet{
 			if(offset < 0) offset = 0;
 
 			List<OrderBundle> OrderBundlelist = null;
-			//List<OrderItem> OrderItemlist = null;
 
 			if (keyword.length() == 0) {
 				//OrderBundlelist = odri.findOrderAll(offset, size, condition, keyword, StatusId);
@@ -205,51 +212,77 @@ public class orderDetailServlet extends MyServlet{
 	protected void ordermanagementDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 상세페이지
 		// 주문 상세 리스트에서 번들을 꽉 채워서 보여주기
-		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+				
+		String cp = req.getContextPath();
 	}
 	
-	protected void sales(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void salesStatistics(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 매출통계 메인화면
 		
-	}
-	
-	protected void periodsales(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 매출통계 - 기간별 매출통계 페이지
-		OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-		//HttpSession session = req.getSession();
-		//SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		String cp = req.getContextPath();
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+
 		
 		try {
-			OrderStatistics os = new OrderStatistics();
+			/*
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if (page != null) {
+				current_page = Integer.parseInt(page);
+			}
 			
+			// 전체 데이터 개수
+			int dataCount = odri.dataCount();
 			
+			// 전체 페이지 수
+			int size = 5;
+			int total_page = util.pageCount(dataCount, size);
+			
+			// 전체페이지보다 표시할 페이지가 큰 경우
+			if (current_page > total_page) {
+				current_page = total_page;
+			}
+
+			// 데이터(게시물) 가져오기
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			List<OrderStatistics> OrderStatistics = null;
+			odri.SalesStatisticsByProduct(offset, size);
+			
+			// 페이징 처리
+			String listUrl = cp + "/admin/list.do";
+			String articleUrl = cp + "/admin/article.do?page=" + current_page;
+			if (query.length() != 0) {
+				listUrl += "?" + query;
+				articleUrl += "&" + query;
+			}
+
+			String paging = util.paging(current_page, total_page, listUrl);
+			
+			// 포워딩할 JSP에 전달할 속성
+			req.setAttribute("page", current_page);
+			req.setAttribute("total_page", total_page);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("size", size);
+			req.setAttribute("articleUrl", articleUrl);
+			req.setAttribute("paging", paging);
+			*/
+			
+			List<OrderStatistics> os = odri.SalesStatisticsByProduct();
+		
+			req.setAttribute("os",os);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp + "/admin/periodsales.do");
-	}
-	
-	protected void productSales(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 매출통계 - 상품별 매출통계 페이지
-		OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
-		
-		//HttpSession session = req.getSession();
-		//SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		String cp = req.getContextPath();
-		
-		try {
-			OrderStatistics os = new OrderStatistics();
-			
-			odri.SalesStatisticsByProduct();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		resp.sendRedirect(cp + "/admin/productsales.do");
+		forward(req, resp, "/WEB-INF/views/admin/sales_statistics.jsp");
 	}
 }

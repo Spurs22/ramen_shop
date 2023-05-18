@@ -375,8 +375,8 @@ private Connection conn = DBConn.getConnection();
 
 	// 기간 조회(1일 | 1개월 | 6개월 | 1년 | 전체) + 상품별 매출 통계
 	@Override
-	public OrderStatistics SalesStatisticsByProduct()  {
-		OrderStatistics orderStatistics = new OrderStatistics();
+	public List<OrderStatistics> SalesStatisticsByProduct()  {
+		List<OrderStatistics> osList = new ArrayList<OrderStatistics>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
@@ -399,7 +399,7 @@ private Connection conn = DBConn.getConnection();
 		try {
 			// 
 			sb.append("SELECT b.product_id, a.name, sum(b.quantity) as 판매수량, ");
-			sb.append(" sum(b.price) as 정가, sum(b.final_price) as 최종매출액 ");
+			sb.append(" sum(b.final_price) as 최종매출액 ");
 			sb.append(" FROM order_item b ");
 			sb.append(" JOIN product a ON a.id = b.product_id ");
 			sb.append(" JOIN order_bundle c ON c.id = b.order_id ");
@@ -408,40 +408,41 @@ private Connection conn = DBConn.getConnection();
 			// 기간 조건(1일 | 1개월 | 6개월 | 1년 | 전체)
 			if (oneDayperiod.getDays() <= 1) { 
 				// 1일
-				sb.append(" AND created_date >= TO_CHAR(SYSDATE -1)");
+				sb.append(" AND c.created_date >= TO_CHAR(SYSDATE -1)");
 			} else if (oneMonthperiod.getMonths() <= 1) { 
 				// 1개월
-				sb.append(" AND created_date >= ADD_MONTHS(SYSDATE, -1)");
+				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -1)");
 			} else if(sixMonthperiod.getMonths() <= 6) {
 				// 6개월
-				sb.append(" AND created_date >= ADD_MONTHS(SYSDATE, -6)");
+				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -6)");
 			} else if(twelveMonthperiod.getMonths() <= 12) {
 				// 1년
-				sb.append(" AND created_date >= ADD_MONTHS(SYSDATE, -12)");
+				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -12)");
 			} else {
 				// 전체
 			}
-			
 			sb.append(" GROUP BY b.product_id, a.name");
-			sb.append(" ORDER BY product_id ");
+			sb.append(" ORDER BY b.product_id ");
 
 			pstmt = conn.prepareStatement(sb.toString());
 			
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
-				orderStatistics.setProductid(rs.getLong("product_id"));
-				orderStatistics.setProductname(rs.getString("a.name"));
-				orderStatistics.setSumquantity(rs.getLong("sum(b.quantity)"));
-				orderStatistics.setSumprice(rs.getLong("sum(b.price)"));
-				orderStatistics.setSumfinal_price(rs.getLong("sum(b.final_price)"));
+			while(rs.next()) {
+				OrderStatistics os = new OrderStatistics();
+				os.setProductid(rs.getLong(1));
+				os.setProductname(rs.getString(2));
+				os.setSumquantity(rs.getLong(3));
+				os.setSumfinal_price(rs.getLong(4));
+				
+				osList.add(os);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt,rs);
 		}
-		return orderStatistics;
+		return osList;
 	}
 	
 	// 회원별 주문리스트 >> 전체 주문내역 확인 - orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X)
@@ -507,7 +508,7 @@ private Connection conn = DBConn.getConnection();
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		OrderBundle orderBundle = new OrderBundle();
-		List<OrderItem> orderItems = new ArrayList<>();
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 		try {
 			// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계

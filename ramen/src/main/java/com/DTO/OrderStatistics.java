@@ -2,7 +2,6 @@ package com.DTO;
 
 public class OrderStatistics {
 	private Long sumquantity;
-	private Long sumprice;
 	private Long sumfinal_price;
 	private Long productid;
 	private String productname;
@@ -12,12 +11,6 @@ public class OrderStatistics {
 	}
 	public void setSumquantity(Long sumquantity) {
 		this.sumquantity = sumquantity;
-	}
-	public Long getSumprice() {
-		return sumprice;
-	}
-	public void setSumprice(Long sumprice) {
-		this.sumprice = sumprice;
 	}
 	public Long getSumfinal_price() {
 		return sumfinal_price;

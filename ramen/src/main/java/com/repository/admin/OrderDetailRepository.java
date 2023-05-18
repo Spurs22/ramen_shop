@@ -24,7 +24,7 @@ public interface OrderDetailRepository {
 	int dataCount(String condition, String keyword);
 	
 	// 상품별 매출 통계
-	OrderStatistics SalesStatisticsByProduct() ;
+	List<OrderStatistics>  SalesStatisticsByProduct() ;
 	
 	// 회원 > 전체 주문내역 확인 >> orderBundle 데이터 출력
 	public List<OrderBundle> findOrderAllByMemberId(int offset, int size, Long MemberId);

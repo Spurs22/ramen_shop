@@ -22,15 +22,21 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-		<div>
-			<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do}'">배송관리</button>
-		</div>
-		<div>
-			<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do}'">주문관리</button>
-		</div>
-		<div>
-			<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do}'">매출통계</button>
-		</div>
+			<form action="location.href='${pageContext.request.contextPath}/admin/main.do}'">
+	
+				<div>
+					<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do}'">배송관리</button>
+				</div>
+				
+				<div>
+					<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do}'">주문관리</button>
+				</div>
+				
+				<div>
+					<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do}'">매출통계</button>
+				</div>
+				
+			</form>
 		</div>
 	</div>
 </div>
