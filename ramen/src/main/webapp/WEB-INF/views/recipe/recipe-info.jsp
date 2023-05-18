@@ -215,9 +215,18 @@
 						조회수 : ${dto.hitCount} 회
 					</th>
 					<th style="text-align: right; padding-right: 20px; width: 15%">
-						<button type="button" class="btn btnSendRecipeLike" title="좋아요" style="border: none;"><i
+						<c:choose>
+							<c:when test="${sessionScope.member!=null}">
+								<button type="button" class="btn btnSendRecipeLike" title="좋아요" style="border: none;"><i
 								class="fa-solid fa-heart" id="likeBtn"></i>&nbsp;&nbsp;<span
 								id="recipeLikeCount">${dto.recipeLikeCount}</span></button>
+							</c:when>
+							<c:otherwise>
+								<button type="button" class="btn btnSendRecipeLike" title="좋아요" style="border: none;" disabled="disabled"><i
+								class="fa-solid fa-heart" id="likeBtn"></i>&nbsp;&nbsp;<span
+								id="recipeLikeCount">${dto.recipeLikeCount}</span></button>
+							</c:otherwise>
+						</c:choose>
 					</th>
 				</tr>
 				<tr>
@@ -232,11 +241,29 @@
 						<hr>
 					</td>
 				</tr>
+				<c:forEach var="recipe" items="${list}">
+					<tr>	
+						<td style="width: 25%; text-align: right; padding-right: 20px;">
+							${recipe.name}
+						</td>
+						<td style="width: 50%; text-align: left" colspan="2">
+							${recipe.quantity} 개
+						</td>
+					</tr>
+				</c:forEach>
 				<tr>
-					<td colspan=3>
-						<c:forEach var="recipe" items="${list}">
-							${recipe.name} ${recipe.quantity} 개 <br>
-						</c:forEach>
+					<td colspan="3">
+						<c:choose>
+							<c:when test="${sessionScope.member!=null}">
+								<br>장바구니에 담기 <button type="button" class="btn" onclick=""><i class="fa-solid fa-cart-arrow-down"></i></button>
+							</c:when>
+							<c:when test="${empty list}">
+								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled"><i class="fa-solid fa-cart-arrow-down"></i></button>
+							</c:when>
+							<c:otherwise>
+								<br>장바구니에 담기 <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/member/login.do';"><i class="fa-solid fa-cart-arrow-down"></i></button>
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 				<tr>
