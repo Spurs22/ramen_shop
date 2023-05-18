@@ -114,17 +114,18 @@
             </span>
         </div>
 
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/notice/list.do'">
+            <span>
+                고객센터
+            </span>
+        </div>
+        
         <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'">
             <span>
                 마이페이지
             </span>
         </div>
 
-        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/notice/list.do'">
-            <span>
-                고객센터
-            </span>
-        </div>
     </div>
 
 <!--<script>-->
