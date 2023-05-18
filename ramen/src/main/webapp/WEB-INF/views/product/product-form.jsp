@@ -174,7 +174,7 @@
 				</div>
 
 				<input type="hidden" name="formType" value="{mode}">
-				<input type="hidden" name="productId" id="productId" value="${editBoard == null ? "" : editBoard.product.productId}">
+				<input type="hidden" name="productId" id="productId" value="${mode == "post" ? "" : editBoard.product.productId}">
 				<div class="selected-product">
 				</div>
 

@@ -1,6 +1,8 @@
 package com.servlet.product;
 
 import com.DTO.*;
+import com.repository.cart.CartRepository;
+import com.repository.cart.CartRepositoryImpl;
 import com.repository.product.*;
 import com.service.product.*;
 import com.util.MyServlet;
@@ -18,11 +20,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Objects;
 
 @MultipartConfig
 @WebServlet("/product/*")
 public class ProductServlet extends MyServlet {
 
+	CartRepository cartRepository = new CartRepositoryImpl();
 	ProductRepository productRepository = new ProductRepositoryImpl();
 	ProductBoardRepository productBoardRepository = new ProductBoardRepositoryImpl();
 	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
@@ -62,6 +66,8 @@ public class ProductServlet extends MyServlet {
 			} else {
 				editPostForm(req, resp);
 			}
+		} else if (uri.contains("add-cart")) {
+			addCart(req, resp);
 		}
 	}
 
@@ -251,10 +257,47 @@ public class ProductServlet extends MyServlet {
 			ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
 			productBoardService.editPost(productBoard);
 
-			resp.sendRedirect(req.getContextPath() + "/product/post?id" + productId);
+			resp.sendRedirect(req.getContextPath() + "/product/post?id=" + productId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected void addCart(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("ProductServlet.add-cart" );
+
+		Boolean result = false;
+		JSONObject jsonObject = new JSONObject();
+		PrintWriter out = null;
+
+		try {
+			out = resp.getWriter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+			if (memberId == null) {
+				//
+				resp.sendRedirect(req.getContextPath() + "/product/list");
+				return;
+			}
+
+			Long productId = Long.parseLong(req.getParameter("id"));
+			int quantity = Integer.parseInt(req.getParameter("quantity"));
+
+			System.out.println("멤버 : " + memberId + ", 상품 아이디" + productId);
+
+			// 장바구니에 추가
+			cartRepository.createItem(productId, memberId, quantity);
+
+		} catch (Exception e) {
+			result = false;
+		}
+
+		jsonObject.put("state", result);
+		Objects.requireNonNull(out).print(jsonObject);
 	}
 
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) {
