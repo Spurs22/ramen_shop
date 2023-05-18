@@ -125,6 +125,12 @@
                 마이페이지
             </span>
         </div>
+        
+        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/admin/main.do'">
+            <span>
+                마이페이지
+            </span>
+        </div>
 
     </div>
 

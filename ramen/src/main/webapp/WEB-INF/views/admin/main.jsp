@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<title>관리자 메인 화면</title>
+	<title>관리자</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
@@ -22,7 +22,15 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<div>${dto.price}</div>
+		<div>
+			<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do}'">배송관리</button>
+		</div>
+		<div>
+			<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do}'">주문관리</button>
+		</div>
+		<div>
+			<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do}'">매출통계</button>
+		</div>
 		</div>
 	</div>
 </div>
