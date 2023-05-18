@@ -1,4 +1,4 @@
-package com.repository.member;
+package com.servlet.member;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -8,8 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import com.DTO.SessionInfo;
+
 import com.DTO.Member;
+import com.DTO.SessionInfo;
+import com.repository.member.MemberRepositoryImpl;
 import com.util.MyServlet;
 
 @WebServlet("/member/*")
@@ -296,17 +298,9 @@ public class MemberServlet extends MyServlet{
 			dto.setMemberId(Long.parseLong(req.getParameter("Id"))); 
 			dto.setPassword(req.getParameter("password"));
 			dto.setName(req.getParameter("nickname"));
-
-			String email1 = req.getParameter("email1");
-			String email2 = req.getParameter("email2");
-			dto.setEmail(email1 + "@" + email2);
-
-			String tel1 = req.getParameter("tel1");
-			String tel2 = req.getParameter("tel2");
-			String tel3 = req.getParameter("tel3");
-			dto.setTel(tel1 + "-" + tel2 + "-" + tel3);
-
-			
+			dto.setEmail(req.getParameter("eamil"));
+			dto.setTel(req.getParameter("tel"));
+			dto.setPostNum(req.getParameter("post_num"));
 			dto.setAddress1(req.getParameter("addr1"));
 			dto.setAddress2(req.getParameter("addr2"));
 
