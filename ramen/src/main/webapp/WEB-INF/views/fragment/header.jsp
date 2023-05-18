@@ -27,7 +27,7 @@
                 <a href="${pageContext.request.contextPath}/member/member.do" title="회원가입"><i class="fa-solid fa-user-plus"></i></a>
             </c:if>
             <c:if test="${not empty sessionScope.member}">
-            	<a href="#" title="알림"><i class="fa-regular fa-bell"></i></a>
+            	<a href="${pageContext.request.contextPath}/member/pwd.do?mode=update" title="내정보수정"><i class="fa-solid fa-gear"></i></a>
             	&nbsp;
 				<a href="${pageContext.request.contextPath}/member/logout.do" title="로그아웃"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
             	<a href="${pageContext.request.contextPath}/cart/list.do" title="장바구니"><i class="fa-solid fa-cart-shopping"></i></a>
