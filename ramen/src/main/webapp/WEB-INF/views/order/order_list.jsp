@@ -24,6 +24,7 @@
 		border-top: 2px solid gray;
 		border-bottom: 1px solid gray;
 	}
+	
 
 	.itemtd{
 		border-bottom: 1px solid gray;
@@ -107,9 +108,9 @@
 		text-align: center;
 	  }
 
-  .postbtn{
-	font-size: 10px;
-  }
+	  .postbtn{
+		font-size: 10px;
+	  }
 
 	</style>
 </head>
@@ -165,13 +166,30 @@
 		    	alert("숫자[4자리]만 가능합니다. ");
 		        f.tel3.focus();
 		        return;
-		    }						
-
-			if (confirm("결제 하시겠습니까 ?")) {
-				const f = document.orderForm;
-				f.action = "${pageContext.request.contextPath}/order/order_ok.do";
-				f.submit();
+		    }				
+		    
+		    let message = "${message}";
+		    if( message != null ){
+		    	alert(message);
+		    	location.href="${pageContext.request.contextPath}/cart/list.do";
+		    }else {
+		    	if (confirm("결제 하시겠습니까 ?")) {
+					const f = document.orderForm;
+					f.action = "${pageContext.request.contextPath}/order/order_ok.do";
+					f.submit();
+				}
+		    }
+		    
+			
+		});
+		
+		$("#btnReset").click(function(){
+			if(confirm("다시 입력 하시겠습니까 ?")){
+				return true;
+			}else{
+				return false;
 			}
+			
 		});
 	});
 </script>
@@ -303,7 +321,7 @@
 								</tr>
 							</table>
 						<br>	
-						<button type="reset" class="btn">다시입력</button>
+						<button type="reset" class="btn" id="btnReset">다시입력</button>
 					</div>
 					
                     <div class="final">

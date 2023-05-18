@@ -39,16 +39,18 @@
 	}
 
 	tr{
-		border-bottom: 1px solid #B4B4B4; 
+		border-bottom: 1px solid #D8D8D8; 
 	}
 	
 	.tdname{
+		border-top : 1px solid #D8D8D8;
 		width:30%;
 		padding:20px;
 		background: #eee;
 	}
 	
 	.tdvalue{
+		border-top : 1px solid #D8D8D8;
 		width:70%;
 		padding:10px;
 	}
@@ -61,6 +63,10 @@
 		font-size: 20px;
 		padding-top:40px;
 	}	
+	
+	.item1, .item2{
+		padding-bottom: 10px;
+	}
 	
 	</style>
 </head>
@@ -77,7 +83,7 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<div class="Okdiv">
-				<i class="fa-solid fa-list-check fa-lg" id="OkImg"></i>
+				<i class="fa-solid fa-list-check fa-lg" id="OkImg" style="color:#FDDF33"></i>
 				<div class="OkText"> 결제가 완료 되었습니다.  </div>
 				<div class="OkText2">감사합니다 :)</div>
 			</div>	
