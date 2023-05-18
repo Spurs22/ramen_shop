@@ -188,4 +188,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 	public List<Product> findProductByName(String name) {
 		return null;
 	}
+
+	@Override
+	public void editQuantity(Long productId, Integer amount) {
+
+	}
 }

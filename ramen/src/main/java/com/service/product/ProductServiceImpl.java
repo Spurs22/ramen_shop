@@ -50,7 +50,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> findNotRegistedProduct() {
+	public List<Product> findNotRegisteredProduct() {
 		return productRepository.findNotRegisteredProduct();
+	}
+
+	@Override
+	public void editQuantity(Long productId, Integer amount) {
+
 	}
 }

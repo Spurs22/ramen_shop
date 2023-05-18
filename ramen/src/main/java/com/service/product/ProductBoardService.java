@@ -15,7 +15,7 @@ public interface ProductBoardService {
 
 	List<ProductBoard> findPostsByMemberId(Long memberId);
 
-	ProductBoard findPostsByProductId(Long productId);
+	ProductBoard findPostByProductId(Long productId);
 
 	List<ProductBoard> findAllPosts();
 

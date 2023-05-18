@@ -20,5 +20,7 @@ public interface ProductService {
 
 	List<Product> findProductByName(String name);
 
-	List<Product> findNotRegistedProduct();
+	List<Product> findNotRegisteredProduct();
+
+	void editQuantity(Long productId, Integer amount);
 }

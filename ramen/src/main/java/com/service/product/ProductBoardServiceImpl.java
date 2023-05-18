@@ -36,8 +36,8 @@ public class ProductBoardServiceImpl implements ProductBoardService {
 	}
 
 	@Override
-	public ProductBoard findPostsByProductId(Long productId) {
-		return productBoardRepository.findPostsByProductId(productId);
+	public ProductBoard findPostByProductId(Long productId) {
+		return productBoardRepository.findPostByProductId(productId);
 	}
 
 	@Override

@@ -136,23 +136,23 @@
 			<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
-					<input class="form-control product-info" id="productName" disabled value="${editBoard.product.productId}">
+					<input class="form-control product-info" id="productName" disabled value="${editBoard == null ? "" : editBoard.product.productId}">
 				</div>
 
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
-					<input class="form-control product-info" id="category" disabled value="${editBoard.product.category}">
+					<input class="form-control product-info" id="category" disabled value="${editBoard == null ? "" : editBoard.product.category.getLabel()}">
 				</div>
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
-					<input class="form-control product-info" id="quantity" disabled value="${editBoard.product.remainQuantity}">
+					<input class="form-control product-info" id="quantity" disabled value="${editBoard == null ? "" : editBoard.product.remainQuantity}">
 				</div>
 			</div>
 
 			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageCo ntext.request.contextPath}/product/post" id="form">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/post" id="form">
 
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">
@@ -162,18 +162,20 @@
 
 					<div class="input-group" style="width: 50%">
 						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">가격</span></div>
-						<input class="form-control product-info" id="price" name="price">
+						<input class="form-control product-info" id="price" name="price" value="${editBoard == null ? "" : editBoard.price}">
 					</div>
 
 				</div>
 
 				<div class="input-group">
 					<span class="input-group-text">상세 설명</span>
-					<textarea class="form-control" aria-label="With textarea" name="content" id="content"></textarea>
+					<textarea class="form-control" aria-label="With textarea" name="content" id="content">
+						${editBoard == null ? "" : editBoard.content}
+					</textarea>
 				</div>
 
 <%--				<input type="hidden" name="formType" value="">--%>
-				<input type="hidden" name="productId" id="productId" value="1">
+				<input type="hidden" name="productId" id="productId" value="${editBoard == null ? "" : editBoard.product.productId}">
 				<div class="selected-product">
 				</div>
 

@@ -143,7 +143,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 	}
 
 	@Override
-	public ProductBoard findPostsByProductId(Long productId) {
+	public ProductBoard findPostByProductId(Long productId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;

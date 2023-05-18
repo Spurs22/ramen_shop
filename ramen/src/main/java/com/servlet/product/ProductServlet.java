@@ -17,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 import java.util.List;
 
 @MultipartConfig
@@ -100,9 +99,10 @@ public class ProductServlet extends MyServlet {
 		System.out.println("ProductServlet.postForm" );
 
 		try {
-			List<Product> products = productService.findNotRegistedProduct();
+			List<Product> products = productService.findNotRegisteredProduct();
 
 			req.setAttribute("products", products);
+//			req.setAttribute("editBoardPost", null);
 
 			String path = "/WEB-INF/views/product/product-form.jsp";
 			forward(req, resp, path);
@@ -126,7 +126,7 @@ public class ProductServlet extends MyServlet {
 				likeStatus = productLikeService.isLike(memberId, productId);
 			}
 
-			ProductBoard post = productBoardService.findPostsByProductId(productId);
+			ProductBoard post = productBoardService.findPostByProductId(productId);
 			List<ProductComment> comments = productCommentService.findCommentsByProductId(productId);
 
 			req.setAttribute("likeStatus", likeStatus);
@@ -209,13 +209,15 @@ public class ProductServlet extends MyServlet {
 	protected void editProductBoard(HttpServletRequest req, HttpServletResponse resp) {
 		System.out.println("ProductServlet.editProductBoard");
 
-		Long productId = Long.valueOf(req.getParameter("productId"));
+		Long productId = Long.valueOf(req.getParameter("id"));
 
-		productBoardService.findPostsByProductId(productId);
+		System.out.println(productId);
+		ProductBoard editBoard = productBoardService.findPostByProductId(productId);
 
 		try {
-			List<Product> products = productService.findNotRegistedProduct();
+			List<Product> products = productService.findNotRegisteredProduct();
 			req.setAttribute("products", products);
+			req.setAttribute("editBoard", editBoard);
 			String path = "/WEB-INF/views/product/product-form.jsp";
 			forward(req, resp, path);
 		} catch (Exception e) {

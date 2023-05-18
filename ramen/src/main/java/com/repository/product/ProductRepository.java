@@ -23,4 +23,6 @@ public interface ProductRepository {
 	List<Product> findProductByName(String name);
 
 	List<Product> findNotRegisteredProduct();
+
+	void editQuantity(Long productId, Integer amount);
 }
