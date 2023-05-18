@@ -4,6 +4,7 @@ import com.DTO.*;
 import com.repository.product.*;
 import com.service.product.*;
 import com.util.MyServlet;
+import com.util.SessionUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -72,6 +73,7 @@ public class ProductServlet extends MyServlet {
 			if (sessionMember == null) {
 				// 로그인 안한상태로 좋아요 클릭시
 				resp.sendRedirect(req.getContextPath() + "/product/list");
+				return;
 			}
 
 			Long memberId = ((SessionInfo) sessionMember).getMemberId();
@@ -130,8 +132,7 @@ public class ProductServlet extends MyServlet {
 			req.setAttribute("likeStatus", likeStatus);
 			req.setAttribute("post", post);
 			req.setAttribute("comments", comments);
-
-			System.out.println(likeStatus);
+			req.setAttribute("memberId", memberId);
 
 			String path = "/WEB-INF/views/product/product-info.jsp";
 			forward(req, resp, path);
@@ -146,14 +147,18 @@ public class ProductServlet extends MyServlet {
 		Long productId = Long.valueOf(req.getParameter("productId"));
 //		req.getParameter("picture");
 
+		Member member = SessionUtil.getMemberFromSession(req);
+
+
 		System.out.println("content");
 		System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
 
-		ProductBoard productBoard = new ProductBoard(new Product(productId), 1L, null, content, price);
+		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
 		productBoardService.createProductPost(productBoard);
 
 		resp.sendRedirect(req.getContextPath() + "/product/list");
 	}
+
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("ProductServlet.list" );
 
@@ -199,11 +204,15 @@ public class ProductServlet extends MyServlet {
 
 		resp.getWriter().write(jsonArray.toString());
 
-		System.out.println(jsonArray.toString());
+		System.out.println(jsonArray);
 	}
 
 	protected void editProductBoard(HttpServletRequest req, HttpServletResponse resp) {
 		System.out.println("ProductServlet.editProductBoard");
+
+		Long productId = Long.valueOf(req.getParameter("productId"));
+
+		productBoardService.findPostsByProductId(productId);
 
 		try {
 			List<Product> products = productService.findNotRegistedProduct();

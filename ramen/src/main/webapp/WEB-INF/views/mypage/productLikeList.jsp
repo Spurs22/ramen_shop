@@ -32,26 +32,26 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<div class="sub-menu">
-				<form name="radioForm" action="${pageContext.request.contextPath}/MyPage/productLikeList.do" method="post">
+				<form name="radioForm" action="${pageContext.request.contextPath}/mypage/productLikeList.do" method="post">
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="btnradio1" autocomplete="off" checked>
 						<label class="btn btn-outline-primary" for="btnradio1">
-							<a href="${pageContext.request.contextPath}/MyPage/productLikeList.do"> 내가 찜 한 상품 </a>
+							<a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/mypage/productLikeList.do"> 내가 찜 한 상품 </a>
 						</label>
 		
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="btnradio2" autocomplete="off" onclick="clickBtnradio(this)">
-						<label class="btn btn-outline-primary" for="btnradio2">내가 좋아요 한 레시피
-							<a href="${pageContext.request.contextPath}/MyPage/recipeLikeList.do"> 내가 좋아요 한 레시피 </a>
+						<label class="btn btn-outline-primary" for="btnradio2">
+							<a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/mypage/recipeLikeList.do"> 내가 좋아요 한 레시피 </a>
 						</label>
 						
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="btnradio3" autocomplete="off" onclick="clickBtnradio(this)">
 						<label class="btn btn-outline-primary" for="btnradio3">
-							<a href="${pageContext.request.contextPath}/MyPage/recipeBoardMyList.do"> 내가 작성한 글 </a>
+							<a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/mypage/recipeBoardMyList.do"> 내가 작성한 글 </a>
 						</label>
 						
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio4" value="btnradio4" autocomplete="off" onclick="clickBtnradio(this)">
 						<label class="btn btn-outline-primary" for="btnradio4">
-							<a href="${pageContext.request.contextPath}/MyPage/orderMyList.do"> 나의 주문내역 </a>
+							<a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/mypage/orderMyList.do"> 나의 주문내역 </a>
 						</label>
 					</div>
 				</form>

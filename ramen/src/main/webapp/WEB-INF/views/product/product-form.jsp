@@ -152,7 +152,7 @@
 			</div>
 
 			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/post" id="form">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageCo ntext.request.contextPath}/product/post" id="form">
 
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">

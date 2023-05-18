@@ -56,14 +56,4 @@ public class RecipeLikeServiceImpl implements RecipeLikeService {
 
 		return false;
 	}
-
-	@Override
-	public List<RecipeBoard> findLikePost(Long memberId, int offset, int size) {
-		return recipeLikeRepository.findLikePost(memberId, offset, size);
-	}
-
-	@Override
-	public int dataCount() {
-		return recipeLikeRepository.dataCount();
-	}
 }

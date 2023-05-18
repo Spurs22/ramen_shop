@@ -189,7 +189,7 @@
 			</div>
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
-				<button class="btn btn-primary">상품 수정</button>
+				<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/product/edit}'">상품 수정</button>
 				<button class="btn btn-danger">상품 삭제</button>
 			</div>
 		</div>
@@ -367,45 +367,31 @@
         $('#likeBtn').css("color", currentColor)
     });
 
+    function setBtnColor() {
+        if (likeStatus) currentColor = LIKE_COLOR;
+		else currentColor = NONE_LIKE_COLOR;
+        likeBtn.style.color = currentColor;
+	}
 
     $(document).ready(function () {
-        if (likeStatus) {
-            currentColor = LIKE_COLOR;
-        } else {
-            currentColor = NONE_LIKE_COLOR;
-		}
-
-        $('#likeBtn').css("color", currentColor)
+		setBtnColor()
     });
 
 
     function changeLikeStatus() {
-        if (likeStatus) {
-            // 좋아요 상태일 때
-			likeStatus = !likeStatus
-            currentColor = LIKE_COLOR;
-        } else {
-            likeStatus = !likeStatus
-            currentColor = NONE_LIKE_COLOR;
-        }
+        likeStatus = !likeStatus;
+        setBtnColor()
         likeBtn.style.color = currentColor;
     }
 
     likeBtn.addEventListener('mouseover', function () {
-        if (likeStatus) {
-            likeBtn.style.filter = 'brightness(80%)';
-        } else {
-            likeBtn.style.color = LIKE_COLOR;
-        }
+        likeBtn.style.filter = 'brightness(80%)';
+        likeBtn.style.color = LIKE_COLOR;
     })
 
     likeBtn.addEventListener('mouseout', function () {
-        if (likeStatus) {
-            likeBtn.style.filter = 'brightness(100%)';
-            likeBtn.style.color = LIKE_COLOR;
-        } else {
-            likeBtn.style.color = NONE_LIKE_COLOR;
-        }
+		likeBtn.style.filter = 'brightness(100%)';
+        likeBtn.style.color = currentColor
     })
 
     function ajaxFun(url, method, query, dataType, fn) {
@@ -435,6 +421,11 @@
     // 게시물 좋아요
     $(function () {
         $("#likeBtn").click(function () {
+            if (${memberId == null}) {
+                alert("로그인 후 이용해주세요.")
+				return
+            }
+
             let msg = likeStatus ? "상품을 찜목록에서 제거합니다." : "상품을 찜목록에 추가합니다.";
 
             if (!confirm(msg)) {

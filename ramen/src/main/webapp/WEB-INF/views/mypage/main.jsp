@@ -23,14 +23,10 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<h3>마이페이지</h3>
-			<table>
-				<tr> 
-					<td> <a href="${pageContext.request.contextPath}/MyPage/productLikeList.do"> 내가 찜 한 상품 </a> </td>
-					<td> <a href="${pageContext.request.contextPath}/MyPage/recipeLikeList.do"> 내가 좋아요 한 레시피 </a> </td>
-					<td> <a href="${pageContext.request.contextPath}/MyPage/recipeBoardMyList.do"> 내가 작성한 글 </a> </td>
-					<td> <a href="${pageContext.request.contextPath}/MyPage/orderMyList.do"> 나의 주문내역 </a> </td>
-				</tr>
-			</table>
+			<div onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'">내가 찜 한 상품</div>
+			<div onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do">내가 좋아요 한 레시피</div>
+			<div onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'">내가 작성한 글 </div>
+			<div onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'">나의 주문내역</div>
 		</div>
 	</div>
 </div>

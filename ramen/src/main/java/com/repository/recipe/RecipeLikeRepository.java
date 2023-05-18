@@ -46,8 +46,4 @@ public interface RecipeLikeRepository {
 	 * @return			레시피 게시글에 대한 좋아요 수 반환
 	 */
 	int countLike(Long postId);
-	
-	List<RecipeBoard> findLikePost(Long memberId, int offset, int size);
-	
-	int dataCount();
 }

@@ -31,8 +31,4 @@ public interface RecipeLikeService {
 	int countLike(Long postId);
 
 	boolean likeRecipePost(Long memberId, Long postId) throws SQLException;
-	
-	List<RecipeBoard> findLikePost(Long memberId, int offset, int size);
-	
-	int dataCount();
 }
