@@ -6,14 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class SessionUtil {
-	public static Long getMemberIdFromSession(HttpServletRequest req) {
+	public static Member getMemberFromSession(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		Object sessionMember = session.getAttribute("member");
 
-		Long memberId = null;
+		Member member = null;
 		if (sessionMember != null) {
-			memberId = ((Member) sessionMember).getMemberId();
+			member = ((Member) sessionMember);
 		}
-		return memberId;
+		return member;
 	}
 }

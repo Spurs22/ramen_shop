@@ -147,7 +147,8 @@ public class ProductServlet extends MyServlet {
 		Long productId = Long.valueOf(req.getParameter("productId"));
 //		req.getParameter("picture");
 
-		Long memberId = SessionUtil.getMemberIdFromSession(req);
+		Member member = SessionUtil.getMemberFromSession(req);
+
 
 		System.out.println("content");
 		System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
