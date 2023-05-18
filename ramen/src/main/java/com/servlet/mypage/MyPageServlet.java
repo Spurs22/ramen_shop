@@ -72,12 +72,6 @@ public class MyPageServlet extends MyServlet {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		String cp = req.getContextPath();
-		
-		// 로그인이 안되어있을 때
-		if(info == null) {
-			resp.sendRedirect(cp+ "/member/login.do");
-			return;
-		}
 			
 			
 		try {
@@ -101,19 +95,19 @@ public class MyPageServlet extends MyServlet {
 			
 			
 			List<ProductBoard> list;
-			if(dao.isLike(info.getMemberId(), dto.getProductId()).equals(1)) {
+			if(dao.isLike(info.getMemberId(), dto.getProductId())) {
 				list = dao.findLikePostById(info.getMemberId(), offset, size);
 			} else {
 				list = null;
 			}
 			
 			String listUrl = cp+ "/mypage/productLikeList.do";
-			String articleUrl = cp + "/mypage/product.do?page=" +current_page;
+			String articleUrl = cp + "/mypage/productArticle.do?page=" +current_page;
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 			
 			req.setAttribute("list", list);
-			req.setAttribute("page", page);
+			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("articleUrl", articleUrl);
@@ -212,6 +206,7 @@ public class MyPageServlet extends MyServlet {
 		}
 		
 		try {
+			
 			String page = req.getParameter("page");
 			int current_page = 1;
 			if(page != null) {
@@ -237,7 +232,7 @@ public class MyPageServlet extends MyServlet {
 			String paging = util.paging(current_page, total_page, listUrl);
 			
 			req.setAttribute("list", list);
-			req.setAttribute("page", page);
+			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("size", size);
@@ -254,6 +249,8 @@ public class MyPageServlet extends MyServlet {
 	protected void orderMyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내 주문 리스트
 	}
+	
+
 	
 	protected void orderCancel(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 취소

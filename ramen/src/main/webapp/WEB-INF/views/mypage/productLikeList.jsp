@@ -7,6 +7,10 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 <style>
+.table-list thead > tr:first-child{ background: #f8f8f8; }
+.table-list th, .table-list td { text-align: center; }
+.table-list .left { text-align: left; padding-left: 5px; }
+
 .sub-menu {
             width: 100%;
             height: 40px;
@@ -46,7 +50,7 @@
 						
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="btnradio3" autocomplete="off" onclick="clickBtnradio(this)">
 						<label class="btn btn-outline-primary" for="btnradio3">
-							<a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/mypage/recipeBoardMyList.do"> 내가 작성한 글 </a>
+							<a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/mypage/recipeBoardMyList.do"> 내가 작성한 조합레시피 글 </a>
 						</label>
 						
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio4" value="btnradio4" autocomplete="off" onclick="clickBtnradio(this)">
@@ -57,10 +61,16 @@
 				</form>
 		<table>
 			<tr>
-				<td width="50%">
-					${dataCount}개(${page}/${total_page} 페이지)
-				</td>
+				<td width="50%"> ${dataCount}개(${page}/${total_page} 페이지) </td>
+				<td align="right">&nbsp;</td>
 			</tr>
+		</table>
+		
+		<table>
+			<c:forEach var="dto" items="${productLikeList}" varStatus="status">
+				<td>${dto.name}</td>
+				<td>${dto.createDate}</td>
+			</c:forEach>
 		</table>
 			</div>
 		</div>

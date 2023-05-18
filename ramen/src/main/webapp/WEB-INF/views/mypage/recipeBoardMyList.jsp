@@ -64,9 +64,8 @@
 							<td class="left">
 								<a href="${articleUrl}&id=${dto.id}">${dto.subject}</a>
 							</td>
-							<td>${dto.create_date}</td>
+							<td>${dto.createDate}</td>
 							<td>${dto.hitCount}</td>
-							<td>${dto.createdDate}</td>
 							<td><i class="fa-solid fa-heart" style="color: red;"></i>${dto.recipeLikeCount}</td>
 						</tr>
 						</c:forEach>
