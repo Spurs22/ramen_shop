@@ -36,6 +36,14 @@
 				${os.productid}
 				${os.productname}
 			</div>
+			
+			<div>
+				${os.sumquantity}
+				${os.sumprice}
+				${os.sumfinal_price}
+				${os.productid}
+				${os.productname}
+			</div>
 		</div>
 	</div>
 </div>

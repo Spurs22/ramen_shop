@@ -26,7 +26,10 @@ public interface OrderDetailRepository {
 	// 상품별 매출 통계
 	OrderStatistics SalesStatisticsByProduct() ;
 	
-	// 회원 > 주문내역 확인 >> orderBundle 데이터 출력
-	List<OrderBundle> findOrderByMemberId(Long MemberId);
+	// 회원 > 전체 주문내역 확인 >> orderBundle 데이터 출력
+	public List<OrderBundle> findOrderAllByMemberId(int offset, int size, Long MemberId);
+	
+	// 회원 > 상세 주문내역 확인 >> orderBundle + orderitem 데이터 출력
+	public OrderBundle findOrderDetailByMemberId(int offset, int size, Long MemberId);
 
 }
