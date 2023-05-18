@@ -97,7 +97,7 @@
 				</tr>
 			</table>
 			
-			<!-- 
+			 
 			<p class="title"> 주문 결제</p>
 				<hr>
 					<table>
@@ -119,7 +119,7 @@
 								</tr>
 							</c:forEach>
 						</table>
-						-->
+						
 		</div>
 	</div>
 </div>

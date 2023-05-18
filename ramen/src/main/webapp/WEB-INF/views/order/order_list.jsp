@@ -207,8 +207,10 @@
 									<td class="itemtd">${cart.productName}</td>
 									<td class="itemtd">${cart.price}</td>
 									<td class="itemtd">${cart.quantity}</td>
-									<td class="itemtd">${cart.price*cart.quantity}</td>
-									<input type="hidden" name="items" value="${cart.productId}">
+									<td class="itemtd">
+										${cart.price*cart.quantity}
+										<input type="hidden" name="items" value="${cart.productId}">
+									</td>
 								</tr>
 							</c:forEach>
 						</table>
