@@ -189,11 +189,11 @@ public class OrderServlet extends MyServlet {
 		try {
 			long orderId = Long.parseLong(req.getParameter("order_id"));
 			long totalPrice = orderRepositoryImpl.orderAllPrice(orderId);
-			// List<OrderItem> list2 = orderRepositoryImpl.ListItems(orderId);
+			List<OrderItem> list2 = orderRepositoryImpl.ListItems(orderId);
 			
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId", orderId);
-			// req.setAttribute("list2", list2);
+			req.setAttribute("list2", list2);
 			
 		}  catch (Exception e) {
 			e.printStackTrace();

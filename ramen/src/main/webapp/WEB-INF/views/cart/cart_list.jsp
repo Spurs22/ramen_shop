@@ -29,13 +29,18 @@
 	}
 	
 	.btn {
-		border-radius: 10px;
-		background: lightgray;
+		border-radius: 0.5;
+		border : 1px solid lightgray;
 	}
 	
 	.btn:hover{
 		background: gray;
 	}
+	
+	.btnchangeNum{
+		font-size: 5px;
+	}
+
 	
 	#chkAll{
 		width: 15px;
@@ -60,6 +65,7 @@
 	
 	<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 	<script type="text/javascript">
+	
 	$(function(){
 		$("#chkAll").click(function(){
 			if($(this).is(":checked")) {
@@ -126,15 +132,19 @@
 		        }
 		    }
 		});
-		
-		// 수량 변경
-		$("#numBtn").click(function(){
-			const f = document.numForm;
-			f.action = "${pageContext.request.contextPath}/num_update.do";
-			f.submit();
-		});
 	});
 	
+	$(function(){
+		$(".btnchangeNum").click(function(){
+			var $count = $(this).parent('.count').find('.quantitys');
+			var quantity = $count.val();
+			var $pid = $(this).closest("tr").find('.productIds');
+			var productId = $pid.val();
+			
+			let url = "${pageContext.request.contextPath}/cart/num_update.do?productId="+ productId +"&quantity="+quantity;
+			location.href= url;
+		});
+	});
 
 	</script>
 </head>
@@ -166,16 +176,14 @@
 					<tbody>
 						<c:forEach var="cart" items="${list}">
 							<tr>
-								<form name="numForm" method="post">
-									<td class="orderItem">
-										<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll" >
-									</td>
-									<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
-									<td class="item2 orderItem">${cart.productName}</td>
-									<td class="item2 orderItem count"><button type="button" class="minus">-</button> <input type="text" class="quantitys" name= "quantitys" value="${cart.quantity}" style="width:50px; text-align: center"> <button type="button" class="plus">+</button>
-									<button type="button" id="numBtn">수량변경</button></td>
-									<td class="item2 orderItem">${cart.price*cart.quantity}</td>
-								</form>
+								<td class="orderItem">
+									<input type="checkbox" name="productIds" value="${cart.productId}" id="chkAll" class="productIds" >
+								</td>
+								<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+								<td class="item2 orderItem">${cart.productName}</td>
+								<td class="item2 orderItem count"><button type="button" class="minus btn">-</button> <input type="text" class="quantitys" name= "quantitys" value="${cart.quantity}" style="width:50px; text-align: center" > <button type="button" class="plus btn">+</button>
+								<button type="button" class= "btnchangeNum btn">수량변경</button></td>
+								<td class="item2 orderItem">${cart.price*cart.quantity}</td>
 							</tr>
 						</c:forEach>
 						

@@ -37,9 +37,33 @@ public class CartRepositoryImpl implements CartRepository{
 		}
 	}
 	
-	
-	@Override	// 장바구니 아이템 수정 ( 개수 변경시, 날짜 변경 )
+	@Override	// 장바구니 아이템 수정 ( 개수 변경시, 날짜 변경, quantity = 기존양 + num )
 	public void editItem(Long productId, Long memberId, int num) {
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "UPDATE cart SET quantity=(SELECT quantity From cart WHERE product_id = ? AND member_id = ?) + ? ,"
+					+ " created_date = SYSDATE "
+					+ " WHERE product_id =? AND member_id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, productId);
+			pstmt.setLong(2, memberId);
+			pstmt.setInt(3, num);
+			pstmt.setLong(4, productId);
+			pstmt.setLong(5, memberId);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+	}
+	
+	@Override	// 장바구니 아이템 수정 ( 개수 변경시, 날짜 변경, quantity = num )
+	public void editItemNum(Long productId, Long memberId, int num) {
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -59,6 +83,32 @@ public class CartRepositoryImpl implements CartRepository{
 		} finally {
 			DBUtil.closeResource(pstmt);
 		}
+	}
+	
+	@Override	// 상품 개수 구하기
+	public int getItemCnt(Long productId) {
+		int cnt = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = " SELECT remain_quantity FROM product WHERE id = 5?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, productId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				cnt = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return cnt;
 	}
 	
 	@Override		// 상품 개수 구하기
@@ -303,4 +353,6 @@ public class CartRepositoryImpl implements CartRepository{
 		}
 		return cart;
 	}
+
+
 }

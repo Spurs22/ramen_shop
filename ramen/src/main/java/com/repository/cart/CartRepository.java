@@ -21,9 +21,24 @@ public interface CartRepository {
 	 * @param num           개수 (뺄때는 - 입력)
 	 */
 	void editItem(Long productId, Long memberId, int num);
+	
+	/**
+	 * [ 장바구니 아이템 수정 ( 개수 변경시 ) ]
+	 * @param memberId      사용자 아이디
+	 * @param productId     상품 아이디
+	 * @param num           개수 (뺄때는 - 입력)
+	 */
+	void editItemNum(Long productId, Long memberId, int num);
 
 	/**
 	 * [ 상품 개수 구하기 ]
+	 * @param productId		상품 아이디
+	 * return				상품의 개수
+	 */
+	int getItemCnt(Long productId);
+	
+	/**
+	 * [ 장바구니의 상품 개수 구하기 ]
 	 * @param memberId  	사용자 아이디
 	 * @param productId		상품 아이디
 	 * return				개수

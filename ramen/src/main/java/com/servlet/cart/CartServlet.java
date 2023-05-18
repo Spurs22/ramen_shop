@@ -2,7 +2,6 @@ package com.servlet.cart;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -78,12 +77,13 @@ public class CartServlet extends MyServlet {
 			
 			for (Cart c : list) {
 				// 잔여수량 체크
-				Product product =productService.findProductByProductId(c.getProductId());
+				Product product = productService.findProductByProductId(c.getProductId());
 				if(product.getRemainQuantity() < c.getQuantity()) {
 					message = "상품이 품절되었습니다.";
+					req.setAttribute("message", message);
 				}
 			}
-				
+			
 			req.setAttribute("list", list);
 			req.setAttribute("dataCount", dataCount);
 
@@ -97,20 +97,25 @@ public class CartServlet extends MyServlet {
 	protected void cartNumUpdate(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// 2) 장바구니의 물건 수량을 변경한다.
+		System.out.println("수량 변경");
+		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		String cp = req.getContextPath();
 
 		try {
 			Long memberId = info.getMemberId();
-/*
+
+			/*
 			String[] pi = req.getParameterValues("productIds");
 			long[] products = null;
 			products = new long[pi.length];
 			for (int i = 0; i < pi.length; i++) {
 				products[i] = Long.parseLong(pi[i]);
 			}
+			*/
 			
+			/*
 			// 수량 변경
 			String[] num = req.getParameterValues("quantitys");
 			int[] quantitys = null;
@@ -122,13 +127,19 @@ public class CartServlet extends MyServlet {
 			// 수정
 			for(Long product : products) {
 				for(int quantity : quantitys) {
-					cartRepositoryImpl.editItem(product, memberId, quantity);
+					cartRepositoryImpl.editItemNum(product, memberId, quantity);
+					System.out.println(product);
+					System.out.println(quantity);
 				}
 			}
-*/
-			int num = Integer.parseInt(req.getParameter("quantitys"));
-			Long productId = Long.parseLong(req.getParameter("productIds"));
-			cartRepositoryImpl.editItem(productId, memberId, num);
+			*/
+			int num = Integer.parseInt(req.getParameter("quantity"));
+			Long productId = Long.parseLong(req.getParameter("productId"));
+			
+			System.out.println(num);
+			System.out.println(productId);
+			
+			cartRepositoryImpl.editItemNum(productId, memberId, num);
 
 		} catch (Exception e) {
 			e.printStackTrace();

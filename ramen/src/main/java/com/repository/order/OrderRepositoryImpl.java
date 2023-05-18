@@ -211,7 +211,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 			pstmt.setLong(1, orderId);
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				OrderItem orderItem = new OrderItem();
 				orderItem.setProductId(rs.getLong(1));
 				orderItem.setOrderItemId(rs.getLong(2));
