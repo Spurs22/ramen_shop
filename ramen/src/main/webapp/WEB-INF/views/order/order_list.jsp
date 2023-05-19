@@ -179,8 +179,6 @@
 					f.submit();
 				}
 		    }
-		    
-			
 		});
 		
 		$("#btnReset").click(function(){
@@ -191,6 +189,8 @@
 			}
 			
 		});
+		
+		
 	});
 </script>
 <body>
@@ -207,7 +207,6 @@
 				<hr>
 					<table>
 						<thead>
-							<c:if test="${dataCount != 0}">
 								<tr>
 									<th class="item1">상품이미지</th>
 									<th class="item2">품명</th>
@@ -215,7 +214,6 @@
 									<th class="item2">총수량</th>
 									<th class="item1">소계</th>
 								</tr>
-							</c:if>
 						</thead>
 
 						<tbody>
@@ -329,8 +327,8 @@
                         <hr>
                         <table>
                             <tr>
-                                <td>총</td>
-                                <td>${dataCount} 건</td>
+                                <td>총 </td>
+                                <td>${dataCount}건</td>
                             </tr>
                             <tr>
                                 <td>상품금액</td>

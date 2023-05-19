@@ -80,7 +80,7 @@
 
 
         $(function() {
-
+        	
             $("#chkAll").click(function(){
                 if($(this).is(":checked")) {
                     $("input[name=productIds]").prop("checked", true);
@@ -103,6 +103,7 @@
                 }
             });
 
+            // 결제버튼
             $("#btnOrder").click(function(){
                 let cnt = $("input[name=productIds]:checked").length;
 
@@ -110,18 +111,32 @@
                     alert("결제할 물품을 먼저 선택하세요.");
                     return false;
                 }
+                
 
                 if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
                     const f = document.listForm;
                     f.action="${pageContext.request.contextPath}/order/order.do";
                     f.submit();
                 }
+                
             });
 
             //수량 옵션
             $('.count :button').on({
                 'click': function () {
-                    $.fn.checkQuantity(this);
+                	let check = $.fn.checkQuantity(this);
+    				if (!check) {
+                        alert('최대 수량을 넘었습니다.');
+    					return;
+                    }
+
+                    var $count = $(this).parent('.count').find('.quantitys');
+                    var quantity = $count.val();
+                    var $pid = $(this).closest("tr").find('.productIds');
+                    var productId = $pid.val();
+
+                    let url = "${pageContext.request.contextPath}/cart/num_update.do?productId="+ productId +"&quantity="+quantity;
+                    location.href= url;
                 },
             });
 
@@ -141,10 +156,10 @@
                 }else if($(obj).hasClass('plus')){
                     if (currentCount < remain) {
                         currentCount++;
-                        console.log('currentCount = ' + currentCount + ', remain = ' + remain)
-						console.log(currentCount < remain)
+                        //console.log('currentCount = ' + currentCount + ', remain = ' + remain);
+						//console.log(currentCount < remain);
                     } else {
-                        alert("이 상품은 최대 " + remain + "개 까지 구매 가능합니다.")
+                        alert("이 상품은 최대 " + remain + "개 까지 구매 가능합니다.");
                         currentCount = remain;
                     }
                 }
@@ -157,23 +172,6 @@
             }
         });
 
-        $(function(){
-            $(".btnChangeNum").click(function(){
-                let check = $.fn.checkQuantity(this);
-				if (!check) {
-                    alert('최대 수량을 넘었습니다.')
-					return;
-                }
-
-                var $count = $(this).parent('.count').find('.quantitys');
-                var quantity = $count.val();
-                var $pid = $(this).closest("tr").find('.productIds');
-                var productId = $pid.val();
-
-                let url = "${pageContext.request.contextPath}/cart/num_update.do?productId="+ productId +"&quantity="+quantity;
-                location.href= url;
-            });
-        });
 
 	</script>
 </head>
@@ -221,7 +219,6 @@
 											<button type="button" class="minus btn">-</button> 
 											<input type="text" class="quantitys" name= "quantitys" value="${cart.quantity}" style="width:50px; text-align: center"> 
 											<button type="button" class="plus btn">+</button>
-											<button type="button" class= "btnChangeNum btn">수량변경</button>
 										</td>
 										<td class="item2 orderItem count2">${cart.remainQuantity}</td>
 										<td class="item2 orderItem">${cart.price*cart.quantity}</td>
@@ -237,7 +234,7 @@
 		<div>	
 					<c:if test="${dataCount != 0}">
 					<button type="button" class="btn" id="btnDeleteList">삭제</button>
-					<button type="button" class="btn" id="btnOrder">결제</button>
+					<button type="button" class="btn" id="btnOrder" >결제</button>
 					</c:if>
 			</div>
 	</div>

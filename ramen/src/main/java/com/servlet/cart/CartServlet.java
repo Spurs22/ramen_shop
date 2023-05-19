@@ -47,11 +47,14 @@ public class CartServlet extends MyServlet {
 
       // 1) 장바구니를 본다. - 30일 이후 지나면 삭제
       // 2) 장바구니의 물건 수량을 변경한다.
+      // 3) 장바구니의 물건을 삭제한다.
       if (uri.indexOf("list.do") != -1) {
          cartList(req, resp);
       } else if (uri.indexOf("num_update.do") != -1) {
          cartNumUpdate(req, resp);
-      } 
+      } else if(uri.indexOf("list_delete.do")!= -1) {
+    	  cartListDelete(req,resp);
+		}
    }
 
    protected void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -60,8 +63,6 @@ public class CartServlet extends MyServlet {
       SessionInfo info = (SessionInfo) session.getAttribute("member");
 
       CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
-      String cp = req.getContextPath();
-      String message = null;
       
       try {
          // 장바구니 30일 이후 품목 삭제
@@ -73,14 +74,6 @@ public class CartServlet extends MyServlet {
          // 장바구니 총 개수 구하기
          int dataCount = cartRepositoryImpl.getCnt(memberId);
          
-         for (Cart c : list) {
-            // 잔여수량 체크
-            Product product = productService.findProductByProductId(c.getProductId());
-            if(product.getRemainQuantity() < c.getQuantity()) {
-               message = "상품이 품절되었습니다.";
-            }
-         }
-         req.setAttribute("message", message);
          req.setAttribute("list", list);
          req.setAttribute("dataCount", dataCount);
 
@@ -127,6 +120,35 @@ public class CartServlet extends MyServlet {
       }
       resp.sendRedirect(cp + "/cart/list.do");
       
-   }      
+   }
+   
+	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
+		// 3) 장바구니의 물건 리스트를 취소한다.
+		System.out.println("장바구니 리스트 취소");
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String cp = req.getContextPath();
+		
+		try {
+			
+			String[] pi = req.getParameterValues("productIds");
+			long[] products = null;
+			products = new long[pi.length];
+			for(int i=0; i<pi.length; i++) {
+				products[i] = Long.parseLong(pi[i]);
+			}
+			
+			CartRepositoryImpl cri = new CartRepositoryImpl();
+			Long memberId = info.getMemberId();
+			cri.deleteCartList(memberId, products);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp + "/cart/list.do");
+	}
 }   
   

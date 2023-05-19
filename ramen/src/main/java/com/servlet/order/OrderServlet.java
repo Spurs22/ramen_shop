@@ -80,7 +80,7 @@ public class OrderServlet extends MyServlet {
 			
 			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
 			Long totalPrice = 0L;
-			int dataCount = cartRepositoryImpl.getCnt(memberId);
+			Long dataCount= 0L;
 			
 			for (Cart c : list) {
 				// 잔여수량 체크
@@ -90,6 +90,7 @@ public class OrderServlet extends MyServlet {
 				}
 				
 				totalPrice += c.getPrice() * c.getQuantity();
+				dataCount++;
 			}
 
 			req.setAttribute("dataCount", dataCount);
