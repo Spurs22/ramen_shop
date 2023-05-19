@@ -1,6 +1,8 @@
 package com.servlet.mypage;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,10 +14,12 @@ import javax.servlet.http.HttpSession;
 import com.DTO.OrderBundle;
 import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
+import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
+import com.repository.recipe.RecipeCommentRepositoryImpl;
 import com.repository.mypage.MypageOrderRepositoryImpl;
-//import com.repository.recipe.RecipeLikeRepositoryImpl;
+import com.repository.recipe.RecipeLikeRepositoryImpl;
 import com.repository.product.ProductLikeRepositoryImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
@@ -41,27 +45,39 @@ public class MyPageServlet extends MyServlet {
 		
 		if(uri.indexOf("main.do") != -1 ) {
 			main(req, resp);
+			
 		} else if(uri.indexOf("productLikeList.do") != -1) {
 			// 내가 찜한 상품 리스트
 			productLikeList(req, resp);
+			
 		} else if (uri.indexOf("productArticle.do") != -1) {
 			// 상품 상세페이지
 			productArticle(req, resp);
+			
 		} else if (uri.indexOf("recipeLikeList.do") != -1) {
 			// 내가 좋아요 한 조합레시피 리스트
 			recipeLikeList(req, resp);
+			
+		} else if (uri.indexOf("recipe.do") != -1) {
+			// 내가 좋아요 한 레시피 상세페이지
+			recipeArticle(req, resp);
+			
 		} else if (uri.indexOf("recipeBoardMyList.do") != -1) {
 			// 내가 쓴 레시피 리스트
 			recipeBoardMyList(req, resp);
-		} else if (uri.indexOf("recipeArticle.do") != -1) {
-			// 레시피 상세페이지
+			
+		} else if (uri.indexOf("my_recipe_article.do") != -1) {
+			// 내가 쓴 레시피 상세페이지
 			recipeArticle(req, resp);
+			
 		} else if (uri.indexOf("orderMyList.do") != -1) {
 			// 내 주문 리스트
 			orderMyList(req, resp);
+			
 		} else if (uri.indexOf("articleorderlist") != -1) {
 			// 주문 상세 페이지
 			articleorderlist(req, resp);
+			
 		} else if (uri.indexOf("orderCancel.do") != -1) {
 			// 주문 취소
 			orderCancel(req, resp);
@@ -129,12 +145,11 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void productArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 상품 상세 페이지
-		forward(req, resp, "/WEB-INF/views/mypage/productArticle.jsp");
+		forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
 	}
 	
 	protected void recipeLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내가 좋아요 한 조합레시피 리스트
-		/*
 		RecipeLikeRepositoryImpl dao = new RecipeLikeRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
@@ -151,7 +166,7 @@ public class MyPageServlet extends MyServlet {
 				current_page = Integer.parseInt(page);
 			}
 			
-			int dataCount = dao.dataCount();
+			int dataCount = dao.dataCount(info.getMemberId());
 			
 			int size = 5;
 			
@@ -164,7 +179,7 @@ public class MyPageServlet extends MyServlet {
 			int offset = (current_page -1 ) * size;
 			if(offset < 0) offset = 0;
 			
-			List<RecipeBoard> list = dao.findLikeMyPost(memberId, offset, size);
+			List<RecipeBoard> list = dao.findLikePost(info.getMemberId(), offset, size);
 			
 			String listUrl =  cp+ "/mypage/recipeLikeList.do";
 			String articleUrl = cp+ "/mypage/recipeArticle.do?page=" +current_page;
@@ -180,17 +195,92 @@ public class MyPageServlet extends MyServlet {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 		
 		forward(req, resp, "/WEB-INF/views/mypage/recipeLikeList.jsp");
-		*/
+		
 	}
 	
 	protected void recipeArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 레시피 상세 페이지
+		// 좋아요 한 레시피 상세 페이지
+		RecipeBoardRepositoryImpl boarddao = new RecipeBoardRepositoryImpl();
+		RecipeLikeRepositoryImpl likedao = new RecipeLikeRepositoryImpl();
+		RecipeCommentRepositoryImpl commentdao = new RecipeCommentRepositoryImpl();
+		MyUtil util = new MyUtil();
 		
+		String cp = req.getContextPath();
 		
-		forward(req, resp, "/WEB-INF/views/mypage/recipeArticle.jsp");
+		String query = "";
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		try {
+			Long id = Long.valueOf(req.getParameter("id"));
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			
+			if(condition == null) {
+				condition = "all";
+				keyword = "";
+			}
+			
+			keyword = URLDecoder.decode(keyword, "utf-8");
+			
+			if(keyword.length() != 0) {
+				query += "?condtion=" +condition+ "&keyword=" +URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			// 조회수 up
+			boarddao.updateHitCount(id);
+			
+			RecipeBoard dto = boarddao.readRecipe(id);
+			if(dto == null) {
+				resp.sendRedirect(cp+ "/mypage/recipeLikeList.do");
+				return;
+			}
+			
+			List<RecipeProduct> list = dto.getRecipeProduct();
+			for(RecipeProduct product : list) {
+				product.setName(product.getName());
+				product.setQuantity(product.getQuantity());
+			}
+			
+			dto.setContent(util.htmlSymbols(dto.getContent()));
+			
+			boolean likeStatus = false;
+			if(info != null) {
+				likeStatus = ! likedao.isLike(info.getMemberId(), id);
+			}
+			
+			// 이전글 다음글
+			RecipeBoard preReadDto = boarddao.preReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard nextReadDto = boarddao.nextReadRecipe(dto.getId(), condition, keyword);
+			
+			int replyCount = commentdao.countComment(id);
+			
+			String articleUrl = cp+ "/recipe/recipe-info.jsp";
+			
+			req.setAttribute("replyCount", replyCount);
+			
+			req.setAttribute("list", list);
+			req.setAttribute("dto", dto);
+			req.setAttribute("query", query);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
+			req.setAttribute("articleUrl", articleUrl);
+			
+			req.setAttribute("likeStatus", likeStatus);
+			
+			forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+ "/mypage/recipeLikeList.do");
 	}
 	
 	protected void recipeBoardMyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

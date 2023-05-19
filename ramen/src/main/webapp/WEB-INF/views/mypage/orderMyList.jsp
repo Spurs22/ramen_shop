@@ -5,6 +5,7 @@
 	<title>Title</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 
 <style>
 .table-list thead > tr:first-child{ background: #f8f8f8; }
@@ -47,7 +48,7 @@
 						<th class="num">주문번호</th>
 						<th class="delivery">송장번호</th>
 						<th class="date">주문일</th>
-						<th class="receiveName">받는사람</th>
+						<th class="receiveName">주문상태</th>
 						<th class="price">총 금액</th>
 					</tr>
 					</thead>
@@ -56,16 +57,21 @@
 						<c:forEach var="dto" items="${list}" varStatus="status">
 						<tr>
 							<td>${dataCount - (page-1) * size - status.index}
-								<a href="${articleUrl}&id=${dto.id}">&gt;</a>
+								<a href="${articleUrl}&memberId=${dto.memberId}">&gt;</a>
 							</td>
 							<td>${dto.deliveryId}</td>
 							<td>${dto.createdDate}</td>
-							<td>${dto.receiveName}</td>
+							<td>${dto.statusName}</td>
 							<td>${dto.totalPrice}</td>
 						</tr>
 						</c:forEach>
 					</tbody>
 				</table>
+				
+				<div class="page-navigation">
+					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+				</div>
+				
 			</div>
 		</div>
 	</div>
