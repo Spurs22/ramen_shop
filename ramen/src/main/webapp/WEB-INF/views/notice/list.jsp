@@ -27,7 +27,7 @@
 
 </head>
 <script type="text/javascript">
-    let menuIndex = 8
+    let menuIndex = 4
     
     function changeList() {
     	const f = document.listForm;

@@ -16,6 +16,8 @@ public class OrderBundle {
 	
 	private String userEmail;
 	private Long totalPrice;
+	
+	private String statusName;
 
 	private List<OrderItem> orderItems;
 	
@@ -122,6 +124,14 @@ public class OrderBundle {
 
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 	
 	

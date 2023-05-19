@@ -20,7 +20,7 @@
 
 </head>
 <script>
-    let menuIndex = 10
+    let menuIndex = 5
     
     function searchList() {
     	const f = document.searchForm;
@@ -62,7 +62,7 @@
 						<c:forEach var="dto" items="${list}" varStatus="status">
 						<tr>
 							<td>${dataCount - (page-1) * size - status.index} </td>
-							<td class="left">
+							<td class=left>
 								<a href="${articleUrl}&id=${dto.id}">${dto.subject}</a>
 							</td>
 							<td>${dto.createdDate}</td>

@@ -9,11 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.DTO.Product;
+import com.DTO.OrderBundle;
 import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.SessionInfo;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
+import com.repository.mypage.MypageOrderRepositoryImpl;
 //import com.repository.recipe.RecipeLikeRepositoryImpl;
 import com.repository.product.ProductLikeRepositoryImpl;
 import com.util.MyServlet;
@@ -58,6 +59,9 @@ public class MyPageServlet extends MyServlet {
 		} else if (uri.indexOf("orderMyList.do") != -1) {
 			// 내 주문 리스트
 			orderMyList(req, resp);
+		} else if (uri.indexOf("articleorderlist") != -1) {
+			// 주문 상세 페이지
+			articleorderlist(req, resp);
 		} else if (uri.indexOf("orderCancel.do") != -1) {
 			// 주문 취소
 			orderCancel(req, resp);
@@ -137,11 +141,6 @@ public class MyPageServlet extends MyServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
-		if(info == null) {
-			resp.sendRedirect(cp+ "/member/login.do");
-			return;
-		}
-		
 		String cp = req.getContextPath();
 		
 		try {
@@ -204,11 +203,6 @@ public class MyPageServlet extends MyServlet {
 		
 		String cp = req.getContextPath();
 		
-		if(info == null) {
-			resp.sendRedirect(cp+ "/member/login.do");
-			return;
-		}
-		
 		try {
 			
 			String page = req.getParameter("page");
@@ -217,6 +211,7 @@ public class MyPageServlet extends MyServlet {
 				current_page = Integer.parseInt(page);
 			}
 			
+			// dataCount에 memberId이여야 dataCount가
 			int dataCount = dao.dataCount();
 			
 			int size = 5;
@@ -253,9 +248,58 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void orderMyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내 주문 리스트
+		MypageOrderRepositoryImpl dao = new MypageOrderRepositoryImpl();
+		MyUtil util = new MyUtil();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		try {
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if(page != null) {
+				current_page = Integer.parseInt(page);
+			}
+			
+			int dataCount = dao.dataCount(info.getMemberId());
+			
+			int size = 5;
+			int total_page = util.pageCount(dataCount, size);
+			if(current_page > total_page) {
+				current_page = total_page;
+			}
+			
+			int offset = (current_page - 1 ) * size;
+			if (offset < 0) offset = 0;
+			
+			List<OrderBundle> list = dao.findOrderAll(info.getMemberId(), offset, size);
+			
+			String listUrl = cp + "/mypage/orderMyList.do";
+			String articleUrl = cp+ "/mypage/articleorderlist.do?page=" +current_page;
+			
+			String paging = util.paging(current_page, total_page, listUrl);
+			
+			req.setAttribute("list", list);
+			req.setAttribute("page", page);
+			req.setAttribute("total_page", total_page);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("paging", paging);
+			req.setAttribute("size", size);
+			req.setAttribute("articleUrl", articleUrl);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/mypage/orderMyList.jsp");
 	}
 	
-
+	protected void articleorderlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 주문 상세 글보기
+	}
 	
 	protected void orderCancel(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 취소

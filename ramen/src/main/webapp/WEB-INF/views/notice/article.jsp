@@ -12,7 +12,7 @@
 </head>
 
 <script type="text/javascript">
-    let menuIndex = 8
+    let menuIndex = 4
     
     <c:if test="${sessionScope.member.memberId=='1'}">
     function deleteNotice() {

@@ -23,10 +23,11 @@ public class MypageOrderRepositoryImpl implements MypageOrderRepository {
 		
 		try {
 			sql = "SELECT NVL(COUNT(*), 0) FROM order_item WHERE member_id = ?";
-			
-			pstmt.setLong(1, memberId);
+			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
+			
+			pstmt.setLong(1, memberId);
 			
 			if(rs.next()) {
 				result = rs.getInt(1);
@@ -48,18 +49,56 @@ public class MypageOrderRepositoryImpl implements MypageOrderRepository {
 		List<OrderBundle> list = new ArrayList<OrderBundle>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
 			// 주문번호(ob.id), 회원번호(m.id), 송장번호(ob.delivery_id), 결제일(ob.created_date), 받는분(ob.receive_name),
 			// 전화번호(ob.tel), 우편번호(ob.post_num), 주소1(ob.address1), 주소2(ob.address2), 회원이메일(m.email)
-			// 총 결제 금액(sum(oi.final_pirce)
-		} catch (Exception e) {
-			// TODO: handle exception
+			// 주문상태(os.status_name), 총 결제 금액(sum(oi.final_pirce)
+			sb.append("SELECT ob.id, m.id, ob.delivery_id, ob.created_date, ob.receive_name, ");
+			sb.append("   ob.tel, ob.post_num, ob.address1, ob.address2, m.email, os.status_name, SUM(c.final_price) as total_price ");
+			sb.append("   FROM member m ");
+			sb.append("   INNER JOIN order_bundle ob ON m.id = ob.member_id ");
+			sb.append("   INNER JOIN order_item oi ON ob.id = oi.order_id ");
+			sb.append("   INNER JOIN order_status os ON oi.status_id = os.id ");
+			sb.append("   WHERE m.id = ? ");
+			sb.append("   GROUP BY ob.id, m.id, ob.delivery_id, ob.created_date, ob.receive_name, ob.tel, ob.post_num, ob.address1, ob.address3, m.email ");
+			sb.append("   ORDER BY ob.created_date DESC ");
+			sb.append("   OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setLong(1, memberId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				OrderBundle dto = new OrderBundle();
+				
+				dto.setOrderBundleId(rs.getLong("ob.id"));
+				dto.setMemberId(rs.getLong("m.id"));
+				dto.setDeliveryId(rs.getLong("delivery_id"));
+				dto.setCreatedDate(rs.getString("created_Date"));
+				dto.setReceiveName(rs.getString("receive_name"));
+				dto.setTel(rs.getString("tel"));
+				dto.setPostNum(rs.getString("post_num"));
+				dto.setAddress1(rs.getString("address1"));
+				dto.setAddress2(rs.getString("address2"));
+				dto.setUserEmail(rs.getString("email"));
+				dto.setStatusName(rs.getString("status_name"));
+				dto.setTotalPrice(rs.getLong("total_price"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
 		}
 		
-		return null;
+		return list;
 	}
 
 	@Override
