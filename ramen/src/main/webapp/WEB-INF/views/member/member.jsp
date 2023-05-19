@@ -154,7 +154,7 @@ function memberOk() {
             </div>
             <div class="form-group">
               <label for="email">이메일</label>
-              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" value = "${dto.email}">
+              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" value = "${dto.email}" ${mode=="update" ? "readonly='readonly' ":""}>
               <p class="error-message"></p>
             </div>  
             <div class="form-group">
