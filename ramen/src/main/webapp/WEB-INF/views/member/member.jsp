@@ -139,12 +139,12 @@ function memberOk() {
           <form name="memberForm" method="POST">   
             <div class="form-group">
               <label for="name">이름</label>
-              <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value = "${dto.name}">
+              <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value = "${dto.name}" ${mode=="update" ? "readonly='readonly' ":""}>
               <p class="error-message"></p>
             </div>
             <div class="form-group">
               <label for="nickname">닉네임</label>
-              <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value = "${dto.nickName}">
+              <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value = "${dto.nickName}" ${mode=="update" ? "readonly='readonly' ":""}>
               <p class="error-message"></p>
             </div>
             <div class="form-group">
@@ -177,11 +177,11 @@ function memberOk() {
             </div>
                 <div class="form-group">
               <label for="tell">주소2</label>
-              <input type="text" id="address2" name="address2"  placeholder="주소를 입력하세요"value = "${dto.addtess2}" >
+              <input type="text" id="address2" name="address2"  placeholder="주소를 입력하세요"value = "${dto.address2}" >
               <p class="error-message"></p>
             </div>
     
-            <button type="button" onclick="memberOk()">회원가입</button>
+            <button type="button" onclick="memberOk()" >확인</button>
             &nbsp;&nbsp;
             <button type="button" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
           </form>

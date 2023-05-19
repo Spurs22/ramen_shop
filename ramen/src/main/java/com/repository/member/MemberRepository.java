@@ -11,19 +11,19 @@ public interface MemberRepository {
 		Member insertMember(Member member) throws SQLException;
 
 		// 아이디로 찾기 
-		Member findById(Long id) throws SQLException;
+		Member findById(Long memberId) throws SQLException;
 		
 		// 로그인 	
 		public Member loginMember(String email, String password) throws SQLException; 
 		
 		// read Member
-		Member readMember(Member member) throws SQLException;
+		public Member readMember(Long memberId) throws SQLException;
 
 		// 회원 탈퇴
-		int deleteMember(long userId) throws SQLException;
+		int deleteMember(long memberId) throws SQLException;
 		
 		// 회원정보 수정	
-		Member updateMember(Member member) throws SQLException;
+		public Member updateMember(Member member) throws SQLException;
 		
 		// 회원 , 관리자 구분
 		Member Roll(Member member)throws SQLException;

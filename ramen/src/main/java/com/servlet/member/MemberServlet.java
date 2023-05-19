@@ -13,7 +13,7 @@ import com.DTO.Member;
 import com.DTO.SessionInfo;
 import com.repository.member.MemberRepositoryImpl;
 import com.util.MyServlet;
-
+// 라멘 
 @WebServlet("/member/*")
 public class MemberServlet extends MyServlet{
 
@@ -220,20 +220,24 @@ public class MemberServlet extends MyServlet{
 				resp.sendRedirect(cp + "/member/login.do");
 				return;
 			}
-
-			// DB에서 해당 회원 정보 가져오기
-			Member member = new Member();
-			member.setMemberId(Long.parseLong(info.getMemberId().toString()));
-			Member dto = repository.readMember(member);
 			
+			// Long memberId = info.getMemberId(); // memberId를 Long 타입으로 가져옴
+	        Member dto = repository.readMember(info.getMemberId());
+	        
 			if (dto == null) {
 				session.invalidate();
 				resp.sendRedirect(cp + "/");
 				return;
 			}
 
-			String userPwd = req.getParameter("userPwd");
+			String userPwd = req.getParameter("password");
 			String mode = req.getParameter("mode");
+			
+			if(mode == null) {
+	            // mode가 null일 경우 예외 처리
+	            throw new IllegalArgumentException("mode 파라미터가 없어요");
+	        }
+			
 			if (!dto.getPassword().equals(userPwd)) {
 				if (mode.equals("update")) {
 					req.setAttribute("title", "회원 정보 수정");
@@ -274,13 +278,12 @@ public class MemberServlet extends MyServlet{
 	}
 
 	// 회원정보 수정 완료
-	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
-	
+	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {	
+		
 		MemberRepositoryImpl repository = new MemberRepositoryImpl();
 		HttpSession session = req.getSession();
-
 		String cp = req.getContextPath();
+		
 		if (req.getMethod().equalsIgnoreCase("GET")) {
 			resp.sendRedirect(cp + "/");
 			return;
@@ -292,17 +295,21 @@ public class MemberServlet extends MyServlet{
 				resp.sendRedirect(cp + "/member/login.do");
 				return;
 			}
-
+			
 			Member dto = new Member();
-
-			dto.setMemberId(Long.parseLong(req.getParameter("Id"))); 
+			
+			String memberIdParam = req.getParameter("Id");
+	        if (memberIdParam != null && !memberIdParam.isEmpty()) {
+	            dto.setMemberId(Long.parseLong(memberIdParam)); 
+	        }
+	
 			dto.setPassword(req.getParameter("password"));
 			dto.setName(req.getParameter("nickname"));
 			dto.setEmail(req.getParameter("eamil"));
 			dto.setTel(req.getParameter("tel"));
-			dto.setPostNum(req.getParameter("post_num"));
-			dto.setAddress1(req.getParameter("addr1"));
-			dto.setAddress2(req.getParameter("addr2"));
+			dto.setPostNum(req.getParameter("postNum"));
+			dto.setAddress1(req.getParameter("address1"));
+			dto.setAddress2(req.getParameter("address2"));
 
 			repository.updateMember(dto);
 			

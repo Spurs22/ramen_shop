@@ -34,6 +34,7 @@ body {
 
 .members-form .row {
   margin-bottom: 1.5rem;
+  
 }
 
 .members-form label {
@@ -70,6 +71,11 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.member-row{
+   text-align: center;
+   margin-bottom: 1.5rem;  
+}
+
 .info-box {
   text-align: center;
 }
@@ -89,10 +95,10 @@ body {
 function sendOk() {
 	const f = document.pwdForm;
 
-	let str = f.userPwd.value;
+	let str = f.password.value;
 	if(!str) {
 		alert("패스워드를 입력하세요. ");
-		f.userPwd.focus();
+		f.password.focus();
 		return;
 	}
 
@@ -117,18 +123,25 @@ function sendOk() {
 			</div>
 			<div class="info-box">
 				<form name="pwdForm" method="post">
+				    <div class ="member-row">
+				       패스워드를 입력해주세요
+				    </div>
 					<div class="row">
-						<input name="userNickname" type="text" class="form-control" readonly="readonly"
-							value="${sessionScope.member.userNickname}">
+						<input name="memberId" type="text" class="form-control" readonly="readonly"
+							value="${sessionScope.member.memberId}">
 					</div>
 					<div class="row">
 						<input name="password" type="password" class="form-control" placeholder="패스워드">
 					</div>
 					<div class="row">
 						<button type="button" class="btnConfirm" onclick="sendOk();">확인</button>
+						<input type="hidden" name="mode" value="${mode}">
 					</div>
 					<div class="row">
 						<button type="button" class="cancel-btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
+					</div>
+					<div class="row">
+						${message }
 					</div>
 				</form>
 			</div>
