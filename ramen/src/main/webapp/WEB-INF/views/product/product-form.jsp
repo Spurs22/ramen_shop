@@ -135,18 +135,18 @@
 			<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
-					<input class="form-control product-info" id="productName" disabled value="${editBoard == null ? "" : editBoard.product.productId}">
+					<input class="form-control product-info" id="productName" disabled value="${mode == "post" ? "" : editBoard.product.productId}">
 				</div>
 
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
-					<input class="form-control product-info" id="category" disabled value="${editBoard == null ? "" : editBoard.product.category.getLabel()}">
+					<input class="form-control product-info" id="category" disabled value="${mode == "post" ? "" : editBoard.product.category.getLabel()}">
 				</div>
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
-					<input class="form-control product-info" id="quantity" disabled value="${editBoard == null ? "" : editBoard.product.remainQuantity}">
+					<input class="form-control product-info" id="quantity" disabled value="${mode == "post" ? "" : editBoard.product.remainQuantity}">
 				</div>
 			</div>
 
@@ -169,7 +169,7 @@
 				<div class="input-group">
 					<span class="input-group-text">상세 설명</span>
 					<textarea class="form-control" aria-label="With textarea" name="content" id="content">
-						${editBoard == null ? "" : editBoard.content}
+						${mode == "post" ? "" : editBoard.content}
 					</textarea>
 				</div>
 
