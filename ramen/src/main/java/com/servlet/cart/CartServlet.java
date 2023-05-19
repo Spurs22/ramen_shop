@@ -47,14 +47,17 @@ public class CartServlet extends MyServlet {
 
       // 1) 장바구니를 본다. - 30일 이후 지나면 삭제
       // 2) 장바구니의 물건 수량을 변경한다.
-      // 3) 장바구니의 물건을 삭제한다.
+      // 3) 장바구니의 물건 리스트를 삭제한다.
+      // 4) 장바구니의 물건을 삭제한다.
       if (uri.indexOf("list.do") != -1) {
          cartList(req, resp);
       } else if (uri.indexOf("num_update.do") != -1) {
          cartNumUpdate(req, resp);
       } else if(uri.indexOf("list_delete.do")!= -1) {
     	  cartListDelete(req,resp);
-		}
+      } else if(uri.indexOf("delete.do")!= -1) {
+			cartDelete(req,resp);
+      } 
    }
 
    protected void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -148,6 +151,30 @@ public class CartServlet extends MyServlet {
 			e.printStackTrace();
 		}
 		
+		resp.sendRedirect(cp + "/cart/list.do");
+	}
+	
+	protected void cartDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
+		// 4) 장바구니의 물건을 취소한다.
+		System.out.println("장바구니 아이템 취소");
+		
+		CartRepositoryImpl cri = new CartRepositoryImpl();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		try {
+			Long memberId = info.getMemberId();
+			Long productId =Long.parseLong(req.getParameter("productId"));
+			
+			cri.deleteCart(memberId, productId);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		resp.sendRedirect(cp + "/cart/list.do");
 	}
 }   

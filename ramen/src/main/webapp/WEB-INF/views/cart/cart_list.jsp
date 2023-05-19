@@ -89,6 +89,16 @@
                 }
             });
 
+            $("#btnDelete").click(function(){
+                let productId = $(this).parents('.main-container').find('.productIds').val();
+
+                if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
+                    const f = document.listForm;
+                    f.action="${pageContext.request.contextPath}/cart/delete.do?productId="+productId;
+                    f.submit();
+                }
+            });
+
             $("#btnDeleteList").click(function(){
                 let cnt = $("input[name=productIds]:checked").length;
                 if(cnt === 0) {
@@ -98,7 +108,7 @@
 
                 if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
                     const f = document.listForm;
-                    f.action="${pageContext.request.contextPath}/cart/list_delete.do";
+                    f.action="${pageContext.request.contextPath}/cart/delete.do";
                     f.submit();
                 }
             });
@@ -111,6 +121,8 @@
                     alert("결제할 물품을 먼저 선택하세요.");
                     return false;
                 }
+                
+                // 남은 수량과 비교
                 
 
                 if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
@@ -198,6 +210,7 @@
 							<th>총수량</th>
 							<th>남은수량</th>
 							<th>소계</th>
+							<th>삭제</th>
 						</tr>
 					</c:if>
 					
@@ -222,6 +235,7 @@
 										</td>
 										<td class="item2 orderItem count2">${cart.remainQuantity}</td>
 										<td class="item2 orderItem">${cart.price*cart.quantity}</td>
+										<td class="item2 orderItem"><button type="button" class="btn" id="btnDelete">x</button></td>
 									</tr>
 						</c:forEach>
 						
