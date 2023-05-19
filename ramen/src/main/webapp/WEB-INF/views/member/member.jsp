@@ -81,13 +81,13 @@ function memberOk() {
 	const f = document.memberForm;
 	let str;
 		 
- 
-	str = f.name.value;
-	if( !/^[가-힣]{2,5}$/i.test(str) ) { 
-		alert("이름를 다시 입력 하세요. ");
-		f.name.focus();
-		return;
-	}
+  
+	// str = f.name.value;
+	// if( !/^[가-힣]{2,5}$/i.test(str) ) { 
+	//	alert("이름를 다시 입력 하세요. ");
+	//	f.name.focus();
+	//	return;
+	// }
 
 	str = f.nickName.value;
 	if( !str ) { 
@@ -96,12 +96,12 @@ function memberOk() {
 		return;
 	}
 
-	str = f.password.value;
-	if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
-		alert("패스워드를 다시 입력 하세요. ");
-		f.password.focus();
-		return;
-	}
+	//str = f.password.value;
+	//if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
+	//	alert("패스워드를 다시 입력 하세요. ");
+	//	f.password.focus();
+	//	return;
+	//}
 
 	  str = f.email.value.trim();
 	   if( !str ) {
@@ -144,7 +144,7 @@ function memberOk() {
             </div>
             <div class="form-group">
               <label for="nickname">닉네임</label>
-              <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value = "${dto.nickName}" ${mode=="update" ? "readonly='readonly' ":""}>
+              <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value = "${dto.nickName}" >
               <p class="error-message"></p>
             </div>
             <div class="form-group">

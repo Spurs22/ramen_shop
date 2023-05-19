@@ -176,22 +176,21 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 		PreparedStatement pstmt = null;
 		String sql;
-
+		
 		try {
-			sql = "UPDATE member SET name=?, nickname=?, password =?, email =?, tel=?, post_num=?, address1=?, address2=?"
+			sql = "UPDATE member SET nickname=?, password =?, email =?, tel=?, post_num=?, address1=?, address2=?"
 					+ " WHERE id=?";
 
 			pstmt = conn.prepareStatement(sql);
- 
-			pstmt.setString(1, member.getName());
-			pstmt.setString(2, member.getNickName());
-			pstmt.setString(4, member.getPassword());
+    
+			pstmt.setString(1, member.getNickName());
+			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getEmail());	
 			pstmt.setString(4, member.getTel());
 			pstmt.setString(5, member.getPostNum());
 			pstmt.setString(6, member.getAddress1());
 			pstmt.setString(7, member.getAddress2());
-			pstmt.setLong(8, member.getMemberId());
+		    pstmt.setLong(8, member.getMemberId());
 			
 
 			pstmt.executeUpdate();
@@ -240,40 +239,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 		return null;
 	}
-/*
-	@Override
-	public Member readMember(Member member) throws SQLException {
 
-		PreparedStatement pstmt = null;
-		String sql;
-		ResultSet rs = null;
-		try {
-			sql = "SELECT * FROM member WHERE email = ? AND password = ? AND enabled = 1";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getEmail());
-			pstmt.setString(2, member.getPassword());
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				Member foundMember = new Member();
-				foundMember.setMemberId(rs.getLong("memberId"));
-				foundMember.setEmail(rs.getString("email"));
-				foundMember.setPassword(rs.getString("password"));
-				foundMember.setNickName(rs.getString("nickname"));
-				// foundMember.setRoll(rs.getString("roll"));
-				return foundMember;
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		} finally {
-			DBUtil.closeResource(pstmt, rs);
-		}
-		return member;
-
-	}
-*/
 	// 회원 / 관리자 구분
 
 	@Override
@@ -315,8 +281,9 @@ public class MemberRepositoryImpl implements MemberRepository {
 			if(rs.next()) {
 				
 				dto = new Member();
+				dto.setMemberId(rs.getLong("id"));
 				dto.setName(rs.getString("name"));
-				dto.setNickName(rs.getString("nickname"));
+				dto.setNickName(rs.getString("nickName"));
 				dto.setPassword(rs.getString("password"));
 				dto.setEmail(rs.getString("email"));
 				dto.setTel(rs.getString("tel"));

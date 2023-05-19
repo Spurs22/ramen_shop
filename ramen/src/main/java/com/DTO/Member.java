@@ -1,7 +1,7 @@
 package com.DTO;
 public class Member {
 
-	private Long MemberId;
+	private Long MemberId = (long) 0;
 	private String name;
 	private String nickName;
 	private String password;
@@ -14,12 +14,13 @@ public class Member {
     private int enabled;
     private Long roll;
     
+
     
 	public Long getMemberId() {
 		return MemberId;
 	}
 	public void setMemberId(Long memberId) {
-		MemberId = memberId;
+		this.MemberId = memberId;
 	}
 	public String getName() {
 		return name;

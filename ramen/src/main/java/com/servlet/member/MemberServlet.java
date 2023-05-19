@@ -298,14 +298,11 @@ public class MemberServlet extends MyServlet{
 			
 			Member dto = new Member();
 			
-			String memberIdParam = req.getParameter("Id");
-	        if (memberIdParam != null && !memberIdParam.isEmpty()) {
-	            dto.setMemberId(Long.parseLong(memberIdParam)); 
-	        }
-	
+			
+	        dto.setMemberId(info.getMemberId()); 
 			dto.setPassword(req.getParameter("password"));
-			dto.setName(req.getParameter("nickname"));
-			dto.setEmail(req.getParameter("eamil"));
+			dto.setNickName(req.getParameter("nickName"));
+			dto.setEmail(req.getParameter("email"));
 			dto.setTel(req.getParameter("tel"));
 			dto.setPostNum(req.getParameter("postNum"));
 			dto.setAddress1(req.getParameter("address1"));

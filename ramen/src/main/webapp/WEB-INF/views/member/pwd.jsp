@@ -127,7 +127,7 @@ function sendOk() {
 				       패스워드를 입력해주세요
 				    </div>
 					<div class="row">
-						<input name="memberId" type="text" class="form-control" readonly="readonly"
+						<input name="memberId" type="hidden" class="form-control" readonly="readonly"
 							value="${sessionScope.member.memberId}">
 					</div>
 					<div class="row">
