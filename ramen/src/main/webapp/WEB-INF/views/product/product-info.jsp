@@ -260,13 +260,12 @@
 
 
 					<div style="display: flex; flex-direction: column; width: 100%; gap: 5px">
-						<div style="display: flex; flex-direction: row; gap: 5px">
-							<button class="btn btn-success" style="flex: 1" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">장바구니</button>
-							<button class="btn btn-success" style="flex: 1">구매하기</button>
-						</div>
+<%--						<div style="display: flex; flex-direction: row; gap: 5px">--%>
+<%--							<button class="btn btn-success" style="flex: 1" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">장바구니</button>--%>
+<%--							<button class="btn btn-success" style="flex: 1">구매하기</button>--%>
+<%--						</div>--%>
 
-						<div class="collapse" id="collapseExample">
-							<div class="card card-body" style="border: 1px solid black; border-radius: 5px; padding: 10px; margin: 10px 0; gap: 15px; display: flex; flex-direction: column">
+							<div style="border: 1px solid black; border-radius: 5px; padding: 10px; margin: 10px 0; gap: 15px; display: flex; flex-direction: column">
 								<div style="display: flex; flex-direction: row; gap: 5px;  justify-content: right">
 									<button class="btn btn-dark btnChange minus" onclick="$.clickChangeBtn(this)">-</button>
 									<input type="number" id="cartQuantityInput" style="width: 50px; text-align: center" value="1">
@@ -277,9 +276,11 @@
 									10,000 원
 								</div>
 
-								<button class="btn btn-dark" id="addCartBtn">장바구니에 넣기</button>
+								<div class="w-100" style="display: flex; gap: 5px">
+									<button class="btn btn-dark w-50" id="addCartBtn">장바구니</button>
+									<button class="btn btn-dark w-50" id="orderBtn">구매하기</button>
+								</div>
 							</div>
-						</div>
 						<button class="btn btn-secondary w-100">상품이 포함된 레시피 조회</button>
 					</div>
 				</div>
@@ -503,10 +504,11 @@
         };
 
 		$("#addCartBtn").click(function () {
-			if (${memberId == null}) {
-				alert("로그인 후 이용해주세요.")
-				return
-			}
+            if (confirm("로그인 하시겠습니까?")) {
+                return;
+            } else {
+                return;
+            }
 
 			let msg = "상품을 장바구니에 저장합니다."
 
@@ -529,6 +531,35 @@
 
 			ajaxFun(url, "post", qs, "json", fn);
 		});
+
+        $("#orderBtn").click(function () {
+            if (${memberId == null}) {
+                if (confirm("로그인 하시겠습니까?")) {
+					return;
+                } else {
+                    return;
+                }
+            }
+
+            let msg = "상품을 주문합니다."
+
+            if (!confirm(msg)) {
+                return false;
+            }
+
+            let url = "${pageContext.request.contextPath}/order/order.do";
+            let productIds = []
+
+            let id = "${post.product.productId}";
+            productIds.push(id);
+            let quantity = $('#cartQuantityInput').val();
+
+            let qs = "quantity=" + quantity + "&productIds=" + productIds;
+
+            let fullPath = url + '?' + qs
+
+            $(location).attr('href', fullPath);
+        });
     });
 
 

@@ -71,6 +71,8 @@ public class ProductServlet extends MyUploadServlet {
 			}
 		} else if (uri.contains("add-cart")) {
 			addCart(req, resp);
+		} else if (uri.contains("direct-order")) {
+			directOrder(req, resp);
 		}
 	}
 
@@ -335,6 +337,14 @@ public class ProductServlet extends MyUploadServlet {
 
 	protected void commentForm(HttpServletRequest req, HttpServletResponse resp) {
 
+	}
+
+	protected void directOrder(HttpServletRequest req, HttpServletResponse resp) {
+
+
+
+		String path = "/WEB-INF/views/product/product-list.jsp";
+		forward(req, resp, path);
 	}
 
 }
