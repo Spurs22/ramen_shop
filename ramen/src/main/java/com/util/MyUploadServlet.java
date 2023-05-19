@@ -49,8 +49,8 @@ public abstract class MyUploadServlet extends HttpServlet {
 	 * @param pathname	서버에 파일을 저장할 경로
 	 * @return			서버에 저장된 파일명, 클라이언트가 업로드한 파일명
 	 */
-	protected Map<String, String> doFileUpload(Part p, String pathname) throws ServletException, IOException {
-		Map<String, String> map = null;
+	protected List<String> doFileUpload(Part p, String pathname) throws ServletException, IOException {
+		List<String> list = null;
 
 		try {
 			File f = new File(pathname);
@@ -68,16 +68,17 @@ public abstract class MyUploadServlet extends HttpServlet {
 			saveFilename += fileExt;
 
 			String fullpath = pathname + File.separator + saveFilename;
+
+			System.out.println(fullpath);
 			p.write(fullpath);
 
-			map = new HashMap<>();
-			map.put("originalFilename", originalFilename);
-			map.put("saveFilename", saveFilename);
+			list = new ArrayList<>();
+			list.add(saveFilename);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return map;
+		return list;
 	}
 
 	/**

@@ -6,6 +6,7 @@ import com.repository.cart.CartRepositoryImpl;
 import com.repository.product.*;
 import com.service.product.*;
 import com.util.MyServlet;
+import com.util.MyUploadServlet;
 import com.util.SessionUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,15 +17,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @MultipartConfig
 @WebServlet("/product/*")
-public class ProductServlet extends MyServlet {
+public class ProductServlet extends MyUploadServlet {
 
 	CartRepository cartRepository = new CartRepositoryImpl();
 	ProductRepository productRepository = new ProductRepositoryImpl();
@@ -157,17 +160,39 @@ public class ProductServlet extends MyServlet {
 	}
 
 	protected void createPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+		if (memberId == null) {
+			resp.sendRedirect(req.getContextPath() + "/product/list");
+			return;
+		}
+
 		String content = req.getParameter("content");
 		int price = Integer.parseInt(req.getParameter("price"));
 		Long productId = Long.valueOf(req.getParameter("productId"));
-//		req.getParameter("picture");
 
-		Long memberId = SessionUtil.getMemberIdFromSession(req);
+		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
+
+
+		String filename = null;
+		Part picture = req.getPart("picture");
+
+		String path = "/Users/kun/Downloads/sample";
+		List<String> fileNameList = doFileUpload(picture, path);
+
+		if (fileNameList != null) {
+			filename = fileNameList.get(0);
+			System.out.println(filename);
+		}
+
+
+		if (filename != null) {
+			productBoard.setImgList(fileNameList);
+		}
 
 		System.out.println("content");
 		System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
 
-		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
 		productBoardService.createProductPost(productBoard);
 
 		resp.sendRedirect(req.getContextPath() + "/product/list");
@@ -255,6 +280,9 @@ public class ProductServlet extends MyServlet {
 			System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
 
 			ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
+
+			System.out.println(productBoard);
+
 			productBoardService.editPost(productBoard);
 
 			resp.sendRedirect(req.getContextPath() + "/product/post?id=" + productId);
@@ -284,14 +312,15 @@ public class ProductServlet extends MyServlet {
 				return;
 			}
 
-			Long productId = Long.parseLong(req.getParameter("id"));
 			int quantity = Integer.parseInt(req.getParameter("quantity"));
+			Long productId = Long.parseLong(req.getParameter("id"));
 
-			System.out.println("멤버 : " + memberId + ", 상품 아이디" + productId);
+			System.out.println("멤버 : " + memberId + ", 상품 아이디 : " + productId + ", 개수 : " + quantity);
 
 			// 장바구니에 추가
 			cartRepository.createItem(productId, memberId, quantity);
 
+			result = true;
 		} catch (Exception e) {
 			result = false;
 		}

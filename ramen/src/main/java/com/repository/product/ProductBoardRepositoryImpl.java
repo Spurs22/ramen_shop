@@ -68,11 +68,12 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "UPDATE product_board SET content = ? " +
+			sql = "UPDATE product_board SET content = ?, PRICE = ? " +
 					"WHERE id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, productBoard.getContent());
-			pstmt.setLong(2, productBoard.getProduct().getProductId());
+			pstmt.setInt(2, productBoard.getPrice());
+			pstmt.setLong(3, productBoard.getProduct().getProductId());
 			pstmt.executeUpdate();
 
 			// 이미 있던 이미지는?
@@ -195,7 +196,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 					"JOIN order_item oi on oi.id = order_item_id " +
 					"GROUP BY oi.product_id) " +
 					"cm ON p.id = cm.product_id " +
-					"ORDER BY ID DESC";
+					"ORDER BY CREATED_DATE DESC";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
@@ -242,17 +243,16 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 
 			// 카테고리가 없을 때
 			if (category != null && keyword != null) {
-				sql += "WHERE category_id = ? AND INSTR(name, ?) > 0 " +
-						"ORDER BY ID DESC";
+				sql += "WHERE category_id = ? AND INSTR(name, ?) > 0 ";
 			} else if (category == null && keyword == null) {
-				sql += "ORDER BY ID DESC";
+
 			} else if (category == null) {
-				sql += "WHERE INSTR(name, ?) > 0 " +
-						"ORDER BY ID DESC";
+				sql += "WHERE INSTR(name, ?) > 0 ";
 			} else if (keyword == null) {
-				sql += "WHERE category_id = ? " +
-						"ORDER BY ID DESC";
+				sql += "WHERE category_id = ? ";
 			}
+
+			sql += "ORDER BY ID DESC ";
 
 			pstmt = conn.prepareStatement(sql);
 

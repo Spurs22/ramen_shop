@@ -189,7 +189,27 @@
             }
         });
 
+<<<<<<< HEAD
 
+=======
+        $(function(){
+            $(".btnChangeNum").click(function(){
+                let check = $.fn.checkQuantity(this);
+				if (!check) {
+                    alert('최대 수량을 넘었습니다.')
+					return;
+                }
+
+                var $count = $(this).parent('.count').find('.quantitys');
+                var quantity = $count.val();
+                var $pid = $(this).closest("tr").find('.productIds');
+                var productId = $pid.val();
+
+                let url = "${pageContext.request.contextPath}/cart/num_update.do?productId="+ productId +"&quantity="+quantity;
+                location.href= url;
+            });
+        });
+>>>>>>> ea0b488 (상품 장바구니 추가)
 	</script>
 </head>
 <body>

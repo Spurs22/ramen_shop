@@ -168,6 +168,15 @@
             text-shadow: none;
             /*color: rgba(197, 197, 197, 0.67);*/
         }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+
+
 	</style>
 </head>
 <script>
@@ -196,11 +205,11 @@
 
 		<div class="content-container">
 			<div style="display: flex; flex-direction: row; gap: 50px">
-				<div style="width: 50%; background: #c5c5c5; aspect-ratio: 1/1">
-					<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/1.png">
+				<div style="width: 50%; aspect-ratio: 1/1">
+					<img class="w-100" src="${pageContext.request.contextPath}/resource/picture/1.png" style="object-fit: fill">
 				</div>
 
-				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; justify-content: space-between">
+				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; ">
 					<div class="product-createdDate">${post.createdDate}</div>
 					<div class="flex-container">
 						<div style="position: relative">
@@ -252,8 +261,24 @@
 
 					<div style="display: flex; flex-direction: column; width: 100%; gap: 5px">
 						<div style="display: flex; flex-direction: row; gap: 5px">
-							<button class="btn btn-success" style="flex: 1">장바구니</button>
+							<button class="btn btn-success" style="flex: 1" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">장바구니</button>
 							<button class="btn btn-success" style="flex: 1">구매하기</button>
+						</div>
+
+						<div class="collapse" id="collapseExample">
+							<div class="card card-body" style="border: 1px solid black; border-radius: 5px; padding: 10px; margin: 10px 0; gap: 15px; display: flex; flex-direction: column">
+								<div style="display: flex; flex-direction: row; gap: 5px;  justify-content: right">
+									<button class="btn btn-dark btnChange minus" onclick="$.clickChangeBtn(this)">-</button>
+									<input type="number" id="cartQuantityInput" style="width: 50px; text-align: center" value="1">
+									<button class="btn btn-dark btnChange plus" onclick="$.clickChangeBtn(this)">+</button>
+								</div>
+
+								<div style="font-size: 25px; font-weight: 650; width: 100%; text-align: right">
+									10,000 원
+								</div>
+
+								<button class="btn btn-dark" id="addCartBtn">장바구니에 넣기</button>
+							</div>
 						</div>
 						<button class="btn btn-secondary w-100">상품이 포함된 레시피 조회</button>
 					</div>
@@ -418,7 +443,7 @@
         });
     }
 
-    // 게시물 좋아요
+    // 게시물 찜
     $(function () {
         $("#likeBtn").click(function () {
             if (${memberId == null}) {
@@ -446,7 +471,67 @@
 
             ajaxFun(url, "post", qs, "json", fn);
         });
+
+
+        $.checkQuantity = function (cartQuantityInput) {
+            <%--let cartQuantityInput--%>
+            <%--let remainQuantity = ${post.product.remainQuantity};--%>
+
+            console.log(remainQuantity);
+            return cartQuantityInput.val() <= remainQuantity;
+        };
+
+        $.clickChangeBtn = function (obj) {
+            let min = 1;
+            let cartQuantityInput = $('#cartQuantityInput');
+            let remainQuantity = ${post.product.remainQuantity};
+            let changeNum = cartQuantityInput.val();
+
+			if ($(obj).hasClass('plus')) {
+				changeNum++;
+			} else {
+				changeNum--;
+			}
+
+            if (changeNum > remainQuantity) {
+                alert('최대 수량보다 많이 담을 수 없습니다.')
+            } else if (changeNum < min) {
+                alert('1개보다 적게 담을 수 없습니다.')
+            } else {
+                cartQuantityInput.val(changeNum);
+            }
+        };
+
+		$("#addCartBtn").click(function () {
+			if (${memberId == null}) {
+				alert("로그인 후 이용해주세요.")
+				return
+			}
+
+			let msg = "상품을 장바구니에 저장합니다."
+
+			if (!confirm(msg)) {
+				return false;
+			}
+
+			let url = "${pageContext.request.contextPath}/product/add-cart";
+			let id = "${post.product.productId}";
+
+			let quantity = $('#cartQuantityInput').val();
+			let qs = "id=" + id + "&quantity=" + quantity;
+
+			const fn = function (data) {
+				let state = data.state;
+				if (state === true) {
+					alert("장바구니에 저장되었습니다.")
+				}
+			};
+
+			ajaxFun(url, "post", qs, "json", fn);
+		});
     });
+
+
 
 </script>
 
