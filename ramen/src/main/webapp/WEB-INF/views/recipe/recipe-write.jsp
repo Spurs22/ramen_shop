@@ -210,13 +210,6 @@
 					<td colspan="2"><textarea name="content" id="content"></textarea></td>
 				</tr>
 			</table>
-			<table>
-				<tr>
-					<td>봉지라면</td>
-					<td>신라면</td>
-					<td>2</td>
-				</tr>
-			</table>
 		</form>
 		</div>
 		
@@ -337,7 +330,7 @@
 		out += "<td>"+ name +"</td>"	
 		out += "<td class='quantity-cell'>";
 		out += "<button type='button' class='quantity-btn'>&lt;&nbsp;</button>";
-		out += "<span class='quantity-value'><input type='number' class='product-quantity' readonly='readonly'></span>";
+		out += "<span class='quantity-value'><input type='number' class='product-quantity' readonly='readonly' value='1'></span>";
 		out += "<button type='button' class='quantity-btn'>&nbsp;&gt;</button>";
 		out += "<input type='hidden' value='`+productId+`'>"
 		out += "</td>";
@@ -347,10 +340,8 @@
 		out += "</tr>";
 		
 		$(".select-product").append(out);
-		cartarr.put(out);
     }
     
-    let cartarr = [];
 </script>
 </body>
 </html>

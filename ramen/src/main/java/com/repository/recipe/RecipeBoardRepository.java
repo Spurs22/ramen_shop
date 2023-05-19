@@ -44,4 +44,6 @@ public interface RecipeBoardRepository {
 	List<RecipeBoard> readRecipeByLike(String condition, String keyword);
 	
 	List<RecipeBoard> readRecipeByAll(String btnradio, String condition, String keyword);
+	
+	List<RecipeBoard> readRecipeByProduct (Long productId);
 }

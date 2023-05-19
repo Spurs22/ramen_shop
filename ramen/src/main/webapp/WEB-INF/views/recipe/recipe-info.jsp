@@ -310,7 +310,7 @@
 								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled"><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:when>
 							<c:otherwise>
-								<br>장바구니에 담기 <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/member/login.do';"><i class="fa-solid fa-cart-arrow-down"></i></button>
+								<br>장바구니에 담기 <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:otherwise>
 						</c:choose>
 					</td>
