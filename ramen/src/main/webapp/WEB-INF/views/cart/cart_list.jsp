@@ -128,8 +128,8 @@
 			// 수량 체크 함수
             $.fn.checkQuantity = function (obj) {
                 let countEl = $(obj).parent('.count').find('.quantitys');
-                let currentCount = countEl.val();
-                let remain = $(obj).parent().next().text();
+                let currentCount = Number(countEl.val());
+                let remain = Number($(obj).parent().next().text());
 				let result = true;
 
                 let min = 1;
@@ -141,6 +141,8 @@
                 }else if($(obj).hasClass('plus')){
                     if (currentCount < remain) {
                         currentCount++;
+                        console.log('currentCount = ' + currentCount + ', remain = ' + remain)
+						console.log(currentCount < remain)
                     } else {
                         alert("이 상품은 최대 " + remain + "개 까지 구매 가능합니다.")
                         currentCount = remain;
