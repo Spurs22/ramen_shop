@@ -191,7 +191,7 @@
             let url = "${pageContext.request.contextPath}/recipe/add-comment.do";
             let qs = "id=" + id + "&content=" + content;
 
-            const fn = function (data) {
+            const fn = function(data) {
                 $tb.find("textarea").val("");
 
                 let state = data.state;
@@ -205,6 +205,34 @@
         });
     });
     
+    
+    
+    // 댓글 삭제
+    $(function() {
+		$("body").on("click", ".deleteReply", function() {
+			if(! confirm("댓글을 삭제하시겠습니까 ? ")) {
+				return false;
+			}
+			
+			let replyNum = $(this).attr("data-replyNum");
+			
+			let url = "${pageContext.request.contextPath}/recipe/drop-comment.do";
+			let query = "replyNum="+replyNum;
+			
+			const fn = function(data) {
+				let state = data.state;
+				if(state === "true") {
+                	listReplyAnswer(replyNum);
+                } else if (state === "false") {
+                	alert('댓글 삭제 실패');
+                }
+			};
+			
+			ajaxFun(url, "post", query, "json", fn);
+		});
+	});
+    
+    // 댓글 리스트
     function listReplyAnswer(replyNum) {
 		let url = "${pageContext.request.contextPath}/recipe/add-comment_ok.do";
 		let query = "id=${dto.id}";
@@ -306,7 +334,7 @@
 							</c:otherwise>
 						</c:choose>
 						<c:choose>
-							<c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='admin'}">
+							<c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='관리자'}">
 								<button type="button" class="btn"
 										onclick="deleteRecipe();">
 									삭제
@@ -344,7 +372,7 @@
 			<div class="reply">
 				<form name="replyForm" method="post">
 					<div class="form-header">
-						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 ${vo.replyCount}개</span>
+						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 <span id="replyCount">${replyCount}개</span></span>
 					</div>
 
 					<table style="width: 100%">

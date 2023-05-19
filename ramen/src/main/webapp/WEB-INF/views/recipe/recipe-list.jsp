@@ -115,7 +115,7 @@
 					<select name="condition" id="conditionval" class="form-select" style="width: 125px;" onchange="clickCondition();">
 						<option value="all"  			${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 						<option value="nickname" 	    ${condition=="nickname"?"selected='selected'":"" }>작성자</option>
-						<option value="created_date"	${condition=="createdDate"?"selected='selected'":"" }>등록일</option>
+						<%--<option value="created_date"	${condition=="createdDate"?"selected='selected'":"" }>등록일</option> --%>
 						<option value="subject" 		${condition=="subject"?"selected='selected'":"" }>제목</option>
 						<option value="content"			${condition=="content"?"selected='selected'":"" }>내용</option>
 					</select>
@@ -151,21 +151,13 @@
 	let btnradio = document.getElementsByName('btnradio');
 	
 	let selectedBtnradio = 'btnradio1';
-	
-	let condition = document.getElementsByName('condition');
-	
 	let selectedCondition = 'all';
 	
 	function clickBtnradio(button) {
 		selectedBtnradio = button.value
 		getList()
 	}
-	
-	function clickCondition() {
-		selectedCondition = document.getElementById("condition").value;
-		getList()
-	}
-	
+
 	$(document).ready(function() {
 		$("#searchInput").on("input", function() {
 			getList()
@@ -173,14 +165,14 @@
 	});
 	
 	function getList() {
-		let keyword = $('#searchInput').val();
-		var condition = document.getElementById("conditionval").value;
+		let keyword = $('#searchInput').val().trim();
+		let condition = $('#conditionval').val();
 		
 		$.ajax({
 			url: "${pageContext.request.contextPath}/recipe/search.do",
 			type: "GET",
 			dataType: "json",
-			data: {btnradio: selectedBtnradio, condition: selectedCondition, keyword: keyword},
+			data: {btnradio: selectedBtnradio, condition: condition, keyword: keyword},
 			success: function(data) {
 				console.log(data);
 				
