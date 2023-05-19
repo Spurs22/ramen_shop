@@ -1,7 +1,6 @@
 package com.servlet.cart;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,7 +13,6 @@ import com.DTO.Cart;
 import com.DTO.Product;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepositoryImpl;
-import com.repository.order.OrderRepositoryImpl;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
 import com.service.product.ProductService;
@@ -27,9 +25,7 @@ public class CartServlet extends MyServlet {
    private final ProductRepository productRepository = new ProductRepositoryImpl();
    
    private final CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
-   private final OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
    private final ProductService productService = new ProductServiceImpl(productRepository);
-   
    
    @Override
    protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

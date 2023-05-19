@@ -64,7 +64,6 @@ public class OrderServlet extends MyServlet {
 		// 1) 주문 폼
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		String cp = req.getContextPath();
 		String message = null;
 		
 		try {
@@ -112,7 +111,6 @@ public class OrderServlet extends MyServlet {
 
 		OrderBundle orderBundle = new OrderBundle();
 		String cp = req.getContextPath();
-		String message = null;
 		
 		try {
 

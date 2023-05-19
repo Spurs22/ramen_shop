@@ -32,6 +32,11 @@
 		border: 2px solid gray;
 	}
 	
+	input{
+		height: 35px;
+		border : 1px solid gray;
+	}
+	
 	.title{
 		font-weight: bold;
 		font-size: 20px;
@@ -108,7 +113,7 @@
 
                 if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
                     const f = document.listForm;
-                    f.action="${pageContext.request.contextPath}/cart/delete.do";
+                    f.action="${pageContext.request.contextPath}/cart/list_delete.do";
                     f.submit();
                 }
             });
