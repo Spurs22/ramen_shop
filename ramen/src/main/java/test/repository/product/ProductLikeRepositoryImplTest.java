@@ -21,20 +21,4 @@ public class ProductLikeRepositoryImplTest {
 //		}
 	}
 
-	@Override
-	public void createItem(Long productId, Long memberId, int quantity) {
-		List<Cart> list = cartRepository.findCartByMemberId(memberId);
-		boolean result = true;
-		for(Cart c : list) {
-			if(c.getProductId() == productId) {
-				cartRepository.editItem(productId, memberId, quantity);
-				result = false;
-				break;
-			}
-		}
-
-		if (result) {
-			cartRepository.createItem(productId, memberId, quantity);
-		}
-	}
 }
