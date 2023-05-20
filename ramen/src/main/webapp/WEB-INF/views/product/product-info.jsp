@@ -526,6 +526,7 @@
 		$("#addCartBtn").click(function () {
             if (${memberId == null}) {
                 if (confirm("로그인 하시겠습니까?")) {
+                    $(location).attr('href', '${pageContext.request.contextPath}/member/login.do')
                     return;
                 } else {
                     return;
@@ -572,7 +573,7 @@
                 return false;
             }
 
-            let url = "${pageContext.request.contextPath}/order/order.do";
+            let url = "${pageContext.request.contextPath}/order/orderOne.do";
             let productIds = []
 
             let id = "${post.product.productId}";

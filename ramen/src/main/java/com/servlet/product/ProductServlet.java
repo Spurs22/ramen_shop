@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,6 +80,8 @@ public class ProductServlet extends MyUploadServlet {
 			addCart(req, resp);
 		} else if (uri.contains("direct-order")) {
 			directOrder(req, resp);
+		} else if (uri.contains("review-form")) {
+			reviewForm(req, resp);
 		}
 	}
 
@@ -347,6 +350,14 @@ public class ProductServlet extends MyUploadServlet {
 
 	protected void commentForm(HttpServletRequest req, HttpServletResponse resp) {
 
+	}
+
+	protected void reviewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("review-form");
+
+
+		String path = "/WEB-INF/views/product/product-review.jsp";
+		forward(req, resp, path);
 	}
 
 	protected void directOrder(HttpServletRequest req, HttpServletResponse resp) {
