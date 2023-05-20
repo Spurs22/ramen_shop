@@ -110,7 +110,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			for(RecipeProduct recipe : list) {
 				pstmt = conn.prepareStatement(sql);
 				
-				pstmt.setLong(1, recipe.getRecipeId());
+				pstmt.setLong(1, recipeBoard.getRecipeId());
 				pstmt.setLong(2, recipe.getProductId());
 				pstmt.setInt(3, recipe.getQuantity());
 				

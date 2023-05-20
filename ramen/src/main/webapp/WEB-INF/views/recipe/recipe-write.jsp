@@ -323,7 +323,7 @@
 	        url: "${pageContext.request.contextPath}/recipe/${mode}_ok.do",
 	        type: "POST",
 	        dataType: "json",
-	        data: { subject: f.subject.value, content: f.content.value, productIds: productIds, quantities: quantities },
+	        data: { subject: f.subject.value, content: f.content.value, productIds: productIds, quantities: quantities, recipeId: f.id.value },
 	        success: function(data) {
 	        	window.location.href = "${pageContext.request.contextPath}/recipe/recipe-list.do";
 	        },
@@ -331,8 +331,6 @@
 	            console.error(error);
 	        }
 	    });
-		
-		alert(${recipeId});
 	    
 		f.submit();
 	}
