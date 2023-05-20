@@ -20,8 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -176,18 +178,14 @@ public class ProductServlet extends MyUploadServlet {
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
 
+//		String filename = null;
+//		Part picture = req.getPart("picture");
 
-		String filename = null;
-		Part picture = req.getPart("picture");
-
-
-//		String path = ;
 		ServletContext context = getServletContext();
 		String path = context.getRealPath("/resource/picture");
 
 		System.out.println(path);
 
-//		List<String> fileNameList = doFileUpload(picture, path);
 		List<String> fileNameList = doFileUpload(req.getParts(), path);
 
 
@@ -196,7 +194,6 @@ public class ProductServlet extends MyUploadServlet {
 				System.out.println(s);
 			}
 		}
-
 
 		if (fileNameList != null) {
 			productBoard.setImgList(fileNameList);

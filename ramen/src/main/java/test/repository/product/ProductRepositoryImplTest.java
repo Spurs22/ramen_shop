@@ -12,7 +12,7 @@ public class ProductRepositoryImplTest {
 		// 샘플 데이터
 		Product product = new Product(
 				ProductCategory.CUP,
-				"간장게장 볶으면",
+				"박상컵라면",
 				11,
 				null
 		);
