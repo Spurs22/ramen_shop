@@ -15,10 +15,16 @@ import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
 import com.DTO.Product;
 import com.DTO.SessionInfo;
+import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
+import com.repository.order.OrderRepository;
 import com.repository.order.OrderRepositoryImpl;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
+import com.service.cart.CartService;
+import com.service.cart.CartServiceImpl;
+import com.service.order.OrderService;
+import com.service.order.OrderServiceImpl;
 import com.service.product.ProductService;
 import com.service.product.ProductServiceImpl;
 import com.util.MyServlet;
@@ -28,11 +34,14 @@ public class OrderServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private final ProductRepository productRepository = new ProductRepositoryImpl();
+	private final OrderRepository orderRepository = new OrderRepositoryImpl();
 	
-	private final CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
-	private final OrderRepositoryImpl orderRepositoryImpl = new OrderRepositoryImpl();
+	private final CartRepository cartRepository = new CartRepositoryImpl();
+	private final CartService cartService = new CartServiceImpl(cartRepository);
+	
 	private final ProductService productService = new ProductServiceImpl(productRepository);
-
+	private final OrderService orderService = new OrderServiceImpl(orderRepository);
+	
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -77,16 +86,16 @@ public class OrderServlet extends MyServlet {
 
 			long memberId = info.getMemberId();
 			
-			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
+			List<Cart> list = cartService.transferCartList(memberId, products);
 			Long totalPrice = 0L;
 			Long dataCount= 0L;
 			
 			for (Cart c : list) {
-				// 잔여수량 체크
+				/* // 잔여수량 체크
 				Product product = productService.findProductByProductId(c.getProductId());
 				if(product.getRemainQuantity() < c.getQuantity()) {
 					message = "해당 상품이 품절되었습니다.";
-				}
+				}*/
 				
 				totalPrice += c.getPrice() * c.getQuantity();
 				dataCount++;
@@ -133,12 +142,12 @@ public class OrderServlet extends MyServlet {
 				products[i] = Long.parseLong(pi[i]);
 			}
 
-			List<Cart> list = cartRepositoryImpl.transferCartList(memberId, products);
+			List<Cart> list = cartService.transferCartList(memberId, products);
 
 			List <OrderItem> itemlist = new ArrayList<OrderItem>();
 			for (Cart c : list) {
 				OrderItem orderItem = new OrderItem();
-				long oneprice = orderRepositoryImpl.orderPrice(c.getProductId());
+				long oneprice = orderService.orderPrice(c.getProductId());
 				long price = oneprice * c.getQuantity();
 				
 				orderItem.setProductId(c.getProductId());
@@ -149,11 +158,11 @@ public class OrderServlet extends MyServlet {
 				itemlist.add(orderItem);
 			}
 			
-			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle, itemlist);
+			long order_id = orderService.createOrderBundle(orderBundle, itemlist);
 
 			for(Cart c: list) {
 				// 장바구니에서 결제한 물품 초기화
-				cartRepositoryImpl.deleteCart(memberId, c.getProductId());
+				cartService.deleteCart(memberId, c.getProductId());
 				
 				// 잔여수량 체크 
 				// Product product = productService.findProductByProductId(c.getProductId());
@@ -176,8 +185,8 @@ public class OrderServlet extends MyServlet {
 		// // 3) 주문 완료 -> order_ok로 이동
 		try {
 			long orderId = Long.parseLong(req.getParameter("order_id"));
-			long totalPrice = orderRepositoryImpl.orderAllPrice(orderId);
-			List<OrderItem> list2 = orderRepositoryImpl.ListItems(orderId);
+			long totalPrice = orderService.orderAllPrice(orderId);
+			List<OrderItem> list2 = orderService.ListItems(orderId);
 			
 			req.setAttribute("totalPrice", totalPrice);
 			req.setAttribute("orderId", orderId);
