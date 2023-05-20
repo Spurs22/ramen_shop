@@ -160,7 +160,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 					"GROUP BY oi.product_id) " +
 					"cm ON p.id = cm.product_id " +
 					"WHERE pb.id = ? " +
-					"ORDER BY ID DESC";
+					"ORDER BY ID DESC ";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setLong(1, productId);
@@ -170,6 +170,23 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 			if (rs.next()) {
 				result = getProductBoard(rs);
 			}
+
+			DBUtil.closeResource(pstmt, rs);
+
+			sql = "SELECT PICTURE_PATH FROM PRODUCT_BOARD_PICTURE WHERE PRODUCT_BOARD_ID = ? ORDER BY PICTURE_PATH";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, productId);
+
+			rs = pstmt.executeQuery();
+
+			ArrayList<String> imgList = new ArrayList<>();
+
+			while (rs.next()) {
+				imgList.add(rs.getString("picture_path"));
+			}
+
+			if (result != null) result.setImgList(imgList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -299,6 +316,8 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 				rs.getInt("price")
 		);
 	}
+
+
 }
 
 

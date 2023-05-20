@@ -59,7 +59,7 @@
 		.product-content-container {
 			/*background: rgba(241, 241, 241, 0.8);*/
 			border: 1px solid gray;
-			min-height: 800px;
+			/*min-height: 800px;*/
 			padding: 15px;
 			margin-top: 50px;
 		}
@@ -223,7 +223,10 @@
 
 						<div class="product-name">${post.product.name}</div>
 					</div>
-					<div class="product-price">${post.price}<span>원</span></div>
+					<div class="product-price" style="width: 100%; text-align: right" >
+						<span style="font-size: 25px; font-weight: 650;">${post.price}</span>
+						<span>원</span>
+					</div>
 
 					<div class="starBundle-main">
 						<c:set var="rating" value="${post.rating}"/>
@@ -272,8 +275,14 @@
 									<button class="btn btn-dark btnChange plus" onclick="$.clickChangeBtn(this)">+</button>
 								</div>
 
-								<div style="font-size: 25px; font-weight: 650; width: 100%; text-align: right">
-									10,000 원
+								<div style="width: 100%; text-align: right" >
+									<span>남은 수량 : </span>
+									<span style="font-size: 16px;" id="remainQuantity"></span>
+								</div>
+
+								<div style="width: 100%; text-align: right" >
+									<span style="font-size: 25px; font-weight: 650;" id="productPrice"></span>
+									<span>원</span>
 								</div>
 
 								<div class="w-100" style="display: flex; gap: 5px">
@@ -287,7 +296,13 @@
 			</div>
 
 			<div class="product-content-container">
-				<div class="product-content">${post.content}</div>
+				<div class="product-content">
+					<c:forEach var="img" items="${post.imgList}">
+						<img src="${pageContext.request.contextPath}/resource/picture/${img}" style="width: 100%; object-fit: cover">
+					</c:forEach>
+					${post.content}
+				</div>
+
 			</div>
 
 			<div style="font-size: 20px; font-weight: 650; margin-top: 30px">
@@ -375,6 +390,8 @@
 
 <script>
     $(document).ready(function () {
+        $('#productPrice').text(${post.price})
+		$('#remainQuantity').text(${post.product.remainQuantity} - 1)
         selectMenu(menuIndex)
     })
 </script>
@@ -487,6 +504,7 @@
             let cartQuantityInput = $('#cartQuantityInput');
             let remainQuantity = ${post.product.remainQuantity};
             let changeNum = cartQuantityInput.val();
+            let price = ${post.price};
 
 			if ($(obj).hasClass('plus')) {
 				changeNum++;
@@ -500,6 +518,8 @@
                 alert('1개보다 적게 담을 수 없습니다.')
             } else {
                 cartQuantityInput.val(changeNum);
+                $('#productPrice').text(changeNum * price)
+                $('#remainQuantity').text(${post.product.remainQuantity} - changeNum)
             }
         };
 
@@ -561,9 +581,6 @@
             $(location).attr('href', fullPath);
         });
     });
-
-
-
 </script>
 
 </body>

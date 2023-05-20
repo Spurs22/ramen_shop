@@ -156,7 +156,7 @@
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">
 						<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
-							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture">
+							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" multiple="multiple">
 					</div>
 
 					<div class="input-group" style="width: 50%">
@@ -168,9 +168,7 @@
 
 				<div class="input-group">
 					<span class="input-group-text">상세 설명</span>
-					<textarea class="form-control" aria-label="With textarea" name="content" id="content">
-						${mode == "post" ? "" : editBoard.content}
-					</textarea>
+					<textarea class="form-control" aria-label="With textarea" name="content" id="content">${mode == "post" ? "" : editBoard.content}</textarea>
 				</div>
 
 				<input type="hidden" name="formType" value="{mode}">
