@@ -1,12 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<%--
-  Created by IntelliJ IDEA.
-  User: kun
-  Date: 2023/05/14
-  Time: 2:34 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -49,17 +41,17 @@
             height: 200px;
         }
 
-		.product-card {
+        .product-card {
             width: 100%;
             height: 50px;
             display: grid;
             grid-template-columns: 45% 40% 15%;
             border-radius: 5px;
-			text-align: center;
-			padding: 0 5px;
-			align-items: center;
-			border: 1px solid #eaeaea;
-			transition: 0.5s;
+            text-align: center;
+            padding: 0 5px;
+            align-items: center;
+            border: 1px solid #eaeaea;
+            transition: 0.5s;
         }
 
         .product-card-menu {
@@ -73,35 +65,35 @@
             align-items: center;
             border: 1px solid #eaeaea;
             transition: 0.5s;
-			color: white;
+            color: white;
         }
 
-		.product-card-container {
+        .product-card-container {
             display: flex;
             flex-direction: column;
             gap: 10px;
-			width: 100%;
+            width: 100%;
         }
 
-		.product-card:hover {
-			background: #e7e7e7;
+        .product-card:hover {
+            background: #e7e7e7;
             cursor: pointer;
-		}
-
-		.selected-product {
-			height: 100px;
-			border: 1px solid #DFE2E6;
-			border-radius: 8px;
-			margin-top: 20px;
         }
 
-		.product-info {
+        .selected-product {
+            height: 100px;
+            border: 1px solid #DFE2E6;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .product-info {
             text-align: center;
         }
 
-		.input-group {
-			margin-top: 35px;
-		}
+        .input-group {
+            margin-top: 35px;
+        }
 
 	</style>
 </head>
@@ -217,7 +209,7 @@
 <script>
     let submitBtn = document.getElementById('submitButton');
     let form = document.getElementById('form');
-	let categoryInput = document.getElementById('category');
+    let categoryInput = document.getElementById('category');
     let quantityInput = document.getElementById('quantity');
     let productNameInput = document.getElementById('productName');
     let productIdInput = document.getElementById('productId');
@@ -232,7 +224,7 @@
         categoryInput.value = category;
         productNameInput.value = name;
         quantityInput.value = remainQuantity;
-		alert("상품이 선택되었습니다.")
+        alert("상품이 선택되었습니다.")
         modal.hide();
     }
 
