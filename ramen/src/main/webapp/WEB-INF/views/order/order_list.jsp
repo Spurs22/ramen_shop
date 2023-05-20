@@ -168,17 +168,13 @@
 		        return;
 		    }				
 		    
-		    let message = "${message}";
-		    if( message != null ){
-		    	alert(message);
-		    	location.href="${pageContext.request.contextPath}/cart/list.do";
-		    }else {
-		    	if (confirm("결제 하시겠습니까 ?")) {
-					const f = document.orderForm;
-					f.action = "${pageContext.request.contextPath}/order/order_ok.do";
-					f.submit();
-				}
-		    }
+		   
+	    	if (confirm("결제 하시겠습니까 ?")) {
+				const f = document.orderForm;
+				f.action = "${pageContext.request.contextPath}/order/order_ok.do";
+				f.submit();
+			}
+		    
 		});
 		
 		$("#btnReset").click(function(){

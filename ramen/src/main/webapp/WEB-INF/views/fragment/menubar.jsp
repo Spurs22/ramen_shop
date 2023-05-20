@@ -43,6 +43,7 @@
         }
 
         .logo {
+            margin-top: 40px;
             width: 100%;
             height: 50px;
             margin-bottom: 80px;
@@ -81,7 +82,7 @@
        <jsp:include page="/WEB-INF/views/fragment/header.jsp" />
    </div>
 
-    <div class="logo">
+    <div class="logo" onclick="location.href='${pageContext.request.contextPath}/home/'">
         <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo.png">
     </div>
     <div class="menubar">

@@ -72,7 +72,7 @@ public class RecipeCommentRepositoryImpl implements RecipeCommentRepository {
 		String sql;
 		
 		try {
-			sql = "DELETE FROM recipe_comment WHERE id = ?, member_id = ?";
+			sql = "DELETE FROM recipe_comment WHERE id = ? AND member_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			

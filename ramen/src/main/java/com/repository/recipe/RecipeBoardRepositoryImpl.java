@@ -945,7 +945,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		ResultSet rs = null;
 		String sql;
 		List<RecipeBoard> list = new ArrayList<>();
-		System.out.println("repo : "+btnradio+","+condition+","+keyword);
+
 		try {
 			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
 					+ " FROM recipe_board r "
@@ -1048,6 +1048,52 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				list.add(recipe);
 			}
 			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByProduct(Long productId) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "";
+		List<RecipeBoard> list = new ArrayList<>();
+		
+		try {
+			sql = "SELECT r.id, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+					+ " FROM recipe_board r "
+					+ " JOIN recipe_product p ON p.recipe_id = r.id "
+					+ " LEFT OUTER JOIN ( "
+					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount "
+					+ " 	FROM recipe_like "
+					+ "		GROUP BY recipe_id "
+					+ " ) bc ON bc.recipe_id = r.id "
+					+ " WHERE product_id = ? "
+					+ " ORDER BY r.id DESC ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, productId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				RecipeBoard recipeboard = new RecipeBoard();
+				
+				recipeboard.setId(rs.getLong("id"));
+				recipeboard.setSubject(rs.getString("subject"));
+				recipeboard.setHitCount(rs.getInt("hit_count"));
+				recipeboard.setCreatedDate(rs.getString("created_date"));
+				recipeboard.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				
+				list.add(recipeboard);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

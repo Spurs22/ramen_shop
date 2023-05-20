@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.DTO.Cart;
+import com.DTO.Product;
 import com.util.DBConn;
 import com.util.DBUtil;
 
@@ -21,7 +22,7 @@ public class CartRepositoryImpl implements CartRepository{
 		
 		try {
 			sql = "INSERT INTO cart(product_id, member_id, quantity, created_date )"
-					+ " VALUES(?, ?, ?, SYSDATE) "; 
+					+ " VALUES(?, ?, ?, SYSDATE)"; 
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, productId);
@@ -35,6 +36,7 @@ public class CartRepositoryImpl implements CartRepository{
 			DBUtil.closeResource(pstmt);
 		}
 	}
+
 	
 	@Override	// 장바구니 아이템 수정 ( 개수 변경시, 날짜 변경, quantity = 기존양 + num )
 	public void editItem(Long productId, Long memberId, int num) {

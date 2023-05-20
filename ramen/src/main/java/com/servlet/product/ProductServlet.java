@@ -11,6 +11,7 @@ import com.util.SessionUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -19,8 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -71,6 +74,8 @@ public class ProductServlet extends MyUploadServlet {
 			}
 		} else if (uri.contains("add-cart")) {
 			addCart(req, resp);
+		} else if (uri.contains("direct-order")) {
+			directOrder(req, resp);
 		}
 	}
 
@@ -173,20 +178,24 @@ public class ProductServlet extends MyUploadServlet {
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
 
+//		String filename = null;
+//		Part picture = req.getPart("picture");
 
-		String filename = null;
-		Part picture = req.getPart("picture");
+		ServletContext context = getServletContext();
+		String path = context.getRealPath("/resource/picture");
 
-		String path = "/Users/kun/Downloads/sample";
-		List<String> fileNameList = doFileUpload(picture, path);
+		System.out.println(path);
+
+		List<String> fileNameList = doFileUpload(req.getParts(), path);
+
 
 		if (fileNameList != null) {
-			filename = fileNameList.get(0);
-			System.out.println(filename);
+			for (String s : fileNameList) {
+				System.out.println(s);
+			}
 		}
 
-
-		if (filename != null) {
+		if (fileNameList != null) {
 			productBoard.setImgList(fileNameList);
 		}
 
@@ -335,6 +344,15 @@ public class ProductServlet extends MyUploadServlet {
 
 	protected void commentForm(HttpServletRequest req, HttpServletResponse resp) {
 
+	}
+
+	protected void directOrder(HttpServletRequest req, HttpServletResponse resp) {
+		String path = "/WEB-INF/views/product/product-list.jsp";
+		try {
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

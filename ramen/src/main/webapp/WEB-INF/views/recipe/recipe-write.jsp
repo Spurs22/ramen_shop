@@ -90,6 +90,39 @@
             text-align: center;
             color: #F0974E;
         }
+		.table-container {
+			width: 100%;
+		}
+		.quantity-cell {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	
+		.quantity-btn {
+			border: none;
+			background-color: transparent;
+			cursor: pointer;
+		}
+	
+		.delete-btn {
+			border: none;
+			background-color: transparent;
+			color: gray;
+			cursor: pointer;
+		}
+	
+		.delete-btn:hover {
+			color: navy;
+		}
+	
+		.fa-trash-can {
+			font-size: 18px;
+		}
+	
+		.fa-trash-can:hover {
+			transform: scale(1.1);
+		}
 	</style>
 </head>
 <script>
@@ -132,7 +165,7 @@
 	
 			<div class="product-container" id="resultForm">
 				<c:forEach var="post" items="${posts}">
-					<a class="product-item" href="${pageContext.request.contextPath}/recipe/write.do?id=${post.product.productId}">
+					<a class="product-item" onclick="addToCart('${post.product.productId}', '${post.price}', '${post.product.name}')">
 						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 						<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">${post.product.name}</div>
 						<div style="color: #5d5d5d; font-size: 11px;">${post.price}원</div>
@@ -140,20 +173,11 @@
 				</c:forEach>
 			</div>
 			<hr>
-			<div class="cart-box">
-				<table>
-					<tr>
-						<td>봉지라면</td>
-						<td>신라면</td>
-						<td><button type="button">-</button> 2 <button type="button"> + </button></td>
-						<td><button type="button"><i class="fa-solid fa-trash-can"></i></button>
-					</tr>
-				</table>
-			</div>
+			
 			
 		</div>
 		
-		<!-- 구분 -->
+		<%-- 구분 --%>
 		
 		<div class="write-step2" style="display: none;">
 		<form name="recipeForm" method="post">
@@ -167,8 +191,8 @@
 					<td>
 						<div style="display: flex; flex-direction: row; gap: 5px">
 							<button class="btn btn-primary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
-							<c:if test="${mode == 'update' }">
-								<input type="hidden" name="id" value="">
+							<c:if test="${mode == 'update'}">
+								<input type="hidden" name="id" value="${board.id}">
 							</c:if>
 						</div>
 					</td>
@@ -186,14 +210,18 @@
 					<td colspan="2"><textarea name="content" id="content"></textarea></td>
 				</tr>
 			</table>
+		</form>
+		</div>
+		
+		<div class="cart-box">
 			<table>
 				<tr>
-					<td>봉지라면</td>
-					<td>신라면</td>
-					<td>2</td>
+					<th>상품명</th>
+					<th>수량</th>
+					<th>삭제</th>
 				</tr>
+				<tbody class="select-product"></tbody>
 			</table>
-		</form>
 		</div>
 		
 	</div>
@@ -243,11 +271,10 @@
 
                 $.each(data, function(i, post) {
                     let userCardTemplate = `
-                            <a class="product-item" href="${pageContext.request.contextPath}/recipe/write.do?id=` + post.productId + `">
+                    		<a class="product-item" onclick="addToCart(`+post.productId+`, `+post.price+`, '`+post.productName+`')">
 								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 								<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">` + post.productName + `</div>
 								<div style="color: #5d5d5d; font-size: 11px;">` + post.price + `원</div>
-
 							</a>
                         `;
 
@@ -294,6 +321,27 @@
 		f.action = "${pageContext.request.contextPath}/recipe/${mode}_ok.do";
 		f.submit();
 	}
+    
+    
+    function addToCart(productId, price, name) {
+    	let out = "";
+    	
+    	out += "<tr>";
+		out += "<td>"+ name +"</td>"	
+		out += "<td class='quantity-cell'>";
+		out += "<button type='button' class='quantity-btn'>&lt;&nbsp;</button>";
+		out += "<span class='quantity-value'><input type='number' class='product-quantity' readonly='readonly' value='1'></span>";
+		out += "<button type='button' class='quantity-btn'>&nbsp;&gt;</button>";
+		out += "<input type='hidden' value='`+productId+`'>"
+		out += "</td>";
+		out += "<td>";
+		out += "<button type='button' class='delete-btn'><i class='fa-solid fa-trash-can'></i></button>";		
+		out += "</td>";
+		out += "</tr>";
+		
+		$(".select-product").append(out);
+    }
+    
 </script>
 </body>
 </html>

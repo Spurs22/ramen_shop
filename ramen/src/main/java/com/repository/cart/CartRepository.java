@@ -1,6 +1,7 @@
 package com.repository.cart;
 
 import com.DTO.Cart;
+// import com.DTO.Product;
 
 import java.util.List;
 
@@ -13,6 +14,13 @@ public interface CartRepository {
 	 * @param quantity		개수
 	 */
 	void createItem(Long productId, Long memberId, int quantity);
+	
+	/**
+	 * [ 장바구니 아이템 리스트 추가 ( 조합 게시판 ) ]
+	 * @param List<Product>		상품 리스트( 상품코드, 상품명, 상품개수 )
+	 * @param memberId			사용자 아이디
+	 */
+	//void createItemList(Long memberId, List<Product> list);
 
 	/**
 	 * [ 장바구니 아이템 수정 ( 개수 변경시 ) ]

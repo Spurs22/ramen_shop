@@ -108,4 +108,9 @@ public class RecipeBoardServiceImpl implements RecipeBoardService {
 	public List<RecipeBoard> readRecipeByAll(String btnradio, String condition, String keyword) {
 		return recipeBoardRepository.readRecipeByAll(btnradio, condition, keyword);
 	}
+
+	@Override
+	public List<RecipeBoard> readRecipeByProduct(Long productId) {
+		return recipeBoardRepository.readRecipeByProduct(productId);
+	}
 }

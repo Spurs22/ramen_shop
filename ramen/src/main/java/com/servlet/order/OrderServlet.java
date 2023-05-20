@@ -111,7 +111,7 @@ public class OrderServlet extends MyServlet {
 
 		OrderBundle orderBundle = new OrderBundle();
 		String cp = req.getContextPath();
-		
+		String message = null;
 		try {
 
 			long memberId = info.getMemberId();
@@ -150,24 +150,22 @@ public class OrderServlet extends MyServlet {
 			}
 			
 			long order_id = orderRepositoryImpl.createOrderBundle(orderBundle, itemlist);
-			int num = Integer.parseInt(req.getParameter("quantity"));
-	        Long productId = Long.parseLong(req.getParameter("productId"));
+
 			for(Cart c: list) {
 				// 장바구니에서 결제한 물품 초기화
 				cartRepositoryImpl.deleteCart(memberId, c.getProductId());
 				
 				// 잔여수량 체크 
-				Product product = productService.findProductByProductId(c.getProductId());
+				// Product product = productService.findProductByProductId(c.getProductId());
+				// cartRepositoryImpl.editItemNum(c.getProductId(), memberId, c.getQuantity());
 	            
-	            if(product.getRemainQuantity() > c.getQuantity()) { 
-	               cartRepositoryImpl.editItemNum(productId, memberId, num);
-	            }
-				
-				// 품목 삭제
+            	// 품목 삭제
 				productService.editQuantity(c.getProductId(), c.getQuantity());
+				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
+            
 			}
-
-			resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
+			req.setAttribute("message", message);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

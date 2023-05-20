@@ -128,8 +128,10 @@
                 }
                 
                 // 남은 수량과 비교
+				// 총 수량 > 남은 수량 >> alert와 총 수량 = 남은 수량으로
+				
                 
-
+                
                 if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
                     const f = document.listForm;
                     f.action="${pageContext.request.contextPath}/order/order.do";
@@ -173,8 +175,6 @@
                 }else if($(obj).hasClass('plus')){
                     if (currentCount < remain) {
                         currentCount++;
-                        //console.log('currentCount = ' + currentCount + ', remain = ' + remain);
-						//console.log(currentCount < remain);
                     } else {
                         alert("이 상품은 최대 " + remain + "개 까지 구매 가능합니다.");
                         currentCount = remain;
@@ -189,27 +189,7 @@
             }
         });
 
-<<<<<<< HEAD
 
-=======
-        $(function(){
-            $(".btnChangeNum").click(function(){
-                let check = $.fn.checkQuantity(this);
-				if (!check) {
-                    alert('최대 수량을 넘었습니다.')
-					return;
-                }
-
-                var $count = $(this).parent('.count').find('.quantitys');
-                var quantity = $count.val();
-                var $pid = $(this).closest("tr").find('.productIds');
-                var productId = $pid.val();
-
-                let url = "${pageContext.request.contextPath}/cart/num_update.do?productId="+ productId +"&quantity="+quantity;
-                location.href= url;
-            });
-        });
->>>>>>> ea0b488 (상품 장바구니 추가)
 	</script>
 </head>
 <body>

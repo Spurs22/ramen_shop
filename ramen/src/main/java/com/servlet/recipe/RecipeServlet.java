@@ -1,5 +1,6 @@
 package com.servlet.recipe;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
@@ -178,7 +179,7 @@ public class RecipeServlet extends MyUploadServlet {
 			List<RecipeBoard> list = recipeBoardService.readRecipe();
 			req.setAttribute("list", list);
 			
-			System.out.println(list.get(1));
+			System.out.println("레시피 리스트");
 			
 			forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
 	}
@@ -285,11 +286,6 @@ public class RecipeServlet extends MyUploadServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-		if (info == null) {
-			forward(req, resp, "/WEB-INF/views/member/login.jsp");
-			return;
-		}
-		
 		String cp = req.getContextPath();
 		
 		try {
@@ -300,6 +296,9 @@ public class RecipeServlet extends MyUploadServlet {
 				resp.sendRedirect(cp + "/recipe/recipe-list.jsp");
 				return;
 			}
+			
+			List<ProductBoard> posts = productBoardService.findAllPosts();
+			req.setAttribute("posts", posts);
 			
 			req.setAttribute("mode", "update");
 			req.setAttribute("board", board);
@@ -444,9 +443,11 @@ public class RecipeServlet extends MyUploadServlet {
 			RecipeBoard preReadDto = recipeBoardService.preReadRecipe(dto.getId(), condition, keyword);
 			RecipeBoard nextReadDto = recipeBoardService.nextReadRecipe(dto.getId(), condition, keyword);
 			
+			/*
 			int replyCount = recipeCommentService.countComment(id);
 			
 			req.setAttribute("replyCount", replyCount);
+			*/
 			
 			req.setAttribute("list", list);
 			req.setAttribute("dto", dto);
@@ -484,8 +485,6 @@ public class RecipeServlet extends MyUploadServlet {
 			comment.setCotent(req.getParameter("content"));
 			comment.setMemberId(info.getMemberId());
 			
-			System.out.println("id"+id);
-			
 			recipeCommentService.createComment(comment);
 			
 			state = "true";
@@ -503,7 +502,7 @@ public class RecipeServlet extends MyUploadServlet {
 	}
 
 	protected void writeRecipeCommentSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 레시피 리스트
+		// 댓글 리스트
 		
 		try {
 			Long id = Long.parseLong(req.getParameter("id"));
@@ -543,48 +542,28 @@ public class RecipeServlet extends MyUploadServlet {
 	protected void deleteRecipeComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 댓글 삭제
 		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute(""); // 수정
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-		String cp = req.getContextPath();
-		
-		String query = "";
+		String state = "false";
 		
 		try {
-			Long commentId = Long.parseLong(req.getParameter("")); // 수정
-			String condition = req.getParameter("condition");
-			String keyword = req.getParameter("keyword");
-			if(condition == null) {
-				condition = "all";
-				keyword = "";
-			}
+			Long replyNum = Long.parseLong(req.getParameter("replyNum"));
 			
-			keyword = URLDecoder.decode(keyword,"utf-8");
+			recipeCommentService.deleteComment(info.getMemberId(), replyNum);
 			
-			if(keyword.length() != 0) {
-				query += "?condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-			}
-			
-			Long memberId = info.getMemberId();
-			
-			RecipeComment comment = recipeCommentService.readComment(commentId, memberId);
-			
-			if(comment == null) {
-				resp.sendRedirect(cp + "" + query); // 수정
-				return;
-			}
-			
-			if(comment.getMemberId() != info.getMemberId() && ! info.getUserNickname().equals("admin")) {
-				resp.sendRedirect(cp + "" + query); // 수정
-				return;
-			}
-			
-			recipeCommentService.deleteComment(memberId, commentId);
+			state = "true";
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "" + query); // 수정
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
+		
 	}
 
 	protected void likeRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -599,10 +578,8 @@ public class RecipeServlet extends MyUploadServlet {
 		
 		try {
 			Long recipeId = Long.parseLong(req.getParameter("id"));
-			System.out.println("멤버 : " + memberId + ", 게시글 아이디" + recipeId);
 
 			result = recipeLikeService.likeRecipePost(memberId, recipeId);
-			System.out.println(result);
 
 			// 좋아요 개수
 			recipeLikeCount = recipeLikeService.countLike(recipeId);
@@ -624,4 +601,5 @@ public class RecipeServlet extends MyUploadServlet {
 		// 댓글 개수
 		
 	}
+	
 }

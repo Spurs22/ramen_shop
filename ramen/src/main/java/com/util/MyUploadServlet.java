@@ -1,13 +1,10 @@
 package com.util;
 
+import com.sun.jdi.ArrayReference;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -88,8 +85,8 @@ public abstract class MyUploadServlet extends HttpServlet {
 	 * @param pathname	서버에 파일을 저장할 경로
 	 * @return			서버에 저장된 파일명, 클라이언트가 올린 파일명
 	 */
-	protected Map<String, String[]> doFileUpload(Collection<Part> parts, String pathname) throws ServletException, IOException {
-		Map<String, String[]> map = null;
+	protected List<String> doFileUpload(Collection<Part> parts, String pathname) throws ServletException, IOException {
+		List<String> list = null;
 		try {
 			File f = new File(pathname);
 			if (!f.exists()) { // 폴더가 존재하지 않으면
@@ -97,16 +94,12 @@ public abstract class MyUploadServlet extends HttpServlet {
 			}
 
 			String original, save, ext;
-			List<String> listOriginal = new ArrayList<String>();
-			List<String> listSave = new ArrayList<String>();
+			List<String> listOriginal = new ArrayList<>();
+			List<String> listSave = new ArrayList<>();
 
 			for (Part p : parts) {
 				String contentType = p.getContentType();
-/*				
-			      if(contentType != null && contentType.toLowerCase().startsWith("multipart/")) {
-			         // multipart
-			      }				
-*/
+
 				// contentType 가 null 인 경우는 파일이 아닌 경우이다.(<input type="text"... 등)
 				if (contentType != null) { // 파일이면
 					original = getOriginalFilename(p);
@@ -129,19 +122,16 @@ public abstract class MyUploadServlet extends HttpServlet {
 			}
 
 			if (listOriginal.size() != 0) {
-				String[] originals = listOriginal.toArray(new String[listOriginal.size()]);
-				String[] saves = listSave.toArray(new String[listSave.size()]);
+//				String[] originals = listOriginal.toArray(new String[listOriginal.size()]);
+//				String[] saves = listSave.toArray(new String[listSave.size()]);
 
-				map = new HashMap<>();
-
-				map.put("originalFilenames", originals);
-				map.put("saveFilenames", saves);
+				list = listSave;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return map;
+		return list;
 	}
 
 	private String getOriginalFilename(Part p) {
