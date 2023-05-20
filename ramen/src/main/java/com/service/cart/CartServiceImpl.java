@@ -18,12 +18,17 @@ public class CartServiceImpl implements CartService{
 	@Override
 	public void createItem(Long productId, Long memberId, int quantity) {
 		List<Cart> list = cartRepository.findCartByMemberId(memberId);
-		for(Cart c : list) {
+		boolean result = true;
+		
+		for(Cart c: list) {
 			if(c.getProductId() == productId) {
 				cartRepository.editItem(productId, memberId, quantity);
-			}else {
-				cartRepository.createItem(productId, memberId, quantity);
+				result = false;
+				break;
 			}
+		}
+		if(result) {
+			cartRepository.createItem(productId, memberId, quantity);
 		}
 	}
 
