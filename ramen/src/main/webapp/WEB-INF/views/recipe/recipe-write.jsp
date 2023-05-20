@@ -192,7 +192,7 @@
 						<div style="display: flex; flex-direction: row; gap: 5px">
 							<button class="btn btn-primary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
 							<c:if test="${mode == 'update'}">
-								<input type="hidden" name="id" value="${board.id}">
+								<input type="hidden" name="id" value="${recipeId}">
 							</c:if>
 						</div>
 					</td>
@@ -201,15 +201,16 @@
 					<td colspan="2">제목</td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="text" name="subject" value=""></td>
+					<td colspan="2"><input type="text" name="subject" value="${dto.subject}"></td>
 				</tr>
 				<tr>
 					<td colspan="2">내용</td>
 				</tr>
 				<tr>
-					<td colspan="2"><textarea name="content" id="content"></textarea></td>
+					<td colspan="2"><textarea name="content" id="content">${dto.content}</textarea></td>
 				</tr>
 			</table>
+			
 		</form>
 		</div>
 		
@@ -318,21 +319,46 @@
 			return;
 		}
 		
-		f.action = "${pageContext.request.contextPath}/recipe/${mode}_ok.do";
+		$.ajax({
+	        url: "${pageContext.request.contextPath}/recipe/${mode}_ok.do",
+	        type: "POST",
+	        dataType: "json",
+	        data: { subject: f.subject.value, content: f.content.value, productIds: productIds, quantities: quantities },
+	        success: function(data) {
+	        	window.location.href = "${pageContext.request.contextPath}/recipe/recipe-list.do";
+	        },
+	        error: function(xhr, status, error) {
+	            console.error(error);
+	        }
+	    });
+		
+		alert(${recipeId});
+	    
 		f.submit();
 	}
     
+    let addedProducts = [];
     
     function addToCart(productId, price, name) {
+    	// 이미 추가된 상품인지 체크
+    	var isAlreadyAdded = addedProducts.some(function(product) {
+			return product.productId === productId;
+		});
+		
+		if (isAlreadyAdded) {
+			alert('이미 추가된 상품입니다.');
+			return;
+		}
+    	
     	let out = "";
     	
     	out += "<tr>";
 		out += "<td>"+ name +"</td>"	
 		out += "<td class='quantity-cell'>";
 		out += "<button type='button' class='quantity-btn'>&lt;&nbsp;</button>";
-		out += "<span class='quantity-value'><input type='number' class='product-quantity' readonly='readonly' value='1'></span>";
+		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' readonly='readonly' value='1'></span>";
 		out += "<button type='button' class='quantity-btn'>&nbsp;&gt;</button>";
-		out += "<input type='hidden' value='`+productId+`'>"
+		out += "<input type='hidden' name='productId' value='`+productId+`'>"
 		out += "</td>";
 		out += "<td>";
 		out += "<button type='button' class='delete-btn'><i class='fa-solid fa-trash-can'></i></button>";		
@@ -340,7 +366,38 @@
 		out += "</tr>";
 		
 		$(".select-product").append(out);
+		
+		var product = {
+		    productId: productId,
+		    quantity: $('.product-quantity').val()
+		};
+		
+		addedProducts.push(product);
+		
+		makeString();
+		
+		console.log(addedProducts);
     }
+    
+    var productIds
+    var quantities
+    
+    function makeString() {
+    	productIds = addedProducts.map(function(product) {
+	        return product.productId;
+	    }).join(',');
+
+	    quantities = addedProducts.map(function(product) {
+	        return product.quantity;
+	    }).join(',');
+	    
+	    console.log(productIds);
+	}
+    
+    $(document).on("click", ".delete-btn", function() {
+        $(this).closest("tr").remove();
+    });
+    
     
 </script>
 </body>

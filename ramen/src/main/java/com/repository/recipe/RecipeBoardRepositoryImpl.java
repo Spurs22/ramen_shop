@@ -41,13 +41,16 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			
 			sql = "INSERT INTO recipe_product (recipe_id, product_id, quantity) "
 					+ " VALUES (recipe_board_seq.CURRVAL, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
 			
 			for(RecipeProduct recipe : list) {
+				pstmt = conn.prepareStatement(sql);
+				
 				pstmt.setLong(1, recipe.getProductId());
 				pstmt.setInt(2, recipe.getQuantity());
 				
 				pstmt.executeUpdate();
+				pstmt.close();
+				pstmt = null;
 			}
 			
 			conn.commit();
@@ -84,7 +87,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt.setString(1, recipeBoard.getSubject());
 			pstmt.setString(2, recipeBoard.getContent());
 			pstmt.setString(3, recipeBoard.getIpAddress());
-			pstmt.setLong(4, recipeBoard.getId());
+			pstmt.setLong(4, recipeBoard.getRecipeId());
 			pstmt.setLong(5, recipeBoard.getMemberId());
 			
 			pstmt.executeUpdate();
@@ -94,7 +97,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			sql = "DELETE FROM recipe_product WHERE recipe_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, recipeBoard.getId());
+			pstmt.setLong(1, recipeBoard.getRecipeId());
 			
 			pstmt.executeUpdate();
 			
@@ -103,14 +106,18 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			
 			sql = "INSERT INTO recipe_product (recipe_id, product_id, quantity) "
 					+ " VALUES (?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
 				
 			for(RecipeProduct recipe : list) {
+				pstmt = conn.prepareStatement(sql);
+				
 				pstmt.setLong(1, recipe.getRecipeId());
 				pstmt.setLong(2, recipe.getProductId());
 				pstmt.setInt(3, recipe.getQuantity());
 				
 				pstmt.executeUpdate();
+				
+				pstmt.close();
+				pstmt = null;
 			}
 			 	
 			conn.commit();
