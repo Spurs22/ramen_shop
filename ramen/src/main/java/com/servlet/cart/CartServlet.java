@@ -12,9 +12,12 @@ import javax.servlet.http.HttpSession;
 import com.DTO.Cart;
 import com.DTO.Product;
 import com.DTO.SessionInfo;
+import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
+import com.service.cart.CartService;
+import com.service.cart.CartServiceImpl;
 import com.service.product.ProductService;
 import com.service.product.ProductServiceImpl;
 import com.util.MyServlet;
@@ -23,8 +26,9 @@ import com.util.MyServlet;
 public class CartServlet extends MyServlet {
    private static final long serialVersionUID = 1L;
    private final ProductRepository productRepository = new ProductRepositoryImpl();
+   private final CartRepository cartRepository = new CartRepositoryImpl();
    
-   private final CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
+   private final CartService carServiceImpl = new CartServiceImpl(cartRepository);
    private final ProductService productService = new ProductServiceImpl(productRepository);
    
    @Override
@@ -61,17 +65,14 @@ public class CartServlet extends MyServlet {
       HttpSession session = req.getSession();
       SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-      CartRepositoryImpl cartRepositoryImpl = new CartRepositoryImpl();
-      
       try {
-         // 장바구니 30일 이후 품목 삭제
-         cartRepositoryImpl.deleteAutoCart();
-
          Long memberId = info.getMemberId();
-         List<Cart> list = cartRepositoryImpl.findCartByMemberId(memberId);
+         
+         // 해당 멤버의 장바구니 목록 조회
+         List<Cart> list = carServiceImpl.findCartByMemberId(memberId);
 
          // 장바구니 총 개수 구하기
-         int dataCount = cartRepositoryImpl.getCnt(memberId);
+         int dataCount = carServiceImpl.getCnt(memberId);
          
          req.setAttribute("list", list);
          req.setAttribute("dataCount", dataCount);
@@ -95,22 +96,16 @@ public class CartServlet extends MyServlet {
       try {
          Long memberId = info.getMemberId();
          
+         // JSP에서 전달받은 값
          int num = Integer.parseInt(req.getParameter("quantity"));
          Long productId = Long.parseLong(req.getParameter("productId"));
          
-         List<Cart> list = cartRepositoryImpl.findCartByMemberId(memberId);
+         List<Cart> list = carServiceImpl.findCartByMemberId(memberId);
 
          // 장바구니 총 개수 구하기
-         int dataCount = cartRepositoryImpl.getCnt(memberId);
+         int dataCount = carServiceImpl.getCnt(memberId);
          
-         for (Cart c : list) {
-            // 잔여수량 체크
-            Product product = productService.findProductByProductId(c.getProductId());
-            
-            if(product.getRemainQuantity() >= c.getQuantity()) { 
-               cartRepositoryImpl.editItemNum(productId, memberId, num);
-            }
-         }
+         carServiceImpl.editItemNum(productId, memberId, num);
          
          req.setAttribute("dataCount", dataCount);
 
@@ -118,7 +113,6 @@ public class CartServlet extends MyServlet {
          e.printStackTrace();
       }
       resp.sendRedirect(cp + "/cart/list.do");
-      
    }
    
 	protected void cartListDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
@@ -138,9 +132,8 @@ public class CartServlet extends MyServlet {
 				products[i] = Long.parseLong(pi[i]);
 			}
 			
-			CartRepositoryImpl cri = new CartRepositoryImpl();
 			Long memberId = info.getMemberId();
-			cri.deleteCartList(memberId, products);
+			carServiceImpl.deleteCartList(memberId, products);
 			
 			
 		} catch (Exception e) {
@@ -154,8 +147,6 @@ public class CartServlet extends MyServlet {
 		// 4) 장바구니의 물건을 취소한다.
 		System.out.println("장바구니 아이템 취소");
 		
-		CartRepositoryImpl cri = new CartRepositoryImpl();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
@@ -165,7 +156,7 @@ public class CartServlet extends MyServlet {
 			Long memberId = info.getMemberId();
 			Long productId =Long.parseLong(req.getParameter("productId"));
 			
-			cri.deleteCart(memberId, productId);
+			carServiceImpl.deleteCart(memberId, productId);
 			
 			
 		} catch (Exception e) {
