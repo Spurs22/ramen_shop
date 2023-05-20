@@ -18,6 +18,9 @@ public interface OrderService {
 	//[ 상품의 가격 구하기( 품목 ) ]
 	long orderPrice(Long productId);
 	
+	//[ 상품의 이름 구하기( 품목 ) ]
+	String orderName(Long productId);
+	
 	// [ 전체 가격 ]
 	long orderAllPrice(Long orderId);
 	

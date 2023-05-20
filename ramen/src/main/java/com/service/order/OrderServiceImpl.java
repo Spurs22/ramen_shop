@@ -32,6 +32,11 @@ public class OrderServiceImpl implements OrderService{
 	public long orderPrice(Long productId) {
 		return orderRepository.orderPrice(productId);
 	}
+	
+	@Override
+	public String orderName(Long productId) {
+		return orderRepository.orderName(productId);
+	}
 
 	@Override
 	public long orderAllPrice(Long orderId) {

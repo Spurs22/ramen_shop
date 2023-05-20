@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import com.DTO.Cart;
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
-import com.DTO.Product;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
@@ -56,11 +55,14 @@ public class OrderServlet extends MyServlet {
 			return;
 		}
 
-		// 1) 주문 폼
+		// 1-1) 주문 폼
+		// 1-2) 주문 폼 2 ( 상품 단품 구매시 )
 		// 2) 주문 완료
 		// 3) 주문 완료 -> order_ok로 이동
 		if (uri.indexOf("order.do") != -1) {
 			orderForm(req, resp);
+		} else if (uri.indexOf("orderOne.do") != -1) {
+			orderOneForm(req, resp);
 		} else if (uri.indexOf("order_ok.do") != -1) {
 			orderSubmit(req, resp);
 		} else if(uri.indexOf("order_complete.do")!= -1) {
@@ -103,6 +105,37 @@ public class OrderServlet extends MyServlet {
 
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("message", message);
+			req.setAttribute("list", list);
+			req.setAttribute("totalPrice", totalPrice);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		forward(req, resp, "/WEB-INF/views/order/order_list.jsp");
+	}
+	
+	private void orderOneForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 1-1) 주문 폼 2 ( 상품 단품 구매시 )
+		try {
+			Long productIds = Long.parseLong(req.getParameter("productIds"));
+			int quantity = Integer.parseInt(req.getParameter("quantity"));
+			String productName = orderService.orderName(productIds);
+			Long price = orderService.orderPrice(productIds);
+			
+			List<Cart> list = new ArrayList<>();
+			Cart cart = new Cart();
+			cart.setProductId(productIds);
+			cart.setProductName(productName);
+			cart.setPrice(price);
+			cart.setQuantity(quantity);
+			
+			list.add(cart);
+			
+			Long totalPrice = orderService.orderPrice(productIds);
+			Long dataCount = 1L;
+			
+			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("list", list);
 			req.setAttribute("totalPrice", totalPrice);
 
@@ -198,4 +231,6 @@ public class OrderServlet extends MyServlet {
 
 		forward(req, resp, "/WEB-INF/views/order/order_ok.jsp");
 	}
+	
+	
 }
