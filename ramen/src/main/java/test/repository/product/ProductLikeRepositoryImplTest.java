@@ -1,5 +1,6 @@
 package test.repository.product;
 
+import com.DTO.Cart;
 import com.DTO.ProductBoard;
 import com.repository.product.ProductLikeRepository;
 import com.repository.product.ProductLikeRepositoryImpl;
@@ -18,5 +19,22 @@ public class ProductLikeRepositoryImplTest {
 //		for (ProductBoard post : posts) {
 //			System.out.println(post);
 //		}
+	}
+
+	@Override
+	public void createItem(Long productId, Long memberId, int quantity) {
+		List<Cart> list = cartRepository.findCartByMemberId(memberId);
+		boolean result = true;
+		for(Cart c : list) {
+			if(c.getProductId() == productId) {
+				cartRepository.editItem(productId, memberId, quantity);
+				result = false;
+				break;
+			}
+		}
+
+		if (result) {
+			cartRepository.createItem(productId, memberId, quantity);
+		}
 	}
 }

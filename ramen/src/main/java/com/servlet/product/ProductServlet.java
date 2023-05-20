@@ -4,6 +4,8 @@ import com.DTO.*;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
 import com.repository.product.*;
+import com.service.cart.CartService;
+import com.service.cart.CartServiceImpl;
 import com.service.product.*;
 import com.util.MyServlet;
 import com.util.MyUploadServlet;
@@ -38,6 +40,7 @@ public class ProductServlet extends MyUploadServlet {
 	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
 	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
 
+	CartService cartService = new CartServiceImpl(cartRepository);
 	ProductService productService = new ProductServiceImpl(productRepository);
 	ProductBoardService productBoardService = new ProductBoardServiceImpl(productBoardRepository);
 	ProductCommentService productCommentService = new ProductCommentServiceImpl(productCommentRepository);
@@ -327,7 +330,7 @@ public class ProductServlet extends MyUploadServlet {
 			System.out.println("멤버 : " + memberId + ", 상품 아이디 : " + productId + ", 개수 : " + quantity);
 
 			// 장바구니에 추가
-			cartRepository.createItem(productId, memberId, quantity);
+			cartService.createItem(productId, memberId, quantity);
 
 			result = true;
 		} catch (Exception e) {

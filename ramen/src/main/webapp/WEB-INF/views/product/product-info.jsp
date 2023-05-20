@@ -524,10 +524,12 @@
         };
 
 		$("#addCartBtn").click(function () {
-            if (confirm("로그인 하시겠습니까?")) {
-                return;
-            } else {
-                return;
+            if (${memberId == null}) {
+                if (confirm("로그인 하시겠습니까?")) {
+                    return;
+                } else {
+                    return;
+                }
             }
 
 			let msg = "상품을 장바구니에 저장합니다."
@@ -545,7 +547,9 @@
 			const fn = function (data) {
 				let state = data.state;
 				if (state === true) {
-					alert("장바구니에 저장되었습니다.")
+                    if (confirm("장바구니에 저장되었습니다.\n장바구니로 이동하시겠습니까?")) {
+                        $(location).attr('href', '${pageContext.request.contextPath}/cart/list.do')
+                    }
 				}
 			};
 
@@ -555,6 +559,7 @@
         $("#orderBtn").click(function () {
             if (${memberId == null}) {
                 if (confirm("로그인 하시겠습니까?")) {
+                    $(location).attr('href', '${pageContext.request.contextPath}/member/login.do')
 					return;
                 } else {
                     return;
