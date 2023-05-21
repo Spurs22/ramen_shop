@@ -55,12 +55,17 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void editQuantity(Long productId, Integer amount) {
-
+	public boolean isPresentName(String name) {
+		return productRepository.isPresentName(name);
 	}
 
 	@Override
-	public boolean isPresentName(String name) {
-		return productRepository.isPresentName(name);
+	public void subtractQuantity(Long productId, Integer amount) {
+		Integer remainQuantity = productRepository.getProductQuantity(productId);
+		if (remainQuantity >= amount) {
+			productRepository.editQuantity(productId, remainQuantity - amount);
+		} else {
+			throw new RuntimeException();
+		}
 	}
 }

@@ -130,6 +130,7 @@
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
 <%--				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>--%>
+	<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/add-form'">등록</button>
 				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-form'">상품 등록</button>
 			</div>
 		</div>

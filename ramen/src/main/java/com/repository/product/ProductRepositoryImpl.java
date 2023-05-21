@@ -181,7 +181,23 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 	@Override
 	public void editQuantity(Long productId, Integer amount) {
+		PreparedStatement pstmt = null;
+		String sql;
 
+		try {
+			sql = "UPDATE product SET REMAIN_QUANTITY = ? " +
+					"WHERE id = ? ";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, amount);
+			pstmt.setLong(2, productId);
+
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
 	}
 
 	@Override
