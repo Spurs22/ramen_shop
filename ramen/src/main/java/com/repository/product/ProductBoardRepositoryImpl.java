@@ -116,7 +116,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id, p.PICTURE " +
 					"FROM PRODUCT_BOARD pb " +
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
@@ -151,7 +151,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		ProductBoard result = null;
 
 		try {
-			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id, p.PICTURE " +
 					"FROM PRODUCT_BOARD pb " +
 					"JOIN product p ON pb.id = p.id " +
 					"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
@@ -205,7 +205,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id, p.PICTURE " +
 					"FROM PRODUCT_BOARD pb " +
 					"JOIN product p ON pb.id = p.id " +
 					"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
@@ -249,7 +249,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-				sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
+				sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id, p.PICTURE " +
 						"FROM PRODUCT_BOARD pb " +
 						"JOIN product p ON pb.id = p.id " +
 						"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
@@ -305,7 +305,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 						ProductCategory.getByValue(rs.getInt("category_id")),
 						rs.getString("name"),
 						rs.getInt("remain_quantity"),
-						null
+						rs.getString("picture")
 				),
 				rs.getLong("member_id" ),
 				null,

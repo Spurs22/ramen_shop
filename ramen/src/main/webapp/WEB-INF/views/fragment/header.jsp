@@ -14,6 +14,10 @@
         margin-left: 10px;
         color: #000000;
     }
+
+	.header-top {
+		margin-bottom: 20px;
+	}
 </style>
 </head>
 	<div class="header-top">
@@ -21,6 +25,12 @@
 			&nbsp;
 		</div>
 		<div class="header-right">
+			<c:if test="${member != null}">
+<%--				<div style="margin-right: 10px">--%>
+<%--					<span style="font-weight: 650">${member.nickName}</span> 님 환영합니다!--%>
+<%--				</div>--%>
+			</c:if>
+
             <c:if test="${empty sessionScope.member}">
                 <a href="${pageContext.request.contextPath}/member/login.do" title="로그인"><i class="fa-solid fa-arrow-right-to-bracket"></i></a>
 				&nbsp;

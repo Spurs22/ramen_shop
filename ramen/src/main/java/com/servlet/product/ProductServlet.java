@@ -3,15 +3,19 @@ package com.servlet.product;
 import com.DTO.*;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
+import com.repository.member.MemberRepository;
+import com.repository.member.MemberRepositoryImpl;
 import com.repository.product.*;
 import com.service.cart.CartService;
 import com.service.cart.CartServiceImpl;
+import com.service.member.MemberService;
 import com.service.product.*;
 import com.util.MyUploadServlet;
 import com.util.SessionUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -19,6 +23,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -34,6 +39,7 @@ public class ProductServlet extends MyUploadServlet {
 	ProductBoardRepository productBoardRepository = new ProductBoardRepositoryImpl();
 	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
 	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
+	MemberRepository memberRepository = new MemberRepositoryImpl();
 
 	CartService cartService = new CartServiceImpl(cartRepository);
 	ProductService productService = new ProductServiceImpl(productRepository);
@@ -72,8 +78,6 @@ public class ProductServlet extends MyUploadServlet {
 			likeProductBoard(req, resp);
 		} else if (uri.contains("add-cart")) {
 			addCart(req, resp);
-		} else if (uri.contains("direct-order")) {
-			directOrder(req, resp);
 		} else if (uri.contains("review-form")) {
 			reviewForm(req, resp);
 		} else if (uri.contains("add-form")) {
@@ -193,9 +197,6 @@ public class ProductServlet extends MyUploadServlet {
 		Long productId = Long.valueOf(req.getParameter("productId"));
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
-
-//		String filename = null;
-//		Part picture = req.getPart("picture");
 
 		ServletContext context = getServletContext();
 		String path = context.getRealPath("/resource/picture");
@@ -365,15 +366,19 @@ public class ProductServlet extends MyUploadServlet {
 	protected void reviewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("review-form");
 
-
-		String path = "/WEB-INF/views/product/product-review.jsp";
-		forward(req, resp, path);
-	}
-
-	protected void directOrder(HttpServletRequest req, HttpServletResponse resp) {
-		String path = "/WEB-INF/views/product/product-list.jsp";
 		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+			if (memberId == null) {
+				resp.sendRedirect(req.getContextPath() + "/home");
+				return;
+			}
+
+			Member member = memberRepository.readMember(memberId);
+			req.setAttribute("member", member);
+
+			String path = "/WEB-INF/views/product/product-review.jsp";
 			forward(req, resp, path);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -421,14 +426,33 @@ public class ProductServlet extends MyUploadServlet {
 
 
 		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+			if (memberId == null) {
+				resp.sendRedirect(req.getContextPath() + "/product/list");
+				return;
+			}
+
 			ProductCategory category = ProductCategory.getByValue(Integer.parseInt(req.getParameter("category")));
 			int quantity = Integer.parseInt(req.getParameter("quantity"));
 			String name = req.getParameter("name");
 
 
-			new Product(category, name, quantity, null);
+			Product product = new Product(category, name, quantity, null);
 
-//			productRepository.createProduct();
+			ServletContext context = getServletContext();
+			String path = context.getRealPath("/resource/picture");
+
+			Part part = req.getPart("picture");
+
+			String fileName = doFileUpload(part, path);
+
+			System.out.println(fileName);
+			product.setPicture(fileName);
+
+			System.out.println(product);
+
+			productService.createProduct(product);
 
 			resp.sendRedirect(req.getContextPath() + "/product/list");
 		} catch (Exception e) {
@@ -440,6 +464,7 @@ public class ProductServlet extends MyUploadServlet {
 
 	}
 	protected void editProduct(HttpServletRequest req, HttpServletResponse resp) {
+
 
 	}
 	protected void editProductForm(HttpServletRequest req, HttpServletResponse resp) {

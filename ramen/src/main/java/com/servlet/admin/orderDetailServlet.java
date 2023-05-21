@@ -177,26 +177,7 @@ public class orderDetailServlet extends MyServlet{
 			// 게시물 가져오기
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
-			
-			
-			/*
-			// 전체 데이터 개수
-			int dataCount;
-			if (keyword.length() == 0) {
-				dataCount = odri.dataCount();
-			} else {
-				dataCount = odri.dataCount(condition, keyword);
-			}
-			
-			// 전체 페이지 수
-			int size = 5;
-			int total_page = util.pageCount(dataCount, size);
-			if (current_page > total_page) {
-				current_page = total_page;
-			}
-			*/
-
-			
+					
 			String query = "";
 			if (keyword.length() != 0) {
 				query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
@@ -247,9 +228,11 @@ public class orderDetailServlet extends MyServlet{
 	protected void ordermanagementDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 상세페이지
 		// 주문 상세 리스트에서 번들을 꽉 채워서 보여주기
+		MyUtil util = new MyUtil();
+		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-				
+		
 		if (info == null) {
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
@@ -258,16 +241,95 @@ public class orderDetailServlet extends MyServlet{
 		String cp = req.getContextPath();
 		
 		try {
-			
-			int proid = 0;
-			String mode = req.getParameter("mode");
-			if(mode!=null) {
-				proid = Integer.parseInt(mode);
+			// 넘어온 페이지
+			String page = req.getParameter("page"); 
+			int current_page = 1;
+			if(page != null) {
+				current_page = Integer.parseInt(page);
 			}
 			
-			List<OrderStatistics> os = odri.salesStatisticsByProduct(proid);
-		
-			req.setAttribute("os",os);
+			// 검색
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			
+			if(condition == null) { // 전체 주문리스트
+				condition = "all";
+				keyword = "";
+			}
+			
+			// GET 방식인 경우 디코딩
+			if (req.getMethod().equalsIgnoreCase("GET")) {
+				keyword = URLDecoder.decode(keyword, "utf-8");
+			}
+			
+			// 한페이지 표시할 데이터 개수
+			String pageSize = req.getParameter("size");
+			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
+
+			int dataCount, total_page;
+			
+			if (keyword.length() != 0) {
+				dataCount = odri.dataCount(condition, keyword);
+			} else {
+				dataCount = odri.dataCount();
+			}
+			total_page = util.pageCount(dataCount, size);
+
+			if (current_page > total_page) {
+				current_page = total_page;
+			}
+			
+			// 게시물 가져오기
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+					
+			String query = "";
+			if (keyword.length() != 0) {
+				query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			// 페이징처리
+			String listUrl = cp + "/admin/ordermanagement.do" + size;
+			
+			String listDetailUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page + "&size=" + size;
+			if (query.length() != 0) {
+				listUrl += "?" + query;
+				listDetailUrl += "&" + query;
+			}
+			
+			String paging = util.paging(current_page, total_page, listUrl);
+
+			int statusId = 0;
+			String status = req.getParameter("statusId");
+			if(status != null) {
+				statusId = Integer.parseInt(status);
+			}
+			
+			int orderBundleId = 0;
+			String id = req.getParameter("orderBundleId");
+			if(id != null) {
+				orderBundleId = Integer.parseInt(id);
+			}
+			
+			
+			OrderBundle orderBundlelist;
+			if (keyword.length() != 0) {
+				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, statusId, orderBundleId);
+			} else {
+				orderBundlelist = odri.findOrderDetail(offset, size, statusId, orderBundleId);
+			}
+			
+			// ordermanagement.jsp에 넘겨줄 데이터		
+			req.setAttribute("orderBundlelist", orderBundlelist);
+			req.setAttribute("page", current_page);
+			req.setAttribute("total_page", total_page);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("size", size);
+			req.setAttribute("articleUrl", listDetailUrl);
+			req.setAttribute("paging", paging);
+			req.setAttribute("condition", condition);
+			req.setAttribute("keyword", keyword);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
