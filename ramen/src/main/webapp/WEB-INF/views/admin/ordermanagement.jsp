@@ -57,8 +57,8 @@
 						<!-- 검색 폼 -->
 						<form name="searchForm" action="${pageContext.request.contextPath}/admin/ordermanagement.do" method="post">
 							<select name="condition" class="form-select">
-								<option value="email" ${condition=="email"?"selected='selected'":"" }>회원</option>
-								<option value="orderbundleid"  ${condition=="orderbundleid"?"selected='selected'":"" }>주문번호</option>
+								<option value="userEmail" ${condition=="userEmail"?"selected='selected'":""}>회원</option>
+								<option value="orderBundleId" ${condition=="orderBundleId"?"selected='selected'":""}>주문번호</option>
 							</select>
 							
 							<div>
@@ -103,8 +103,9 @@
 				<tbody>
 					<c:forEach var="orderBundle" items="${orderBundlelist}" >
 						<tr>
-		
-							<td>${orderBundle.orderBundleId}</td>
+							<td >
+								<a href="${articleUrl}&num=${orderBundle.orderBundleId}" class="text-reset">${orderBundle.orderBundleId}</a>
+							</td>
 							<td>${orderBundle.createdDate}</td>
 							<td>${orderBundle.userEmail}</td>
 							<td>${orderBundle.tel}</td>
@@ -116,7 +117,7 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			<!-- 페이징하기 -->${paging }
+			<!-- 페이징하기 -->${paging}
 		</div>
 	</div>
 </div>

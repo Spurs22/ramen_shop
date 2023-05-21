@@ -125,7 +125,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
-			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
 			
 			// status 상태조건, condition 검색조건
@@ -214,7 +214,7 @@ private Connection conn = DBConn.getConnection();
 		
 		try {
 			// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 우편번호, 주소1, 주소2, 주문상태, 송장번호, 합계
-			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email useremail, b.tel, ");
+			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email, b.tel, ");
 			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, ");
 			sb.append(" d.status_name, b.delivery_id, NVL(tot,0) tot ");
 			sb.append(" FROM member a ");
@@ -253,8 +253,6 @@ private Connection conn = DBConn.getConnection();
 				ob.setCreatedDate(rs.getString("created_date"));
 				ob.setUserEmail(rs.getString("email"));
 				ob.setTel(rs.getString("tel"));
-				ob.setMemberId(rs.getLong("memberid"));
-				ob.setDeliveryId(rs.getLong("delivery_id"));
 				ob.setReceiveName(rs.getString("receive_name"));
 				ob.setPostNum(rs.getString("post_num"));
 				ob.setAddress1(rs.getString("address1"));
@@ -270,6 +268,7 @@ private Connection conn = DBConn.getConnection();
 			rs = null;
 			
 			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
+			// 주문번호, 주문상세번호, 상품명, 단가, 수량, 상품별합계, 주문상태명, 우편번호, 주소1, 주소2
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
 			sb.append(" c.price, c.final_price, d.name, e.status_name ");

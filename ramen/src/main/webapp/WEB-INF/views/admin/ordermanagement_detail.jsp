@@ -7,8 +7,13 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-
+		.whole-container{
+		
+		}
 	</style>
+	<script>
+
+	</script>
 </head>
 <script>
     let menuIndex = 6
@@ -34,37 +39,47 @@
 			<table class="table table-border table-list">
 				<thead>
 					<tr>
-						<th class="orderBundleId">주문번호</th>
-						<th class="deliveryId">송장번호</th>
-						<th class="createdDate">주문일</th>
-						<th class="receiveName">받는분</th>
-						<th class="tel">전화번호</th>
-						<th class="postNum">우편번호</th>
-						<th class="address1">주소1</th>
-						<th class="address2">주소2</th>
-						<th class="userEmail">사용자이메일</th>
+						<td class="orderBundleId">주문번호</td>
+						<td class="createdDate">주문일</td>
+						<td class="deliveryId">송장번호</td>
+						<td class="receiveName">받는분</td>
+						<td class="tel">전화번호</td>
+						<td class="postNum">우편번호</td>
+						<td class="address1">주소1</td>
+						<td class="address2">주소2</td>
+						<td class="userEmail">사용자이메일</td>
+						<td class="userEmail">주문상태</td>
+					</tr>
+					<tr>
+						<td>${orderBundlelist.orderBundleId}</td>
+						<td>${orderBundlelist.createdDate}</td>
+						<td>${orderBundlelist.deliveryId}</td>
+						<td>${orderBundlelist.receiveName}</td>
+						<td>${orderBundlelist.tel}</td>
+						<td>${orderBundlelist.postNum}</td>
+						<td>${orderBundlelist.address1}</td>
+						<td>${orderBundlelist.address2}</td>
+						<td>${orderBundlelist.userEmail}</td>
+						<td>${orderBundlelist.statusName}</td>
 					</tr>
 				</thead>
 				
 				<tbody>
-					<c:forEach var="orderBundle" items="${list}" varStatus="status"> <!-- list수정 필요 -->
+					<tr>
+						<th class="orderItemId">주문상세번호</th>
+						<th class="productName">상품명</th>
+						<th class="price">가격</th>
+						<th class="quantity">수량</th>
+						<th class="finalPrice">합계</th>
+					</tr>
+					
+					<c:forEach var="orderBundle" items="${orderBundlelist}">
 						<tr>
-							<td>${dataCount - (page-1) * size - status.index}</td>
-							<!--
-							<td class="left">
-								<a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
-							</td>
-							  -->
-							<td>${ob.orderBundleId}</td>
-							<td>${ob.deliveryId}</td>
-							<td>${ob.createdDate}</td>
-							<td>${ob.receiveName}</td>
-							<td>${ob.tel}</td>
-							<td>${ob.postNum}</td>
-							<td>${ob.address1}</td>
-							<td>${ob.address2}</td>
-							<td>${ob.userEmail}</td>
-							<!-- orderitem 출력하기.. List 출력 -->
+							<td>${orderBundle.orderItemId}</td>
+							<td>${orderBundle.productName}</td>
+							<td>${orderBundle.price}</td>
+							<td>${orderBundle.quantity}</td>
+							<td>${orderBundle.finalPrice}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -72,22 +87,12 @@
 
 			<table class="table">
 				<tr>
-					<td width="100">
-						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/list.do';" title="새로고침"><i class="fa-solid fa-arrow-rotate-right"></i></button>
-					</td>
-					<td align="center">
-						<form name="searchForm" action="${pageContext.request.contextPath}/admin/ordermanagement.do" method="post">
-							<select name="condition" class="form-select">
-								<option value="userEmail" ${condition=="userEmail"?"selected='selected'":"" }>회원</option>
-								<option value="statusId"  ${condition=="statusId"?"selected='selected'":"" }>주문상태</option>
-								<option value="orderItmeId"  ${condition=="orderItmeId"?"selected='selected'":"" }>주문번호</option>
-							</select>
-							<input type="text" name="keyword" value="${keyword}" class="form-control">
-							<button type="button" class="btn" onclick="searchList();">검색</button>
-						</form>
+					<td class="text-end">
+							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?${query}';">리스트</button>
 					</td>
 				</tr>
 			</table>
+			${paging}
 		</div>
 	</div>
 </div>
