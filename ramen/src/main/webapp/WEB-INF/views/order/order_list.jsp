@@ -114,81 +114,7 @@
 
 	</style>
 </head>
-<script>
-	// let menuIndex = 5
 
-	$(function() {
-		
-		$("#btnOrder").click(function() {
-			const f = document.orderForm;
-
-			// 이름 2-5자 체크
-			let str;
-			str = f.receiveName.value;
-			if (!/^[가-힣]{2,5}$/.test(str)) {
-				alert("이름을 다시 입력하세요.");
-				f.receiveName.focus();
-				return;
-			}
-
-			// 배송지 체크
-			str = f.zip.value;
-			if (!str) {
-				alert("배송지를 입력하세요.");
-				daumPostcode();
-				return;
-			}
-
-			str = f.zip2.value;
-			if (!str) {
-				alert("상세주소를 입력하세요.");
-				f.zip3.focus();
-				return;
-			}
-
-			// 전화번호 체크
-			str = f.tel1.value;
-			if (!str) {
-				alert("전화번호를 입력하세요. ");
-				f.tel1.focus();
-				return;
-			}
-			
-		    str = f.tel2.value;
-		    if( !/^\d{3,4}$/.test(str) ) {
-		        alert("숫자[3-4자리]만 가능합니다. ");
-		        f.tel2.focus();
-		        return;
-		    }
-
-		    str = f.tel3.value;
-		    if( !/^\d{4}$/.test(str) ) {
-		    	alert("숫자[4자리]만 가능합니다. ");
-		        f.tel3.focus();
-		        return;
-		    }				
-		    
-		   
-	    	if (confirm("결제 하시겠습니까 ?")) {
-				const f = document.orderForm;
-				f.action = "${pageContext.request.contextPath}/order/order_ok.do";
-				f.submit();
-			}
-		    
-		});
-		
-		$("#btnReset").click(function(){
-			if(confirm("다시 입력 하시겠습니까 ?")){
-				return true;
-			}else{
-				return false;
-			}
-			
-		});
-		
-		
-	});
-</script>
 <body>
 	<div class="whole-container">
 
@@ -352,6 +278,78 @@
 		</div>
 	</div>
 
+<script>
+
+	$(function() {
+		$("#btnOrder").click(function() {
+			const f = document.orderForm;
+
+			// 이름 2-5자 체크
+			let str;
+			str = f.receiveName.value;
+			if (!/^[가-힣]{2,5}$/.test(str)) {
+				alert("이름을 다시 입력하세요.");
+				f.receiveName.focus();
+				return;
+			}
+
+			// 배송지 체크
+			str = f.zip.value;
+			if (!str) {
+				alert("배송지를 입력하세요.");
+				daumPostcode();
+				return;
+			}
+
+			str = f.zip2.value;
+			if (!str) {
+				alert("상세주소를 입력하세요.");
+				f.zip3.focus();
+				return;
+			}
+
+			// 전화번호 체크
+			str = f.tel1.value;
+			if (!str) {
+				alert("전화번호를 입력하세요. ");
+				f.tel1.focus();
+				return;
+			}
+			
+		    str = f.tel2.value;
+		    if( !/^\d{3,4}$/.test(str) ) {
+		        alert("숫자[3-4자리]만 가능합니다. ");
+		        f.tel2.focus();
+		        return;
+		    }
+
+		    str = f.tel3.value;
+		    if( !/^\d{4}$/.test(str) ) {
+		    	alert("숫자[4자리]만 가능합니다. ");
+		        f.tel3.focus();
+		        return;
+		    }		
+		    
+		   
+	    	if (confirm("결제 하시겠습니까 ?")) {
+				const f = document.orderForm;
+				f.action = "${pageContext.request.contextPath}/order/order_ok.do";
+				f.submit();
+			}
+		});
+		
+		$("#btnReset").click(function(){
+			if(confirm("다시 입력 하시겠습니까 ?")){
+				return true;
+			}else{
+				return false;
+			}
+			
+		});
+		
+		
+	});
+</script>
 	<script>
 		$(document).ready(function() {
 			selectMenu(menuIndex)

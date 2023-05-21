@@ -278,7 +278,6 @@
                 	let qs = "productId="+ productId +"&quantity="+quantity
                 	
                 	const fn = function(){
-                		alert("성공~!");
                 	}
 
                     
@@ -315,8 +314,7 @@
                 return result;
             }
         });
-
-
+      
 	</script>
 </body>
 </html>

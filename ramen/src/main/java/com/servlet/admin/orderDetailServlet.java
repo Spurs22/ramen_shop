@@ -111,13 +111,74 @@ public class orderDetailServlet extends MyServlet{
 		String cp = req.getContextPath();
 		
 		try {
-			OrderItem odi = new OrderItem();
+			// 넘어온 페이지
+			String page = req.getParameter("page"); 
+			int current_page = 1;
+			if(page != null) {
+				current_page = Integer.parseInt(page);
+			}
 			
-			//odi.setStatusId(2);
+			// 한페이지 표시할 데이터 개수
+			String pageSize = req.getParameter("size");
+			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
+
+			int dataCount, total_page;
+			
+			dataCount = odri.dataCount();
+			
+			total_page = util.pageCount(dataCount, size);
+
+			if (current_page > total_page) {
+				current_page = total_page;
+			}
+			
+			// 게시물 가져오기
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+					
+			String query = "";
+			
+			// 페이징처리
+			String listUrl = cp + "/admin/deliverymanagement.do";
+			
+			String listDetailUrl = cp + "/admin/deliverymanagement.do?page=" + current_page;
+			if (query.length() != 0) {
+				listUrl += "?" + query;
+				listDetailUrl += "&" + query;
+			}
+			
+			String paging = util.paging(current_page, total_page, listUrl);
+
+			int orderId = 0;
+			String id = req.getParameter("orderId");
+			if(id != null) {
+				orderId = Integer.parseInt(id);
+			}
+			int statusId = 0;
+			String status = req.getParameter("statusId");
+			if(status != null) {
+				statusId = Integer.parseInt(status);
+			}
+			
+	
+			List<OrderBundle> orderBundlelist;
+			
+			orderBundlelist = odri.findOrderAll(offset, size, statusId);
+			
+			// ordermanagement.jsp에 넘겨줄 데이터		
+			req.setAttribute("orderBundlelist", orderBundlelist);
+			req.setAttribute("page", current_page);
+			req.setAttribute("total_page", total_page);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("size", size);
+			req.setAttribute("articleUrl", listDetailUrl);
+			req.setAttribute("paging", paging);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//resp.sendRedirect(cp + "/board/deliverymanagement.do?page=" + page);
+		//resp.sendRedirect(cp + "/admin/deliverymanagement.do?page=" + page);
+		forward(req,resp,"/WEB-INF/views/admin/deliverymanagement.jsp");
 		
 	}
 	
@@ -227,7 +288,6 @@ public class orderDetailServlet extends MyServlet{
 	}
 	protected void ordermanagementDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 상세페이지
-		// 주문 상세 리스트에서 번들을 꽉 채워서 보여주기
 		MyUtil util = new MyUtil();
 		
 		HttpSession session = req.getSession();
@@ -313,6 +373,7 @@ public class orderDetailServlet extends MyServlet{
 			
 			
 			OrderBundle orderBundlelist;
+			
 			if (keyword.length() != 0) {
 				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, statusId, orderBundleId);
 			} else {

@@ -27,9 +27,8 @@ private Connection conn = DBConn.getConnection();
 
 		try {
 			sql = "UPDATE order_bundle "
-					+ " SET delivery_id = ? "
-					+ " WHERE id = ?" ;
-			//UPDATE shipments SET status = '배송중' WHERE invoice_number = '송장번호';
+					+ " SET status_id = 2  "
+					+ " WHERE delivery_id = ?" ;
 			pstmt = conn.prepareStatement(sql);
 			 
 			pstmt.setLong(1, deliveryId);

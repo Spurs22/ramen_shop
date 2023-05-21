@@ -152,7 +152,6 @@ public class CartServlet extends MyServlet {
         	 cartService.editItemNum(productId, memberId, num);
          }
          
-         
          req.setAttribute("dataCount", dataCount);
 
       } catch (Exception e) {
