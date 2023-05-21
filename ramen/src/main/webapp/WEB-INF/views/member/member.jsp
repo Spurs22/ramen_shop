@@ -35,7 +35,7 @@
   }
   
   .sign-up input[type="text"],
- 
+  .sign-up input[type="password"],
   select {
    width: 100%;
    padding: 10px;
@@ -78,53 +78,122 @@
 
 <script type="text/javascript">
 function memberOk() {
-	const f = document.memberForm;
-	let str;
-		 
-  
-	// str = f.name.value;
-	// if( !/^[가-힣]{2,5}$/i.test(str) ) { 
-	//	alert("이름를 다시 입력 하세요. ");
-	//	f.name.focus();
-	//	return;
-	// }
+    const f = document.memberForm;
+    let str;
 
-	str = f.nickName.value;
-	if( !str ) { 
-		alert("닉네임를 다시 입력 하세요. ");
-		f.nickName.focus();
-		return;
-	}
-
-	//str = f.password.value;
-	//if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
-	//	alert("패스워드를 다시 입력 하세요. ");
-	//	f.password.focus();
-	//	return;
-	//}
-
-	  str = f.email.value.trim();
-	   if( !str ) {
-	        alert("이메일을 입력하세요. ");
-	        f.email.focus();
-	        return;
-	    }
-	    
-
-    str = f.tel.value;
-    if( !str ) {
-        alert("전화번호를 입력하세요. ");
-        f.tel.focus();
+    str = f.name.value;
+    if (!str) {
+        showErrorMsg(f.name, "이름을 입력해주세요.");
         return;
+    } else {
+        hideErrorMsg(f.name);
     }
 
+    str = f.nickName.value;
+    if (!str) {
+        showErrorMsg(f.nickName, "닉네임을 입력해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.nickName);
+    }
     
-   
+    if (!validateNickName(str)) {
+        showErrorMsg(f.nickName, "올바른 닉네임을 입력해주세요.(한글 2~5자 이내)");
+        return;
+    } else {
+        hideErrorMsg(f.nickName);  	
+    }
 
-   	f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
+    str = f.password.value;
+    if (!str) {
+        showErrorMsg(f.password, "비밀번호를 입력해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.password);
+    }
+
+    if (!validatePassword(str)) {
+        showErrorMsg(f.password, "올바른 패스워드를 입력해주세요.(5~10자 이내,알파벳 소문자 1개, 특수문자 1개)");
+        return;
+    } else {
+        hideErrorMsg(f.password);  	
+    }
+    
+    str = f.email.value.trim();
+    if (!str) {
+        showErrorMsg(f.email, "이메일을 입력해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.email);
+    }
+
+    if (!validateEmail(str)) {
+        showErrorMsg(f.email, "올바른 이메일 주소를 입력해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.email);
+    }
+
+    str = f.tel.value;
+    if (!str) {
+        showErrorMsg(f.tel, "전화번호를 입력해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.tel);
+    }
+    
+    if (!validatetel(str)) {
+        showErrorMsg(f.tel, "올바른 전화번호 를 입력해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.tel);
+    }
+    
+    str = f.postNum.value;
+    if (!str) {
+        showErrorMsg(f.postNum, "우편번호를 선택해주세요.");
+        return;
+    } else {
+        hideErrorMsg(f.postNum);
+    }
+    
+    alert("회원가입에 성공하였습니다!");
+    f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
     f.submit();
-}
+  
+	}
+	
+	function showErrorMsg(element, message) {
+	    const errorElement = element.nextElementSibling;
+	    errorElement.innerHTML = message;
+	    errorElement.style.display = "block";
+	    element.focus();
+	}
+	
+	function hideErrorMsg(element) {
+	    const errorElement = element.nextElementSibling;
+	    errorElement.style.display = "none";
+	}
+	
+	// 이메일 유효성 검사 
+	function validateEmail(email) {
+		 return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+	}
+	
+	// 패스워드 유효성 검사
+	function validatePassword(password) {
+	    return /^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(password);
+	}
+	
+	// 닉네임 유효성 검사
+	function validateNickName(nickName) {  
+	    return /^[가-힣]{2,5}$/i.test(nickName);
+	}
 
+    // 전화번호 형식: XXX-XXXX-XXXX
+	function validatetel(tel) {
+		  return /^\d{3}-\d{4}-\d{4}$/.test(tel);
+	}
 </script>
 </head>
 <body>
@@ -149,7 +218,7 @@ function memberOk() {
             </div>
             <div class="form-group">
               <label for="password">비밀번호</label>
-              <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요" autocomplete="off" value = "${dto.password}">
+              <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" autocomplete="off" value = "${dto.password}">
               <p class="error-message"></p>
             </div>
             <div class="form-group">

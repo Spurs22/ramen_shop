@@ -102,11 +102,12 @@ body {
 
 <script type="text/javascript">
 function sendLogin() {
+	
     const f = document.loginForm;
 
     const emailInput = f.email.value.trim();
     if (!validateEmail(emailInput)) {
-        alert("유효한 이메일 주소를 입력하세요.");
+        alert("올바른 이메일 주소를 입력해주세요.");
         f.email.focus();
         return;
     }
