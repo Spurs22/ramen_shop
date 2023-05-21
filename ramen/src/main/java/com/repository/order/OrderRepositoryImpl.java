@@ -163,8 +163,34 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 		return price;
 	}
-
 	
+	@Override // 상품 이름 구하기
+	public String orderName(Long productId) {
+		String productName = "";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT name from product p "
+					+ " JOIN product_board pb ON p.id = pb.id "
+					+ " WHERE p.id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, productId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				productName = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return productName;
+	}
 	
 	// sum(finalPrice) >> 전체 가격
 	@Override
@@ -231,6 +257,8 @@ public class OrderRepositoryImpl implements OrderRepository{
 		
 		return list;
 	}
+
+
 
 }
 

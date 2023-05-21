@@ -174,6 +174,63 @@ public class ProductRepositoryImpl implements ProductRepository {
 		return result;
 	}
 
+	@Override
+	public List<Product> findProductByName(String name) {
+		return null;
+	}
+
+	@Override
+	public void editQuantity(Long productId, Integer amount) {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE product SET REMAIN_QUANTITY = ? " +
+					"WHERE id = ? ";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, amount);
+			pstmt.setLong(2, productId);
+
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+	}
+
+	@Override
+	public boolean isPresentName(String name) {
+		boolean result = false;
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT count(*) cnt " +
+					"FROM product " +
+					"WHERE REPLACE(name, ' ', '') = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, name);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				if (rs.getInt("cnt") == 1) {
+					result = true;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return result;
+	}
+
 	private static Product getProduct(ResultSet rs) throws SQLException {
 		return new Product(
 				rs.getLong("id"),
@@ -182,15 +239,5 @@ public class ProductRepositoryImpl implements ProductRepository {
 				rs.getInt("remain_quantity"),
 				rs.getString("picture")
 		);
-	}
-
-	@Override
-	public List<Product> findProductByName(String name) {
-		return null;
-	}
-
-	@Override
-	public void editQuantity(Long productId, Integer amount) {
-
 	}
 }

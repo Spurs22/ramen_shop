@@ -4,10 +4,13 @@ import com.DTO.Product;
 import com.DTO.ProductCategory;
 import com.repository.product.ProductRepository;
 import com.repository.product.ProductRepositoryImpl;
+import com.service.product.ProductService;
+import com.service.product.ProductServiceImpl;
 
 public class ProductRepositoryImplTest {
 	public static void main(String[] args) {
 		ProductRepository productRepository = new ProductRepositoryImpl();
+		ProductService productService = new ProductServiceImpl(productRepository);
 
 		// 샘플 데이터
 		Product product = new Product(
@@ -20,8 +23,8 @@ public class ProductRepositoryImplTest {
 
 
 //		// 상품 생성
-		System.out.println("createProduct test");
-		productRepository.createProduct(product);
+//		System.out.println("createProduct test");
+//		productRepository.createProduct(product);
 //
 
 
@@ -39,5 +42,7 @@ public class ProductRepositoryImplTest {
 //		result = productRepository.findProductByProductId(product.getId());
 //		System.out.println("조회 결과 " + result);
 
+//		// 재고 빼기 서비스
+//		productService.subtractQuantity(1L, 4);
 	}
 }

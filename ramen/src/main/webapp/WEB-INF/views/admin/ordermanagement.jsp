@@ -9,9 +9,28 @@
 	<style>
 
 	</style>
+	
+	<script type="text/javascript">
+	function changeList() {
+	    const f = document.listForm;
+	    f.page.value="1";
+	    f.action="${pageContext.request.contextPath}/admin/ordermanagement.do";
+	    f.submit();
+	}
+	
+	function changeList(statusId) {
+		location.href = "${pageContext.request.contextPath}/admin/ordermanagement.do?statusId=" + statusId;
+	}
+	
+	function searchList(){
+		const f = document.searchForm;
+		f.submit();
+	}
+	
+	</script>
 </head>
 <script>
-    let menuIndex = 9
+    let menuIndex = 6
 </script>
 <body>
 <div class="whole-container">
@@ -22,7 +41,43 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			 
+			<div> 
+				<button type='button' class='btn btnstatus' onclick="changeList(1)">결제완료</button>
+				<button type='button' class='btn btnstatus' onclick="changeList(2)">배송중</button>
+				<button type='button' class='btn btnstatus' onclick="changeList(3)">배송완료</button>
+				<button type='button' class='btn btnstatus' onclick="changeList(4)">주문취소</button>
+			</div>
+		
+			<table class="table">
+				<tr>
+					<td align="center">
+					<div>
+						<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do';"><i class="bi bi-arrow-clockwise"></i></button>
+					</div>
+						<!-- 검색 폼 -->
+						<form name="searchForm" action="${pageContext.request.contextPath}/admin/ordermanagement.do" method="post">
+							<select name="condition" class="form-select">
+								<option value="email" ${condition=="email"?"selected='selected'":"" }>회원</option>
+								<option value="orderbundleid"  ${condition=="orderbundleid"?"selected='selected'":"" }>주문번호</option>
+							</select>
+							
+							<div>
+							<input type="text" name="keyword" value="${keyword}" class="form-control">
+							</div>
+							
+							<button type="button" class="btn" onclick="searchList();">검색</button>
+							
+							<div class="col-auto p-1">
+								<input type="hidden" name="size" value="${size}">
+								<button type="button" class="btn btn-light" onclick="searchList()"> <i class="bi bi-search"></i> </button>
+							</div>
+						
+						</form>
+					</td>
+				</tr>
+			</table>
+		
+		
 			<table class="table">
 				<tr>
 					<td>
@@ -35,59 +90,33 @@
 				<thead>
 					<tr>
 						<th class="orderBundleId">주문번호</th>
-						<th class="deliveryId">송장번호</th>
 						<th class="createdDate">주문일</th>
-						<th class="receiveName">받는분</th>
+						<th class="userEmail">주문자이메일</th>
 						<th class="tel">전화번호</th>
-						<th class="postNum">우편번호</th>
-						<th class="address1">주소1</th>
-						<th class="address2">주소2</th>
-						<th class="userEmail">사용자이메일</th>
+						<th class="receiveName">받는분</th>
+						<th class="statusName">주문상태</th>
+						<th class="deliveryId">송장번호</th>
+						<th class="totalPrice">합계</th>
 					</tr>
 				</thead>
 				
 				<tbody>
-					<c:forEach var="orderBundle" items="${list}" varStatus="status"> <!-- list수정 필요 -->
+					<c:forEach var="orderBundle" items="${orderBundlelist}" >
 						<tr>
-							<td>${dataCount - (page-1) * size - status.index}</td>
-							<!--
-							<td class="left">
-								<a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
-							</td>
-							  -->
-							<td>${ob.orderBundleId}</td>
-							<td>${ob.deliveryId}</td>
-							<td>${ob.createdDate}</td>
-							<td>${ob.receiveName}</td>
-							<td>${ob.tel}</td>
-							<td>${ob.postNum}</td>
-							<td>${ob.address1}</td>
-							<td>${ob.address2}</td>
-							<td>${ob.userEmail}</td>
-							<!-- orderitem 출력하기.. List 출력 -->
+		
+							<td>${orderBundle.orderBundleId}</td>
+							<td>${orderBundle.createdDate}</td>
+							<td>${orderBundle.userEmail}</td>
+							<td>${orderBundle.tel}</td>
+							<td>${orderBundle.receiveName}</td>
+							<td>${orderBundle.statusName}</td>
+							<td>${orderBundle.deliveryId}</td>
+							<td>${orderBundle.totalPrice}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
-
-			<table class="table">
-				<tr>
-					<td width="100">
-						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/bbs/list.do';" title="새로고침"><i class="fa-solid fa-arrow-rotate-right"></i></button>
-					</td>
-					<td align="center">
-						<form name="searchForm" action="${pageContext.request.contextPath}/admin/ordermanagement.do" method="post">
-							<select name="condition" class="form-select">
-								<option value="userEmail" ${condition=="userEmail"?"selected='selected'":"" }>회원</option>
-								<option value="statusId"  ${condition=="statusId"?"selected='selected'":"" }>주문상태</option>
-								<option value="orderItmeId"  ${condition=="orderItmeId"?"selected='selected'":"" }>주문번호</option>
-							</select>
-							<input type="text" name="keyword" value="${keyword}" class="form-control">
-							<button type="button" class="btn" onclick="searchList();">검색</button>
-						</form>
-					</td>
-				</tr>
-			</table>
+			<!-- 페이징하기 -->${paging }
 		</div>
 	</div>
 </div>

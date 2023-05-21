@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,60 +46,34 @@ private Connection conn = DBConn.getConnection();
 
 	// 전체 주문내역 확인 >> orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X)
 	@Override
-	public List<OrderBundle> findOrderAll(int offset, int size, String condition, String keyword, Long StatusId) {
-		List<OrderBundle> OrderBundleList = new ArrayList<OrderBundle>();
+	public List<OrderBundle> findOrderAll(int offset, int size, int statusId) {
+		List<OrderBundle> orderBundleList = new ArrayList<OrderBundle>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-		
-		try {
-			// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-			sb.append("SELECT b.id, a.id, b.delivery_id, b.created_date, ");
-			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email, sum(c.final_price) as 합계 ");
-			sb.append(" FROM member a  ");
-			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
-			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
-			sb.append(" INNER JOIN order_status d ON c.status_id = d.id");
 
-			// status 상태조건, condition 검색조건
-			if (StatusId == 1 && condition.equals("all")) { 
-				// 1.결제완료 & 검색 null
+		try {
+			// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계
+			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email, b.tel, ");
+			sb.append(" b.receive_name, d.status_name, b.delivery_id, NVL(tot,0) tot ");
+			sb.append(" FROM member a ");
+			sb.append(" JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" JOIN order_item c ON b.id = c.order_id ");
+			sb.append(" JOIN order_status d ON c.status_id = d.id ");
+			sb.append(" LEFT OUTER JOIN( ");
+			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append(" ) s ON c.order_id = s.order_id ");
+			
+			// status주문상태 검색 조건
+			if(statusId == 1) {
 				sb.append(" WHERE d.id = 1");
-			} else if (StatusId == 1 && condition.equals("a.email")) { 
-				// 1.결제완료 & 회원이메일 검색
-				sb.append(" WHERE d.id = 1 AND a.email = ?");
-			} else if (StatusId == 1 && condition.equals("b.id")) { 
-				// 1.결제완료 & 주문번호 검색
-				sb.append(" WHERE d.id = 1 AND b.id = ?");
-			} else if (StatusId == 2 && condition.equals("all")) { 
-				// 2.배송중 & 검색 null
-				sb.append(" WHERE d.id = 1");
-			} else if (StatusId == 2 && condition.equals("a.email")) {
-				// 2.배송중 & 회원이메일 검색
-				sb.append(" WHERE d.id = 2 AND a.email = ?");
-			} else if (StatusId == 2 && condition.equals("b.id")) {
-				// 2.배송중 & 주문번호 검색
-				sb.append(" WHERE d.id = 2 AND b.id = ?");
-			} else if (StatusId == 3 && condition.equals("all")) { 
-				// 3.배송완료 & 검색 null
+			} else if(statusId == 2) {
+				sb.append(" WHERE d.id = 2");
+			} else if(statusId == 3) {
 				sb.append(" WHERE d.id = 3");
-			} else if (StatusId == 3 && condition.equals("a.email")) { 
-				// 3.배송완료 & 회원이메일 검색
-				sb.append(" WHERE d.id = 3 AND a.email = ?");
-			} else if (StatusId == 3 && condition.equals("b.id")) { 
-				// 3.배송완료 & 주문번호 검색
-				sb.append(" WHERE d.id = 3 AND b.id = ?");
-			} else if (StatusId == 4 && condition.equals("all")) { 
-				// 3.주문취소 & 검색 null
-				sb.append(" WHERE d.id = 3");
-			} else if (StatusId == 4 && condition.equals("a.email")) { 
-				// 3.주문취소 & 회원이메일 검색
-				sb.append(" WHERE d.id = 3 AND a.email = ?");
-			} else { 
-				// 3.주문취소 & 주문번호 검색
-				sb.append(" WHERE d.id = 3 AND b.id = ?");
+			} else if(statusId == 4) {
+				sb.append(" WHERE d.id = 4");
 			}
-			sb.append(" GROUP BY b.id, a.id, b.delivery_id, b.created_date, b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email ");
 			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
@@ -115,85 +87,154 @@ private Connection conn = DBConn.getConnection();
 			while(rs.next()) {
 				OrderBundle ob = new OrderBundle();
 				
-				// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-				ob.setOrderBundleId(rs.getLong("b.id"));
-				ob.setMemberId(rs.getLong("a.id"));
-				ob.setDeliveryId(rs.getLong("delivery_id"));
+				// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계
+				ob.setOrderBundleId(rs.getLong("orderbundleid"));
 				ob.setCreatedDate(rs.getString("created_date"));
-				ob.setReceiveName(rs.getString("receive_name"));
-				ob.setTel(rs.getString("tel"));
-				ob.setPostNum(rs.getString("post_num"));
-				ob.setAddress1(rs.getString("address1"));
-				ob.setAddress2(rs.getString("address2"));
 				ob.setUserEmail(rs.getString("email"));
-				ob.setTotalPrice(rs.getLong("final_price"));
+				ob.setTel(rs.getString("tel"));
+				ob.setReceiveName(rs.getString("receive_name"));
+				ob.setStatusName(rs.getString("status_name"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setTotalPrice(rs.getLong("tot"));
 				
-				OrderBundleList.add(ob);
+				orderBundleList.add(ob);
 			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeResource(pstmt,rs);
 		}
-		return OrderBundleList;
+		return orderBundleList;
+	}
+	
+	
+	// 전체 주문내역 확인 >> orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X) - 검색
+	@Override
+	public List<OrderBundle> findOrderAll(int offset, int size, String condition, String keyword, int statusId) {
+		List<OrderBundle> orderBundleList = new ArrayList<OrderBundle>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계			
+			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email, b.tel, ");
+			sb.append(" b.receive_name, d.status_name, b.delivery_id, NVL(tot,0) tot ");
+			sb.append(" FROM member a ");
+			sb.append(" JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" JOIN order_item c ON b.id = c.order_id ");
+			sb.append(" JOIN order_status d ON c.status_id = d.id ");
+			sb.append(" LEFT OUTER JOIN( ");
+			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append(" ) s ON c.order_id = s.order_id ");
+			
+			// status 상태조건, condition 검색조건
+			switch(statusId) {
+			case 1:
+				if(condition.equals("a.email")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 1 AND a.email = ?");
+				} else if(condition.equals("b.id")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 1 AND b.id = ?");
+				}
+				break;
+			case 2:
+				if(condition.equals("a.email")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 2 AND a.email = ?");
+				} else if(condition.equals("b.id")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 2 AND b.id = ?");
+				}
+				break;
+			case 3:
+				if(condition.equals("a.email")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 3 AND a.email = ?");
+				} else if(condition.equals("b.id")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 3 AND b.id = ?");
+				}
+				break;
+			case 4:
+				if(condition.equals("a.email")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 4 AND a.email = ?");
+				} else if(condition.equals("b.id")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 4 AND b.id = ?");
+				}
+				break;
+			default:
+				System.out.println("데이터가 없습니다.");
+			}
+			sb.append(" ORDER BY b.created_date DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, keyword);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				OrderBundle ob = new OrderBundle();
+				
+				// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계
+				ob.setOrderBundleId(rs.getLong("orderbundleid"));
+				ob.setCreatedDate(rs.getString("created_date"));
+				ob.setUserEmail(rs.getString("email"));
+				ob.setTel(rs.getString("tel"));
+				ob.setReceiveName(rs.getString("receive_name"));
+				ob.setStatusName(rs.getString("status_name"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setTotalPrice(rs.getLong("tot"));
+				
+				orderBundleList.add(ob);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt,rs);
+		}
+		return orderBundleList;
 	}
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	
 	@Override
-	public OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, Long StatusId, Long orderBundleId) {
+	public OrderBundle findOrderDetail(int offset, int size, int statusId, int orderBundleId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		OrderBundle orderBundle = new OrderBundle();
 		List<OrderItem> orderItems = new ArrayList<>();
-
+		
 		try {
-			// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-			sb.append("SELECT b.id, a.id, b.delivery_id, b.created_date, ");
-			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email, sum(c.final_price) as 합계 ");
-			sb.append(" FROM member a  ");
-			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
-			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
-			sb.append(" INNER JOIN order_status d ON c.status_id = d.id");
-			// status 상태조건, condition 검색조건
-				if (StatusId == 1 && condition.equals("all")) { 
-					// 1.결제완료 & 검색 null
-					sb.append(" WHERE d.id = 1");
-				} else if (StatusId == 1 && condition.equals("a.email")) { 
-					// 1.결제완료 & 회원이메일 검색
-					sb.append(" WHERE d.id = 1 AND a.email = ?");
-				} else if (StatusId == 1 && condition.equals("b.id")) { 
-					// 1.결제완료 & 주문번호 검색
-					sb.append(" WHERE d.id = 1 AND b.id = ?");
-				} else if (StatusId == 2 && condition.equals("all")) { 
-					// 2.배송중 & 검색 null
-					sb.append(" WHERE d.id = 1");
-				} else if (StatusId == 2 && condition.equals("a.email")) {
-					// 2.배송중 & 회원이메일 검색
-					sb.append(" WHERE d.id = 2 AND a.email = ?");
-				} else if (StatusId == 2 && condition.equals("b.id")) {
-					// 2.배송중 & 주문번호 검색
-					sb.append(" WHERE d.id = 2 AND b.id = ?");
-				} else if (StatusId == 3 && condition.equals("all")) { 
-					// 3.배송완료 & 검색 null
-					sb.append(" WHERE d.id = 3");
-				} else if (StatusId == 3 && condition.equals("a.email")) { 
-					// 3.배송완료 & 회원이메일 검색
-					sb.append(" WHERE d.id = 3 AND a.email = ?");
-				} else if (StatusId == 3 && condition.equals("b.id")) { 
-					// 3.배송완료 & 주문번호 검색
-					sb.append(" WHERE d.id = 3 AND b.id = ?");
-				} else if (StatusId == 4 && condition.equals("all")) { 
-					// 3.주문취소 & 검색 null
-					sb.append(" WHERE d.id = 3");
-				} else if (StatusId == 4 && condition.equals("a.email")) { 
-					// 3.주문취소 & 회원이메일 검색
-					sb.append(" WHERE d.id = 3 AND a.email = ?");
-				} else { 
-					// 3.주문취소 & 주문번호 검색
-					sb.append(" WHERE d.id = 3 AND b.id = ?");
-				}
-			sb.append(" GROUP BY b.id, a.id, b.delivery_id, b.created_date, b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email ");
+			// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 우편번호, 주소1, 주소2, 주문상태, 송장번호, 합계
+			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email useremail, b.tel, ");
+			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, ");
+			sb.append(" d.status_name, b.delivery_id, NVL(tot,0) tot ");
+			sb.append(" FROM member a ");
+			sb.append(" JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" JOIN order_item c ON b.id = c.order_id ");
+			sb.append(" JOIN order_status d ON c.status_id = d.id ");
+			sb.append(" LEFT OUTER JOIN( ");
+			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append(" ) s ON c.order_id = s.order_id ");
+			
+			// status주문상태 검색 조건
+			if(statusId == 1) {
+				sb.append(" WHERE d.id = 1");
+			} else if(statusId == 2) {
+				sb.append(" WHERE d.id = 2");
+			} else if(statusId == 3) {
+				sb.append(" WHERE d.id = 3");
+			} else if(statusId == 4) {
+				sb.append(" WHERE d.id = 4");
+			}
 			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
@@ -205,18 +246,22 @@ private Connection conn = DBConn.getConnection();
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-				orderBundle.setOrderBundleId(rs.getLong("b.id"));
-				orderBundle.setMemberId(rs.getLong("a.id"));
-				orderBundle.setDeliveryId(rs.getLong("delivery_id"));
-				orderBundle.setCreatedDate(rs.getString("created_date"));
-				orderBundle.setReceiveName(rs.getString("receive_name"));
-				orderBundle.setTel(rs.getString("tel"));
-				orderBundle.setPostNum(rs.getString("post_num"));
-				orderBundle.setAddress1(rs.getString("address1"));
-				orderBundle.setAddress2(rs.getString("address2"));
-				orderBundle.setUserEmail(rs.getString("email"));
-				orderBundle.setTotalPrice(rs.getLong("final_price"));
+				OrderBundle ob = new OrderBundle();
+
+				// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계
+				ob.setOrderBundleId(rs.getLong("orderbundleid"));
+				ob.setCreatedDate(rs.getString("created_date"));
+				ob.setUserEmail(rs.getString("email"));
+				ob.setTel(rs.getString("tel"));
+				ob.setMemberId(rs.getLong("memberid"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setReceiveName(rs.getString("receive_name"));
+				ob.setPostNum(rs.getString("post_num"));
+				ob.setAddress1(rs.getString("address1"));
+				ob.setAddress2(rs.getString("address2"));
+				ob.setStatusName(rs.getString("status_name"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setTotalPrice(rs.getLong("tot"));
 			} 
 			
 			pstmt.close();
@@ -226,41 +271,26 @@ private Connection conn = DBConn.getConnection();
 			
 			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
-			sb.append("SELECT c.id, c.product_id, b.id, c.status_id, c.quantity, ");
+			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
 			sb.append(" c.price, c.final_price, d.name, e.status_name ");
 			sb.append(" FROM member a  ");
 			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
 			sb.append(" INNER JOIN product d ON d.id = c.product_id");
 			sb.append(" INNER JOIN order_status e ON c.status_id = e.id");
-			if (StatusId == 1) { 
-				// 1.결제완료 +  orderBundleId 조회
-				sb.append(" WHERE c.status_id = 1 AND b.id = ?");
-			} else if (StatusId == 1 && condition.equals("a.email")) { 
-				// 1.결제완료 + 회원이메일 검색 + orderBundleId 조회
-				sb.append(" WHERE c.status_id = 1 AND b.id = ? AND a.email = ?");
-			} else if (StatusId == 2) { 
-				// 2.배송중 +  orderBundleId 조회
-				sb.append(" WHERE c.status_id = 2 AND b.id = ?");
-			} else if (StatusId == 1 && condition.equals("a.email")) { 
-				// 2.배송중 + 회원이메일 검색 + orderBundleId 조회
-				sb.append(" WHERE c.status_id = 2 AND b.id = ? AND a.email = ?");
-			} else if (StatusId == 1 && condition.equals("a.email")) { 
-				// 3.배송완료 + orderBundleId 조회
-				sb.append(" WHERE c.status_id = 3 AND b.id = ?");
-			} else if (StatusId == 1 && condition.equals("a.email")) { 
-				// 3.배송완료 + 회원이메일 검색 + orderBundleId 조회
-				sb.append(" WHERE c.status_id = 3 AND b.id = ? AND a.email = ?");
-			} else if (StatusId == 1 && condition.equals("a.email")) { 
-				// 4.주문취소 + orderBundleId 조회
-				sb.append(" WHERE c.status_id = 4 AND b.id = ?");
-			} else {
-				// 4.주문취소 + 회원이메일 검색 + orderBundleId 조회
-				sb.append(" WHERE c.status_id = 4 AND b.id = ? AND a.email = ?");
+			// status주문상태 검색 조건
+			if(statusId == 1) {
+				sb.append(" WHERE e.id = 1");
+			} else if(statusId == 2) {
+				sb.append(" WHERE e.id = 2");
+			} else if(statusId == 3) {
+				sb.append(" WHERE e.id = 3");
+			} else if(statusId == 4) {
+				sb.append(" WHERE e.id = 4");
 			}
 			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
-		
+			
 			pstmt = conn.prepareStatement(sb.toString());
 			
 			pstmt.setInt(1, offset);
@@ -273,19 +303,192 @@ private Connection conn = DBConn.getConnection();
 				OrderItem orderItem = new OrderItem();
 				
 				// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
-				orderItem.setOrderBundleId(rs.getLong("c.id"));
+				orderItem.setOrderBundleId(rs.getLong("orderitemid"));
 				orderItem.setProductId(rs.getLong("product_id"));
-				orderItem.setOrderBundleId(rs.getLong("b.id"));
+				orderItem.setOrderBundleId(rs.getLong("orderbundleid"));
 				orderItem.setStatusId(rs.getLong("status_id"));
 				orderItem.setQuantity(rs.getInt("quantity"));
 				orderItem.setPrice(rs.getLong("price"));
 				orderItem.setFinalPrice(rs.getLong("final_price"));
-				orderItem.setProductName(rs.getString("d.name"));
+				orderItem.setProductName(rs.getString("name"));
 				orderItem.setStatusName(rs.getString("status_name"));
 
 				orderItems.add(orderItem);
 			} 
 			
+			orderBundle.setOrderItems(orderItems);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt,rs);
+		}
+		return orderBundle;
+	}
+	
+	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	 - 검색
+	@Override
+	public OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, int orderBundleId) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		OrderBundle orderBundle = new OrderBundle();
+		List<OrderItem> orderItems = new ArrayList<>();
+		
+		try {
+			// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 우편번호, 주소1, 주소2, 주문상태, 송장번호, 합계
+			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email useremail, b.tel, ");
+			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, ");
+			sb.append(" d.status_name, b.delivery_id, NVL(tot,0) tot ");
+			sb.append(" FROM member a ");
+			sb.append(" JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" JOIN order_item c ON b.id = c.order_id ");
+			sb.append(" JOIN order_status d ON c.status_id = d.id ");
+			sb.append(" LEFT OUTER JOIN( ");
+			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append(" ) s ON c.order_id = s.order_id ");
+			// status 상태조건, condition 검색조건
+			switch(statusId) {
+			case 1:
+				if(condition.equals("useremail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 1 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 1 AND b.id = ?");
+				}
+			case 2:
+				if(condition.equals("useremail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 2 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 2 AND b.id = ?");
+				}
+			case 3:
+				if(condition.equals("useremail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 3 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 3 AND b.id = ?");
+				}
+			case 4:
+				if(condition.equals("a.email")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 4 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 4 AND b.id = ?");
+				}
+			}
+			sb.append(" ORDER BY b.created_date DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, keyword);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				OrderBundle ob = new OrderBundle();
+
+				// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계
+				ob.setOrderBundleId(rs.getLong("orderbundleid"));
+				ob.setCreatedDate(rs.getString("created_date"));
+				ob.setUserEmail(rs.getString("email"));
+				ob.setTel(rs.getString("tel"));
+				ob.setMemberId(rs.getLong("memberid"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setReceiveName(rs.getString("receive_name"));
+				ob.setPostNum(rs.getString("post_num"));
+				ob.setAddress1(rs.getString("address1"));
+				ob.setAddress2(rs.getString("address2"));
+				ob.setStatusName(rs.getString("status_name"));
+				ob.setDeliveryId(rs.getLong("delivery_id"));
+				ob.setTotalPrice(rs.getLong("tot"));
+			} 
+			
+			pstmt.close();
+			pstmt = null;
+			rs.close();
+			rs = null;
+			
+			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
+			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
+			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
+			sb.append(" c.price, c.final_price, d.name, e.status_name ");
+			sb.append(" FROM member a  ");
+			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
+			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
+			sb.append(" INNER JOIN product d ON d.id = c.product_id");
+			sb.append(" INNER JOIN order_status e ON c.status_id = e.id");
+			// status 상태조건, condition 검색조건
+			switch(statusId) {
+			case 1:
+				if(condition.equals("useremail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 1 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 1 AND b.id = ?");
+				}
+			case 2:
+				if(condition.equals("useremail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 2 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 2 AND b.id = ?");
+				}
+			case 3:
+				if(condition.equals("useremail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 3 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 3 AND b.id = ?");
+				}
+			case 4:
+				if(condition.equals("a.email")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE d.id = 4 AND a.email = ?");
+				} else if(condition.equals("orderbundleid")) {
+					// 주문번호 검색
+					sb.append(" WHERE d.id = 4 AND b.id = ?");
+				}
+			}
+			sb.append(" ORDER BY b.created_date DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, keyword);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
+			
+			rs = pstmt.executeQuery();
+			
+			// orderItems 조회
+			while (rs.next()) {
+				OrderItem orderItem = new OrderItem();
+				
+				// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
+				orderItem.setOrderBundleId(rs.getLong("orderitemid"));
+				orderItem.setProductId(rs.getLong("product_id"));
+				orderItem.setOrderBundleId(rs.getLong("orderbundleid"));
+				orderItem.setStatusId(rs.getLong("status_id"));
+				orderItem.setQuantity(rs.getInt("quantity"));
+				orderItem.setPrice(rs.getLong("price"));
+				orderItem.setFinalPrice(rs.getLong("final_price"));
+				orderItem.setProductName(rs.getString("name"));
+				orderItem.setStatusName(rs.getString("status_name"));
+
+				orderItems.add(orderItem);
+			} 
 			orderBundle.setOrderItems(orderItems);
 			
 		} catch (Exception e) {
@@ -305,7 +508,7 @@ private Connection conn = DBConn.getConnection();
 		String sql;
 
 		try {
-			sql = "SELECT NVL(COUNT(*), 0) FROM order_item";
+			sql = "SELECT NVL(COUNT(*), 0) FROM order_bundle";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
@@ -375,27 +578,12 @@ private Connection conn = DBConn.getConnection();
 
 	// 기간 조회(1일 | 1개월 | 6개월 | 1년 | 전체) + 상품별 매출 통계
 	@Override
-	public List<OrderStatistics> SalesStatisticsByProduct()  {
+	public List<OrderStatistics> salesStatisticsByProduct(int proid)  {
 		List<OrderStatistics> osList = new ArrayList<OrderStatistics>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-
-        // 현재 날짜 구하기
-        LocalDate now = LocalDate.now();
-        // 1일 전
-        LocalDate oneDayAgo = now.minusDays(1);
-        Period oneDayperiod = Period.between(oneDayAgo, now);
-        // 1개월 전
-        LocalDate oneMonthAgo = now.minusMonths(1);
-        Period oneMonthperiod = Period.between(oneMonthAgo, now);
-        // 6개월 전
-        LocalDate sixMonthAgo = now.minusMonths(6);
-        Period sixMonthperiod = Period.between(sixMonthAgo, now);
-        // 12개월 전
-        LocalDate twelveMonthAgo12 = now.minusMonths(12);
-        Period twelveMonthperiod = Period.between(twelveMonthAgo12, now);
-        
+      
 		try {
 			// 
 			sb.append("SELECT b.product_id, a.name, sum(b.quantity) as 판매수량, ");
@@ -406,16 +594,16 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" WHERE b.status_id <= 3");
 			
 			// 기간 조건(1일 | 1개월 | 6개월 | 1년 | 전체)
-			if (oneDayperiod.getDays() <= 1) { 
+			if (proid == 1) { 
 				// 1일
 				sb.append(" AND c.created_date >= TO_CHAR(SYSDATE -1)");
-			} else if (oneMonthperiod.getMonths() <= 1) { 
+			} else if (proid == 2) { 
 				// 1개월
 				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -1)");
-			} else if(sixMonthperiod.getMonths() <= 6) {
+			} else if(proid == 3) {
 				// 6개월
 				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -6)");
-			} else if(twelveMonthperiod.getMonths() <= 12) {
+			} else if(proid == 4) {
 				// 1년
 				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -12)");
 			} else {
@@ -445,156 +633,4 @@ private Connection conn = DBConn.getConnection();
 		return osList;
 	}
 	
-	// 회원별 주문리스트 >> 전체 주문내역 확인 - orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X)
-		@Override
-		public List<OrderBundle> findOrderAllByMemberId(int offset, int size, Long MemberId) {
-			List<OrderBundle> OrderBundleList = new ArrayList<OrderBundle>();
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			StringBuilder sb = new StringBuilder();
-			
-			try {
-				// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-				sb.append("SELECT b.id, a.id, b.delivery_id, b.created_date, ");
-				sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email, sum(c.final_price) as 합계 ");
-				sb.append(" FROM member a  ");
-				sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
-				sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
-				sb.append(" INNER JOIN order_status d ON c.status_id = d.id");
-				sb.append(" WHERE a.id = ?");
-				sb.append(" GROUP BY b.id, a.id, b.delivery_id, b.created_date, b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email ");
-				sb.append(" ORDER BY b.created_date DESC ");
-				sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
-				
-				pstmt = conn.prepareStatement(sb.toString());
-				
-				pstmt.setLong(1, MemberId);
-				pstmt.setInt(2, offset);
-				pstmt.setInt(3, size);
-				
-				rs = pstmt.executeQuery();
-				
-				while(rs.next()) {
-					OrderBundle ob = new OrderBundle();
-					
-					// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-					ob.setOrderBundleId(rs.getLong("b.id"));
-					ob.setMemberId(rs.getLong("a.id"));
-					ob.setDeliveryId(rs.getLong("delivery_id"));
-					ob.setCreatedDate(rs.getString("created_date"));
-					ob.setReceiveName(rs.getString("receive_name"));
-					ob.setTel(rs.getString("tel"));
-					ob.setPostNum(rs.getString("post_num"));
-					ob.setAddress1(rs.getString("address1"));
-					ob.setAddress2(rs.getString("address2"));
-					ob.setUserEmail(rs.getString("email"));
-					ob.setTotalPrice(rs.getLong("final_price"));
-					
-					OrderBundleList.add(ob);
-				} 
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				DBUtil.closeResource(pstmt,rs);
-			}
-			return OrderBundleList;
-		}
-	
-	
-	// 회원별 주문리스트 >> 상세 주문내역 확인 - orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X)
-	@Override
-	public OrderBundle findOrderDetailByMemberId(int offset, int size, Long MemberId) {
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		StringBuilder sb = new StringBuilder();
-		OrderBundle orderBundle = new OrderBundle();
-		List<OrderItem> orderItems = new ArrayList<OrderItem>();
-
-		try {
-			// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-			sb.append("SELECT b.id, a.id, b.delivery_id, b.created_date, ");
-			sb.append(" b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email, sum(c.final_price) as 합계 ");
-			sb.append(" FROM member a  ");
-			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
-			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
-			sb.append(" INNER JOIN order_status d ON c.status_id = d.id");
-			sb.append(" WHERE a.id = ?");
-			sb.append(" GROUP BY b.id, a.id, b.delivery_id, b.created_date, b.receive_name, b.tel, b.post_num, b.address1, b.address2, a.email ");
-			sb.append(" ORDER BY b.created_date DESC ");
-			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
-			
-			pstmt = conn.prepareStatement(sb.toString());
-			
-			pstmt.setLong(1, MemberId);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				// 주문번호, 맴버아이디, 송장번호, 결제일, 받는분, 전화번호, 우편번호, 주소1, 주소2, 회원이메일, 합계
-				orderBundle.setOrderBundleId(rs.getLong("b.id"));
-				orderBundle.setMemberId(rs.getLong("a.id"));
-				orderBundle.setDeliveryId(rs.getLong("delivery_id"));
-				orderBundle.setCreatedDate(rs.getString("created_date"));
-				orderBundle.setReceiveName(rs.getString("receive_name"));
-				orderBundle.setTel(rs.getString("tel"));
-				orderBundle.setPostNum(rs.getString("post_num"));
-				orderBundle.setAddress1(rs.getString("address1"));
-				orderBundle.setAddress2(rs.getString("address2"));
-				orderBundle.setUserEmail(rs.getString("email"));
-				orderBundle.setTotalPrice(rs.getLong("final_price"));
-			} 
-			
-			pstmt.close();
-			pstmt = null;
-			rs.close();
-			rs = null;
-			
-			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
-			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
-			sb.append("SELECT c.id, c.product_id, b.id, c.status_id, c.quantity, ");
-			sb.append(" c.price, c.final_price, d.name, e.status_name ");
-			sb.append(" FROM member a  ");
-			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
-			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
-			sb.append(" INNER JOIN product d ON d.id = c.product_id");
-			sb.append(" INNER JOIN order_status e ON c.status_id = e.id");
-			sb.append(" WHERE a.id = ?");
-			sb.append(" ORDER BY b.created_date DESC ");
-			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
-		
-			pstmt = conn.prepareStatement(sb.toString());
-			
-			pstmt.setLong(1, MemberId);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
-			
-			rs = pstmt.executeQuery();
-			
-			// orderItems 조회
-			while (rs.next()) {
-				OrderItem orderItem = new OrderItem();
-				
-				// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
-				orderItem.setOrderBundleId(rs.getLong("c.id"));
-				orderItem.setProductId(rs.getLong("product_id"));
-				orderItem.setOrderBundleId(rs.getLong("b.id"));
-				orderItem.setStatusId(rs.getLong("status_id"));
-				orderItem.setQuantity(rs.getInt("quantity"));
-				orderItem.setPrice(rs.getLong("price"));
-				orderItem.setFinalPrice(rs.getLong("final_price"));
-				orderItem.setProductName(rs.getString("d.name"));
-				orderItem.setStatusName(rs.getString("status_name"));
-
-				orderItems.add(orderItem);
-			} 
-			orderBundle.setOrderItems(orderItems);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.closeResource(pstmt,rs);
-		}
-		return orderBundle;
-	}
 }

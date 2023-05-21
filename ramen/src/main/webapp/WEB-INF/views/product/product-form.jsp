@@ -1,5 +1,3 @@
-<%@ page import="java.util.List" %>
-<%@ page import="com.DTO.Product" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--
@@ -151,7 +149,7 @@
 			</div>
 
 			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/${mode}" id="form">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/${mode}-board" id="form">
 
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">

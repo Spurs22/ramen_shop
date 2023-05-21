@@ -94,7 +94,7 @@ public class CartRepositoryImpl implements CartRepository{
 		String sql;
 		
 		try {
-			sql = " SELECT remain_quantity FROM product WHERE id = 5?";
+			sql = " SELECT remain_quantity FROM product WHERE id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, productId);

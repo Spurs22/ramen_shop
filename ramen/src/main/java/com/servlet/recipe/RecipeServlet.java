@@ -255,21 +255,35 @@ public class RecipeServlet extends MyUploadServlet {
 		String cp = req.getContextPath();
 		
 		if(req.getMethod().equalsIgnoreCase("GET")) {
-			resp.sendRedirect(cp + ""); // 수정
+			resp.sendRedirect(cp + "/recipe/recipe-list.do");
 			return;
 		}
 		
 		try {
 			RecipeBoard dto = new RecipeBoard();
-			RecipeProduct product = new RecipeProduct();
 			
 			dto.setSubject(req.getParameter("subject"));
 			dto.setMemberId(info.getMemberId());
 			dto.setContent(req.getParameter("content"));
 			dto.setIpAddress("127.0.0.1");
 			
-			// 어케하누 json list 반환 // 수정
-			
+			String productIds = req.getParameter("productIds");
+		    String quantities = req.getParameter("quantities");
+
+		    String[] productIdarr = productIds.split(",");
+		    String[] quantityarr = quantities.split(",");
+		    
+		    for(int i = 0; i < productIdarr.length; i++) {
+		    	RecipeProduct product = new RecipeProduct();
+		    	
+		    	product.setProductId(Long.parseLong(productIdarr[i]));
+		    	product.setQuantity(Integer.parseInt(quantityarr[i]));
+		    	
+		    	System.out.println(product.getProductId());
+		    	
+		    	list.add(product);
+		    }
+		    
 			dto.setRecipeProduct(list);
 			
 			recipeBoardService.insertRecipe(dto);
@@ -300,8 +314,13 @@ public class RecipeServlet extends MyUploadServlet {
 			List<ProductBoard> posts = productBoardService.findAllPosts();
 			req.setAttribute("posts", posts);
 			
+			RecipeBoard dto = recipeBoardRepository.readRecipe(recipe_id);
+			
+			req.setAttribute("dto", dto);
+			
 			req.setAttribute("mode", "update");
 			req.setAttribute("board", board);
+			req.setAttribute("recipeId", recipe_id);
 			
 			forward(req, resp, "/WEB-INF/views/recipe/recipe-write.jsp");
 			return;
@@ -315,6 +334,8 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void updateRecipeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 수정 완료
+		List<RecipeProduct> list = new ArrayList<>();
+		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
@@ -328,11 +349,33 @@ public class RecipeServlet extends MyUploadServlet {
 		try {
 			RecipeBoard board = new RecipeBoard();
 			
-			board.setId(Long.parseLong(req.getParameter(""))); // 수정
-			board.setSubject(req.getParameter("")); // 수정
-			board.setContent(req.getParameter("")); // 수정
-		
-			// json list 변환 // 수정
+			Long recipe_id = Long.parseLong(req.getParameter("recipeId"));
+			
+			board.setRecipeId(recipe_id);
+			
+			board.setSubject(req.getParameter("subject"));
+			board.setMemberId(info.getMemberId());
+			board.setContent(req.getParameter("content"));
+			board.setIpAddress("127.0.0.1");
+			
+			String productIds = req.getParameter("productIds");
+		    String quantities = req.getParameter("quantities");
+
+		    String[] productIdarr = productIds.split(",");
+		    String[] quantityarr = quantities.split(",");
+		    
+		    for(int i = 0; i < productIdarr.length; i++) {
+		    	RecipeProduct product = new RecipeProduct();
+		    	
+		    	product.setProductId(Long.parseLong(productIdarr[i]));
+		    	product.setQuantity(Integer.parseInt(quantityarr[i]));
+		    	
+		    	System.out.println(product.getProductId());
+		    	
+		    	list.add(product);
+		    }
+			
+			board.setRecipeProduct(list);
 			
 			board.setMemberId(info.getMemberId());
 			
@@ -342,7 +385,7 @@ public class RecipeServlet extends MyUploadServlet {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.jsp");
+		resp.sendRedirect(cp + "/recipe/recipe-list.do");
 	}
 
 	protected void deleteRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -428,8 +471,6 @@ public class RecipeServlet extends MyUploadServlet {
 				product.setName(product.getName());
 				product.setQuantity(product.getQuantity());
 			}
-			
-			dto.setContent(util.htmlSymbols(dto.getContent()));
 			
 			HttpSession session = req.getSession();
 			SessionInfo info = (SessionInfo)session.getAttribute("member");

@@ -32,9 +32,17 @@ public interface OrderRepository {
 	/**
 	 * [ 상품의 가격 구하기( 품목 ) ]
 	 * @param productId	 	상품번호
-	 * @return				상품가격
+	 * @return				상품 가격
 	 */
 	long orderPrice(Long productId);
+	
+	/**
+	 * [ 상품의 이름 구하기( 품목 ) ]
+	 * @param productId	 	상품번호
+	 * @return				상품 이름
+	 */
+	String orderName(Long productId);
+	
 	
 	/**
 	 * [ 전체 가격 ]

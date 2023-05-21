@@ -1,5 +1,6 @@
 package test.repository.product;
 
+import com.DTO.Cart;
 import com.DTO.ProductBoard;
 import com.repository.product.ProductLikeRepository;
 import com.repository.product.ProductLikeRepositoryImpl;
@@ -19,4 +20,5 @@ public class ProductLikeRepositoryImplTest {
 //			System.out.println(post);
 //		}
 	}
+
 }

@@ -11,7 +11,7 @@
 	</style>
 </head>
 <script>
-    let menuIndex = 9
+    let menuIndex = 6
 </script>
 <body>
 <div class="whole-container">
