@@ -243,7 +243,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	// 회원 / 관리자 구분
 
 	@Override
-	public Member Roll(Member member) throws SQLException {
+	public Member roll(Member member) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		ResultSet rs = null;

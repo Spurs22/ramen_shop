@@ -26,7 +26,7 @@ public interface MemberRepository {
 		public Member updateMember(Member member) throws SQLException;
 		
 		// 회원 , 관리자 구분
-		Member Roll(Member member)throws SQLException;
+		Member roll(Member member)throws SQLException;
 		
 		List<Member> findAll();
 		
