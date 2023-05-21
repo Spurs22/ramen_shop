@@ -148,6 +148,7 @@ public class OrderServlet extends MyServlet {
 		OrderBundle orderBundle = new OrderBundle();
 		String cp = req.getContextPath();
 		String message = null;
+		String errorMessage = "";
 		try {
 
 			long memberId = info.getMemberId();
@@ -196,12 +197,14 @@ public class OrderServlet extends MyServlet {
 				// cartRepositoryImpl.editItemNum(c.getProductId(), memberId, c.getQuantity());
 	            
             	// 품목 삭제
-				productService.editQuantity(c.getProductId(), c.getQuantity());
+				productService.subtractQuantity(c.getProductId(), c.getQuantity());
 				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
             
 			}
 			req.setAttribute("message", message);
 			
+		} catch (RuntimeException e) {
+			errorMessage = "재고보다 숫자가 많다.";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
