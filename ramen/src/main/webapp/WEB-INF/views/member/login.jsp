@@ -104,6 +104,13 @@ body {
 function sendLogin() {
     const f = document.loginForm;
 
+    const emailInput = f.email.value.trim();
+    if (!validateEmail(emailInput)) {
+        alert("유효한 이메일 주소를 입력하세요.");
+        f.email.focus();
+        return;
+    }
+ 
 	let str = f.email.value;
     if(!str) {
         alert("이메일을 입력하세요. ");
@@ -121,9 +128,18 @@ function sendLogin() {
     f.action = "${pageContext.request.contextPath}/member/login_ok.do";
     f.submit();
     
+    showLoginSuccessMessage();
+ 
+	}
     
-    
-}
+	function validateEmail(email) {
+	    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	    return emailRegex.test(email);
+	}
+
+    function showLoginSuccessMessage() {
+        alert("반갑습니다!");
+    }
 </script>
 
 </head>
