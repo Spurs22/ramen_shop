@@ -174,16 +174,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 		return result;
 	}
 
-	private static Product getProduct(ResultSet rs) throws SQLException {
-		return new Product(
-				rs.getLong("id"),
-				ProductCategory.getByValue(rs.getInt("category_id")),
-				rs.getString("name"),
-				rs.getInt("remain_quantity"),
-				rs.getString("picture")
-		);
-	}
-
 	@Override
 	public List<Product> findProductByName(String name) {
 		return null;
@@ -192,5 +182,46 @@ public class ProductRepositoryImpl implements ProductRepository {
 	@Override
 	public void editQuantity(Long productId, Integer amount) {
 
+	}
+
+	@Override
+	public boolean isPresentName(String name) {
+		boolean result = false;
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT count(*) cnt " +
+					"FROM product " +
+					"WHERE REPLACE(name, ' ', '') = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, name);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				if (rs.getInt("cnt") == 1) {
+					result = true;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		return result;
+	}
+
+	private static Product getProduct(ResultSet rs) throws SQLException {
+		return new Product(
+				rs.getLong("id"),
+				ProductCategory.getByValue(rs.getInt("category_id")),
+				rs.getString("name"),
+				rs.getInt("remain_quantity"),
+				rs.getString("picture")
+		);
 	}
 }

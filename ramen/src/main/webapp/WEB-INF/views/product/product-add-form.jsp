@@ -35,6 +35,9 @@
             border-radius: 20px;
             /*min-height: 400px;*/
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
         }
 
         textarea {
@@ -92,7 +95,10 @@
         }
 
         .input-group {
-            margin-top: 35px;
+        }
+
+		.product-name-preview {
+            font-weight: 600; font-size: 22px
         }
 
 	</style>
@@ -114,94 +120,57 @@
 				<%--				<input type="text" style="width: 150px; padding: 0 5px">--%>
 				<%--				<button class="btn btn-primary">검색</button>--%>
 			</div>
-
-			<div style="display: flex; flex-direction: row; gap: 5px">
-				<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#selectProductModal">상품 선택</button>
-			</div>
 		</div>
 
-		<div class="content-container" style="flex: 1; justify-content: end">
-
-			<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
-				<div class="input-group">
-					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
-					<input class="form-control product-info" id="productName" disabled value="${mode == "post" ? "" : editBoard.product.productId}">
+		<div class="content-container" style="flex: 1;">
+			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/${mode}-product" id="form">
+				<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+					<div class="input-group">
+						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
+						<input class="form-control product-info" name="name" id="productName" value="${mode == "post" ? "" : product.productName}">
+						<button class="btn btn-outline-secondary" type="button" id="productNameCheckBtn">중복 검사</button>
+					</div>
 				</div>
+				<input type="hidden" name="productId" value="${mode.equals("post") ? "" : product.productId}">
 
-
-				<div class="input-group">
-					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
-					<input class="form-control product-info" id="category" disabled value="${mode == "post" ? "" : editBoard.product.category.getLabel()}">
-				</div>
-
-				<div class="input-group">
-					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
-					<input class="form-control product-info" id="quantity" disabled value="${mode == "post" ? "" : editBoard.product.remainQuantity}">
-				</div>
-			</div>
-
-			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
-			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/${mode}" id="form">
-
-				<div style="display: flex; flex-direction: row; gap: 15px">
-					<div class="input-group" style="flex: 1">
-						<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
-							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" multiple="multiple">
+				<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+					<div class="input-group">
+						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
+						<select class="form-select form-control product-info" name="category" id="category">
+							<option selected value="0">카테고리 선택</option>
+							<option value="1">봉지라면</option>
+							<option value="2">컵라면</option>
+							<option value="3">토핑</option>
+						</select>
 					</div>
 
-					<div class="input-group" style="width: 50%">
-						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">가격</span></div>
-						<input class="form-control product-info" id="price" name="price" value="${editBoard == null ? "" : editBoard.price}">
+					<div class="input-group">
+						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
+						<input class="form-control product-info" id="quantityInput" name="quantity" value="${mode == "post" ? "" : product.remainQuantity}">
 					</div>
-
 				</div>
 
-				<div class="input-group">
-					<span class="input-group-text">상세 설명</span>
-					<textarea class="form-control" aria-label="With textarea" name="content" id="content">${mode == "post" ? "" : editBoard.content}</textarea>
+				<div class="input-group" style="flex: 1">
+					<input type="file" class="form-control" aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" id="productImgInput">
 				</div>
 
-				<input type="hidden" name="formType" value="{mode}">
-				<input type="hidden" name="productId" id="productId" value="${mode == "post" ? "" : editBoard.product.productId}">
-				<div class="selected-product">
+				<div style="width: 100%; border-bottom: 1px solid #DFE2E6"></div>
+
+				<div style="height: 210px; display: flex; flex-direction: row; gap: 40px;">
+					<img src="${pageContext.request.contextPath}/resource/picture/${mode == "post" ? "default2.png" : product.getPicture}"
+						 style="height: 100%; width: 210px; object-fit: cover; border: 1px solid #DFE2E6"
+						 id="productImg">
+					<div style="display: grid; height: 100%; gap: 15px; grid-template-columns: 70px 10px 150px; grid-auto-rows: 50px; align-items: center; align-content: center">
+						<div class="product-name-preview">상품명</div><span class="product-name-preview">:</span><span class="product-name-preview" id="name-preview"></span>
+						<div style="font-size: 18px">카테고리</div><span>:</span><span id="category-preview"></span>
+						<div style="font-size: 18px">재고</div><span>:</span><span id="quantity-preview"></span>
+					</div>
 				</div>
 
-				<div class="w-100 text-end" style="margin-top: 20px">
-					<button type="button" class="btn btn-primary" id="submitButton">확인</button>
+				<div style="text-align: right">
+					<button type="button" class="btn btn-success" style="width: 100px; margin-top: 20px" id="submitButton">확인</button>
 				</div>
 			</form>
-		</div>
-	</div>
-
-	<!-- Modal -->
-	<div class="modal fade" id="selectProductModal" tabindex="-1" aria-labelledby="selectProductLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="selectProductLabel">상품 선택</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body" style="height: 400px; overflow: auto">
-					<div class="product-card-container">
-						<div class="shadow-sm product-card-menu bg-secondary">
-							<div>상품명</div>
-							<div>카테고리</div>
-							<div>재고</div>
-						</div>
-
-						<c:forEach var="product" items="${products}">
-							<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.remainQuantity}, '${product.category.label}')">
-								<div>${product.name}</div>
-								<div>${product.category.label}</div>
-								<div>${product.remainQuantity}</div>
-							</div>
-						</c:forEach>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				</div>
-			</div>
 		</div>
 	</div>
 </div>
@@ -209,27 +178,29 @@
 <script>
     let submitBtn = document.getElementById('submitButton');
     let form = document.getElementById('form');
-    let categoryInput = document.getElementById('category');
-    let quantityInput = document.getElementById('quantity');
     let productNameInput = document.getElementById('productName');
     let productIdInput = document.getElementById('productId');
+    let productImgInput = document.getElementById('productImgInput')
+    let productImg = document.getElementById('productImg');
+    let productId = null;
+    let nameCheckStatus = false;
+    // 유효성 검사
 
-    var modal = new bootstrap.Modal(document.getElementById('selectProductModal'), {
-        keyboard: false
-    })
-
-    function selectProduct(productId, name, remainQuantity, category) {
-        // alert(productId + '' + name + '' + price + '' + remainQuantity + '' + category)
-        productIdInput.value = productId;
-        categoryInput.value = category;
-        productNameInput.value = name;
-        quantityInput.value = remainQuantity;
-        alert("상품이 선택되었습니다.")
-        modal.hide();
-    }
+    productImgInput.addEventListener('change', function () {
+        const reader = new FileReader();
+        reader.onload = ({ target }) => {
+            productImg.src = target.result;
+        };
+        reader.readAsDataURL(productImgInput.files[0]);
+    });
 
     submitBtn.addEventListener('click', function () {
-        if (${editBoard == null}) {
+        if (${mode.equals('post')}) {
+            if (!nameCheckStatus) {
+                alert('아이디 중복 검사를 먼저 해주세요.')
+                return
+            }
+
             if (confirm("등록 하시겠습니까?")) {
                 if (productIdInput.value) {
                     form.submit();
@@ -248,10 +219,80 @@
         }
     });
 
+    $(function () {
+        let categoryInput = $('#category');
+        let quantityInput = $('#quantityInput')
+
+		// 카테고리 미리보기
+        categoryInput.change(function () {
+            let $categoryPreview = $('#category-preview');
+
+            if (Number(categoryInput.val()) === 0) {
+                $categoryPreview.text('')
+			} else {
+                $categoryPreview.text(categoryInput.find('[value=' + categoryInput.val() + ']').text())
+            }
+        });
+
+        $("#productNameCheckBtn").click(function () {
+
+            let url = "${pageContext.request.contextPath}/product/valid-product-name}";
+            let name = $('#productName')
+            let qs = "name=" + name.val();
+
+            const fn = function (data) {
+                let state = data.state;
+                if (state === true) {
+                    name.attr('readOnly', true);
+                    name.css('background-color', '#F8F9FA')
+
+                    nameCheckStatus = true
+					$('#name-preview').text(name.val())
+                    alert('사용 가능한 상품명입니다.')
+                } else {
+                    alert('이미 존재하는 상품명입니다.')
+                }
+            };
+            ajaxFun(url, "post", qs, "json", fn);
+        });
+
+        quantityInput.change(function () {
+            $('#quantity-preview').text(quantityInput.val());
+        });
+
+
+        function ajaxFun(url, method, query, dataType, fn) {
+            $.ajax({
+                type: method,
+                url: url,
+                data: query,
+                dataType: dataType,
+                success: function (data) {
+                    fn(data);
+                },
+                beforeSend: function (jqXHR) {
+                    jqXHR.setRequestHeader("AJAX", true); // 사용자 정의 헤더
+                },
+                error: function (jqXHR) {
+                    if (jqXHR.status === 403) {
+                        login();
+                        return false;
+                    } else if (jqXHR.status === 400) {
+                        alert("요청 처리가 실패 했습니다.");
+                        return false;
+                    }
+                }
+            });
+        }
+    });
+
+
+
+
 </script>
 
 <script>
-    $(document).ready(function () {
+    $(function () {
         selectMenu(menuIndex)
     })
 </script>

@@ -58,4 +58,9 @@ public class ProductServiceImpl implements ProductService {
 	public void editQuantity(Long productId, Integer amount) {
 
 	}
+
+	@Override
+	public boolean isPresentName(String name) {
+		return productRepository.isPresentName(name);
+	}
 }

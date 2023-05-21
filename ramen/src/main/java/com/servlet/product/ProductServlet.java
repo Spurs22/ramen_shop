@@ -7,7 +7,6 @@ import com.repository.product.*;
 import com.service.cart.CartService;
 import com.service.cart.CartServiceImpl;
 import com.service.product.*;
-import com.util.MyServlet;
 import com.util.MyUploadServlet;
 import com.util.SessionUtil;
 import org.json.JSONArray;
@@ -20,15 +19,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @MultipartConfig
@@ -54,11 +48,17 @@ public class ProductServlet extends MyUploadServlet {
 
 		if (uri.contains("post-form")) {
 			postForm(req, resp);
-		} else if (uri.contains("post")) {
+		} else if (uri.contains("post-board")) {
 			if (req.getMethod().equals("POST")) {
 				createPost(req, resp);
 			} else {
 				postInfo(req, resp);
+			}
+		} else if (uri.contains("edit-board")) {
+			if (req.getMethod().equals("POST")) {
+				editPost(req, resp);
+			} else {
+				editPostForm(req, resp);
 			}
 		} else if (uri.contains("list")) {
 			list(req, resp);
@@ -70,18 +70,28 @@ public class ProductServlet extends MyUploadServlet {
 			searchKeyword(req, resp);
 		} else if (uri.contains("like")) {
 			likeProductBoard(req, resp);
-		} else if (uri.contains("edit")) {
-			if (req.getMethod().equals("POST")) {
-				editPost(req, resp);
-			} else {
-				editPostForm(req, resp);
-			}
 		} else if (uri.contains("add-cart")) {
 			addCart(req, resp);
 		} else if (uri.contains("direct-order")) {
 			directOrder(req, resp);
 		} else if (uri.contains("review-form")) {
 			reviewForm(req, resp);
+		} else if (uri.contains("add-form")) {
+			productAddForm(req, resp);
+		} else if (uri.contains("post-product")) {
+			if (req.getMethod().equals("POST")) {
+				createProduct(req, resp);
+			} else {
+				productInfo(req, resp);
+			}
+		} else if (uri.contains("edit-product")) {
+			if (req.getMethod().equals("POST")) {
+				editProduct(req, resp);
+			} else {
+				editProductForm(req, resp);
+			}
+		} else if (uri.contains("valid-product-name")) {
+			validProductName(req, resp);
 		}
 	}
 
@@ -369,4 +379,70 @@ public class ProductServlet extends MyUploadServlet {
 		}
 	}
 
+	protected void productAddForm(HttpServletRequest req, HttpServletResponse resp) {
+		String path = "/WEB-INF/views/product/product-add-form.jsp";
+
+		try {
+			req.setAttribute("mode", "post");
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void validProductName(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("ProductServlet.validProductName");
+
+		Boolean result = false;
+
+		try {
+			String productName = req.getParameter("name").replaceAll(" ", "");
+			System.out.println("전달받은 상품 이름 : " + productName);
+
+
+			// 존재하면 true 반환
+			result = productService.isPresentName(productName);
+			System.out.println(result);
+
+			JSONObject job = new JSONObject();
+
+			// 존재하면 false 반환
+			job.put("state", !result);
+
+			PrintWriter out = resp.getWriter();
+			out.print(job);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void createProduct(HttpServletRequest req, HttpServletResponse resp) {
+
+
+		try {
+			ProductCategory category = ProductCategory.getByValue(Integer.parseInt(req.getParameter("category")));
+			int quantity = Integer.parseInt(req.getParameter("quantity"));
+			String name = req.getParameter("name");
+
+
+			new Product(category, name, quantity, null);
+
+//			productRepository.createProduct();
+
+			resp.sendRedirect(req.getContextPath() + "/product/list");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void productInfo(HttpServletRequest req, HttpServletResponse resp) {
+
+	}
+	protected void editProduct(HttpServletRequest req, HttpServletResponse resp) {
+
+	}
+	protected void editProductForm(HttpServletRequest req, HttpServletResponse resp) {
+
+	}
 }

@@ -23,4 +23,6 @@ public interface ProductService {
 	List<Product> findNotRegisteredProduct();
 
 	void editQuantity(Long productId, Integer amount);
+
+	boolean isPresentName(String name);
 }

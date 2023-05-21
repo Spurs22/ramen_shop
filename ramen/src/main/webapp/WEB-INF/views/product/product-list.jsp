@@ -136,7 +136,7 @@
 
 		<div class="product-container" id="resultForm">
 			<c:forEach var="post" items="${posts}">
-				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=${post.product.productId}">
+				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=${post.product.productId}">
 					<c:forEach var="img" items="${post.imgList}">
 						<img class="product-img" src="/Users/kun/Downloads/sample/${img}">
 					</c:forEach>
@@ -235,7 +235,7 @@
 
                 $.each(data, function(i, post) {
                     let userCardTemplate = `
-                            <a class="product-item shadow" href="${pageContext.request.contextPath}/product/post?id=` + post.productId + `">
+                            <a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=` + post.productId + `">
 								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
 								<div style="margin-top: 5px; font-weight: 750">` + post.productName + `</div>
 								<div style="color: #5d5d5d">` + post.price + `원</div>
