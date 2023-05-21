@@ -61,7 +61,7 @@ public class OrderServlet extends MyServlet {
 		// 3) 주문 완료 -> order_ok로 이동
 		if (uri.indexOf("order.do") != -1) {
 			orderForm(req, resp);
-		} else if (uri.indexOf("orderOne.do") != -1) {
+		} else if (uri.indexOf("order-one.do") != -1) {
 			orderOneForm(req, resp);
 		} else if (uri.indexOf("order_ok.do") != -1) {
 			orderSubmit(req, resp);
@@ -93,12 +93,6 @@ public class OrderServlet extends MyServlet {
 			Long dataCount= 0L;
 			
 			for (Cart c : list) {
-				/* // 잔여수량 체크
-				Product product = productService.findProductByProductId(c.getProductId());
-				if(product.getRemainQuantity() < c.getQuantity()) {
-					message = "해당 상품이 품절되었습니다.";
-				}*/
-				
 				totalPrice += c.getPrice() * c.getQuantity();
 				dataCount++;
 			}

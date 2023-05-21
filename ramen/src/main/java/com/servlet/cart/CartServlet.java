@@ -96,7 +96,15 @@ public class CartServlet extends MyServlet {
          
          // 해당 멤버의 장바구니 목록 조회
          List<Cart> list = cartService.findCartByMemberId(memberId);
-
+         
+         for(Cart c : list) {
+        	 if(c.getRemainQuantity() < c.getQuantity()) {
+        		 cartService.editItemNum(c.getProductId(), memberId, c.getRemainQuantity());
+        	 }
+         }
+         
+         list = cartService.findCartByMemberId(memberId);
+         
          // 장바구니 총 개수 구하기
          int dataCount = cartService.getCnt(memberId);
          

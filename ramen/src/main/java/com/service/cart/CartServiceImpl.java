@@ -21,12 +21,15 @@ public class CartServiceImpl implements CartService{
 		boolean result = true;
 		
 		for(Cart c: list) {
+			// 해당 품목이 이미 존재
 			if(c.getProductId() == productId) {
 				cartRepository.editItem(productId, memberId, quantity);
 				result = false;
-				break;
+				return;
 			}
 		}
+		
+		// 해당 품목이 존재하지 않음
 		if(result) {
 			cartRepository.createItem(productId, memberId, quantity);
 		}

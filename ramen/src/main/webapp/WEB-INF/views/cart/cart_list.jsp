@@ -80,117 +80,7 @@
 		background:#eee;
 	}
 	</style>
-	
-<script type="text/javascript">
 
-
-        $(function() {
-        	
-            $("#chkAll").click(function(){
-                if($(this).is(":checked")) {
-                    $("input[name=productIds]").prop("checked", true);
-                } else {
-                    $("input[name=productIds]").prop("checked", false);
-                }
-            });
-
-            $("#btnDelete").click(function(){
-                let productId = $(this).parents('.main-container').find('.productIds').val();
-
-                if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
-                    const f = document.listForm;
-                    f.action="${pageContext.request.contextPath}/cart/delete.do?productId="+productId;
-                    f.submit();
-                }
-            });
-
-            $("#btnDeleteList").click(function(){
-                let cnt = $("input[name=productIds]:checked").length;
-                if(cnt === 0) {
-                    alert("삭제할 물품을 먼저 선택하세요.");
-                    return false;
-                }
-
-                if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
-                    const f = document.listForm;
-                    f.action="${pageContext.request.contextPath}/cart/list_delete.do";
-                    f.submit();
-                }
-            });
-
-            // 결제버튼
-            $("#btnOrder").click(function(){
-                let cnt = $("input[name=productIds]:checked").length;
-
-                if(cnt === 0) {
-                    alert("결제할 물품을 먼저 선택하세요.");
-                    return false;
-                }
-                
-                // 남은 수량과 비교
-				// 총 수량 > 남은 수량 >> alert와 총 수량 = 남은 수량으로
-				
-                
-                
-                if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
-                    const f = document.listForm;
-                    f.action="${pageContext.request.contextPath}/order/order.do";
-                    f.submit();
-                }
-                
-            });
-
-            //수량 옵션
-            $('.count :button').on({
-                'click': function () {
-                	let check = $.fn.checkQuantity(this);
-    				if (!check) {
-                        alert('최대 수량을 넘었습니다.');
-    					return;
-                    }
-
-                    var $count = $(this).parent('.count').find('.quantitys');
-                    var quantity = $count.val();
-                    var $pid = $(this).closest("tr").find('.productIds');
-                    var productId = $pid.val();
-
-                    let url = "${pageContext.request.contextPath}/cart/num_update.do?productId="+ productId +"&quantity="+quantity;
-                    location.href= url;
-                },
-            });
-
-			// 수량 체크 함수
-            $.fn.checkQuantity = function (obj) {
-                let countEl = $(obj).parent('.count').find('.quantitys');
-                let currentCount = Number(countEl.val());
-                let remain = Number($(obj).parent().next().text());
-				let result = true;
-
-                let min = 1;
-
-                if($(obj).hasClass('minus')){
-                    if(currentCount > min){
-                        currentCount--;
-                    }
-                }else if($(obj).hasClass('plus')){
-                    if (currentCount < remain) {
-                        currentCount++;
-                    } else {
-                        alert("이 상품은 최대 " + remain + "개 까지 구매 가능합니다.");
-                        currentCount = remain;
-                    }
-                }
-                countEl.val(currentCount);
-
-                if (currentCount > remain) {
-                    result = false;
-                }
-                return result;
-            }
-        });
-
-
-	</script>
 </head>
 <body>
 <div class="whole-container">
@@ -258,5 +148,153 @@
 			</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	function ajaxFun(url, method, query, dataType, fn) {
+	    $.ajax({
+	        type: method,
+	        url: url,
+	        data: query,
+	        dataType: dataType,
+	        success: function (data) {
+	            fn(data);
+	        },
+	        beforeSend: function (jqXHR) {
+	            jqXHR.setRequestHeader("AJAX", true); // 사용자 정의 헤더
+	        },
+	        error: function (jqXHR) {
+	            if (jqXHR.status === 403) {
+	                login();
+	                return false;
+	            } else if (jqXHR.status === 400) {
+	                alert("요청 처리가 실패 했습니다.");
+	                return false;
+	            }
+	        }
+	    });
+	}
+
+        $(function() {
+        	let quantityEl = $(".quantitys");
+        	let quantity = Number(quantityEl.val());
+        	let remain = Number($(".count2").text());
+        	if(quantity > remain){
+        		quantityEl.val(remain);
+        	}
+        	
+        	
+            $("#chkAll").click(function(){
+                if($(this).is(":checked")) {
+                    $("input[name=productIds]").prop("checked", true);
+                } else {
+                    $("input[name=productIds]").prop("checked", false);
+                }
+            });
+
+            $(document).on("click","#btnDelete", function(){
+                let productId = $(this).parents('.main-container').find('.productIds').val();
+
+                if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
+                    const f = document.listForm;
+                    f.action="${pageContext.request.contextPath}/cart/delete.do?productId="+productId;
+                    f.submit();
+                }
+            });
+
+            $("#btnDeleteList").click(function(){
+            	event.preventDefault();
+                let cnt = $("input[name=productIds]:checked").length;
+                if(cnt === 0) {
+                    alert("삭제할 물품을 먼저 선택하세요.");
+                    return false;
+                }
+
+                if(confirm("선택한 물품을 삭제 하시겠습니까 ?")) {
+                    const f = document.listForm;
+                    f.action="${pageContext.request.contextPath}/cart/list_delete.do";
+                    f.submit();
+                }
+            });
+
+            // 결제버튼
+            $("#btnOrder").click(function(){
+                let cnt = $("input[name=productIds]:checked").length;
+
+                if(cnt === 0) {
+                    alert("결제할 물품을 먼저 선택하세요.");
+                    return false;
+                }
+                
+                // 남은 수량과 비교
+				// 총 수량 > 남은 수량 >> alert와 총 수량 = 남은 수량으로
+				
+                
+                
+                if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
+                    const f = document.listForm;
+                    f.action="${pageContext.request.contextPath}/order/order.do";
+                    f.submit();
+                }
+                
+            });
+
+            //수량 옵션
+            $('.count :button').on({
+                'click': function () {
+                	let check = $.fn.checkQuantity(this);
+    				if (!check) {
+                        alert('최대 수량을 넘었습니다.');
+    					return;
+                    }
+    				
+                    var $count = $(this).parent('.count').find('.quantitys');
+                    var quantity = $count.val();
+                    var $pid = $(this).closest("tr").find('.productIds');
+                    var productId = $pid.val();
+                    
+                	let url = "${pageContext.request.contextPath}/cart/num_update.do"
+                	let qs = "productId="+ productId +"&quantity="+quantity
+                	
+                	const fn = function(){
+                		alert("성공~!");
+                	}
+
+                    
+                    ajaxFun(url, "post", qs, "json", fn);
+                },
+            });
+
+			// 수량 체크 함수
+            $.fn.checkQuantity = function (obj) {
+                let countEl = $(obj).parent('.count').find('.quantitys');
+                let currentCount = Number(countEl.val());
+                let remain = Number($(obj).parent().next().text());
+				let result = true;
+
+                let min = 1;
+
+                if($(obj).hasClass('minus')){
+                    if(currentCount > min){
+                        currentCount--;
+                    }
+                }else if($(obj).hasClass('plus')){
+                    if (currentCount < remain) {
+                        currentCount++;
+                    } else {
+                        alert("이 상품은 최대 " + remain + "개 까지 구매 가능합니다.");
+                        currentCount = remain;
+                    }
+                }
+                countEl.val(currentCount);
+
+                if (currentCount > remain) {
+                    result = false;
+                }
+                return result;
+            }
+        });
+
+
+	</script>
 </body>
 </html>
