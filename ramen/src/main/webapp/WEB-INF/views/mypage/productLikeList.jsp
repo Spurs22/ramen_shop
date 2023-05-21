@@ -38,12 +38,36 @@
 			<div class="sub-menu">
 		<table>
 			<tr>
-				<td width="50%"> ${dataCount}개(${page}/${total_page} 페이지) </td>
+				<td width="50%"> ${likedataCount}개(${page}/${total_page} 페이지) </td>
 				<td align="right">&nbsp;</td>
 			</tr>
 		</table>
 		
+		<table>
+			<thead>
+			<tr class="table-list">
+				<th class="subject"> 이름 </th>
+				<th class="subject"> 이름 </th>
+			</tr>
+			</thead>
+			
+			<tbody>
+				<c:forEach var="dto" items="${list}" varStatus="status">
+				<tr>
+					<td class=left>
+						<a href="${pageContext.request.contextPath}/product/product.do">${dto.productId}</a>
+					</td>
+					<td>${dto.productName}</td>
+				</tr>
+				</c:forEach>
+			</tbody>
+		</table>
 		
+	
+		
+		<div class="page-navigation">
+			${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+		</div>
 		
 			</div>
 		</div>

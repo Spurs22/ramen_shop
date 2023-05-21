@@ -5,6 +5,7 @@
 	<title>Title</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 
 <style>
 .table-list thead > tr:first-child{ background: #f8f8f8; }
@@ -34,7 +35,7 @@
 			<div>
 				<table>
 					<tr>
-						<td width="50%"> ${dataCount}개(${page}/${total_page} 페이지) </td>
+						<td width="50%"> ${likedataCount}개(${page}/${total_page} 페이지) </td>
 						<td align="right">&nbsp;</td>
 					</tr>	
 				</table>
@@ -62,6 +63,11 @@
 						</c:forEach>
 					</tbody>
 				</table>
+				
+				<div class="page-navigation">
+					${likedataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+				</div>
+				
 			</div>
 		</div>
 	</div>
