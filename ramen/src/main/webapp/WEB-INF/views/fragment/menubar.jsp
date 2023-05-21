@@ -29,6 +29,7 @@
             border-radius: 8px 8px 0 0;
             background: #eeeeee;
             padding-top: 4px;
+            font-size: 14px;
         }
 
         .menubar-item:hover:not(.selected-menu) {
@@ -111,18 +112,20 @@
                 고객센터
             </span>
         </div>
-        
-        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/main.do'">
-            <span>
-                마이페이지
-            </span>
-        </div>
-        
-        <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/admin/main.do'">
-            <span>
-                관리자페이지
-            </span>
-        </div>
+        <c:if test="${sessionScope.member.userRoll == 0}">
+            <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/main.do'">
+                <span>
+                    마이페이지
+                </span>
+            </div>
+        </c:if>
+        <c:if test="${sessionScope.member.userRoll == 1}">
+            <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/admin/main.do'">
+                <span>
+                    관리자페이지
+                </span>
+            </div>
+        </c:if>
 
     </div>
 

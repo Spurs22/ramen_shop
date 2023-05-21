@@ -48,7 +48,8 @@
             width: 100%;
             height: 150px;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 3px;
+			border: 1px solid gray;
         }
 
         .product-item:hover {
@@ -112,15 +113,15 @@
 			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 				<input type="radio" class="btn-check" name="category" id="btnradio1" autocomplete="off" value="1"
 					   onclick="clickCategory(this)" checked>
-				<label class="btn btn-outline-primary" for="btnradio1">봉지 라면</label>
+				<label class="btn btn-outline-secondary" for="btnradio1">봉지 라면</label>
 
 				<input type="radio" class="btn-check" name="category" id="btnradio2" autocomplete="off" value="2"
 					   onclick="clickCategory(this)">
-				<label class="btn btn-outline-primary" for="btnradio2">컵 라면</label>
+				<label class="btn btn-outline-secondary" for="btnradio2">컵 라면</label>
 
 				<input type="radio" class="btn-check" name="category" id="btnradio3" autocomplete="off" value="3"
 					   onclick="clickCategory(this)">
-				<label class="btn btn-outline-primary" for="btnradio3">토핑</label>
+				<label class="btn btn-outline-secondary" for="btnradio3">토핑</label>
 			</div>
 
 			<div style="display: flex; flex-direction: row; gap: 5px" >
@@ -129,19 +130,31 @@
 			</div>
 
 			<c:if test="${sessionScope.member.userRoll == 1}">
-				<div style="display: flex; flex-direction: row; gap: 5px">
-						<%--				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>--%>
-					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/add-form'">상품 등록</button>
-					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/post-form'">상세 페이지 등록</button>
+<%--				<div style="display: flex; flex-direction: row; gap: 5px">--%>
+<%--						&lt;%&ndash;				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>&ndash;%&gt;--%>
+<%--					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/add-form'">상품 등록</button>--%>
+<%--					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/post-form'"></button>--%>
+<%--				</div>--%>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						Action
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/add-form">상품 등록</a></li>
+						<li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/post-form">상품 상세페이지 등록</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/manage-product">상품 관리</a></li>
+					</ul>
 				</div>
 			</c:if>
-
 		</div>
 
 		<div class="product-container" id="resultForm">
 			<c:forEach var="post" items="${posts}">
 				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=${post.product.productId}">
-					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}">
+
+					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? "default2.png" : post.product.picture}">
 					<div style="margin-top: 5px; font-weight: 750">${post.product.name}</div>
 					<div style="color: #5d5d5d">${post.price}원</div>
 					<div class="starBundle-comment">
@@ -235,19 +248,21 @@
                 // resultForm2.css('display','none')
 
                 $.each(data, function(i, post) {
-                    let userCardTemplate = `
-                            <a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=` + post.productId + `">
-								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
-								<div style="margin-top: 5px; font-weight: 750">` + post.productName + `</div>
-								<div style="color: #5d5d5d">` + post.price + `원</div>
+                    let userCardTemplate = `<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=` + post.productId + `">`
 
+					if (post.picture == null) {
+						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/default2.png"/>`
+					} else {
+						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/` + post.picture + `"/>`
+					}
+
+                    userCardTemplate += `<div style="margin-top: 5px; font-weight: 750">` + post.productName + `</div>
+								<div style="color: #5d5d5d">` + post.price + `원</div>
 								<div class="starBundle-comment">` +
 									generateStars(post.rating)
 								+ `</div>
-
 							</a>
                         `;
-
                     resultForm.append(userCardTemplate);
                 });
 
@@ -278,7 +293,6 @@
                 starsHTML += `<i class="fa-regular fa-star"></i>`;
             }
         }
-
         return starsHTML;
     }
 </script>

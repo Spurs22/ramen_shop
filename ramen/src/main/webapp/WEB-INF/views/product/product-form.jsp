@@ -148,13 +148,12 @@
 				</div>
 			</div>
 
-			<%-- enctype="multipart/form-data" 쓰면 오류남 --%>
 			<form method="post" class="main-content-card" enctype="multipart/form-data" action="${pageContext.request.contextPath}/product/${mode}-board" id="form">
 
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">
-						<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
-							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" multiple="multiple">
+						<input type="file" class="form-control" id="imgInput"
+							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" >
 					</div>
 
 					<div class="input-group" style="width: 50%">
@@ -172,6 +171,7 @@
 				<input type="hidden" name="formType" value="{mode}">
 				<input type="hidden" name="productId" id="productId" value="${mode == "post" ? "" : editBoard.product.productId}">
 				<div class="selected-product">
+					<img id="imgPreview" style="width: 100px; height: 100px">
 				</div>
 
 				<div class="w-100 text-end" style="margin-top: 20px">
@@ -255,6 +255,15 @@
             }
         }
     });
+
+
+    // $('#imgInput').change(function () {
+    //     const reader = new FileReader();
+    //     reader.onload = ({ target }) => {
+    //         $('#imgPreview').src = target.result;
+    //     };
+    //     reader.readAsDataURL($('#imgInput').files[0]);
+    // });
 
 </script>
 

@@ -238,7 +238,7 @@ public class ProductServlet extends MyUploadServlet {
 				req.setAttribute("member", member);
 			}
 
-			List<ProductBoard> posts = productBoardService.findAllPosts();
+			List<ProductBoard> posts = productBoardService.findByCategoryAndKeyword(ProductCategory.BONGJI, null);
 			req.setAttribute("posts", posts);
 
 			String path = "/WEB-INF/views/product/product-list.jsp";

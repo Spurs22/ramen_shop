@@ -43,7 +43,6 @@
             	<a href="${pageContext.request.contextPath}/cart/list.do" title="장바구니"><i class="fa-solid fa-cart-shopping"></i></a>
             </c:if>
             <c:if test="${sessionScope.member.userRoll == 1}">
-            	&nbsp;
 				<a href="#" title="관리자"><i class="fa-solid fa-gear"></i></a>
             </c:if>
 		</div>

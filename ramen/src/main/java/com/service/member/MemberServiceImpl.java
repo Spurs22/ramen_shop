@@ -20,11 +20,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member findById(Long memberId) throws SQLException {
-		return memberRepository.findById(memberId);
-	}
-
-	@Override
 	public Member loginMember(String email, String password) throws SQLException {
 		return memberRepository.loginMember(email, password);
 	}
@@ -45,8 +40,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member Roll(Member member) throws SQLException {
-		return memberRepository.Roll(member);
+	public Member roll(Member member) throws SQLException {
+		return memberRepository.roll(member);
 	}
 
 	@Override
@@ -54,8 +49,4 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findAll();
 	}
 
-	@Override
-	public Member findByEmail(String email) {
-		return memberRepository.findByEmail(email);
-	}
 }
