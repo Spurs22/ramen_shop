@@ -3,9 +3,12 @@ package com.servlet.product;
 import com.DTO.*;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
+import com.repository.member.MemberRepository;
+import com.repository.member.MemberRepositoryImpl;
 import com.repository.product.*;
 import com.service.cart.CartService;
 import com.service.cart.CartServiceImpl;
+import com.service.member.MemberService;
 import com.service.product.*;
 import com.util.MyUploadServlet;
 import com.util.SessionUtil;
@@ -35,6 +38,7 @@ public class ProductServlet extends MyUploadServlet {
 	ProductBoardRepository productBoardRepository = new ProductBoardRepositoryImpl();
 	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
 	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
+	MemberRepository memberRepository = new MemberRepositoryImpl();
 
 	CartService cartService = new CartServiceImpl(cartRepository);
 	ProductService productService = new ProductServiceImpl(productRepository);
@@ -194,9 +198,6 @@ public class ProductServlet extends MyUploadServlet {
 		Long productId = Long.valueOf(req.getParameter("productId"));
 
 		ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
-
-//		String filename = null;
-//		Part picture = req.getPart("picture");
 
 		ServletContext context = getServletContext();
 		String path = context.getRealPath("/resource/picture");
@@ -366,9 +367,22 @@ public class ProductServlet extends MyUploadServlet {
 	protected void reviewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("review-form");
 
+		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+			if (memberId == null) {
+				resp.sendRedirect(req.getContextPath() + "/home");
+				return;
+			}
 
-		String path = "/WEB-INF/views/product/product-review.jsp";
-		forward(req, resp, path);
+			Member member = memberRepository.readMember(memberId);
+			req.setAttribute("member", member);
+
+			String path = "/WEB-INF/views/product/product-review.jsp";
+			forward(req, resp, path);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void directOrder(HttpServletRequest req, HttpServletResponse resp) {

@@ -160,7 +160,7 @@
 					<img src="${pageContext.request.contextPath}/resource/picture/${mode == "post" ? "default2.png" : product.getPicture}"
 						 style="height: 100%; width: 210px; object-fit: cover; border: 1px solid #DFE2E6"
 						 id="productImg">
-					<div style="display: grid; height: 100%; grid-template-columns: 70px 10px 150px; grid-auto-rows: 50px; align-items: center; align-content: center">
+					<div style="display: grid; height: 100%; grid-template-columns: 70px 25px 150px; grid-auto-rows: 50px; align-items: center; align-content: center">
 						<div class="product-name-preview">상품명</div><span class="product-name-preview">:</span><span class="product-name-preview" id="name-preview"></span>
 						<div style="font-size: 16px">카테고리</div><span>:</span><span id="category-preview"></span>
 						<div style="font-size: 16px">재고</div><span>:</span><span id="quantity-preview"></span>
@@ -202,19 +202,11 @@
             }
 
             if (confirm("등록 하시겠습니까?")) {
-                if (productIdInput.value) {
-                    form.submit();
-                } else {
-                    alert('상품을 선택하세요.')
-                }
+				form.submit();
             }
         } else {
             if (confirm("수정 하시겠습니까?")) {
-                if (productIdInput.value) {
-                    form.submit();
-                } else {
-                    alert('상품을 선택하세요.')
-                }
+				form.submit();
             }
         }
     });

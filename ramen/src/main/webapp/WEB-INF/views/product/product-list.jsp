@@ -138,10 +138,7 @@
 		<div class="product-container" id="resultForm">
 			<c:forEach var="post" items="${posts}">
 				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=${post.product.productId}">
-					<c:forEach var="img" items="${post.imgList}">
-						<img class="product-img" src="/Users/kun/Downloads/sample/${img}">
-					</c:forEach>
-
+					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}">
 					<div style="margin-top: 5px; font-weight: 750">${post.product.name}</div>
 					<div style="color: #5d5d5d">${post.price}원</div>
 					<div class="starBundle-comment">

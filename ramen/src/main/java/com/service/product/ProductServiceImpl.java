@@ -16,17 +16,17 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void createProduct(Product product) {
-
+		productRepository.createProduct(product);
 	}
 
 	@Override
 	public void editProduct(Long productId, Product product) {
-
+		editProduct(productId, product);
 	}
 
 	@Override
 	public void deleteProduct(Product product) {
-
+		deleteProduct(product);
 	}
 
 	@Override

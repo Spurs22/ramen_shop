@@ -1,7 +1,10 @@
 package com.servlet.home;
 
+import com.DTO.Member;
 import com.DTO.Product;
 import com.DTO.ProductBoard;
+import com.repository.member.MemberRepository;
+import com.repository.member.MemberRepositoryImpl;
 import com.repository.product.ProductBoardRepository;
 import com.repository.product.ProductBoardRepositoryImpl;
 import com.repository.product.ProductRepository;
@@ -11,6 +14,7 @@ import com.service.product.ProductBoardServiceImpl;
 import com.service.product.ProductService;
 import com.service.product.ProductServiceImpl;
 import com.util.MyServlet;
+import com.util.SessionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +26,8 @@ import java.util.List;
 
 @WebServlet("/home/*")
 public class HomeServlet extends MyServlet {
+
+	MemberRepository memberRepository = new MemberRepositoryImpl();
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, UnsupportedEncodingException {
@@ -50,6 +56,11 @@ public class HomeServlet extends MyServlet {
 		System.out.println("HomeServlet.homePage");
 
 		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+			if (memberId != null) {
+				Member member = memberRepository.readMember(memberId);
+				req.setAttribute("member", member);
+			}
 
 			String path = "/WEB-INF/views/home/home.jsp";
 			forward(req, resp, path);
