@@ -46,8 +46,8 @@ public abstract class MyUploadServlet extends HttpServlet {
 	 * @param pathname	서버에 파일을 저장할 경로
 	 * @return			서버에 저장된 파일명, 클라이언트가 업로드한 파일명
 	 */
-	protected List<String> doFileUpload(Part p, String pathname) throws ServletException, IOException {
-		List<String> list = null;
+	protected String doFileUpload(Part p, String pathname) throws ServletException, IOException {
+		String name = null;
 
 		try {
 			File f = new File(pathname);
@@ -69,13 +69,13 @@ public abstract class MyUploadServlet extends HttpServlet {
 			System.out.println(fullpath);
 			p.write(fullpath);
 
-			list = new ArrayList<>();
-			list.add(saveFilename);
+
+			name = saveFilename;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return list;
+		return name;
 	}
 
 	/**

@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -421,14 +422,33 @@ public class ProductServlet extends MyUploadServlet {
 
 
 		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+			if (memberId == null) {
+				resp.sendRedirect(req.getContextPath() + "/product/list");
+				return;
+			}
+
 			ProductCategory category = ProductCategory.getByValue(Integer.parseInt(req.getParameter("category")));
 			int quantity = Integer.parseInt(req.getParameter("quantity"));
 			String name = req.getParameter("name");
 
 
-			new Product(category, name, quantity, null);
+			Product product = new Product(category, name, quantity, null);
 
-//			productRepository.createProduct();
+			ServletContext context = getServletContext();
+			String path = context.getRealPath("/resource/picture");
+
+			Part part = req.getPart("picture");
+
+			String fileName = doFileUpload(part, path);
+
+			System.out.println(fileName);
+			product.setPicture(fileName);
+
+			System.out.println(product);
+
+			productService.createProduct(product);
 
 			resp.sendRedirect(req.getContextPath() + "/product/list");
 		} catch (Exception e) {
