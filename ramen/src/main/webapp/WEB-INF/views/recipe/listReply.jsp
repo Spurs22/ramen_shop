@@ -76,7 +76,7 @@
 						<span class='deleteReply' data-replyNum='${vo.id}'>삭제</span>
 					</c:when>
 					<c:otherwise>
-						<span>삭제</span>
+						<span style="cursor: pointer;" onclick="noAccess();">삭제</span>
 					</c:otherwise>
 				</c:choose>
 			</td>		

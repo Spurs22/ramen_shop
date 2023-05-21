@@ -123,6 +123,20 @@
 		.fa-trash-can:hover {
 			transform: scale(1.1);
 		}
+		
+		.cart-box {
+		    width: 100%;
+		}
+		.cart-box tr {
+		    height: 40px;
+		}
+		.hightlight { background: #f6f6f6; border-top: 2px solid black; border-bottom: 2px solid black; text-align: center;}
+		.product-quantity{ border: none; width: 40px; text-align: center; outline: none;}
+		
+		
+		.contenttb { width: 100%; }
+		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 20px; border-radius: 5px; background: #f6f6f6;}
+		.subjecttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 40px; padding: 10px; border-radius: 5px; background: #f6f6f6;}
 	</style>
 </head>
 <script>
@@ -181,7 +195,7 @@
 		
 		<div class="write-step2" style="display: none;">
 		<form name="recipeForm" method="post">
-			<table>
+			<table class="contenttb">
 				<tr>
 					<td>
 						<div style="display: flex; flex-direction: row; gap: 5px">
@@ -201,13 +215,13 @@
 					<td colspan="2">제목</td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="text" name="subject" value="${dto.subject}"></td>
+					<td colspan="2"><input class="subjecttxt" type="text" name="subject" value="${dto.subject}"></td>
 				</tr>
 				<tr>
 					<td colspan="2">내용</td>
 				</tr>
 				<tr>
-					<td colspan="2"><textarea name="content" id="content">${dto.content}</textarea></td>
+					<td colspan="2"><textarea class="contenttxt" name="content" id="content">${dto.content}</textarea></td>
 				</tr>
 			</table>
 			
@@ -216,10 +230,10 @@
 		
 		<div class="cart-box">
 			<table>
-				<tr>
-					<th>상품명</th>
-					<th>수량</th>
-					<th>삭제</th>
+				<tr class='hightlight'>
+					<th style="width:40%">상품명</th>
+					<th style="width:30%">수량</th>
+					<th style="width:20%">삭제</th>
 				</tr>
 				<tbody class="select-product"></tbody>
 			</table>
@@ -350,7 +364,7 @@
     	
     	let out = "";
     	
-    	out += "<tr>";
+    	out += "<tr style='border-bottom: 1px solid gray;'>";
 		out += "<td>"+ name +"</td>"	
 		out += "<td class='quantity-cell'>";
 		out += "<button type='button' class='quantity-btn'>&lt;&nbsp;</button>";
@@ -358,7 +372,7 @@
 		out += "<button type='button' class='quantity-btn'>&nbsp;&gt;</button>";
 		out += "<input type='hidden' name='productId' value='`+productId+`'>"
 		out += "</td>";
-		out += "<td>";
+		out += "<td style='text-align: center;'>";
 		out += "<button type='button' class='delete-btn'><i class='fa-solid fa-trash-can'></i></button>";		
 		out += "</td>";
 		out += "</tr>";
