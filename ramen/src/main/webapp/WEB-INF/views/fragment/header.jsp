@@ -25,10 +25,10 @@
 			&nbsp;
 		</div>
 		<div class="header-right">
-			<c:if test="${member != null}">
-<%--				<div style="margin-right: 10px">--%>
-<%--					<span style="font-weight: 650">${member.nickName}</span> 님 환영합니다!--%>
-<%--				</div>--%>
+			<c:if test="${not empty sessionScope}">
+				<div style="margin-right: 10px">
+					<span style="font-weight: 650">${sessionScope.member.userNickname}</span> 님 환영합니다!
+				</div>
 			</c:if>
 
             <c:if test="${empty sessionScope.member}">

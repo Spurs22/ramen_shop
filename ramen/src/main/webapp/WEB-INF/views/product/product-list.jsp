@@ -125,14 +125,17 @@
 
 			<div style="display: flex; flex-direction: row; gap: 5px" >
 				<input type="text" class="search-box" id="searchInput">
-				<button class="btn btn-primary" id="searchButton">검색</button>
+<%--				<button class="btn btn-primary" id="searchButton">검색</button>--%>
 			</div>
 
-			<div style="display: flex; flex-direction: row; gap: 5px">
-<%--				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>--%>
-	<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/add-form'">등록</button>
-				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-form'">상품 등록</button>
-			</div>
+			<c:if test="${sessionScope.member.userRoll == 1}">
+				<div style="display: flex; flex-direction: row; gap: 5px">
+						<%--				<button class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/product/post-product-form'">상품 등록</button>--%>
+					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/add-form'">상품 등록</button>
+					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/post-form'">상세 페이지 등록</button>
+				</div>
+			</c:if>
+
 		</div>
 
 		<div class="product-container" id="resultForm">

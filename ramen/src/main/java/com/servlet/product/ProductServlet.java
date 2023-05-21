@@ -9,6 +9,7 @@ import com.repository.product.*;
 import com.service.cart.CartService;
 import com.service.cart.CartServiceImpl;
 import com.service.member.MemberService;
+import com.service.member.MemberServiceImpl;
 import com.service.product.*;
 import com.util.MyUploadServlet;
 import com.util.SessionUtil;
@@ -41,6 +42,7 @@ public class ProductServlet extends MyUploadServlet {
 	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
 	MemberRepository memberRepository = new MemberRepositoryImpl();
 
+	MemberService memberService = new MemberServiceImpl(memberRepository);
 	CartService cartService = new CartServiceImpl(cartRepository);
 	ProductService productService = new ProductServiceImpl(productRepository);
 	ProductBoardService productBoardService = new ProductBoardServiceImpl(productBoardRepository);
@@ -96,6 +98,8 @@ public class ProductServlet extends MyUploadServlet {
 			}
 		} else if (uri.contains("valid-product-name")) {
 			validProductName(req, resp);
+		} else if (uri.contains("manage-product")) {
+			manageProduct(req, resp);
 		}
 	}
 
@@ -227,11 +231,22 @@ public class ProductServlet extends MyUploadServlet {
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("ProductServlet.list" );
 
-		List<ProductBoard> posts = productBoardService.findAllPosts();
-		req.setAttribute("posts", posts);
+		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+			if (memberId != null) {
+				Member member = memberService.readMember(memberId);
+				req.setAttribute("member", member);
+			}
 
-		String path = "/WEB-INF/views/product/product-list.jsp";
-		forward(req, resp, path);
+			List<ProductBoard> posts = productBoardService.findAllPosts();
+			req.setAttribute("posts", posts);
+
+			String path = "/WEB-INF/views/product/product-list.jsp";
+			forward(req, resp, path);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void searchKeyword(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -469,5 +484,17 @@ public class ProductServlet extends MyUploadServlet {
 	}
 	protected void editProductForm(HttpServletRequest req, HttpServletResponse resp) {
 
+	}
+
+	protected void manageProduct(HttpServletRequest req, HttpServletResponse resp) {
+		String path = "/WEB-INF/views/product/manage-product.jsp";
+
+		try {
+			List<Product> products = productService.findAllProduct();
+			req.setAttribute("products", products);
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

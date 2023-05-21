@@ -9,7 +9,7 @@
 	<style>
         .main-banner {
 			width: 100%;
-			min-height: 200px;
+			min-height: 280px;
 			background: #f6f6f6;
 			font-weight: 700;
 			font-size: 30px;
@@ -20,7 +20,7 @@
 
         .today-recipe {
             width: 100%;
-            min-height: 300px;
+            /*min-height: 300px;*/
             border: 1px solid #DFE2E6;
             border-radius: 5px;
 			display: flex;
@@ -71,6 +71,7 @@
 			text-align: center;
 			font-size: 25px;
 			font-weight: 600;
+			margin: 15px 0;
         }
 
 		.rank-label {
@@ -110,32 +111,40 @@
 		<div class="content-container">
 			<%--	내용	 --%>
 			<div class="main-banner">
-				<div class="container-label">배너</div>
-
+				<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/00.jpg" style="object-fit: cover">
 			</div>
 
 			<div class="today-recipe">
 				<div class="container-label">
 					오늘의 레시피
 				</div>
-<%--				<div class="recipe-container">--%>
-<%--					<div class="recipe selected-recipe">--%>
-<%--						recipe1--%>
-<%--						<div class="rank-label"><div style="margin: auto 0">1</div></div>--%>
-<%--					</div>--%>
-<%--					<div class="recipe">--%>
-<%--						recipe2--%>
-<%--						<div class="rank-label">2</div>--%>
-<%--					</div>--%>
-<%--					<div class="recipe">--%>
-<%--						recipe3--%>
-<%--						<div class="rank-label">3</div>--%>
-<%--					</div>--%>
-<%--					<div class="recipe">--%>
-<%--						recipe4--%>
-<%--						<div class="rank-label">4</div>--%>
-<%--					</div>--%>
-<%--				</div>--%>
+
+				<div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+					</div>
+					<div class="carousel-inner" style="height: 400px">
+						<div class="carousel-item active">
+							<img src="${pageContext.request.contextPath}/resource/picture/jjapaguri.png" class="d-block w-100" alt="...">
+						</div>
+						<div class="carousel-item">
+							<img src="${pageContext.request.contextPath}/resource/picture/buldakgeti.png" class="d-block w-100" alt="...">
+						</div>
+						<div class="carousel-item">
+							<img src="${pageContext.request.contextPath}/resource/picture/spabuldak.png" class="d-block w-100" alt="...">
+						</div>
+					</div>
+					<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
 			</div>
 
 			<div class="main-banner">

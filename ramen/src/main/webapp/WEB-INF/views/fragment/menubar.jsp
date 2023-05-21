@@ -83,7 +83,7 @@
    </div>
 
     <div class="logo" onclick="location.href='${pageContext.request.contextPath}/home/'">
-        <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo.png">
+        <img style="height: 100%; margin: auto; display: block" src="${pageContext.request.contextPath}/resource/picture/logo2.png">
     </div>
     <div class="menubar">
         <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/home/'">
