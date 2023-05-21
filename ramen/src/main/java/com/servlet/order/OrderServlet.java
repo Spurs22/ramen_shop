@@ -200,6 +200,7 @@ public class OrderServlet extends MyServlet {
 					
 				} catch (RuntimeException e) {
 					System.out.println("재고보다 주문 수량이 많습니다.");
+					// 결제시 에러메세지 보내서 체크 ...
 					resp.sendRedirect(cp+"/cart/list.do");
 					return;
 				}

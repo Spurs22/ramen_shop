@@ -247,11 +247,6 @@
                     return false;
                 }
                 
-                // 남은 수량과 비교
-				// 총 수량 > 남은 수량 >> alert와 총 수량 = 남은 수량으로
-				
-                
-                
                 if(confirm("선택한 물품을 결제 하시겠습니까 ?")) {
                     const f = document.listForm;
                     f.action="${pageContext.request.contextPath}/order/order.do";
