@@ -99,37 +99,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	
 	//
-	@Override
-	public Member findById(Long id) throws SQLException {
-		Member foundMember = null;
-		PreparedStatement pstmt = null;
-		String sql;
-		ResultSet rs = null;
-		try {
-			sql = "SELECT * FROM member WHERE id=?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setLong(1, id);
-
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				foundMember = new Member();
-				foundMember.setMemberId(rs.getLong("memberId"));
-				foundMember.setEmail(rs.getString("email"));
-				foundMember.setPassword(rs.getString("password"));
-				foundMember.setNickName(rs.getString("nickname"));
-				// foundMember.setRoll(rs.getLong("roll"));
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		} finally {
-			DBUtil.closeResource(pstmt, rs);
-		}
-		return foundMember;
-
-	}
 
 	@Override
 	public List<Member> findAll() {
@@ -231,14 +200,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	}
 
-	@Override
-	public Member findByEmail(String email) {
-		/*
-		 * PreparedStatement pstmt = null; ResultSet rs = null; Long memberId = null;
-		 */
 
-		return null;
-	}
 
 	// 회원 / 관리자 구분
 
