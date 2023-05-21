@@ -44,6 +44,10 @@ public class MemberServlet extends MyServlet{
 		   updateSubmit(req, resp);
 		} else if (uri.indexOf("userIdCheck.do") != -1) {
 			userIdCheck(req, resp);
+		} else if (uri.indexOf("select.do") !=-1) {
+			selectForm(req, resp);
+		} else if (uri.indexOf("select_ok.do") !=-1) {
+			selectSubmit(req, resp);
 		}
 	}
 
@@ -320,6 +324,14 @@ public class MemberServlet extends MyServlet{
 
 	protected void userIdCheck(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+	}
+	
+	protected void selectForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		forward(req, resp, "/WEB-INF/views/member/select.jsp");
+	}
+	
+	protected void selectSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 	
 	
