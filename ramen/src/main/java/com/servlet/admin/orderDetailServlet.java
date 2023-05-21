@@ -24,8 +24,8 @@ import com.util.MyUtil;
 @WebServlet("/admin/*")
 public class orderDetailServlet extends MyServlet{
 	private static final long serialVersionUID = 1L;
-	OrderRepositoryImpl ori = new OrderRepositoryImpl();
-	OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
+	private OrderRepositoryImpl ori = new OrderRepositoryImpl();
+	private OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
 	
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,7 +58,7 @@ public class orderDetailServlet extends MyServlet{
 		  4-1) 주문번호별 주문리스트(주문번호 검색)
 		  4-2) 주문번호 >> 주문 상세리스트
 		4. 매출 통계  ----> sales_statistics
-		  1) 기간별 + 상품별 매출
+		  1) 기간별 + 상품별 매출000
 		*/
 		
 		// uri에 따른 작업 구분
@@ -92,15 +92,21 @@ public class orderDetailServlet extends MyServlet{
 			return;
 		}
 		
-		forward(req, resp, "/WEB-INF/views/admin/main.jsp"); // 안되면 jsp로
+		forward(req, resp, "/WEB-INF/views/admin/main.jsp"); // jsp로 포워딩
 
 	}
 	
 	protected void deliverymanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 처리(송장번호 등록하면 배송중으로 바뀜)
+		MyUtil util = new MyUtil();
 		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
 		
 		String cp = req.getContextPath();
 		
@@ -117,16 +123,21 @@ public class orderDetailServlet extends MyServlet{
 	
 	protected void ordermanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문리스트
-		OrderDetailRepositoryImpl odri = new OrderDetailRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		
 		String cp = req.getContextPath();
 		
 		try {
-			String page = req.getParameter("page"); // 넘어온 페이지
+			// 넘어온 페이지
+			String page = req.getParameter("page"); 
 			int current_page = 1;
 			if(page != null) {
 				current_page = Integer.parseInt(page);
@@ -146,6 +157,29 @@ public class orderDetailServlet extends MyServlet{
 				keyword = URLDecoder.decode(keyword, "utf-8");
 			}
 			
+			// 한페이지 표시할 데이터 개수
+			String pageSize = req.getParameter("size");
+			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
+
+			int dataCount, total_page;
+			
+			if (keyword.length() != 0) {
+				dataCount = odri.dataCount(condition, keyword);
+			} else {
+				dataCount = odri.dataCount();
+			}
+			total_page = util.pageCount(dataCount, size);
+
+			if (current_page > total_page) {
+				current_page = total_page;
+			}
+			
+			// 게시물 가져오기
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			
+			/*
 			// 전체 데이터 개수
 			int dataCount;
 			if (keyword.length() == 0) {
@@ -155,23 +189,13 @@ public class orderDetailServlet extends MyServlet{
 			}
 			
 			// 전체 페이지 수
-			int size = 10;
+			int size = 5;
 			int total_page = util.pageCount(dataCount, size);
 			if (current_page > total_page) {
 				current_page = total_page;
 			}
-			
-			// 게시물 가져오기
-			int offset = (current_page - 1) * size;
-			if(offset < 0) offset = 0;
+			*/
 
-			List<OrderBundle> OrderBundlelist = null;
-
-			if (keyword.length() == 0) {
-				//OrderBundlelist = odri.findOrderAll(offset, size, condition, keyword, StatusId);
-			} else {
-				//OrderBundlelist = odri.findOrderDetail(offset, size, condition, keyword);
-			}
 			
 			String query = "";
 			if (keyword.length() != 0) {
@@ -181,17 +205,29 @@ public class orderDetailServlet extends MyServlet{
 			// 페이징처리
 			String listUrl = cp + "/admin/ordermanagement.do";
 			
-			String listDetailUrl = cp + "/admin/ordermanagementDetail.do?page=" + current_page;
+			String listDetailUrl = cp + "/admin/ordermanagement.do?page=" + current_page;
 			if (query.length() != 0) {
 				listUrl += "?" + query;
 				listDetailUrl += "&" + query;
 			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
+
+			int statusId = 0;
+			String status = req.getParameter("statusId");
+			if(status != null) {
+				statusId = Integer.parseInt(status);
+			}
 			
+			List<OrderBundle> orderBundlelist;
+			if (keyword.length() != 0) {
+				orderBundlelist = odri.findOrderAll(offset, size, condition, keyword, statusId);
+			} else {
+				orderBundlelist = odri.findOrderAll(offset, size, statusId);
+			}
 			
-			// guest.jsp에 넘겨줄 데이터
-			req.setAttribute("list", OrderBundlelist);
+			// ordermanagement.jsp에 넘겨줄 데이터		
+			req.setAttribute("orderBundlelist", orderBundlelist);
 			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
@@ -200,13 +236,12 @@ public class orderDetailServlet extends MyServlet{
 			req.setAttribute("paging", paging);
 			req.setAttribute("condition", condition);
 			req.setAttribute("keyword", keyword);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		// JSP로 포위딩
-		forward(req,resp,"/WEB-INF/views/orderdetail/ordermanagement.jsp");
+		forward(req,resp,"/WEB-INF/views/admin/ordermanagement.jsp");
 		
 	}
 	protected void ordermanagementDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -215,7 +250,30 @@ public class orderDetailServlet extends MyServlet{
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 				
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		
 		String cp = req.getContextPath();
+		
+		try {
+			
+			int proid = 0;
+			String mode = req.getParameter("mode");
+			if(mode!=null) {
+				proid = Integer.parseInt(mode);
+			}
+			
+			List<OrderStatistics> os = odri.salesStatisticsByProduct(proid);
+		
+			req.setAttribute("os",os);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// JSP로 포위딩
+		forward(req,resp,"/WEB-INF/views/admin/ordermanagement_detail.jsp");
 	}
 	
 	protected void salesStatistics(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -228,7 +286,6 @@ public class orderDetailServlet extends MyServlet{
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
 		}
-
 		
 		try {
 			/*
@@ -276,7 +333,13 @@ public class orderDetailServlet extends MyServlet{
 			req.setAttribute("paging", paging);
 			*/
 			
-			List<OrderStatistics> os = odri.SalesStatisticsByProduct();
+			int proid = 0;
+			String mode = req.getParameter("mode");
+			if(mode!=null) {
+				proid = Integer.parseInt(mode);
+			}
+			
+			List<OrderStatistics> os = odri.salesStatisticsByProduct(proid);
 		
 			req.setAttribute("os",os);
 			
