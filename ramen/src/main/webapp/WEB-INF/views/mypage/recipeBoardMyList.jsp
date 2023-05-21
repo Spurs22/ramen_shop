@@ -5,6 +5,7 @@
 	<title>Title</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 
 <style>
 .table-list thead > tr:first-child{ background: #f8f8f8; }
@@ -63,11 +64,11 @@
 						<tr>
 							<td>${dataCount - (page-1) * size - status.index} </td>
 							<td class=left>
-								<a href="${articleUrl}&id=${dto.id}">${dto.subject}</a>
+								<a href="${pageContext.request.contextPath}/recipe/recipe.do?id=${dto.id}">${dto.subject}</a>
 							</td>
 							<td>${dto.createdDate}</td>
 							<td>${dto.hitCount}</td>
-							<td><i class="fa-solid fa-heart" style="color: red;"></i>${dto.recipeLikeCount}</td>
+							<td><i class="fa-solid fa-heart" style="color: red;"> </i>${dto.recipeLikeCount}</td>
 						</tr>
 						</c:forEach>
 					</tbody>
@@ -75,7 +76,9 @@
 				
 			
 				
-				
+				<div class="page-navigation">
+					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+				</div>
 			
 				
 			</div>
