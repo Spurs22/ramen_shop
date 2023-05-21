@@ -1,7 +1,7 @@
 package com.DTO;
 public class Member {
 
-	private Long MemberId = (long) 0;
+	private Long MemberId;
 	private String name;
 	private String nickName;
 	private String password;
