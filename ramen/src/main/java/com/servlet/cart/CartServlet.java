@@ -14,8 +14,12 @@ import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
+import com.repository.product.ProductRepository;
+import com.repository.product.ProductRepositoryImpl;
 import com.service.cart.CartService;
 import com.service.cart.CartServiceImpl;
+import com.service.product.ProductService;
+import com.service.product.ProductServiceImpl;
 import com.util.MyServlet;
 
 @WebServlet("/cart/*")
@@ -24,6 +28,8 @@ public class CartServlet extends MyServlet {
    private final CartRepository cartRepository = new CartRepositoryImpl();
    private final CartService cartService = new CartServiceImpl(cartRepository);
    
+   private final ProductRepository productRepository = new ProductRepositoryImpl();
+   private final ProductService productService = new ProductServiceImpl(productRepository);
    @Override
    protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       req.setCharacterEncoding("utf-8");
@@ -136,8 +142,16 @@ public class CartServlet extends MyServlet {
 
          // 장바구니 총 개수 구하기
          int dataCount = cartService.getCnt(memberId);
+         int remain = productService.getProductQuantity(productId);
          
-         cartService.editItemNum(productId, memberId, num);
+         // 잔여수량 < 주문 수량
+         if(remain < num) {
+        	 										// 주문수량은 remain으로.
+        	 cartService.editItemNum(productId, memberId, remain);
+         }else {
+        	 cartService.editItemNum(productId, memberId, num);
+         }
+         
          
          req.setAttribute("dataCount", dataCount);
 

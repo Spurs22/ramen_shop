@@ -103,7 +103,7 @@
 							<th>상품이미지</th>
 							<th>품명</th>
 							<th>총수량</th>
-							<th>남은수량</th>
+							<th>재고수량</th>
 							<th>소계</th>
 							<th>삭제</th>
 						</tr>
@@ -173,6 +173,19 @@
 	        }
 	    });
 	}
+	
+	// 수량 직접 입력시
+	function sendData(){
+		let productId = $(".productids").val();
+		let quantity = $(".quantitys").val();
+		let url = "${pageContext.request.contextPath}/cart/num_update.do";
+        let qs = "productId="+ productId +"&quantity="+quantity;
+        
+        const fn = function(){
+    	}
+       	
+        ajaxFun(url, "post", qs, "json", fn);
+	}
 
         $(function() {
         	let quantityEl = $(".quantitys");
@@ -199,6 +212,15 @@
                     f.action="${pageContext.request.contextPath}/cart/delete.do?productId="+productId;
                     f.submit();
                 }
+            });
+            
+            // 수량 직접 입력시.
+            $(document).ready(function(){
+            	$(".quantitys").on('change',function(){
+            			sendData();
+            			alert("재고 수량을 초과하였습니다.");
+            			window.location.reload();
+            	});
             });
 
             $("#btnDeleteList").click(function(){
