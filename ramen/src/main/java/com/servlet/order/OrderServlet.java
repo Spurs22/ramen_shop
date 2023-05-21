@@ -148,7 +148,7 @@ public class OrderServlet extends MyServlet {
 		OrderBundle orderBundle = new OrderBundle();
 		String cp = req.getContextPath();
 		String message = null;
-		String errorMessage = "";
+		String errorMessage=null;
 		try {
 
 			long memberId = info.getMemberId();
@@ -185,26 +185,29 @@ public class OrderServlet extends MyServlet {
 				
 				itemlist.add(orderItem);
 			}
-			
-			long order_id = orderService.createOrderBundle(orderBundle, itemlist);
 
 			for(Cart c: list) {
-				// 장바구니에서 결제한 물품 초기화
-				cartService.deleteCart(memberId, c.getProductId());
-				
-				// 잔여수량 체크 
-				// Product product = productService.findProductByProductId(c.getProductId());
-				// cartRepositoryImpl.editItemNum(c.getProductId(), memberId, c.getQuantity());
-	            
-            	// 품목 삭제
-				productService.subtractQuantity(c.getProductId(), c.getQuantity());
-				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
+				try {
+					// 상품 초기화
+					productService.subtractQuantity(c.getProductId(), c.getQuantity());
+					
+					long order_id = orderService.createOrderBundle(orderBundle, itemlist);
+					
+					// 장바구니에서 결제한 물품 초기화
+					cartService.deleteCart(memberId, c.getProductId());
+					
+					resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
+					
+				} catch (RuntimeException e) {
+					System.out.println("재고보다 주문 수량이 많습니다.");
+					resp.sendRedirect(cp+"/cart/list.do");
+					return;
+				}
             
 			}
+			req.setAttribute("errorMessage", errorMessage);
 			req.setAttribute("message", message);
 			
-		} catch (RuntimeException e) {
-			errorMessage = "재고보다 숫자가 많다.";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
