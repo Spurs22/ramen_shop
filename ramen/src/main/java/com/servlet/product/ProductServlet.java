@@ -15,6 +15,7 @@ import com.util.SessionUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -77,8 +78,6 @@ public class ProductServlet extends MyUploadServlet {
 			likeProductBoard(req, resp);
 		} else if (uri.contains("add-cart")) {
 			addCart(req, resp);
-		} else if (uri.contains("direct-order")) {
-			directOrder(req, resp);
 		} else if (uri.contains("review-form")) {
 			reviewForm(req, resp);
 		} else if (uri.contains("add-form")) {
@@ -385,15 +384,6 @@ public class ProductServlet extends MyUploadServlet {
 		}
 	}
 
-	protected void directOrder(HttpServletRequest req, HttpServletResponse resp) {
-		String path = "/WEB-INF/views/product/product-list.jsp";
-		try {
-			forward(req, resp, path);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	protected void productAddForm(HttpServletRequest req, HttpServletResponse resp) {
 		String path = "/WEB-INF/views/product/product-add-form.jsp";
 
@@ -474,6 +464,7 @@ public class ProductServlet extends MyUploadServlet {
 
 	}
 	protected void editProduct(HttpServletRequest req, HttpServletResponse resp) {
+
 
 	}
 	protected void editProductForm(HttpServletRequest req, HttpServletResponse resp) {

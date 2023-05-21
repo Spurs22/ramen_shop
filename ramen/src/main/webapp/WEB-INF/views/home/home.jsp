@@ -10,7 +10,7 @@
         .main-banner {
 			width: 100%;
 			min-height: 200px;
-			background: #ffeadd;	
+			background: #f6f6f6;
 			font-weight: 700;
 			font-size: 30px;
 			text-align: center;
@@ -118,24 +118,24 @@
 				<div class="container-label">
 					오늘의 레시피
 				</div>
-				<div class="recipe-container">
-					<div class="recipe selected-recipe">
-						recipe1
-						<div class="rank-label"><div style="margin: auto 0">1</div></div>
-					</div>
-					<div class="recipe">
-						recipe2
-						<div class="rank-label">2</div>
-					</div>
-					<div class="recipe">
-						recipe3
-						<div class="rank-label">3</div>
-					</div>
-					<div class="recipe">
-						recipe4
-						<div class="rank-label">4</div>
-					</div>
-				</div>
+<%--				<div class="recipe-container">--%>
+<%--					<div class="recipe selected-recipe">--%>
+<%--						recipe1--%>
+<%--						<div class="rank-label"><div style="margin: auto 0">1</div></div>--%>
+<%--					</div>--%>
+<%--					<div class="recipe">--%>
+<%--						recipe2--%>
+<%--						<div class="rank-label">2</div>--%>
+<%--					</div>--%>
+<%--					<div class="recipe">--%>
+<%--						recipe3--%>
+<%--						<div class="rank-label">3</div>--%>
+<%--					</div>--%>
+<%--					<div class="recipe">--%>
+<%--						recipe4--%>
+<%--						<div class="rank-label">4</div>--%>
+<%--					</div>--%>
+<%--				</div>--%>
 			</div>
 
 			<div class="main-banner">

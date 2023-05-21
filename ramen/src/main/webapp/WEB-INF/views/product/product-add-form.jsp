@@ -101,6 +101,12 @@
             font-weight: 600; font-size: 20px
         }
 
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
 	</style>
 </head>
 <script>
@@ -146,7 +152,7 @@
 
 					<div class="input-group">
 						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
-						<input class="form-control product-info" id="quantityInput" name="quantity" value="${mode == "post" ? "" : product.remainQuantity}">
+						<input type="number" class="form-control product-info" id="quantityInput" name="quantity" value="${mode == "post" ? "" : product.remainQuantity}">
 					</div>
 				</div>
 

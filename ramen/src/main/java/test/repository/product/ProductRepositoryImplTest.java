@@ -7,6 +7,8 @@ import com.repository.product.ProductRepositoryImpl;
 import com.service.product.ProductService;
 import com.service.product.ProductServiceImpl;
 
+import javax.servlet.ServletContext;
+
 public class ProductRepositoryImplTest {
 	public static void main(String[] args) {
 		ProductRepository productRepository = new ProductRepositoryImpl();
