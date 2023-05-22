@@ -66,7 +66,11 @@
 			margin-bottom: 20px;
 			padding: 0 20px;
         }
-
+		.cart-box > tr {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 		a {
 			text-decoration: none;
 			color: black;
@@ -103,6 +107,8 @@
 			border: none;
 			background-color: transparent;
 			cursor: pointer;
+			width: 30px;
+			height: 30px;
 		}
 	
 		.delete-btn {
@@ -124,8 +130,10 @@
 			transform: scale(1.1);
 		}
 		
-		.cart-box {
-		    width: 100%;
+		
+		.cart-box table {
+		    margin: 0px auto;
+		    
 		}
 		.cart-box tr {
 		    height: 40px;
@@ -134,9 +142,11 @@
 		.product-quantity{ border: none; width: 40px; text-align: center; outline: none;}
 		
 		
-		.contenttb { width: 100%; }
+		.contenttb { width: 100%; padding: 20px; }
 		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 10px; border-radius: 5px; background: #f6f6f6;}
 		.subjecttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 40px; padding: 10px; border-radius: 5px; background: #f6f6f6;}
+		
+		.quantity-btn { border: 1px solid gray; border-radius: 3px;}
 	</style>
 </head>
 <script>
@@ -202,8 +212,8 @@
 							<button type="button" class="btn btn-success btnwrite2toggle">이전</button>
 						</div>
 					</td>
-					<td>
-						<div style="display: flex; flex-direction: row; gap: 5px">
+					<td style="text-align: right;">
+						<div style="display: flex; flex-direction: row; gap: 5px; justify-content: flex-end;">
 							<button class="btn btn-primary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
 							<c:if test="${mode == 'update'}">
 								<input type="hidden" name="id" value="${recipeId}">
@@ -212,13 +222,13 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">제목</td>
+					<td colspan="2" style="padding: 15px; font-size: 20px; font-weight: bold;">제목</td>
 				</tr>
 				<tr>
 					<td colspan="2"><input class="subjecttxt" type="text" name="subject" value="${dto.subject}"></td>
 				</tr>
 				<tr>
-					<td colspan="2">내용</td>
+					<td colspan="2" style="padding: 15px; font-size: 20px; font-weight: bold;">내용</td>
 				</tr>
 				<tr>
 					<td colspan="2"><textarea class="contenttxt" name="content" id="content">${dto.content}</textarea></td>
@@ -231,9 +241,9 @@
 		<div class="cart-box">
 			<table>
 				<tr class='hightlight'>
-					<th style="width:40%">상품명</th>
-					<th style="width:30%">수량</th>
-					<th style="width:20%">삭제</th>
+					<td style="width:200px;">상품명</td>
+					<td style="width:100px;">수량</td>
+					<td style="width:100px;">삭제</td>
 				</tr>
 				<tbody class="select-product"></tbody>
 			</table>
@@ -367,15 +377,15 @@
     	
     	let out = "";
     	
-    	out += "<tr style='border-bottom: 1px solid gray;'>";
-		out += "<td>"+ name +"</td>"	
-		out += "<td class='quantity-cell'>";
-		out += "<button type='button' class='quantity-btn minus'>&lt;&nbsp;</button>";
-		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' readonly='readonly' value='1'></span>";
-		out += "<button type='button' class='quantity-btn plus'>&nbsp;&gt;</button>";
-		out += "<input type='hidden' name='productId' value='`+productId+`'>"
+    	out += "<tr style='border-bottom: 1px solid gray;' data-product-id='" + productId + "'>";
+		out += "<td style='width: 200px; padding-left: 16px;'>"+ name +"</td>"	
+		out += "<td style='width: 100px;' class='quantity-cell'>";
+		out += "<button type='button' class='quantity-btn minus'>&lt;</button>";
+		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1'></span>";
+		out += "<button type='button' class='quantity-btn plus'>&gt;</button>";
+		out += "<input type='hidden' name='productId' value='" + productId + "'>";
 		out += "</td>";
-		out += "<td style='text-align: center;'>";
+		out += "<td style='text-align: center; width:100px'>";
 		out += "<button type='button' class='delete-btn'><i class='fa-solid fa-trash-can'></i></button>";		
 		out += "</td>";
 		out += "</tr>";
@@ -410,9 +420,17 @@
 	}
     
     $(document).on("click", ".delete-btn", function() {
-        $(this).closest("tr").remove();
-    });
-    
+		$(this).closest("tr").remove();
+		
+		const productId = $(this).closest("tr").find(".productId").val();
+		const index = addedProducts.findIndex(product => product.id === productId);
+		
+		if (index !== -1) {
+			addedProducts.splice(index, 1);
+		}
+	});
+
+
     
 </script>
 </body>

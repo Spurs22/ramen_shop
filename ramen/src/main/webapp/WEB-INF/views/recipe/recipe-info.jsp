@@ -268,6 +268,8 @@
 		        	if(confirm('장바구니에 담았습니다! 장바구니로 이동하시겠습니까 ?')) {
 			        	location.href = "${pageContext.request.contextPath}/cart/list.do";
 		        	}
+	        	} else {
+	        		alert(data.error + '의 재고가 부족합니다.');
 	        	}
 	        },
 	        error: function(xhr, status, error) {
@@ -455,7 +457,9 @@
 	}
     
     function reqlogin() {
-		alert("로그인이 필요합니다.");
+		if(confirm("로그인이 필요한 서비스입니다.\n로그인 하시겠습니까 ? ")) {
+			location.href = '${pageContext.request.contextPath}/member/login.do';
+		}
 		return false;
 	}
     
@@ -463,6 +467,7 @@
 		alert("권한이 없습니다.");
 		return false;
 	}
+    
 </script>
 </body>
 </html>

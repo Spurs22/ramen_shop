@@ -97,6 +97,8 @@ public class RecipeServlet extends MyUploadServlet {
 			likeRecipe(req, resp);
 		} else if (uri.contains("count-comment.do")) {
 			countComment(req, resp);
+		} else if (uri.contains("contain-post")) {
+			productList(req, resp);
 		}
 	}
 
@@ -664,6 +666,32 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void countComment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 댓글 개수
+		
+	}
+	
+	protected void productList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 이 상품이 포함된 레시피
+		List<RecipeBoard> list = new ArrayList<>();
+		
+		try {
+			Long productId = Long.parseLong(req.getParameter("id"));
+			
+			System.out.println(productId);
+			
+			list = recipeBoardService.readRecipeByProduct(productId);
+			
+			if(list == null || list.size() == 0) {
+				forward(req, resp, "/WEB-INF/views/product/post-board?id=" + productId);
+				return;
+			}
+			
+			req.setAttribute("list", list);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/recipe/recipe-product-list.jsp");
 		
 	}
 	
