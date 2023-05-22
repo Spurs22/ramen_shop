@@ -1,6 +1,7 @@
 package com.servlet.cart;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
 
 import com.DTO.Cart;
 import com.DTO.RecipeProduct;
@@ -66,6 +69,7 @@ public class CartServlet extends MyServlet {
 	// 1) 장바구니에 물건을 추가한다. ( 레시피 조합 > 장바구니 추가 )
 	   	HttpSession session = req.getSession();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    String state = "false";
 	    
 	    try {
 	         Long memberId = info.getMemberId();
@@ -86,11 +90,17 @@ public class CartServlet extends MyServlet {
 	         int dataCount = cartService.getCnt(memberId);
 	         
 	         req.setAttribute("dataCount", dataCount);
+	         state = "true";
+	         
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
+	    JSONObject job = new JSONObject();
+		job.put("state", state);
 
-	      forward(req, resp, "/WEB-INF/views/cart/cart_list.jsp");
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
    }
 
 	protected void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
