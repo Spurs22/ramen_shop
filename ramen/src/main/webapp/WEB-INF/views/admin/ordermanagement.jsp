@@ -7,7 +7,9 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
-
+	.whole-container{
+		width: 80%;
+	}
 	</style>
 	
 	<script type="text/javascript">

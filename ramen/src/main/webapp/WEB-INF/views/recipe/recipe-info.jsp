@@ -176,6 +176,10 @@
     // 댓글 등록
     $(function () {
         $(".btnSendReply").click(function () {
+        	if(! confirm("댓글을 등록하시겠습니까 ? ")) {
+				return false;
+			}
+        	
             let id = "${dto.id}";
             const $tb = $(this).closest("table");
             let content = $tb.find("textarea").val().trim();
@@ -303,11 +307,11 @@
 				<tr>
 					<td colspan="3">
 						<c:choose>
-							<c:when test="${empty sessionScope.member}">
-								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled" onclick=""><i class="fa-solid fa-cart-arrow-down"></i></button>
-							</c:when>
 							<c:when test="${empty list}">
 								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled"><i class="fa-solid fa-cart-arrow-down"></i></button>
+							</c:when>
+							<c:when test="${empty sessionScope.member}">
+								<br>장바구니에 담기 <button type="button" class="btn" onclick="reqlogin();"><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:when>
 							<c:otherwise>
 								<br>장바구니에 담기 <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"><i class="fa-solid fa-cart-arrow-down"></i></button>
@@ -323,14 +327,20 @@
 				<tr>
 					<td style="text-align: left">
 						<c:choose>
-							<c:when test="${sessionScope.member.userNickname==dto.nickname}">
+							<c:when test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='관리자'}">
 								<button type="button" class="btn"
 										onclick="location.href='${pageContext.request.contextPath}/recipe/update.do?id=${dto.id}';">
 									수정
 								</button>
 							</c:when>
+							<c:when test="${sessionScope.member.userNickname!=dto.nickname || sessionScope.member.userNickname!='관리자'}">
+								<button type="button" class="btn"
+										onclick="noAccess();">
+									수정
+								</button>
+							</c:when>
 							<c:otherwise>
-								<button type="button" class="btn" disabled="disabled">수정</button>
+								<button type="button" class="btn" onclick="reqlogin();">수정</button>
 							</c:otherwise>
 						</c:choose>
 						<c:choose>
@@ -340,8 +350,14 @@
 									삭제
 								</button>
 							</c:when>
+							<c:when test="${sessionScope.member.userNickname!=dto.nickname || sessionScope.member.userNickname!='관리자'}">
+								<button type="button" class="btn"
+										onclick="noAccess();">
+									삭제
+								</button>
+							</c:when>
 							<c:otherwise>
-								<button type="button" class="btn" disabled="disabled">삭제</button>
+								<button type="button" class="btn" onclick="reqlogin();">삭제</button>
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -384,7 +400,7 @@
 						<tr>
 							<td class='right'>
 								<c:if test="${empty sessionScope.member}">
-									<button type='button' class='btn btnSendReply' disabled="disabled">댓글 등록</button>
+									<button type='button' class='btn' onclick="reqlogin();">댓글 등록</button>
 								</c:if>
 								<c:if test="${not empty sessionScope.member}">
 									<button type='button' class='btn btnSendReply'>댓글 등록</button>
@@ -409,7 +425,16 @@
 		if(confirm("게시글을 삭제하시겠습니까 ? ")) {
 	    	location.href='${pageContext.request.contextPath}/recipe/delete.do?id=${dto.id}';
 		}
-    	
+	}
+    
+    function reqlogin() {
+		alert("로그인이 필요합니다.");
+		return false;
+	}
+    
+    function noAccess() {
+		alert("권한이 없습니다.");
+		return false;
 	}
 </script>
 </body>

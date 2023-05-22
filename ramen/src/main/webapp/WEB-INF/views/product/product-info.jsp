@@ -61,7 +61,7 @@
 			border: 1px solid gray;
 			/*min-height: 800px;*/
 			padding: 15px;
-			margin-top: 50px;
+			margin-top: 15px;
 		}
 
 		.product-comment-container {
@@ -198,19 +198,22 @@
 			</div>
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
-				<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/product/edit-board?id=${post.product.productId}'">상품 수정</button>
-				<button class="btn btn-danger">상품 삭제</button>
+				<c:if test="${sessionScope.member.userRoll == 1}">
+					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-board?id=${post.product.productId}'">상품 수정</button>
+					<button class="btn btn-secondary">상품 삭제</button>
+				</c:if>
 			</div>
 		</div>
 
 		<div class="content-container">
 			<div style="display: flex; flex-direction: row; gap: 50px">
 				<div style="width: 50%; aspect-ratio: 1/1">
-					<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}" style="object-fit: fill">
+					<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}" style="object-fit: cover">
 				</div>
 
 				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; ">
 					<div class="product-createdDate">${post.createdDate}</div>
+					<div class="" style="">${post.product.category.label}</div>
 					<div class="flex-container">
 						<div style="position: relative">
 							<div style="position: absolute; right: -20px; text-align: center;">
@@ -220,7 +223,6 @@
 								<i class="fa-solid fa-heart fa-2xl like-full" id="likeBtn"></i>
 							</div>
 						</div>
-
 						<div class="product-name">${post.product.name}</div>
 					</div>
 					<div class="product-price" style="width: 100%; text-align: right" >
@@ -286,8 +288,8 @@
 								</div>
 
 								<div class="w-100" style="display: flex; gap: 5px">
-									<button class="btn btn-dark w-50" id="addCartBtn">장바구니</button>
-									<button class="btn btn-dark w-50" id="orderBtn">구매하기</button>
+									<button class="btn btn-outline-dark w-50" id="addCartBtn">장바구니</button>
+									<button class="btn btn-outline-dark w-50" id="orderBtn">구매하기</button>
 								</div>
 							</div>
 						<button class="btn btn-secondary w-100">상품이 포함된 레시피 조회</button>
@@ -295,6 +297,9 @@
 				</div>
 			</div>
 
+			<div style="font-size: 20px; font-weight: 650; margin-top: 50px">
+				상품 설명
+			</div>
 			<div class="product-content-container">
 				<div class="product-content">
 					<c:forEach var="img" items="${post.imgList}">
@@ -465,8 +470,12 @@
     $(function () {
         $("#likeBtn").click(function () {
             if (${memberId == null}) {
-                alert("로그인 후 이용해주세요.")
-				return
+                if (confirm("로그인이 필요한 서비스 입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+                    $(location).attr('href', '${pageContext.request.contextPath}/member/login.do')
+                    return;
+                } else {
+                    return;
+                }
             }
 
             let msg = likeStatus ? "상품을 찜목록에서 제거합니다." : "상품을 찜목록에 추가합니다.";
@@ -525,7 +534,7 @@
 
 		$("#addCartBtn").click(function () {
             if (${memberId == null}) {
-                if (confirm("로그인 하시겠습니까?")) {
+                if (confirm("로그인이 필요한 서비스 입니다.\n로그인 페이지로 이동하시겠습니까?")) {
                     $(location).attr('href', '${pageContext.request.contextPath}/member/login.do')
                     return;
                 } else {
@@ -559,9 +568,9 @@
 
         $("#orderBtn").click(function () {
             if (${memberId == null}) {
-                if (confirm("로그인 하시겠습니까?")) {
+                if (confirm("로그인이 필요한 서비스 입니다.\n로그인 페이지로 이동하시겠습니까?")) {
                     $(location).attr('href', '${pageContext.request.contextPath}/member/login.do')
-					return;
+                    return;
                 } else {
                     return;
                 }
@@ -573,7 +582,7 @@
                 return false;
             }
 
-            let url = "${pageContext.request.contextPath}/order/orderOne.do";
+            let url = "${pageContext.request.contextPath}/order/order-one.do";
             let productIds = []
 
             let id = "${post.product.productId}";

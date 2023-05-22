@@ -25,10 +25,10 @@
 			&nbsp;
 		</div>
 		<div class="header-right">
-			<c:if test="${member != null}">
-<%--				<div style="margin-right: 10px">--%>
-<%--					<span style="font-weight: 650">${member.nickName}</span> 님 환영합니다!--%>
-<%--				</div>--%>
+			<c:if test="${not empty sessionScope}">
+				<div style="margin-right: 10px">
+					<span style="font-weight: 650">${sessionScope.member.userNickname}</span> 님 환영합니다!
+				</div>
 			</c:if>
 
             <c:if test="${empty sessionScope.member}">
@@ -43,7 +43,6 @@
             	<a href="${pageContext.request.contextPath}/cart/list.do" title="장바구니"><i class="fa-solid fa-cart-shopping"></i></a>
             </c:if>
             <c:if test="${sessionScope.member.userRoll == 1}">
-            	&nbsp;
 				<a href="#" title="관리자"><i class="fa-solid fa-gear"></i></a>
             </c:if>
 		</div>
