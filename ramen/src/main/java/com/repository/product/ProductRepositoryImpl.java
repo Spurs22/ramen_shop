@@ -211,7 +211,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 		try {
 			sql = "SELECT count(*) cnt " +
 					"FROM product " +
-					"WHERE REPLACE(name, ' ', '') = ?";
+					"WHERE REPLACE(name, ' ', '') = ? ";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, name);
