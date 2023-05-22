@@ -343,6 +343,11 @@
 			return;
 		}
 		
+		if(productIds == null || productIds.size < 1) {
+			alert('상품을 등록해주세요.');
+			return;
+		}
+		
 		$.ajax({
 	        url: "${pageContext.request.contextPath}/recipe/${mode}_ok.do",
 	        type: "POST",

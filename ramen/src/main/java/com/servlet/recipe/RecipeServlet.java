@@ -673,6 +673,8 @@ public class RecipeServlet extends MyUploadServlet {
 		// 이 상품이 포함된 레시피
 		List<RecipeBoard> list = new ArrayList<>();
 		
+		String cp = req.getContextPath();
+		
 		try {
 			Long productId = Long.parseLong(req.getParameter("id"));
 			
@@ -681,7 +683,7 @@ public class RecipeServlet extends MyUploadServlet {
 			list = recipeBoardService.readRecipeByProduct(productId);
 			
 			if(list == null || list.size() == 0) {
-				forward(req, resp, "/WEB-INF/views/product/post-board?id=" + productId);
+				resp.sendRedirect(cp + "/product/post-board?id=" + productId);
 				return;
 			}
 			
@@ -691,7 +693,7 @@ public class RecipeServlet extends MyUploadServlet {
 			e.printStackTrace();
 		}
 		
-		forward(req, resp, "/WEB-INF/views/recipe/recipe-product-list.jsp");
+		forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
 		
 	}
 	
