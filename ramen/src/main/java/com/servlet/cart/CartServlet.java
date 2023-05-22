@@ -68,7 +68,8 @@ public class CartServlet extends MyServlet {
 	// 1) 장바구니에 물건을 추가한다. ( 레시피 조합 > 장바구니 추가 )
 	   	HttpSession session = req.getSession();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    String state = "false";
+	    boolean state = false;
+	    String error = "";
 	    
 	    try {
 	         Long memberId = info.getMemberId();
@@ -81,7 +82,6 @@ public class CartServlet extends MyServlet {
 	         
 	         String[] p = productIds.split(",");
 	         String[] q = quantities.split(",");
-	         String error = "";
 	         
 	         boolean check= false; 
 	         for(int i=0; i<p.length; i++) {
@@ -102,19 +102,15 @@ public class CartServlet extends MyServlet {
 	        		 error = error.substring(0,error.length()-1);
 	        	 }
 	         }
-	         
-	         // 장바구니 총 개수 구하기
-	         int dataCount = cartService.getCnt(memberId);
 	        
-	         req.setAttribute("error", error);
-	         req.setAttribute("dataCount", dataCount);
-	         state = "true";
+	         state = !check;
 	         
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
 	    JSONObject job = new JSONObject();
 		job.put("state", state);
+		job.put("error", error);
 
 		resp.setContentType("text/html;charset=utf-8");
 		PrintWriter out = resp.getWriter();
