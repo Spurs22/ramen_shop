@@ -70,7 +70,7 @@ public class CartServlet extends MyServlet {
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
 	    boolean state = false;
 	    String error = "";
-	    
+	    boolean check= false; 
 	    try {
 	         Long memberId = info.getMemberId();
 	         
@@ -83,19 +83,20 @@ public class CartServlet extends MyServlet {
 	         String[] p = productIds.split(",");
 	         String[] q = quantities.split(",");
 	         
-	         boolean check= false; 
+	         
 	         for(int i=0; i<p.length; i++) {
 	        	 if(cartService.getItemCnt(Long.parseLong(p[i])) == 0) {
 	        		 Long productId = Long.parseLong(p[i]);
 	        		 error += productService.findProductByProductId(productId).getName() + ",";
 	        		 check = true;
-	        		 continue;
 	        	 }
-	        	 cartService.createItem(Long.parseLong(p[i]), memberId ,Integer.parseInt(q[i]));
 	         }
 	         
 	         if(!check) {
 	        	 error = null;
+	        	 for(int i=0; i<p.length; i++) {
+	        		 cartService.createItem(Long.parseLong(p[i]), memberId ,Integer.parseInt(q[i]));
+	        	 }
 	         } else {
 	        	 // error : 장바구니 재고수량보다 많은 경우 error로 productId들 출력
 	        	 if(error.endsWith(",")) {
@@ -108,6 +109,8 @@ public class CartServlet extends MyServlet {
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
+	    
+	    System.out.println("state : " + state + ", error : " + error);
 	    JSONObject job = new JSONObject();
 		job.put("state", state);
 		job.put("error", error);
