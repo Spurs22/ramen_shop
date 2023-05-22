@@ -9,7 +9,7 @@ public interface MemberRepository {
 	
 	    // 회원가입
 		Member insertMember(Member member) throws SQLException;
-		
+
 		// 로그인 	
 		public Member loginMember(String email, String password) throws SQLException; 
 		
@@ -27,6 +27,9 @@ public interface MemberRepository {
 		
 		List<Member> findAll();
 		
+
+		// 이메일로 찾기 
+		Member findByEmail(String email);
 
 		
 }

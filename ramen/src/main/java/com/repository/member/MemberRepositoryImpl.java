@@ -265,4 +265,17 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	
+	 
+	// findByEmail 
+	
+	@Override
+	public Member findByEmail(String email) {
+
+
+		return null;
+	}
+
+	
+
+	
 }
