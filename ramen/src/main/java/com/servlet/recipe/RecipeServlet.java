@@ -1,6 +1,5 @@
 package com.servlet.recipe;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
@@ -41,7 +40,6 @@ import com.service.recipe.RecipeCommentServiceImpl;
 import com.service.recipe.RecipeLikeService;
 import com.service.recipe.RecipeLikeServiceImpl;
 import com.util.MyUploadServlet;
-import com.util.MyUtil;
 
 @MultipartConfig
 @WebServlet("/recipe/*")
@@ -259,6 +257,8 @@ public class RecipeServlet extends MyUploadServlet {
 			return;
 		}
 		
+		String state = "false";
+		
 		try {
 			RecipeBoard dto = new RecipeBoard();
 			
@@ -288,11 +288,16 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			recipeBoardService.insertRecipe(dto);
 			
+			state = "true";
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		JSONObject job = new JSONObject();
+		job.put("state", state);
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.do");
+		PrintWriter out = resp.getWriter();
+		out.print(job);
 	}
 
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -346,6 +351,8 @@ public class RecipeServlet extends MyUploadServlet {
 			return;
 		}
 		
+		String state = "true";
+		
 		try {
 			RecipeBoard board = new RecipeBoard();
 			
@@ -381,11 +388,17 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			recipeBoardService.updateRecipe(board);
 			
+			state = "true";
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.do");
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		
+		PrintWriter out = resp.getWriter();
+		out.print(job);
 	}
 
 	protected void deleteRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -435,8 +448,6 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void recipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 상세 보기
-		MyUtil util = new MyUtil();
-		
 		String cp = req.getContextPath();
 		
 		String query = "";
