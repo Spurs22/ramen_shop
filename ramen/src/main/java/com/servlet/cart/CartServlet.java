@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import com.DTO.Cart;
-import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
@@ -80,15 +79,29 @@ public class CartServlet extends MyServlet {
 	         
 	         String[] p = productIds.split(",");
 	         String[] q = quantities.split(",");
-	         
-	         
+	         String error = "";
+	         boolean check= false; 
 	         for(int i=0; i<p.length; i++) {
+	        	 if(cartService.getItemCnt(Long.parseLong(p[i])) < Integer.parseInt(q[i])) {
+	        		 error += productService.findProductByProductId(Long.parseLong(p[i])).getName() + ",";
+	        		 check = true;
+	        	 }
 	        	 cartService.createItem(Long.parseLong(p[i]), memberId,Integer.parseInt(q[i]));
+	         
+	         }
+	         if(!check) {
+	        	 error = null;
+	         }else {
+	        	 // error : 장바구니 재고수량보다 많은 경우 error로 productId들 출력
+	        	 if(error.endsWith(",")) {
+	        		 error = error.substring(0,error.length()-1);
+	        	 }
 	         }
 
 	         // 장바구니 총 개수 구하기
 	         int dataCount = cartService.getCnt(memberId);
 	         
+	         req.setAttribute("error", error);
 	         req.setAttribute("dataCount", dataCount);
 	         state = "true";
 	         
