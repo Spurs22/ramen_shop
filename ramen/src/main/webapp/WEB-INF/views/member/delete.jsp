@@ -84,7 +84,31 @@ body {
   width: 100%;
     border: 2px solid #FFFFFF; 
  }
+.message {
+   color: red;
+   font-size: 12px;
+   margin-top: 5px;
+}
+
 </style>
+
+<script type="text/javascript">
+function sendOk() {
+	const f = document.pwdForm;
+
+	let str = f.password.value;
+	if(!str) {
+		alert("패스워드를 입력하세요. ");
+		f.password.focus();
+		return;
+	}
+
+	f.action = "${pageContext.request.contextPath}/member/delete_ok.do";
+	f.submit();
+}
+
+</script>
+
 
 <head>
 <meta charset="UTF-8">
@@ -92,6 +116,39 @@ body {
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-
+<main>
+	<div class="container">
+		<div class="members-form">
+			<div class="members-title">
+				<h3>회원탈퇴</h3>
+			</div>
+			<div class="info-box">
+				<form name="pwdForm" method="post">
+				    <div class ="member-row">
+				       패스워드를 입력해주세요
+				    </div>
+					<div class="row">
+						<input name="memberId" type="hidden" class="form-control" readonly="readonly"
+							value="${sessionScope.member.memberId}">
+					</div>
+					<div class="row">
+						<input name="password" type="password" class="form-control" placeholder="패스워드">
+					</div>
+					<div class="row">
+        		   <p class = "message"> 회원탈퇴시 개인정보 및 모든데이터는 삭제됩니다. </p>
+						<button type="button" class="btnConfirm" onclick="sendOk();">확인</button>
+						<input type="hidden" name="mode" value="${mode}">
+					</div>
+					<div class="row">
+						<button type="button" class="cancel-btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
+					</div>
+					<div class="row">
+						${message}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</main>
 </body>
 </html>

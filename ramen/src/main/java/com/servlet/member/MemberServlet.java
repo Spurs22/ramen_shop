@@ -26,6 +26,7 @@ public class MemberServlet extends MyServlet{
 
 		String uri = req.getRequestURI();
 
+
 		// uri에 따른 작업 구분
 		if (uri.indexOf("login.do") != -1) {
 			loginForm(req, resp);
@@ -47,8 +48,10 @@ public class MemberServlet extends MyServlet{
 			userIdCheck(req, resp);
 		} else if (uri.indexOf("select.do") !=-1) {
 			selectForm(req, resp);
-		} else if (uri.indexOf("select_ok.do") !=-1) {
-			selectSubmit(req, resp);
+		} else if(uri.indexOf("delete.do") !=-1) {
+			deleteForm(req, resp);
+		} else if(uri.indexOf("delete.ok") !=-1) {
+			deleteSubmit(req, resp);
 		}
 	}
 
@@ -341,5 +344,57 @@ public class MemberServlet extends MyServlet{
 	protected void selectSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 	
+	
+	    // 회원탈퇴 폼
+	 protected void deleteForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+	    if (info == null) {
+	        resp.sendRedirect(req.getContextPath() + "/member/login.do");
+	        return;
+	    }
+
+	    req.setAttribute("title", "회원 탈퇴");
+	    forward(req, resp, "/WEB-INF/views/member/delete.jsp");
+	}
+		
+		// 회원 탈퇴 처리 
+		private void deleteSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+			
+			MemberRepositoryImpl repository = new MemberRepositoryImpl();
+			HttpSession session = req.getSession();
+			String cp = req.getContextPath();
+			
+	    try {
+	    	SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        if (info == null) { // 로그아웃 된 경우
+	            resp.sendRedirect(cp + "/member/login.do");
+	            return;
+	        }
+
+            
+	        long memberId = info.getMemberId();
+	        
+	        repository.deleteMember(memberId);
+	        
+	        req.setAttribute("message", "회원 탈퇴가 완료되었습니다.");
+	        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+
+	        
+		} 
+	    
+	    
+	    catch (Exception e) {
+			e.printStackTrace();
+			
+			req.setAttribute("error", "회원 탈퇴에 실패했습니다.");
+	        req.getRequestDispatcher("/delete.jsp").forward(req, resp);
+		}
+
+		resp.sendRedirect(cp + "/");
+	}
+		
 	
 }
