@@ -77,8 +77,9 @@ public class CartServlet extends MyServlet {
 	         String[] p = productIds.split(",");
 	         String[] q = quantities.split(",");
 	         
+	         
 	         for(int i=0; i<p.length; i++) {
-	        	 cartService.createItem(Long.parseLong(p[i]), memberId,Integer.parseInt(q[0]));
+	        	 cartService.createItem(Long.parseLong(p[i]), memberId,Integer.parseInt(q[i]));
 	         }
 
 	         // 장바구니 총 개수 구하기
