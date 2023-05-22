@@ -52,9 +52,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 			pstmt.setInt(1, product.getCategory().getValue());
 			pstmt.setString(2, product.getName());
-			pstmt.setInt(4, product.getRemainQuantity());
-			pstmt.setString(5, product.getPicture());
-			pstmt.setLong(6, productId);
+			pstmt.setInt(3, product.getRemainQuantity());
+			pstmt.setString(4, product.getPicture());
+			pstmt.setLong(5, productId);
 
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -128,9 +128,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 		Product result = null;
 
 		try {
-			sql = "SELECT id, category_id, name, remain_quantity, picture FROM PRODUCT ORDER BY ID DESC ";
+			sql = "SELECT id, category_id, name, remain_quantity, picture FROM PRODUCT WHERE ID = ? ORDER BY ID DESC ";
 			pstmt = conn.prepareStatement(sql);
-
+			pstmt.setLong(1, productId);
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {

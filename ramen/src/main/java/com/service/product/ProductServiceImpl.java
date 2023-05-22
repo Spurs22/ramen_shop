@@ -21,12 +21,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void editProduct(Long productId, Product product) {
-		editProduct(productId, product);
+		productRepository.editProduct(productId, product);
 	}
 
 	@Override
 	public void deleteProduct(Product product) {
-		deleteProduct(product);
+		productRepository.deleteProduct(product);
 	}
 
 	@Override

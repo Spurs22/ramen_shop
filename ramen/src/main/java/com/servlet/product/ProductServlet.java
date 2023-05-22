@@ -11,12 +11,12 @@ import com.service.cart.CartServiceImpl;
 import com.service.member.MemberService;
 import com.service.member.MemberServiceImpl;
 import com.service.product.*;
+import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.SessionUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -439,7 +439,6 @@ public class ProductServlet extends MyUploadServlet {
 
 	protected void createProduct(HttpServletRequest req, HttpServletResponse resp) {
 
-
 		try {
 			Long memberId = SessionUtil.getMemberIdFromSession(req);
 
@@ -479,9 +478,47 @@ public class ProductServlet extends MyUploadServlet {
 
 	}
 	protected void editProduct(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+			if (memberId == null) {
+				resp.sendRedirect(req.getContextPath() + "/product/list");
+				return;
+			}
+
+			ProductCategory category = ProductCategory.getByValue(Integer.parseInt(req.getParameter("category")));
+			int quantity = Integer.parseInt(req.getParameter("quantity"));
+			String name = req.getParameter("name");
+			Long productId = Long.valueOf(req.getParameter("id"));
+
+			Product product = new Product(productId, category, name, quantity, null);
+
+			ServletContext context = getServletContext();
+			String path = context.getRealPath("/resource/picture");
 
 
+			Part part = req.getPart("picture");
+			String fileName = doFileUpload(part, path);
 
+			String currentPicture = productService.findProductByProductId(productId).getPicture();
+
+			// 업로드한 파일이 있다면
+			if (fileName != null && currentPicture != null) {
+				FileManager.doFiledelete(path, currentPicture);
+				System.out.println(currentPicture + " 삭제");
+				System.out.println(fileName + " 생성");
+			}
+
+			product.setPicture(fileName);
+
+			System.out.println(product);
+
+			productService.editProduct(productId, product);
+
+			resp.sendRedirect(req.getContextPath() + "/product/list");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	protected void editProductForm(HttpServletRequest req, HttpServletResponse resp) {
 		String path = "/WEB-INF/views/product/product-add-form.jsp";

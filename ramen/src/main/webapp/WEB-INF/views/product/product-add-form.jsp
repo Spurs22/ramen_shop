@@ -140,7 +140,7 @@
 						<button class="btn btn-outline-secondary" type="button" id="productNameCheckBtn">중복 검사</button>
 					</div>
 				</div>
-				<input type="hidden" name="productId" value="${mode.equals("post") ? "" : product.productId}">
+				<input type="hidden" name="id" value="${mode.equals("post") ? "" : product.productId}">
 
 				<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
 					<div class="input-group">

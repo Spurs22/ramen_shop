@@ -17,7 +17,7 @@
 	<style>
 
 		.content-container {
-			height: 550px;
+
         }
 
         .sub-menu button {
