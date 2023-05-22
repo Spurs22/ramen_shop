@@ -41,22 +41,23 @@
 
         .product-card {
             width: 100%;
-            height: 50px;
+            height: 120px;
             display: grid;
-            grid-template-columns: 45% 40% 15%;
+            grid-template-columns: 20% 30% 20% 18% 12%;
             border-radius: 5px;
             text-align: center;
             padding: 0 5px;
             align-items: center;
             border: 1px solid #eaeaea;
             transition: 0.5s;
+			align-content: center;
         }
 
         .product-card-menu {
             width: 100%;
             height: 50px;
             display: grid;
-            grid-template-columns: 45% 40% 15%;
+            grid-template-columns: 20% 30% 25% 10% 15%;
             border-radius: 5px;
             text-align: center;
             padding: 0 5px;
@@ -100,6 +101,7 @@
 			</div>
 
 			<div class="shadow-sm product-card-menu bg-secondary">
+				<div>상품 이미지</div>
 				<div>상품명</div>
 				<div>카테고리</div>
 				<div>재고</div>
@@ -110,10 +112,17 @@
 		<div class="content-container" style="flex: 1; ">
 			<div class="product-card-container">
 				<c:forEach var="product" items="${products}">
-					<div class="shadow-sm product-card" onclick="selectProduct(${product.productId}, '${product.name}', ${product.remainQuantity}, '${product.category.label}')">
+					<div class="shadow-sm product-card">
+						<div style="height: 100%">
+							<img src="${pageContext.request.contextPath}/resource/picture/${product.picture}" style="height: 100px; width: 100px; object-fit: cover; border: 1px solid lightgray; border-radius: 5px"/>
+						</div>
 						<div>${product.name}</div>
 						<div>${product.category.label}</div>
 						<div>${product.remainQuantity}</div>
+						<div style="display: flex; flex-direction: column; gap: 5px; width: 100%; padding: 5px">
+							<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-product?id=' + ${product.productId}">수정</button>
+							<button class="btn btn-outline-danger">삭제</button>
+						</div>
 					</div>
 				</c:forEach>
 			</div>

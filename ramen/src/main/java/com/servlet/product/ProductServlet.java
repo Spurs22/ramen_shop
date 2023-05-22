@@ -481,9 +481,21 @@ public class ProductServlet extends MyUploadServlet {
 	protected void editProduct(HttpServletRequest req, HttpServletResponse resp) {
 
 
+
 	}
 	protected void editProductForm(HttpServletRequest req, HttpServletResponse resp) {
+		String path = "/WEB-INF/views/product/product-add-form.jsp";
 
+		try {
+			Long productId = Long.valueOf(req.getParameter("id"));
+			Product product = productService.findProductByProductId(productId);
+
+			req.setAttribute("product", product);
+			req.setAttribute("mode", "edit");
+			forward(req, resp, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void manageProduct(HttpServletRequest req, HttpServletResponse resp) {

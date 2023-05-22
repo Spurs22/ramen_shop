@@ -22,13 +22,14 @@
         .menubar-item {
             /*vertical-align: bottom;*/
             height: 70%;
-            width: 150px;
+            /*width: 110px;*/
             /*background: #f6e5cc;*/
+            padding: 6px 15px 0px 15px;
             border: 1px solid #DFE2E6;
             border-bottom: none;
             border-radius: 8px 8px 0 0;
             background: #eeeeee;
-            padding-top: 6px;
+            /*padding-top: 6px;*/
             font-size: 14px;
         }
 
