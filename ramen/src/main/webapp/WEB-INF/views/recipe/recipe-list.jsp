@@ -119,7 +119,7 @@
 						<option value="subject" 		${condition=="subject"?"selected='selected'":"" }>제목</option>
 						<option value="content"			${condition=="content"?"selected='selected'":"" }>내용</option>
 					</select>
-					<input type="text" name="keyword" id="searchInput" value="${keyword}" class="form-control" style="width: 400px;">
+					<input type="text" name="keyword" id="searchInput" value="${keyword}" class="form-control" style="width: 370px;">
 					<button type="button" class="btn btn-primary">검색</button>
 				</form>
 			</div>

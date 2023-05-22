@@ -191,7 +191,7 @@ public class CartRepositoryImpl implements CartRepository{
 				cart.setMemberId(rs.getLong(2));
 				cart.setQuantity(rs.getInt(3));
 				cart.setCreatedDate(rs.getString(4));
-				// cart.setPicture(rs.getString(5));
+			    cart.setPicture(rs.getString(5));
 				cart.setPrice(rs.getLong(6));
 				cart.setProductName(rs.getString(7));
 				cart.setRemainQuantity(rs.getInt(8));
@@ -238,7 +238,7 @@ public class CartRepositoryImpl implements CartRepository{
 				cart.setMemberId(rs.getLong(2));
 				cart.setQuantity(rs.getInt(3));
 				cart.setCreatedDate(rs.getString(4));
-				// cart.setPicture(rs.getString(5));
+				cart.setPicture(rs.getString(5));
 				cart.setPrice(rs.getLong(6));
 				cart.setProductName(rs.getString(7));
 				

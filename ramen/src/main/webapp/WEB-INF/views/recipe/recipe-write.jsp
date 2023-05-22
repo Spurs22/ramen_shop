@@ -135,7 +135,7 @@
 		
 		
 		.contenttb { width: 100%; }
-		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 20px; border-radius: 5px; background: #f6f6f6;}
+		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 10px; border-radius: 5px; background: #f6f6f6;}
 		.subjecttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 40px; padding: 10px; border-radius: 5px; background: #f6f6f6;}
 	</style>
 </head>
@@ -173,7 +173,7 @@
 				</div>
 	
 				<div style="display: flex; flex-direction: row; gap: 5px">
-					<button class="btn btn-success btnwrite1toggle" onclick="">다음</button>
+					<button type="button" class="btn btn-success btnwrite1toggle" onclick="">다음</button>
 				</div>
 			</div>
 	
@@ -199,7 +199,7 @@
 				<tr>
 					<td>
 						<div style="display: flex; flex-direction: row; gap: 5px">
-							<button class="btn btn-success btnwrite2toggle">이전</button>
+							<button type="button" class="btn btn-success btnwrite2toggle">이전</button>
 						</div>
 					</td>
 					<td>
@@ -254,13 +254,13 @@
     let selectedCategory = 1
 
     function clickCategory(button) {
-        selectedCategory = button.value
-		getList()
+        selectedCategory = button.value;
+		getList();
     }
 
     $(document).ready(function() {
         $("#searchInput").on("input", function() {
-            getList()
+            getList();
         });
     });
 
@@ -339,7 +339,10 @@
 	        dataType: "json",
 	        data: { subject: f.subject.value, content: f.content.value, productIds: productIds, quantities: quantities, recipeId: f.id.value },
 	        success: function(data) {
-	        	window.location.href = "${pageContext.request.contextPath}/recipe/recipe-list.do";
+	        	let state = data.state;
+	        	if(state == "true") {
+		        	window.location.href = "${pageContext.request.contextPath}/recipe/recipe-list.do";
+	        	}
 	        },
 	        error: function(xhr, status, error) {
 	            console.error(error);
@@ -367,9 +370,9 @@
     	out += "<tr style='border-bottom: 1px solid gray;'>";
 		out += "<td>"+ name +"</td>"	
 		out += "<td class='quantity-cell'>";
-		out += "<button type='button' class='quantity-btn'>&lt;&nbsp;</button>";
+		out += "<button type='button' class='quantity-btn minus'>&lt;&nbsp;</button>";
 		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' readonly='readonly' value='1'></span>";
-		out += "<button type='button' class='quantity-btn'>&nbsp;&gt;</button>";
+		out += "<button type='button' class='quantity-btn plus'>&nbsp;&gt;</button>";
 		out += "<input type='hidden' name='productId' value='`+productId+`'>"
 		out += "</td>";
 		out += "<td style='text-align: center;'>";

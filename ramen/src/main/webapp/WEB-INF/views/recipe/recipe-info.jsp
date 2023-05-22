@@ -1,5 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+	String productIds = request.getParameter("productIds");
+	String quantities = request.getParameter("quantities");
+%>
 <html>
 <head>
 	<title>Title</title>
@@ -74,7 +78,7 @@
         .btnSendRecipeLike:hover > i {
         	color: #dc6c6a;
         }
-
+        
 	</style>
 </head>
 <script>
@@ -210,7 +214,6 @@
     });
     
     
-    
     // 댓글 삭제
     $(function() {
 		$("body").on("click", ".deleteReply", function() {
@@ -247,6 +250,30 @@
 		};
 		
 		ajaxFun(url, "get", query, "text", fn);
+	}
+    
+    let productIds = '${productIds}';
+    let quantities = '${quantities}';
+    
+    // 장바구니에 추가
+    function sendToCart() {
+		$.ajax({
+	        url: "${pageContext.request.contextPath}/cart/recipe_add.do",
+	        type: "POST",
+	        dataType: "json",
+	        data: { productIds: productIds, quantities: quantities },
+	        success: function(data) {
+	        	let state = data.state;
+	        	if(state == "true") {
+		        	if(confirm('장바구니에 담았습니다! 장바구니로 이동하시겠습니까 ?')) {
+			        	location.href = "${pageContext.request.contextPath}/cart/list.do";
+		        	}
+	        	}
+	        },
+	        error: function(xhr, status, error) {
+	            console.error(error);
+	        }
+	    });
 	}
 
 </script>
@@ -308,13 +335,13 @@
 					<td colspan="3">
 						<c:choose>
 							<c:when test="${empty list}">
-								<br>장바구니에 담기 <button type="button" class="btn" disabled="disabled"><i class="fa-solid fa-cart-arrow-down"></i></button>
+								<br>장바구니에 담기 <button type="button" class="btn cartbtn" disabled="disabled"><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:when>
 							<c:when test="${empty sessionScope.member}">
-								<br>장바구니에 담기 <button type="button" class="btn" onclick="reqlogin();"><i class="fa-solid fa-cart-arrow-down"></i></button>
+								<br>장바구니에 담기 <button type="button" class="btn cartbtn" onclick="reqlogin();"><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:when>
 							<c:otherwise>
-								<br>장바구니에 담기 <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/';"><i class="fa-solid fa-cart-arrow-down"></i></button>
+								<br>장바구니에 담기 <button type="button" class="btn cartbtn" onclick="sendToCart();"><i class="fa-solid fa-cart-arrow-down"></i></button>
 							</c:otherwise>
 						</c:choose>
 					</td>

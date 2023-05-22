@@ -1,6 +1,7 @@
 package com.servlet.cart;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
+
 import com.DTO.Cart;
-import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
@@ -66,30 +68,52 @@ public class CartServlet extends MyServlet {
 	// 1) 장바구니에 물건을 추가한다. ( 레시피 조합 > 장바구니 추가 )
 	   	HttpSession session = req.getSession();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    String state = "false";
 	    
 	    try {
 	         Long memberId = info.getMemberId();
 	         
 	         // 해당 멤버의 상품리스트...
-	        
-	         // List<RecipeProduct> list = 레시피조합상품리스트.;
-	         List<RecipeProduct> list = null;
+	         String productIds = req.getParameter("productIds");
+	         String quantities = req.getParameter("quantities");
 	         
-	         for(RecipeProduct p:list) {
-	        	 cartService.createItem(p.getProductId(), memberId, p.getQuantity());
+	         String[] p = productIds.split(",");
+	         String[] q = quantities.split(",");
+	         String error = "";
+	         boolean check= false; 
+	         for(int i=0; i<p.length; i++) {
+	        	 if(cartService.getItemCnt(Long.parseLong(p[i])) < Integer.parseInt(q[i])) {
+	        		 error += productService.findProductByProductId(Long.parseLong(p[i])).getName() + ",";
+	        		 check = true;
+	        	 }
+	        	 cartService.createItem(Long.parseLong(p[i]), memberId,Integer.parseInt(q[i]));
+	         
+	         }
+	         if(!check) {
+	        	 error = null;
+	         }else {
+	        	 // error : 장바구니 재고수량보다 많은 경우 error로 productId들 출력
+	        	 if(error.endsWith(",")) {
+	        		 error = error.substring(0,error.length()-1);
+	        	 }
 	         }
 
 	         // 장바구니 총 개수 구하기
 	         int dataCount = cartService.getCnt(memberId);
 	         
-	         req.setAttribute("list", list);
+	         req.setAttribute("error", error);
 	         req.setAttribute("dataCount", dataCount);
-
+	         state = "true";
+	         
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
+	    JSONObject job = new JSONObject();
+		job.put("state", state);
 
-	      forward(req, resp, "/WEB-INF/views/cart/cart_list.jsp");
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
    }
 
 	protected void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

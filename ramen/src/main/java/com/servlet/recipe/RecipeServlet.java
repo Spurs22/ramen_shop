@@ -1,6 +1,5 @@
 package com.servlet.recipe;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
@@ -41,7 +40,6 @@ import com.service.recipe.RecipeCommentServiceImpl;
 import com.service.recipe.RecipeLikeService;
 import com.service.recipe.RecipeLikeServiceImpl;
 import com.util.MyUploadServlet;
-import com.util.MyUtil;
 
 @MultipartConfig
 @WebServlet("/recipe/*")
@@ -259,6 +257,10 @@ public class RecipeServlet extends MyUploadServlet {
 			return;
 		}
 		
+		String state = "false";
+		String productIds = "";
+		String quantities = "";
+		
 		try {
 			RecipeBoard dto = new RecipeBoard();
 			
@@ -267,8 +269,8 @@ public class RecipeServlet extends MyUploadServlet {
 			dto.setContent(req.getParameter("content"));
 			dto.setIpAddress("127.0.0.1");
 			
-			String productIds = req.getParameter("productIds");
-		    String quantities = req.getParameter("quantities");
+			productIds = req.getParameter("productIds");
+		    quantities = req.getParameter("quantities");
 
 		    String[] productIdarr = productIds.split(",");
 		    String[] quantityarr = quantities.split(",");
@@ -288,11 +290,17 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			recipeBoardService.insertRecipe(dto);
 			
+			state = "true";
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.do");
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		
+		PrintWriter out = resp.getWriter();
+		out.print(job);
 	}
 
 	protected void updateRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -346,6 +354,8 @@ public class RecipeServlet extends MyUploadServlet {
 			return;
 		}
 		
+		String state = "true";
+		
 		try {
 			RecipeBoard board = new RecipeBoard();
 			
@@ -381,11 +391,17 @@ public class RecipeServlet extends MyUploadServlet {
 			
 			recipeBoardService.updateRecipe(board);
 			
+			state = "true";
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp + "/recipe/recipe-list.do");
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		
+		PrintWriter out = resp.getWriter();
+		out.print(job);
 	}
 
 	protected void deleteRecipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -435,11 +451,11 @@ public class RecipeServlet extends MyUploadServlet {
 
 	protected void recipe(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 레시피 상세 보기
-		MyUtil util = new MyUtil();
-		
 		String cp = req.getContextPath();
 		
 		String query = "";
+		String productIds ="";
+		String quantities ="";
 		
 		try {
 			Long id = Long.valueOf(req.getParameter("id"));
@@ -470,7 +486,13 @@ public class RecipeServlet extends MyUploadServlet {
 			for(RecipeProduct product : list) {
 				product.setName(product.getName());
 				product.setQuantity(product.getQuantity());
+				
+				productIds += product.getProductId() + ",";
+				quantities += product.getQuantity() + ",";
 			}
+			
+			productIds = productIds.substring(0, productIds.length() - 1);
+			quantities = quantities.substring(0, quantities.length() - 1);
 			
 			HttpSession session = req.getSession();
 			SessionInfo info = (SessionInfo)session.getAttribute("member");
@@ -497,6 +519,8 @@ public class RecipeServlet extends MyUploadServlet {
 			req.setAttribute("nextReadDto", nextReadDto);
 			
 			req.setAttribute("likeStatus", likeStatus);
+			req.setAttribute("productIds", productIds);
+			req.setAttribute("quantities", quantities);
 			
 			forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
 			return;

@@ -18,7 +18,6 @@
 	<style>
 
 
-
         .product-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -138,7 +137,7 @@
 
 				<div class="btn-group">
 					<button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-						Action
+						상품 관리
 					</button>
 					<ul class="dropdown-menu">
 						<li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/add-form">상품 등록</a></li>
@@ -155,7 +154,7 @@
 				<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=${post.product.productId}">
 
 					<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? "default2.png" : post.product.picture}">
-					<div style="margin-top: 5px; font-weight: 750">${post.product.name}</div>
+					<div style="margin-top: 5px; font-weight: 600">${post.product.name}</div>
 					<div style="color: #5d5d5d">${post.price}원</div>
 					<div class="starBundle-comment">
 						<c:set var="rating" value="${post.rating}"/>
@@ -256,7 +255,7 @@
 						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/` + post.picture + `"/>`
 					}
 
-                    userCardTemplate += `<div style="margin-top: 5px; font-weight: 750">` + post.productName + `</div>
+                    userCardTemplate += `<div style="margin-top: 5px; font-weight: 600">` + post.productName + `</div>
 								<div style="color: #5d5d5d">` + post.price + `원</div>
 								<div class="starBundle-comment">` +
 									generateStars(post.rating)

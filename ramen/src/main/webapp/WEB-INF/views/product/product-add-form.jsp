@@ -14,6 +14,10 @@
             border-radius: 5px;
         }
 
+		.main-container {
+            padding-bottom: 40px;
+        }
+
         .sub-menu button {
             border-radius: 5px;
         }
@@ -119,12 +123,11 @@
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
-	<div class="main-container shadow-lg" style="padding: 70px 70px 110px 70px">
+	<div class="main-container shadow-lg">
 
 		<div class="sub-menu">
 			<div style="display: flex; flex-direction: row; gap: 5px" >
-				<%--				<input type="text" style="width: 150px; padding: 0 5px">--%>
-				<%--				<button class="btn btn-primary">검색</button>--%>
+				<button type="button" class="btn btn-outline-secondary" style="width: 90px" onclick="location.href='${pageContext.request.contextPath}/product/list'">뒤로가기</button>
 			</div>
 		</div>
 
@@ -133,7 +136,7 @@
 				<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
 					<div class="input-group">
 						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
-						<input class="form-control product-info" name="name" id="productName" value="${mode == "post" ? "" : product.productName}">
+						<input class="form-control product-info" name="name" id="productName" value="${mode == "post" ? "" : product.name}">
 						<button class="btn btn-outline-secondary" type="button" id="productNameCheckBtn">중복 검사</button>
 					</div>
 				</div>
@@ -163,7 +166,7 @@
 				<div style="width: 100%; border-bottom: 1px solid #DFE2E6"></div>
 
 				<div style="height: 210px; display: flex; flex-direction: row; gap: 40px;">
-					<img src="${pageContext.request.contextPath}/resource/picture/${mode == "post" ? "default2.png" : product.getPicture}"
+					<img src="${pageContext.request.contextPath}/resource/picture/${mode == "post" ? "default2.png" : product.picture}"
 						 style="height: 100%; width: 210px; object-fit: cover; border: 1px solid #DFE2E6"
 						 id="productImg">
 					<div style="display: grid; height: 100%; grid-template-columns: 70px 25px 150px; grid-auto-rows: 50px; align-items: center; align-content: center">
@@ -174,7 +177,7 @@
 				</div>
 
 				<div style="text-align: right">
-					<button type="button" class="btn btn-success" style="width: 100px; margin-top: 20px" id="submitButton">확인</button>
+					<button type="button" class="btn btn-success" style="width: 100px; margin-top: 20px" id="submitButton">${mode.equals('post') ? '등록 완료' : '수정 완료'}</button>
 				</div>
 			</form>
 		</div>
@@ -188,8 +191,31 @@
     let productIdInput = document.getElementById('productId');
     let productImgInput = document.getElementById('productImgInput')
     let productImg = document.getElementById('productImg');
+
+    let categoryInput = $('#category');
+    let quantityInput = $('#quantityInput')
+
     let productId = null;
     let nameCheckStatus = false;
+
+    $(function () {
+        if (${mode.equals('edit')}) {
+            let categoryName = '${product.category.label}';
+            console.log(categoryName)
+
+            categoryInput.find('[value=${product.category.value}]').attr('selected', true)
+            nameCheckStatus = true;
+            let $productName = $('#productName');
+            $productName.attr('readOnly', true)
+			$productName.css('background-color', 'F8F9FA')
+
+			$('#name-preview').text($productName.val())
+            $('#quantity-preview').text('${product.remainQuantity}')
+            $('#category-preview').text(categoryName)
+        }
+    });
+
+
     // 유효성 검사
 
     productImgInput.addEventListener('change', function () {
@@ -218,8 +244,6 @@
     });
 
     $(function () {
-        let categoryInput = $('#category');
-        let quantityInput = $('#quantityInput')
 
 		// 카테고리 미리보기
         categoryInput.change(function () {
