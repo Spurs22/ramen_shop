@@ -71,20 +71,20 @@ public class CartServlet extends MyServlet {
 	         Long memberId = info.getMemberId();
 	         
 	         // 해당 멤버의 상품리스트...
-	        
-	         // List<RecipeProduct> list = 레시피조합상품리스트.;
-	         List<RecipeProduct> list = null;
+	         String productIds = req.getParameter("productIds");
+	         String quantities = req.getParameter("quantities");
 	         
-	         for(RecipeProduct p:list) {
-	        	 cartService.createItem(p.getProductId(), memberId, p.getQuantity());
+	         String[] p = productIds.split(",");
+	         String[] q = quantities.split(",");
+	         
+	         for(int i=0; i<p.length; i++) {
+	        	 cartService.createItem(Long.parseLong(p[i]), memberId,Integer.parseInt(q[0]));
 	         }
 
 	         // 장바구니 총 개수 구하기
 	         int dataCount = cartService.getCnt(memberId);
 	         
-	         req.setAttribute("list", list);
 	         req.setAttribute("dataCount", dataCount);
-
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
