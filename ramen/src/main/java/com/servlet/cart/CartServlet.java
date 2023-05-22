@@ -76,31 +76,35 @@ public class CartServlet extends MyServlet {
 	         // 해당 멤버의 상품리스트...
 	         String productIds = req.getParameter("productIds");
 	         String quantities = req.getParameter("quantities");
+	         System.out.println(productIds);
+	         System.out.println(quantities);
+	         
 	         
 	         String[] p = productIds.split(",");
 	         String[] q = quantities.split(",");
 	         String error = "";
 	         boolean check= false; 
 	         for(int i=0; i<p.length; i++) {
-	        	 if(cartService.getItemCnt(Long.parseLong(p[i])) < Integer.parseInt(q[i])) {
-	        		 error += productService.findProductByProductId(Long.parseLong(p[i])).getName() + ",";
+	        	 if(cartService.getItemCnt(Long.parseLong(p[i])) == 0) {
+	        		 Long productId = Long.parseLong(p[i]);
+	        		 error += productService.findProductByProductId(productId).getName() + ",";
 	        		 check = true;
 	        	 }
-	        	 cartService.createItem(Long.parseLong(p[i]), memberId,Integer.parseInt(q[i]));
-	         
+	        	 cartService.createItem(Long.parseLong(p[i]), memberId ,Integer.parseInt(q[i]));
 	         }
+	         
 	         if(!check) {
 	        	 error = null;
-	         }else {
+	         } else {
 	        	 // error : 장바구니 재고수량보다 많은 경우 error로 productId들 출력
 	        	 if(error.endsWith(",")) {
 	        		 error = error.substring(0,error.length()-1);
 	        	 }
 	         }
-
+	         
 	         // 장바구니 총 개수 구하기
 	         int dataCount = cartService.getCnt(memberId);
-	         
+	        
 	         req.setAttribute("error", error);
 	         req.setAttribute("dataCount", dataCount);
 	         state = "true";
