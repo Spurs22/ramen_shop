@@ -15,7 +15,7 @@
         }
 
 		.main-container {
-            padding: 70px 70px 110px 70px
+            padding-bottom: 40px;
         }
 
         .sub-menu button {

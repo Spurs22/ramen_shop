@@ -30,23 +30,28 @@
 .whole-container {
 	width: 800px;
 	margin: 0px auto 100px auto;
+	/*margin: 0px auto 0px auto;*/
+	/*height: 1vh;*/
+	display: flex;
+	flex-direction: column;
 }
 
 .content-container {
+	flex: 1;
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
 	gap: 0px;
-	height: 100%;
+	/*height: 100%;*/
 	width: 100%;
-	overflow: scroll;
 }
 
 .main-container {
 	border: 1px solid #DFE2E6;
 	/*border-top: none;*/
 	width: 100%;
-	height: 800px;
+	/*height: 800px;*/
+	flex: 1;
 	position: relative;
 	top: -1px;
 	border-radius: 0 10px 10px 10px;

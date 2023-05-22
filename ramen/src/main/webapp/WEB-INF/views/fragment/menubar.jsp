@@ -48,7 +48,7 @@
             margin-top: 40px;
             width: 100%;
             height: 50px;
-            margin-bottom: 80px;
+            margin-bottom: 55px;
             cursor: pointer;
         }
 

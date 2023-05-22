@@ -17,9 +17,6 @@
 
 	<style>
 
-		.main-container {
-            padding: 70px 70px 110px 70px
-		}
 
         .product-container {
             display: grid;
