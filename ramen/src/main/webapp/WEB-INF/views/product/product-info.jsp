@@ -292,7 +292,7 @@
 									<button class="btn btn-outline-dark w-50" id="orderBtn">구매하기</button>
 								</div>
 							</div>
-						<button class="btn btn-secondary w-100">상품이 포함된 레시피 조회</button>
+						<button class="btn btn-secondary w-100" onclick="location.href='${pageContext.request.contextPath}/recipe/contain-post?id=${post.product.productId}'">상품이 포함된 레시피 조회</button>
 					</div>
 				</div>
 			</div>
