@@ -258,6 +258,8 @@ public class RecipeServlet extends MyUploadServlet {
 		}
 		
 		String state = "false";
+		String productIds = "";
+		String quantities = "";
 		
 		try {
 			RecipeBoard dto = new RecipeBoard();
@@ -267,8 +269,8 @@ public class RecipeServlet extends MyUploadServlet {
 			dto.setContent(req.getParameter("content"));
 			dto.setIpAddress("127.0.0.1");
 			
-			String productIds = req.getParameter("productIds");
-		    String quantities = req.getParameter("quantities");
+			productIds = req.getParameter("productIds");
+		    quantities = req.getParameter("quantities");
 
 		    String[] productIdarr = productIds.split(",");
 		    String[] quantityarr = quantities.split(",");
@@ -293,6 +295,7 @@ public class RecipeServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		JSONObject job = new JSONObject();
 		job.put("state", state);
 		
@@ -451,6 +454,8 @@ public class RecipeServlet extends MyUploadServlet {
 		String cp = req.getContextPath();
 		
 		String query = "";
+		String productIds ="";
+		String quantities ="";
 		
 		try {
 			Long id = Long.valueOf(req.getParameter("id"));
@@ -481,7 +486,13 @@ public class RecipeServlet extends MyUploadServlet {
 			for(RecipeProduct product : list) {
 				product.setName(product.getName());
 				product.setQuantity(product.getQuantity());
+				
+				productIds += product.getProductId() + ",";
+				quantities += product.getQuantity() + ",";
 			}
+			
+			productIds = productIds.substring(0, productIds.length() - 1);
+			quantities = quantities.substring(0, quantities.length() - 1);
 			
 			HttpSession session = req.getSession();
 			SessionInfo info = (SessionInfo)session.getAttribute("member");
@@ -508,6 +519,8 @@ public class RecipeServlet extends MyUploadServlet {
 			req.setAttribute("nextReadDto", nextReadDto);
 			
 			req.setAttribute("likeStatus", likeStatus);
+			req.setAttribute("productIds", productIds);
+			req.setAttribute("quantities", quantities);
 			
 			forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
 			return;

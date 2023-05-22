@@ -1,5 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+	String productIds = request.getParameter("productIds");
+	String quantities = request.getParameter("quantities");
+%>
 <html>
 <head>
 	<title>Title</title>
@@ -248,13 +252,16 @@
 		ajaxFun(url, "get", query, "text", fn);
 	}
     
+    let productIds = '${productIds}';
+    let quantities = '${quantities}';
+    
     // 장바구니에 추가
     function sendToCart() {
 		$.ajax({
-	        url: "${pageContext.request.contextPath}/cart/recipe_add.do";
+	        url: "${pageContext.request.contextPath}/cart/recipe_add.do",
 	        type: "POST",
 	        dataType: "json",
-	        data: { list=${list} },
+	        data: { productIds: productIds, quantities: quantities },
 	        success: function(data) {
 	        	let state = data.state;
 	        	if(state == "true") {
