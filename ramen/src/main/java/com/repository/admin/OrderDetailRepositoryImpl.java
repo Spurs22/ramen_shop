@@ -130,52 +130,56 @@ private Connection conn = DBConn.getConnection();
 			// status 상태조건, condition 검색조건
 			switch(statusId) {
 			case 1:
-				if(condition.equals("a.email")) {
+				if(condition.equals("userEmail")) {
 					// 주문자이메일 검색
 					sb.append(" WHERE d.id = 1 AND a.email = ?");
-				} else if(condition.equals("b.id")) {
+				} else if(condition.equals("orderBundleId")) {
 					// 주문번호 검색
 					sb.append(" WHERE d.id = 1 AND b.id = ?");
 				}
 				break;
 			case 2:
-				if(condition.equals("a.email")) {
+				if(condition.equals("userEmail")) {
 					// 주문자이메일 검색
 					sb.append(" WHERE d.id = 2 AND a.email = ?");
-				} else if(condition.equals("b.id")) {
+				} else if(condition.equals("orderBundleId")) {
 					// 주문번호 검색
 					sb.append(" WHERE d.id = 2 AND b.id = ?");
 				}
 				break;
 			case 3:
-				if(condition.equals("a.email")) {
+				if(condition.equals("userEmail")) {
 					// 주문자이메일 검색
 					sb.append(" WHERE d.id = 3 AND a.email = ?");
-				} else if(condition.equals("b.id")) {
+				} else if(condition.equals("orderBundleId")) {
 					// 주문번호 검색
 					sb.append(" WHERE d.id = 3 AND b.id = ?");
 				}
 				break;
 			case 4:
-				if(condition.equals("a.email")) {
+				if(condition.equals("userEmail")) {
 					// 주문자이메일 검색
 					sb.append(" WHERE d.id = 4 AND a.email = ?");
-				} else if(condition.equals("b.id")) {
+				} else if(condition.equals("orderBundleId")) {
 					// 주문번호 검색
 					sb.append(" WHERE d.id = 4 AND b.id = ?");
 				}
 				break;
-			default:
-				System.out.println("데이터가 없습니다.");
 			}
 			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setString(1, keyword);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
+			if(statusId >=1 && statusId <=4) {
+				pstmt.setString(1, keyword);
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, size);
+			} else {
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, size);
+			}
+			
 			
 			rs = pstmt.executeQuery();
 			
@@ -384,10 +388,14 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
-			
-			pstmt.setString(1, keyword);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
+			if(statusId >=1 && statusId <=4) {
+				pstmt.setString(1, keyword);				
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, size);
+			} else {
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, size);
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -464,9 +472,14 @@ private Connection conn = DBConn.getConnection();
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setString(1, keyword);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
+			if(statusId >=1 && statusId <=4) {
+				pstmt.setString(1, keyword);				
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, size);
+			} else {
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, size);
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -499,15 +512,27 @@ private Connection conn = DBConn.getConnection();
 	
 	// 데이터 개수
 	@Override
-	public int dataCount() {
+	public int dataCount(int statusId) {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql;
+		StringBuilder sb = new StringBuilder();
 
 		try {
-			sql = "SELECT NVL(COUNT(*), 0) FROM order_bundle";
-			pstmt = conn.prepareStatement(sql);
+			sb.append("SELECT NVL(COUNT(*), 0) FROM order_bundle ob");
+			sb.append(" JOIN order_item oi ON ob.id = oi.order_id");
+			
+			if(statusId == 1) {
+				sb.append(" WHERE oi.status_id = 1");
+			} else if(statusId == 2) {
+				sb.append(" WHERE oi.status_id = 2");
+			} else if(statusId == 3) {
+				sb.append(" WHERE oi.status_id = 3");
+			} else if(statusId == 4) {
+				sb.append(" WHERE oi.status_id = 4");
+			}
+			
+			pstmt = conn.prepareStatement(sb.toString());
 
 			rs = pstmt.executeQuery();
 			
@@ -522,44 +547,66 @@ private Connection conn = DBConn.getConnection();
 		}
 		return result;
 	}
-		
-	// 검색에서의 데이터 개수
-	  //1) 전체 주문리스트
-	  //2) 회원 주문리스트  -- 회원 검색
-	  //3) 주문상태별 주문리스트 -- 주문상태별 검색
-	  //4) 주문번호별 내역 -- 주문번호별 검색
+	
+	// 검색할 때 데이터 개수
 	@Override
-	public int dataCount(String condition, String keyword) {
+	public int dataCount(String condition, String keyword, int statusId) {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
-		String sql;
+		StringBuilder sb = new StringBuilder();
 
 		try {
-			sql = "SELECT NVL(COUNT(*), 0) FROM order_item oi ";
-				//+ " JOIN member1 m ON b.userId = m.userId "; // 맴버테이블, 주문상태 테이블, 번들테이블 조인하기
-				
-			if (condition.equals("memberId")) { 
-				// 회원이메일 검색
-				sql += "  WHERE email = ?  "; 
-				
-			} else if (condition.equals("status_name")) { 
-				// 주문상태별 검색
-				sql += "  WHERE status_name = ? ";
-				
-			} else { 
-				// 주문번호별 검색
-				sql += "  WHERE orderBundleId = ? ";
+			sb.append(" SELECT NVL(COUNT(*), 0) FROM order_item oi ");
+			sb.append(" JOIN order_bundle ob ON oi.order_id = ob.id ");
+			sb.append(" JOIN member m ON ob.member_id = m.id ");
+			sb.append(" JOIN order_status os ON os.id = oi.status_id ");
+
+			switch(statusId) {
+			case 1:
+				if(condition.equals("userEmail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE oi.status_id =1 AND m.email = ?");
+				} else if(condition.equals("orderBundleId")) {
+					// 주문번호 검색
+					sb.append(" WHERE oi.status_id = 1 AND ob.id = ?");
+				}
+				break;
+			case 2:
+				if(condition.equals("userEmail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE oi.status_id = 2 AND m.email = ?");
+				} else if(condition.equals("orderBundleId")) {
+					// 주문번호 검색
+					sb.append(" WHERE oi.status_id = 2 AND ob.id = ?");
+				}
+				break;
+			case 3:
+				if(condition.equals("userEmail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE oi.status_id = 3 AND m.email = ?");
+				} else if(condition.equals("orderBundleId")) {
+					// 주문번호 검색
+					sb.append(" WHERE oi.status_id = 3 AND ob.id = ?");
+				}
+				break;
+			case 4:
+				if(condition.equals("userEmail")) {
+					// 주문자이메일 검색
+					sb.append(" WHERE oi.status_id = 4 AND m.email = ?");
+				} else if(condition.equals("orderBundleId")) {
+					// 주문번호 검색
+					sb.append(" WHERE oi.status_id = 4 AND ob.id = ?");
+				}
+				break;
 			}
 
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setString(1, keyword);
-			if (condition.equals("all")) {
-				pstmt.setString(2, keyword);
+			if(statusId >=1 && statusId <=4) {
+				pstmt.setString(1, keyword);
 			}
-
+			
 			rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
@@ -576,7 +623,7 @@ private Connection conn = DBConn.getConnection();
 
 	// 기간 조회(1일 | 1개월 | 6개월 | 1년 | 전체) + 상품별 매출 통계
 	@Override
-	public List<OrderStatistics> salesStatisticsByProduct(int proid)  {
+	public List<OrderStatistics> salesStatisticsByProduct(int mode)  {
 		List<OrderStatistics> osList = new ArrayList<OrderStatistics>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -592,16 +639,16 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" WHERE b.status_id <= 3");
 			
 			// 기간 조건(1일 | 1개월 | 6개월 | 1년 | 전체)
-			if (proid == 1) { 
+			if (mode == 1) { 
 				// 1일
 				sb.append(" AND c.created_date >= TO_CHAR(SYSDATE -1)");
-			} else if (proid == 2) { 
+			} else if (mode == 2) { 
 				// 1개월
 				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -1)");
-			} else if(proid == 3) {
+			} else if(mode == 3) {
 				// 6개월
 				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -6)");
-			} else if(proid == 4) {
+			} else if(mode == 4) {
 				// 1년
 				sb.append(" AND c.created_date >= ADD_MONTHS(SYSDATE, -12)");
 			} else {

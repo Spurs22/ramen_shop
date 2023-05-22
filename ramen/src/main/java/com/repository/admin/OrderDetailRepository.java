@@ -24,10 +24,10 @@ public interface OrderDetailRepository {
 	OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, int orderBundleId);
 	
 	// 데이터 개수
-	int dataCount();
+	int dataCount(int statusId);
 	
 	// 검색에서의 데이터 개수
-	int dataCount(String condition, String keyword);
+	int dataCount(String condition, String keyword, int statusId);
 	
 	// 상품별 매출 통계
 	List<OrderStatistics> salesStatisticsByProduct(int proid) ;
