@@ -190,20 +190,22 @@ public class OrderServlet extends MyServlet {
 				try {
 					// 상품 초기화
 					productService.subtractQuantity(c.getProductId(), c.getQuantity());
-					
-					long order_id = orderService.createOrderBundle(orderBundle, itemlist);
-					
-					// 장바구니에서 결제한 물품 초기화
-					cartService.deleteCart(memberId, c.getProductId());
-					
-					resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
-					
 				} catch (RuntimeException e) {
 					System.out.println("재고보다 주문 수량이 많습니다.");
 					// 결제시 에러메세지 보내서 체크 ...
-					resp.sendRedirect(cp+"/cart/list.do");
+					message = "fail";
+					resp.sendRedirect(cp+"/cart/list.do?message="+message);
 					return;
 				}
+				
+				long order_id = orderService.createOrderBundle(orderBundle, itemlist);
+				
+				// 장바구니에서 결제한 물품 초기화
+				cartService.deleteCart(memberId, c.getProductId());
+				
+				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
+				
+				
             
 			}
 			req.setAttribute("errorMessage", errorMessage);

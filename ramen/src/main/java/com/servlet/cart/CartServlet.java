@@ -79,10 +79,10 @@ public class CartServlet extends MyServlet {
 	         System.out.println(productIds);
 	         System.out.println(quantities);
 	         
-	         
 	         String[] p = productIds.split(",");
 	         String[] q = quantities.split(",");
 	         String error = "";
+	         
 	         boolean check= false; 
 	         for(int i=0; i<p.length; i++) {
 	        	 if(cartService.getItemCnt(Long.parseLong(p[i])) == 0) {
@@ -127,6 +127,7 @@ public class CartServlet extends MyServlet {
       SessionInfo info = (SessionInfo) session.getAttribute("member");
 
       try {
+    	 String message = req.getParameter("message");
          Long memberId = info.getMemberId();
          
          // 해당 멤버의 장바구니 목록 조회
@@ -137,12 +138,12 @@ public class CartServlet extends MyServlet {
         		 cartService.editItemNum(c.getProductId(), memberId, c.getRemainQuantity());
         	 }
          }
-         
          list = cartService.findCartByMemberId(memberId);
          
          // 장바구니 총 개수 구하기
          int dataCount = cartService.getCnt(memberId);
          
+         req.setAttribute("message", message);
          req.setAttribute("list", list);
          req.setAttribute("dataCount", dataCount);
 

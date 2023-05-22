@@ -188,6 +188,11 @@
 	}
 
         $(function() {
+        	if(${message != null}){
+        		alert("재고보다 주문 수량이 많습니다.");
+        	}
+        	
+        	
         	let quantityEl = $(".quantitys");
         	let quantity = Number(quantityEl.val());
         	let remain = Number($(".count2").text());
