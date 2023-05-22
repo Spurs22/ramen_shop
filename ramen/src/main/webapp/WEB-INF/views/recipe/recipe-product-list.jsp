@@ -102,8 +102,8 @@
 					<td>순번</td>
 					<td>${vo.subject}</td>
 					<td>${vo.nickname}</td>
-					<td>${vo.created_date}</td>
-					<td>${vo.hit_count}</td>
+					<td>${vo.createdDate}</td>
+					<td>${vo.hitCount}</td>
 					<td>${vo.recipeLikeCount}</td>	
 				</tr>
 			</c:forEach>
