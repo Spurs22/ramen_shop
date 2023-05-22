@@ -4,10 +4,6 @@
 <%@ taglib prefix = "fmt" uri ="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
 <style type="text/css">
@@ -89,37 +85,13 @@ body {
     border: 2px solid #FFFFFF; 
  }
 </style>
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-<main>
-	<div class="container">
-		<div class="members-form">
-			<div class="members-title">
-				<h3>계정설정 변경</h3>
-			</div>
-			<div class="info-box">
-				<form name="pwdForm" method="post">
-				    <div class="member-row">
-				       원하는 메뉴를 선택해주세요
-				    </div>
-					<div class="row">
-						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/pwd.do?mode=update'">내 정보변경</button>
-					</div>
-          			<div class="row">
-						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/pwd.do?mode=delete'">회원탈퇴</button>
-					</div>
-					<div class="row">
-						<button type="button" class="cancel-btn" onclick="location.href='${pageContext.request.contextPath}/';">취소하기</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</main>
-
-
-
-
 
 </body>
 </html>

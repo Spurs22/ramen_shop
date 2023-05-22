@@ -128,19 +128,14 @@ function sendLogin() {
 
     f.action = "${pageContext.request.contextPath}/member/login_ok.do";
     f.submit();
-    
-    showLoginSuccessMessage();
- 
-	}
-    
-	function validateEmail(email) {
-	    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-	    return emailRegex.test(email);
+	
 	}
 
-    function showLoginSuccessMessage() {
-        alert("반갑습니다!");
-    }
+	function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+	}
+
 </script>
 
 </head>

@@ -1,6 +1,7 @@
 package com.servlet.member;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -89,14 +90,20 @@ public class MemberServlet extends MyServlet{
 	            SessionInfo info = new SessionInfo();
 	            info.setMemberId(dto.getMemberId());
 	            info.setUserNickname(dto.getNickName());
-
 	            info.setUserRoll(dto.getRoll());
 
 	            // 세션에 member라는 이름으로 저장
 	            session.setAttribute("member", info);
-
-	            // 메인 화면으로 리다이렉트
-	            resp.sendRedirect(cp + "/");
+	            
+	            // 메시지 출력 , 메인화면 리다이렉트
+	            resp.setContentType("text/html; charset=UTF-8");
+	            PrintWriter out = resp.getWriter();
+	            out.println("<script>alert('반갑습니다!'); location.href='" + cp + "/';</script>");
+	            out.flush();
+	            
+	            // 메인 화면으로 리다이렉트	    
+	           //resp.sendRedirect(cp + "/");
+	       
 	        } else {
 	            // 로그인 실패인 경우 (다시 로그인 폼으로)
 
