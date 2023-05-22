@@ -89,6 +89,7 @@ public class CartServlet extends MyServlet {
 	        		 Long productId = Long.parseLong(p[i]);
 	        		 error += productService.findProductByProductId(productId).getName() + ",";
 	        		 check = true;
+	        		 continue;
 	        	 }
 	        	 cartService.createItem(Long.parseLong(p[i]), memberId ,Integer.parseInt(q[i]));
 	         }
