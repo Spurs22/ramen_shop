@@ -1,5 +1,6 @@
 /build/
 DBConn.java
+order_list.jsp
 /src/main/webapp/WEB-INF/web.xml
 /ramen.eml
 /.classpath
