@@ -38,6 +38,7 @@
 	padding: 20px;
 	gap: 0px;
 	height: 100%;
+	width: 100%;
 	overflow: scroll;
 }
 
@@ -50,5 +51,5 @@
 	top: -1px;
 	border-radius: 0 10px 10px 10px;
 	margin-bottom: 100px;
-	padding: 35px 50px 50px 50px;
+	padding: 70px 70px 110px 70px
 }

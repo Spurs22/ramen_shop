@@ -14,6 +14,10 @@
             border-radius: 5px;
         }
 
+		.main-container {
+            padding: 70px 70px 110px 70px
+        }
+
         .sub-menu button {
             border-radius: 5px;
         }
@@ -119,12 +123,11 @@
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
-	<div class="main-container shadow-lg" style="padding: 70px 70px 110px 70px">
+	<div class="main-container shadow-lg">
 
 		<div class="sub-menu">
 			<div style="display: flex; flex-direction: row; gap: 5px" >
-				<%--				<input type="text" style="width: 150px; padding: 0 5px">--%>
-				<%--				<button class="btn btn-primary">검색</button>--%>
+				<button type="button" class="btn btn-outline-secondary" style="width: 90px" onclick="location.href='${pageContext.request.contextPath}/product/list'">뒤로가기</button>
 			</div>
 		</div>
 

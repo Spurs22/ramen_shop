@@ -94,7 +94,7 @@
 
 		<div class="sub-menu">
 			<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%">
-				<button type="button" class="btn btn-outline-secondary" style="width: 90px">뒤로가기</button>
+				<button type="button" class="btn btn-outline-secondary" style="width: 90px" onclick="location.href='${pageContext.request.contextPath}/product/list'">뒤로가기</button>
 				<input type="text" style="width: 150px; padding: 0 5px">
 <%--								<button class="btn btn-primary">검색</button>--%>
 			</div>

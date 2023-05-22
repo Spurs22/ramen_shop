@@ -199,8 +199,8 @@
 
 			<div style="display: flex; flex-direction: row; gap: 5px">
 				<c:if test="${sessionScope.member.userRoll == 1}">
-					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-board?id=${post.product.productId}'">상품 수정</button>
-					<button class="btn btn-secondary">상품 삭제</button>
+					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-board?id=${post.product.productId}'">글 수정</button>
+					<button class="btn btn-secondary">글 삭제</button>
 				</c:if>
 			</div>
 		</div>

@@ -93,6 +93,16 @@
 			border: 1px solid #DFE2E6;
 			border-radius: 8px;
 			margin-top: 20px;
+			display: flex;
+			flex-direction: row;
+			overflow: auto;
+        }
+
+		.selected-product img {
+			height: 100%;
+			width: 100px;
+			object-fit: cover;
+
         }
 
 		.product-info {
@@ -123,7 +133,8 @@
 				<%--				<button class="btn btn-primary">검색</button>--%>
 			</div>
 
-			<div style="display: flex; flex-direction: row; gap: 5px">
+			<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%">
+				<button type="button" class="btn btn-outline-secondary" style="width: 90px" onclick="location.href='${pageContext.request.contextPath}/product/list'">뒤로가기</button>
 				<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#selectProductModal">상품 선택</button>
 			</div>
 		</div>
@@ -153,7 +164,7 @@
 				<div style="display: flex; flex-direction: row; gap: 15px">
 					<div class="input-group" style="flex: 1">
 						<input type="file" class="form-control" id="imgInput"
-							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" >
+							   aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" multiple="multiple" >
 					</div>
 
 					<div class="input-group" style="width: 50%">
@@ -170,8 +181,8 @@
 
 				<input type="hidden" name="formType" value="{mode}">
 				<input type="hidden" name="productId" id="productId" value="${mode == "post" ? "" : editBoard.product.productId}">
-				<div class="selected-product">
-					<img id="imgPreview" style="width: 100px; height: 100px">
+				<div class="selected-product" id="imgPool">
+
 				</div>
 
 				<div class="w-100 text-end" style="margin-top: 20px">
@@ -256,14 +267,30 @@
         }
     });
 
+    let productImgInput = document.getElementById('imgInput');
+    let productImg = document.getElementById('imgPreview');
+    let imgPool = document.getElementById('imgPool');
+    let imgTag = '<img style="width: 100px; height: 100px" + src="'
 
-    // $('#imgInput').change(function () {
-    //     const reader = new FileReader();
-    //     reader.onload = ({ target }) => {
-    //         $('#imgPreview').src = target.result;
-    //     };
-    //     reader.readAsDataURL($('#imgInput').files[0]);
-    // });
+    productImgInput.addEventListener('change', function () {
+        for (const file of productImgInput.files) {
+            const reader = new FileReader();
+            reader.onload = ({ target }) => {
+                let img = document.createElement('img');
+                img.src = target.result;
+                imgPool.appendChild(img)
+                // productImg.src = target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    /*
+    	let temp = imgTag + target.result + "\"/>"
+            tempStrs += temp
+            let tempStrs = '';
+     */
 
 </script>
 
