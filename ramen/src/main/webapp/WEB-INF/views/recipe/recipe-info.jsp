@@ -265,7 +265,9 @@
 	        success: function(data) {
 	        	let state = data.state;
 	        	if(state == "true") {
-		        	window.location.href = "${pageContext.request.contextPath}/cart/list.do";
+		        	if(confirm('장바구니에 담았습니다! 장바구니로 이동하시겠습니까 ?')) {
+			        	location.href = "${pageContext.request.contextPath}/cart/list.do";
+		        	}
 	        	}
 	        },
 	        error: function(xhr, status, error) {

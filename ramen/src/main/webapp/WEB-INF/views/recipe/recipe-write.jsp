@@ -370,9 +370,9 @@
     	out += "<tr style='border-bottom: 1px solid gray;'>";
 		out += "<td>"+ name +"</td>"	
 		out += "<td class='quantity-cell'>";
-		out += "<button type='button' class='quantity-btn'>&lt;&nbsp;</button>";
+		out += "<button type='button' class='quantity-btn minus'>&lt;&nbsp;</button>";
 		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' readonly='readonly' value='1'></span>";
-		out += "<button type='button' class='quantity-btn'>&nbsp;&gt;</button>";
+		out += "<button type='button' class='quantity-btn plus'>&nbsp;&gt;</button>";
 		out += "<input type='hidden' name='productId' value='`+productId+`'>"
 		out += "</td>";
 		out += "<td style='text-align: center;'>";
