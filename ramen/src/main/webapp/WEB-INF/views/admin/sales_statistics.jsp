@@ -31,26 +31,47 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 		<form action="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">
-			<div> 
-				<button type='button' class='btn btnperiod' onclick="changeList(0)">전체</button>
-				<button type='button' class='btn btnperiod' onclick="changeList(1)">1일</button>
-				<button type='button' class='btn btnperiod' onclick="changeList(2)">1개월</button>
-				<button type='button' class='btn btnperiod' onclick="changeList(3)">6개월</button>
-				<button type='button' class='btn btnperiod' onclick="changeList(4)">1년</button>
+			<div>
+				<ul class="nav nav-pills nav-fill">
+				  <li class="nav-item">
+				    <a class="nav-link active" aria-current="page" onclick="changeList(0)">전체</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" onclick="changeList(1)">1일</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" onclick="changeList(2)">1개월</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" onclick="changeList(3)">6개월</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" onclick="changeList(4)">1년</a>
+				  </li>
+				</ul>
 			</div>
 			
 			<div>
-			<p>
-			상품번호 | 상품명 | 판매수량 | 총매출합계
-			</p>
-			<c:forEach var="sals" items="${os}">
-				<p>
-				${sals.productid}
-				${sals.productname}
-				${sals.sumquantity}
-				${sals.sumfinal_price}
-				</p>
-			</c:forEach>
+				<table class="table table-border table-list">
+				<thead>
+					<tr>
+						<th class="productid">상품번호</th>
+						<th class="productname">상품명</th>
+						<th class="sumquantity">판매수량</th>
+						<th class="sumfinal_price">총매출합계</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="sals" items="${os}">
+						<tr>
+							<td>${sals.productid}</td>
+							<td>${sals.productname}</td>
+							<td>${sals.sumquantity}</td>
+							<td>${sals.sumfinal_price}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+				</table>	
 			</div>
 			</form>
 		</div>
