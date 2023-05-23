@@ -121,7 +121,7 @@
 										<td class="orderItem">
 											<input type="checkbox" name="productIds" value="${cart.productId}" class="productIds" id="chkAll2">
 										</td>
-										<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+										<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${cart.picture}" style="height: 100px;"></td>
 										<td class="item2 orderItem">${cart.productName}</td>
 										<td class="item1 orderItem count">
 											<button type="button" class="minus btn">-</button> 
