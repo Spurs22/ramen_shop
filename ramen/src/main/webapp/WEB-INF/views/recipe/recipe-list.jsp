@@ -128,7 +128,7 @@
 			<div class="product-container" id="resultForm">
 				<c:forEach var="recipe" items="${list}">
 					<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=${recipe.id}" style="padding: 30px;"> 
-						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
+						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.picture == null ? "default2.png" : recipe.picture}">
 						<div style="font-weight: bold;">${recipe.subject}</div>
 						<div>${recipe.nickname}</div>
 						<div style="font-size: 14px">조회 수 : ${recipe.hitCount} 회</div>
@@ -184,7 +184,7 @@
 				$.each(data, function(i, list) {
 					 let userCardTemplate = `
 						<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=` + list.id + `" style="padding: 30px;"> 
-							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
+							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/` + list.picture + `">
 							<div style="font-weight: bold;">` + list.subject+ `</div>
 							<div>` + list.nickname + `</div>
 							<div style="font-size: 14px">조회 수 : ` + list.hitCount + `</div>

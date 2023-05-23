@@ -6,7 +6,7 @@
 %>
 <html>
 <head>
-	<title>Title</title>
+	<title>${dto.subject}</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
@@ -53,10 +53,17 @@
         .content-reply {
             outline: none;
         }
+		.pnbtn {
+			color: black;
+            text-decoration: none;
+		}
 
-        .pnbtn {
+        .rightbtn {
             color: black;
             text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .pnbtn:hover {
@@ -319,7 +326,7 @@
 				<tr>
 					<td colspan=3>
 						<hr>
-						<img src="${pageContext.request.contextPath}/resource/picture/1.png">
+						<img src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}">
 						<hr>
 					</td>
 				</tr>
@@ -402,11 +409,11 @@
 									class="fa-solid fa-caret-left"></i>&nbsp;${preReadDto.subject}</a>
 						</c:if>
 					</td>
-					<td>
+					<td style="width: 100px;">
 					</td>
 					<td style="text-align: right;">
 						<c:if test="${not empty nextReadDto}">
-							<a class="pnbtn"
+							<a class="pnbtn rightbtn" style="width: 100px"
 							   href="${recipeUrl}${recipeUrl.contains('keyword') ? '&' : '?'}id=${nextReadDto.id}">${nextReadDto.subject}&nbsp;<i
 									class="fa-solid fa-caret-right"></i></a>
 						</c:if>

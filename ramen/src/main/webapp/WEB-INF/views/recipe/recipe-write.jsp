@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<title>Title</title>
+	<title>Recipe</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
@@ -21,7 +21,7 @@
             grid-template-columns: repeat(4, 1fr);
             grid-auto-rows: 170px;
             padding: 20px;
-            height: 50%;
+            height: 300px;
 			gap: 3px;            
 			overflow: auto;
         }
@@ -190,7 +190,7 @@
 			<div class="product-container" id="resultForm">
 				<c:forEach var="post" items="${posts}">
 					<a class="product-item" onclick="addToCart('${post.product.productId}', '${post.price}', '${post.product.name}')">
-						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
+						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? "default2.png" : post.product.picture}">
 						<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">${post.product.name}</div>
 						<div style="color: #5d5d5d; font-size: 11px;">${post.price}원</div>
 					</a>
@@ -297,7 +297,7 @@
                 $.each(data, function(i, post) {
                     let userCardTemplate = `
                     		<a class="product-item" onclick="addToCart(`+post.productId+`, `+post.price+`, '`+post.productName+`')">
-								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png">
+								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? 'default2.png' : post.product.picture}">
 								<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">` + post.productName + `</div>
 								<div style="color: #5d5d5d; font-size: 11px;">` + post.price + `원</div>
 							</a>
@@ -329,6 +329,11 @@
 		const f = document.recipeForm;
 		let str;
 		
+		if(productIds == null || productIds.size < 1) {
+			alert('상품을 등록해주세요.');
+			return;
+		}
+		
 		str = f.subject.value.trim();
 		if(!str) {
 			alert("제목을 입력하세요.");
@@ -340,11 +345,6 @@
 		if(!str) {
 			alert("내용을 입력하세요.");
 			f.content.focus();
-			return;
-		}
-		
-		if(productIds == null || productIds.size < 1) {
-			alert('상품을 등록해주세요.');
 			return;
 		}
 		
@@ -386,9 +386,9 @@
 		out += "<td style='width: 200px; padding-left: 16px;'>"+ name +"</td>"	
 		out += "<td style='width: 100px;' class='quantity-cell'>";
 		out += "<button type='button' class='quantity-btn minus'>&lt;</button>";
-		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1'></span>";
+		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1' readonly='readonly'></span>";
 		out += "<button type='button' class='quantity-btn plus'>&gt;</button>";
-		out += "<input type='hidden' name='productId' value='" + productId + "'>";
+		out += "<input type='hidden' class='product-id' name='productId' value='" + productId + "'>";
 		out += "</td>";
 		out += "<td style='text-align: center; width:100px'>";
 		out += "<button type='button' class='delete-btn'><i class='fa-solid fa-trash-can'></i></button>";		
@@ -409,6 +409,8 @@
 		console.log(addedProducts);
     }
     
+    
+    // 레시피 문자열로 넘겨주기
     var productIds
     var quantities
     
@@ -424,6 +426,7 @@
 	    console.log(productIds);
 	}
     
+    // 레시피 상품 삭제
     $(document).on("click", ".delete-btn", function() {
 		$(this).closest("tr").remove();
 		
@@ -434,8 +437,54 @@
 			addedProducts.splice(index, 1);
 		}
 	});
-
-
+    
+    $(document).on("click", ".minus", function() {
+    	let tr = $(this).closest("tr");
+        let quantityInput = tr.find('.product-quantity');
+        let value = parseInt(quantityInput.val());
+    	
+        if (value > 1) {
+            value--;
+            quantityInput.val(value);
+            
+            let productId = tr.data('productId'); // tr 요소에서 productId 값을 가져옴
+            updateProductQuantity(productId.toString(), value.toString());
+        }
+        
+        console.log(addedProducts);
+        makeString();
+	});
+    
+    
+    // 수량 조절
+    $(document).on("click", ".plus", function() {
+    	let tr = $(this).closest("tr");
+        let quantityInput = tr.find('.product-quantity');
+        let value = parseInt(quantityInput.val());
+        
+        if (value < 10) {
+            value++;
+            quantityInput.val(value);
+            
+            let productId = tr.data('productId'); // tr 요소에서 productId 값을 가져옴
+            updateProductQuantity(productId.toString(), value.toString());
+        }
+        
+        console.log(addedProducts);
+        makeString();
+	});
+    
+    function updateProductQuantity(productId, quantity) {
+        // addedProducts 배열에서 productId에 해당하는 객체를 찾음
+        let product = addedProducts.find(item => item.productId === productId);
+        
+        if (product) {
+            product.quantity = quantity; // 수량을 변경
+        } else {
+            // productId에 해당하는 객체가 없는 경우 새로운 객체를 addedProducts 배열에 추가
+            addedProducts.push({ productId, quantity });
+        }
+    }
     
 </script>
 </body>

@@ -13,7 +13,14 @@ public class RecipeBoard {
 	private Long recipeId;
 	private String nickname;
 	private List<RecipeProduct> recipeProduct;
+	private String picture;
 	
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 	private int recipeLikeCount;
 	
 	public int getRecipeLikeCount() {

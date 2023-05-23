@@ -177,6 +177,11 @@ public class RecipeServlet extends MyUploadServlet {
 //		forward(req, resp, "/WEB-INF/views/recipe/recipe-list.jsp");
 			
 			List<RecipeBoard> list = recipeBoardService.readRecipe();
+			
+			for(RecipeBoard board : list) {
+				System.out.println(board.getPicture());
+			}
+			
 			req.setAttribute("list", list);
 			
 			System.out.println("레시피 리스트");
@@ -209,6 +214,11 @@ public class RecipeServlet extends MyUploadServlet {
 			json.put("createdDate", board.getCreatedDate());
 			json.put("nickname", board.getNickname());
 			json.put("recipeLikeCount", board.getRecipeLikeCount());
+			
+			String picture = (board.getPicture()==null ? "default2.png" : board.getPicture());
+			json.put("picture", picture);
+			
+			System.out.println("사진 확인 : " + picture);
 			jarr.put(json);
 			
 			System.out.println(board.getId()+","+board.getSubject());
