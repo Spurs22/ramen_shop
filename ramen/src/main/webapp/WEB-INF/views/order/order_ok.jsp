@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
 	<title>Title</title>
@@ -83,7 +84,7 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<div class="Okdiv">
-				<i class="fa-solid fa-list-check fa-lg" id="OkImg" style="color:#eee"></i>
+				<i class="fa-solid fa-list-check fa-lg" id="OkImg" style="color:#BDBDBD"></i>
 				<div class="OkText"> 결제가 완료 되었습니다.  </div>
 				<div class="OkText2">감사합니다 :)</div>
 			</div>	
@@ -98,7 +99,7 @@
 				</tr>
 				<tr>
 					<td class="tdname"> 총 가격 </td>
-					<td class="tdvalue"> ${totalPrice} </td>
+					<td class="tdvalue"><fmt:formatNumber value="${totalPrice}"/> 원 </td>
 				</tr>
 			</table>
 			
@@ -120,7 +121,7 @@
 									<td class="itemtd"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
 									<td class="itemtd">${order.productName}</td>
 									<td class="itemtd">${order.quantity}</td>
-									<td class="itemtd">${order.price}</td>
+									<td class="itemtd"><fmt:formatNumber value="${order.price}"/></td>
 								</tr>
 							</c:forEach>
 						</table>
@@ -130,10 +131,6 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        selectMenu(menuIndex)
-    })
-    
 </script>
 
 </body>

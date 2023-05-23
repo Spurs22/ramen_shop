@@ -121,7 +121,7 @@
 										<td class="orderItem">
 											<input type="checkbox" name="productIds" value="${cart.productId}" class="productIds" id="chkAll2">
 										</td>
-										<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${cart.picture}" style="height: 100px;"></td>
+										<td class="item1 orderItem"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
 										<td class="item2 orderItem">${cart.productName}</td>
 										<td class="item1 orderItem count">
 											<button type="button" class="minus btn">-</button> 
@@ -129,7 +129,7 @@
 											<button type="button" class="plus btn">+</button>
 										</td>
 										<td class="item2 orderItem count2">${cart.remainQuantity}</td>
-										<td class="item2 orderItem">${cart.price*cart.quantity}</td>
+										<td class="item2 orderItem"><fmt:formatNumber value="${cart.price*cart.quantity}"/></td>
 										<td class="item2 orderItem"><button type="button" class="btn" id="btnDelete">x</button></td>
 									</tr>
 						</c:forEach>
@@ -188,11 +188,6 @@
 	}
 
         $(function() {
-        	if(${message != null}){
-        		alert("재고보다 주문 수량이 많습니다.");
-        	}
-        	
-        	
         	let quantityEl = $(".quantitys");
         	let quantity = Number(quantityEl.val());
         	let remain = Number($(".count2").text());
@@ -280,7 +275,7 @@
                 	const fn = function(){
                 	}
 
-                    
+                	window.location.reload();
                     ajaxFun(url, "post", qs, "json", fn);
                 },
             });
