@@ -30,7 +30,10 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			 
+			<div>
+			 <h3>주문배송</h3>
+			 <hr>
+			 </div>
 			<table class="table">
 				<tr>
 					<td>
@@ -56,7 +59,7 @@
 				<tbody>
 					<c:forEach var="orderBundle" items="${orderBundlelist}">
 						<tr>
-							<td >${orderBundle.orderBundleId}</td>
+							<td>${orderBundle.orderBundleId}</td>
 							<td>${orderBundle.createdDate}</td>
 							<td>${orderBundle.userEmail}</td>
 							<td>${orderBundle.tel}</td>

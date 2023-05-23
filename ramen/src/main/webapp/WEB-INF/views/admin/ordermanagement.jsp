@@ -44,40 +44,38 @@
 			<div>
 				<ul class="nav nav-pills nav-fill">
 				  <li class="nav-item">
-				    <a class="nav-link active" aria-current="page" onclick="changeList(1)" href="#">결제완료</a>
+				    <a class="nav-link active" aria-current="page" onclick="changeList(1)" >결제완료</a>
 				  </li>
 				  <li class="nav-item">
-				    <a class="nav-link" onclick="changeList(2)" href="#">배송중</a>
+				    <a class="nav-link" onclick="changeList(2)" >배송중</a>
 				  </li>
 				  <li class="nav-item">
-				    <a class="nav-link" onclick="changeList(3)" href="#">배송완료</a>
+				    <a class="nav-link" onclick="changeList(3)" >배송완료</a>
 				  </li>
 				  <li class="nav-item">
-				    <a class="nav-link" onclick="changeList(4)" href="#">주문취소</a>
+				    <a class="nav-link" onclick="changeList(4)" >주문취소</a>
 				  </li>
 				</ul>
 			</div>
-
-			
 		
 			<table class="table">
 				<tr>
 					<td align="center">
-							<div>
-								<nav class="navbar bg-light">
-								  <div class="container-fluid">
-								    <form name="searchForm" action="${pageContext.request.contextPath}/admin/ordermanagement.do" method="post">
-									      	<select name="condition" class="form-select">
-												<option value="userEmail" ${condition=="userEmail"?"selected='selected'":""}>회원</option>
-												<option value="orderBundleId" ${condition=="orderBundleId"?"selected='selected'":""}>주문번호</option>
-											</select>
-								      <input type="text" name="keyword" value="${keyword}" class="form-control me-2" aria-label="Search">
-								      <input type="hidden" name="size" value="${size}">
-								      <button type="button" class="btn btn-outline-success" onclick="searchList()" type="submit">검색</button>
-								    </form>
-								  </div>
-								</nav>
-							</div>
+						<div>
+							<nav class="navbar bg-light">
+							  <div class="container-fluid">
+							    <form name="searchForm" action="${pageContext.request.contextPath}/admin/ordermanagement.do" method="post">
+								      	<select name="condition" class="form-select">
+											<option value="userEmail" ${condition=="userEmail"?"selected='selected'":""}>회원</option>
+											<option value="orderBundleId" ${condition=="orderBundleId"?"selected='selected'":""}>주문번호</option>
+										</select>
+							      <input type="text" name="keyword" value="${keyword}" class="form-control me-2" aria-label="Search">
+							      <input type="hidden" name="size" value="${size}">
+							      <button type="button" class="btn btn-outline-success" onclick="searchList()">검색</button>
+							    </form>
+							  </div>
+							</nav>
+						</div>
 					</td>
 				</tr>
 			</table>
@@ -108,7 +106,7 @@
 				<tbody>
 					<c:forEach var="orderBundle" items="${orderBundlelist}" >
 						<tr>
-							<td >
+							<td>
 								<a href="${articleUrl}&num=${orderBundle.orderBundleId}" class="text-reset">${orderBundle.orderBundleId}</a>
 							</td>
 							<td>${orderBundle.createdDate}</td>
@@ -122,7 +120,9 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			${paging}
+			<div class="page-navigation">
+					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+			</div>
 		</div>
 	</div>
 </div>

@@ -129,7 +129,7 @@
 											<button type="button" class="plus btn">+</button>
 										</td>
 										<td class="item2 orderItem count2">${cart.remainQuantity}</td>
-										<td class="item2 orderItem">${cart.price*cart.quantity}</td>
+										<td class="item2 orderItem"><fmt:formatNumber value="${cart.price*cart.quantity}"/></td>
 										<td class="item2 orderItem"><button type="button" class="btn" id="btnDelete">x</button></td>
 									</tr>
 						</c:forEach>
@@ -280,7 +280,7 @@
                 	const fn = function(){
                 	}
 
-                    
+                	window.location.reload();
                     ajaxFun(url, "post", qs, "json", fn);
                 },
             });

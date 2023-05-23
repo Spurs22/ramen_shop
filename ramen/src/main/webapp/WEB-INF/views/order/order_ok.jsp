@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
 	<title>Title</title>
@@ -98,7 +99,7 @@
 				</tr>
 				<tr>
 					<td class="tdname"> 총 가격 </td>
-					<td class="tdvalue"> ${totalPrice} </td>
+					<td class="tdvalue"> <fmt:formatNumber value="${totalPrice}"/> </td>
 				</tr>
 			</table>
 			

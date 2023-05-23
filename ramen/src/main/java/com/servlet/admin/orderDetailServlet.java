@@ -56,7 +56,7 @@ public class orderDetailServlet extends MyServlet{
 		  4-1) 주문번호별 주문리스트(주문번호 검색)
 		  4-2) 주문번호 >> 주문 상세리스트
 		4. 매출 통계  ----> sales_statistics
-		  1) 기간별 + 상품별 매출000
+		  1) 기간별 + 상품별 매출
 		*/
 		
 		// uri에 따른 작업 구분
@@ -118,7 +118,7 @@ public class orderDetailServlet extends MyServlet{
 			
 			// 한페이지 표시할 데이터 개수
 			String pageSize = req.getParameter("size");
-			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
+			int size = pageSize == null ? 10 : Integer.parseInt(pageSize);
 
 			int dataCount, total_page;
 			
@@ -153,13 +153,6 @@ public class orderDetailServlet extends MyServlet{
 			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
-			/*
-			int orderId = 0;
-			String id = req.getParameter("orderId");
-			if(id != null) {
-				orderId = Integer.parseInt(id);
-			}
-			*/
 	
 			List<OrderBundle> orderBundlelist;
 			
@@ -207,15 +200,20 @@ public class orderDetailServlet extends MyServlet{
 			// 검색
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
-			
 			if(condition == null) { // 전체 주문리스트
 				condition = "all";
 				keyword = "";
 			}
-			
 			// GET 방식인 경우 디코딩
 			if (req.getMethod().equalsIgnoreCase("GET")) {
 				keyword = URLDecoder.decode(keyword, "utf-8");
+			}
+			
+			// 주문 상태
+			int status = 0;
+			String statusId = req.getParameter("status");
+			if(statusId != null) {
+				status = Integer.parseInt(statusId);
 			}
 			
 			// 한페이지 표시할 데이터 개수
@@ -223,14 +221,6 @@ public class orderDetailServlet extends MyServlet{
 			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
 
 			int dataCount, total_page;
-			
-			// 주문 상태
-			int status = 0;
-			String ststatusId = req.getParameter("statusId");
-			if(ststatusId != null) {
-				status = Integer.parseInt(ststatusId);
-			}
-			
 			if (keyword.length() != 0) {
 				dataCount = odri.dataCount(condition, keyword, status);
 			} else {
@@ -245,25 +235,19 @@ public class orderDetailServlet extends MyServlet{
 			// 게시물 가져오기
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
-					
-			String query = "";
-			if (keyword.length() != 0) {
-				query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-			}
-			
+				
 			// 페이징처리
-			String listUrl = cp + "/admin/ordermanagement.do";
-			
+			String query = "status=" + status;	
+			String listUrl = cp + "/admin/ordermanagement.do?size=" + size;
 			String listDetailUrl = cp + "/admin/ordermanagement.do?page=" + current_page;
-			if (query.length() != 0) {
-				listUrl += "?" + query;
+			if (keyword.length() != 0) {
+				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+				listUrl += "&" + query;
 				listDetailUrl += "&" + query;
 			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 
-			
-			
 			List<OrderBundle> orderBundlelist;
 			if (keyword.length() != 0) {
 				orderBundlelist = odri.findOrderAll(offset, size, condition, keyword, status);
@@ -273,7 +257,7 @@ public class orderDetailServlet extends MyServlet{
 			
 			// ordermanagement.jsp에 넘겨줄 데이터		
 			req.setAttribute("orderBundlelist", orderBundlelist);
-			//req.setAttribute("statusId", status);
+			req.setAttribute("status", status);
 			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
@@ -334,9 +318,9 @@ public class orderDetailServlet extends MyServlet{
 			
 			// 주문상태
 			int status = 0;
-			String ststatusId = req.getParameter("statusId");
-			if(ststatusId != null) {
-				status = Integer.parseInt(ststatusId);
+			String statusId = req.getParameter("status");
+			if(statusId != null) {
+				status = Integer.parseInt(statusId);
 			}
 			
 			if (keyword.length() != 0) {
@@ -354,29 +338,23 @@ public class orderDetailServlet extends MyServlet{
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
 					
-			String query = "";
-			if (keyword.length() != 0) {
-				query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-			}
-			
-			// 페이징처리
+			// 페이징 처리
+			String query = "status=" + status;
 			String listUrl = cp + "/admin/ordermanagement.do" + size;
-			
-			String listDetailUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page + "&size=" + size;
-			if (query.length() != 0) {
-				listUrl += "?" + query;
+			String listDetailUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page;
+			if (keyword.length() != 0) {
+				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+				listUrl += "&" + query;
 				listDetailUrl += "&" + query;
 			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
-
 			
 			int orderBundleId = 0;
 			String id = req.getParameter("orderBundleId");
 			if(id != null) {
 				orderBundleId = Integer.parseInt(id);
 			}
-			
 			
 			OrderBundle orderBundlelist;
 			
@@ -388,6 +366,7 @@ public class orderDetailServlet extends MyServlet{
 			
 			// ordermanagement.jsp에 넘겨줄 데이터		
 			req.setAttribute("orderBundlelist", orderBundlelist);
+			req.setAttribute("status", status);
 			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
@@ -415,7 +394,7 @@ public class orderDetailServlet extends MyServlet{
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
 		}
-		
+		String cp = req.getContextPath();
 		try {
 			/*
 			String page = req.getParameter("page");
@@ -463,7 +442,7 @@ public class orderDetailServlet extends MyServlet{
 			*/
 			
 			int proid = 0;
-			String mode = req.getParameter("mode");
+			String mode = req.getParameter("proid");
 			if(mode!=null) {
 				proid = Integer.parseInt(mode);
 			}
@@ -471,10 +450,11 @@ public class orderDetailServlet extends MyServlet{
 			List<OrderStatistics> os = odri.salesStatisticsByProduct(proid);
 		
 			req.setAttribute("os",os);
-			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		forward(req, resp, "/WEB-INF/views/admin/sales_statistics.jsp");
+
 	}
 }

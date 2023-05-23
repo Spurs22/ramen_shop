@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -165,7 +166,7 @@
 						<td class="itemtd">${cart.price}</td>
 						<td class="itemtd">${cart.quantity}</td>
 						<td class="itemtd">
-								${cart.price*cart.quantity}
+								<fmt:formatNumber value="${cart.price*cart.quantity}"/>
 							<input type="hidden" name="items" value="${cart.productId}">
 						</td>
 					</tr>
@@ -282,7 +283,7 @@
 							</tr>
 							<tr>
 								<td>상품금액</td>
-								<td>${totalPrice}</td>
+								<td><fmt:formatNumber value="${totalPrice}"/></td>
 							</tr>
 							<tr>
 								<td>할인금액</td>
@@ -294,7 +295,7 @@
 							</tr>
 							<tr>
 								<td>전체주문금액</td>
-								<td>${totalPrice}</td>
+								<td><fmt:formatNumber value="${totalPrice}"/></td>
 							</tr>
 						</table>
 						<br>
@@ -373,11 +374,9 @@
                     merchant_uid: 'merchant_' + new Date().getTime(),
                     name: 'ramen 결제',
                     amount: ${totalPrice},
-                    buyer_email: 'tkstpqpfldk9@naver.com',
-                    buyer_name: '김지윤',
-                    buyer_tel: '010-5498-3867',
-                    buyer_addr: '서울시',
-                    buyer_postcode: '123-456',
+                    buyer_email: '${userEmail}',
+                    buyer_name: '${userName}',
+                    buyer_tel: '${userTel}',
                 }, function (rsp) {
                     if (rsp.success) {
                         //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기

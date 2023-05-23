@@ -16,6 +16,8 @@ import com.DTO.OrderItem;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
+import com.repository.member.MemberRepository;
+import com.repository.member.MemberRepositoryImpl;
 import com.repository.order.OrderRepository;
 import com.repository.order.OrderRepositoryImpl;
 import com.repository.product.ProductRepository;
@@ -34,6 +36,7 @@ public class OrderServlet extends MyServlet {
 	
 	private final ProductRepository productRepository = new ProductRepositoryImpl();
 	private final OrderRepository orderRepository = new OrderRepositoryImpl();
+	private final MemberRepository memberRepository = new MemberRepositoryImpl();
 	
 	private final CartRepository cartRepository = new CartRepositoryImpl();
 	private final CartService cartService = new CartServiceImpl(cartRepository);
@@ -76,6 +79,9 @@ public class OrderServlet extends MyServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		String message = null;
+		String userName= "";
+		String userTel = "";
+		String userEmail = "";
 		
 		try {
 			
@@ -87,6 +93,9 @@ public class OrderServlet extends MyServlet {
 			}
 
 			long memberId = info.getMemberId();
+			userName = memberRepository.readMember(memberId).getName();
+			userTel = memberRepository.readMember(memberId).getTel();
+			userEmail = memberRepository.readMember(memberId).getEmail();
 			
 			List<Cart> list = cartService.transferCartList(memberId, products);
 			Long totalPrice = 0L;
@@ -97,6 +106,9 @@ public class OrderServlet extends MyServlet {
 				dataCount++;
 			}
 
+			req.setAttribute("userEmail", userEmail);
+			req.setAttribute("userName", userName);
+			req.setAttribute("userTel", userTel);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("message", message);
 			req.setAttribute("list", list);
@@ -191,11 +203,10 @@ public class OrderServlet extends MyServlet {
 					// 상품 초기화
 					productService.subtractQuantity(c.getProductId(), c.getQuantity());
 				} catch (RuntimeException e) {
-					System.out.println("재고보다 주문 수량이 많습니다.");
-					// 결제시 에러메세지 보내서 체크 ...
-					message = "fail";
-					resp.sendRedirect(cp+"/cart/list.do?message="+message);
-					return;
+					System.out.println("( 주문 오류 ) memberId : " + memberId + " >> 재고보다 주문 수량이 많습니다.");
+					//message = "fail";
+					//resp.sendRedirect(cp+"/cart/list.do?message="+message);
+					//return;
 				}
 				
 				long order_id = orderService.createOrderBundle(orderBundle, itemlist);
@@ -204,9 +215,6 @@ public class OrderServlet extends MyServlet {
 				cartService.deleteCart(memberId, c.getProductId());
 				
 				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
-				
-				
-            
 			}
 			req.setAttribute("errorMessage", errorMessage);
 			req.setAttribute("message", message);

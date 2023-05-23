@@ -180,7 +180,6 @@ private Connection conn = DBConn.getConnection();
 				pstmt.setInt(2, size);
 			}
 			
-			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -267,6 +266,7 @@ private Connection conn = DBConn.getConnection();
 			
 			pstmt.close();
 			pstmt = null;
+			
 			rs.close();
 			rs = null;
 			
@@ -276,10 +276,11 @@ private Connection conn = DBConn.getConnection();
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
 			sb.append(" c.price, c.final_price, d.name, e.status_name ");
 			sb.append(" FROM member a  ");
-			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
-			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
-			sb.append(" INNER JOIN product d ON d.id = c.product_id");
-			sb.append(" INNER JOIN order_status e ON c.status_id = e.id");
+			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" INNER JOIN order_item c ON b.id = c.order_id ");
+			sb.append(" INNER JOIN product d ON d.id = c.product_id ");
+			sb.append(" INNER JOIN order_status e ON c.status_id = e.id ");
+			
 			// status주문상태 검색 조건
 			if(statusId == 1) {
 				sb.append(" WHERE e.id = 1");
@@ -349,6 +350,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" LEFT OUTER JOIN( ");
 			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
+			
 			// status 상태조건, condition 검색조건
 			switch(statusId) {
 			case 1:
@@ -519,9 +521,9 @@ private Connection conn = DBConn.getConnection();
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			sb.append("SELECT NVL(COUNT(*), 0) FROM order_bundle ob");
-			sb.append(" JOIN order_item oi ON ob.id = oi.order_id");
-			
+			sb.append("SELECT NVL(COUNT(DISTINCT ob.id),0) FROM order_bundle ob");
+			sb.append(" LEFT JOIN order_item oi ON ob.id = oi.order_id");
+
 			if(statusId == 1) {
 				sb.append(" WHERE oi.status_id = 1");
 			} else if(statusId == 2) {
@@ -557,8 +559,8 @@ private Connection conn = DBConn.getConnection();
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			sb.append(" SELECT NVL(COUNT(*), 0) FROM order_item oi ");
-			sb.append(" JOIN order_bundle ob ON oi.order_id = ob.id ");
+			sb.append(" SELECT NVL(COUNT(DISTINCT ob.id), 0) FROM order_bundle ob  ");
+			sb.append(" JOIN order_item oi ON oi.order_id = ob.id ");
 			sb.append(" JOIN member m ON ob.member_id = m.id ");
 			sb.append(" JOIN order_status os ON os.id = oi.status_id ");
 
