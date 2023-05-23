@@ -183,7 +183,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		String sql;
 
 		try {
-			sql = "UPDATE member SET enabled = 0 WHERE  = ?";
+			sql = "UPDATE member SET enabled = 0 WHERE id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, memberId);
 			pstmt.executeUpdate();
