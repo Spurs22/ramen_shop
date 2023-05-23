@@ -79,8 +79,10 @@ public class OrderServlet extends MyServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		String message = null;
-		String userName= null;
+		String userName= "";
 		String userTel = "";
+		String userEmail = "";
+		
 		try {
 			
 			String[] pi = req.getParameterValues("productIds");
@@ -93,6 +95,7 @@ public class OrderServlet extends MyServlet {
 			long memberId = info.getMemberId();
 			userName = memberRepository.readMember(memberId).getName();
 			userTel = memberRepository.readMember(memberId).getTel();
+			userEmail = memberRepository.readMember(memberId).getEmail();
 			
 			List<Cart> list = cartService.transferCartList(memberId, products);
 			Long totalPrice = 0L;
@@ -103,6 +106,9 @@ public class OrderServlet extends MyServlet {
 				dataCount++;
 			}
 
+			req.setAttribute("userEmail", userEmail);
+			req.setAttribute("userName", userName);
+			req.setAttribute("userTel", userTel);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("message", message);
 			req.setAttribute("list", list);
@@ -112,7 +118,7 @@ public class OrderServlet extends MyServlet {
 			e.printStackTrace();
 		}
 
-		forward(req, resp, "/WEB-INF/views/order/order_list.jsp?userName="+userName+"&userTel="+userTel);
+		forward(req, resp, "/WEB-INF/views/order/order_list.jsp");
 	}
 	
 	private void orderOneForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -209,7 +215,6 @@ public class OrderServlet extends MyServlet {
 				cartService.deleteCart(memberId, c.getProductId());
 				
 				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
-            
 			}
 			req.setAttribute("errorMessage", errorMessage);
 			req.setAttribute("message", message);

@@ -84,7 +84,7 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<div class="Okdiv">
-				<i class="fa-solid fa-list-check fa-lg" id="OkImg" style="color:#BDBDBD"></i>
+				<i class="fa-solid fa-list-check fa-lg" id="OkImg" style="color:#eee"></i>
 				<div class="OkText"> 결제가 완료 되었습니다.  </div>
 				<div class="OkText2">감사합니다 :)</div>
 			</div>	
@@ -99,7 +99,7 @@
 				</tr>
 				<tr>
 					<td class="tdname"> 총 가격 </td>
-					<td class="tdvalue"><fmt:formatNumber value="${totalPrice}"/> 원 </td>
+					<td class="tdvalue"> <fmt:formatNumber value="${totalPrice}"/> </td>
 				</tr>
 			</table>
 			
@@ -121,7 +121,7 @@
 									<td class="itemtd"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
 									<td class="itemtd">${order.productName}</td>
 									<td class="itemtd">${order.quantity}</td>
-									<td class="itemtd"><fmt:formatNumber value="${order.price}"/></td>
+									<td class="itemtd">${order.price}</td>
 								</tr>
 							</c:forEach>
 						</table>
@@ -131,6 +131,10 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        selectMenu(menuIndex)
+    })
+    
 </script>
 
 </body>

@@ -110,6 +110,7 @@ public class CartServlet extends MyServlet {
 	         e.printStackTrace();
 	      }
 	    
+	    System.out.println("state : " + state + ", error : " + error);
 	    JSONObject job = new JSONObject();
 		job.put("state", state);
 		job.put("error", error);

@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
 	<title>Title</title>
@@ -163,10 +163,10 @@
 												src="${pageContext.request.contextPath}/resource/picture/${cart.picture}"
 												style="height: 100px;"></td>
 						<td class="itemtd">${cart.productName}</td>
-						<td class="itemtd" id="cartPrice"><fmt:formatNumber value="${cart.price}"/></td>
+						<td class="itemtd">${cart.price}</td>
 						<td class="itemtd">${cart.quantity}</td>
 						<td class="itemtd">
-							<fmt:formatNumber value="${cart.price*cart.quantity}"/>
+								<fmt:formatNumber value="${cart.price*cart.quantity}"/>
 							<input type="hidden" name="items" value="${cart.productId}">
 						</td>
 					</tr>
@@ -309,6 +309,7 @@
 </div>
 
 <script>
+
     $(function () {
 
         $("#btnOrder").click(function () {
@@ -373,6 +374,7 @@
                     merchant_uid: 'merchant_' + new Date().getTime(),
                     name: 'ramen 결제',
                     amount: ${totalPrice},
+                    buyer_email: '${userEmail}',
                     buyer_name: '${userName}',
                     buyer_tel: '${userTel}',
                 }, function (rsp) {
