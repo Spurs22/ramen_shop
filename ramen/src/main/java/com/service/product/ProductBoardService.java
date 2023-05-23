@@ -11,7 +11,7 @@ public interface ProductBoardService {
 
 	void editPost(ProductBoard productBoard);
 
-	int deletePost(Long memberId, Long productId);
+	int deletePost(Long memberId, Long userRoll, Long productId);
 
 	List<ProductBoard> findPostsByMemberId(Long memberId);
 

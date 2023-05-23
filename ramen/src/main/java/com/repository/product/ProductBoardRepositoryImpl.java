@@ -105,6 +105,22 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 
 	@Override
 	public int deletePost(Long memberId, Long postId) {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "call DELETE_POST_PROCEDURE(?)";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, postId);
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+
 		return 0;
 	}
 
@@ -121,7 +137,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 					"LEFT JOIN (SELECT product_board_id, AVG(rating) as rating " +
 					"    FROM product_comment " +
 					"    GROUP BY product_board_id) " +
-					"    cm ON pb.id = cm.product_board_id " +
+					"    cme ON pb.id = cm.product_board_id " +
 					"JOIN product p ON pb.id = p.id " +
 					"JOIN product_category pc ON p.category_id = pc.id " +
 					"WHERE MEMBER_ID = ? " +
