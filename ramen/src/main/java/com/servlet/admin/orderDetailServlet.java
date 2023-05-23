@@ -3,7 +3,6 @@ package com.servlet.admin;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.DTO.OrderBundle;
-import com.DTO.OrderItem;
 import com.DTO.OrderStatistics;
 import com.DTO.SessionInfo;
 import com.repository.admin.OrderDetailRepositoryImpl;
@@ -124,7 +122,14 @@ public class orderDetailServlet extends MyServlet{
 
 			int dataCount, total_page;
 			
-			dataCount = odri.dataCount();
+			int status = 0;
+			String ststatusId = req.getParameter("statusId");
+			if(ststatusId != null) {
+				status = Integer.parseInt(ststatusId);
+			}
+		
+			
+			dataCount = odri.dataCount(status);
 			
 			total_page = util.pageCount(dataCount, size);
 
@@ -148,22 +153,17 @@ public class orderDetailServlet extends MyServlet{
 			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
-
+			/*
 			int orderId = 0;
 			String id = req.getParameter("orderId");
 			if(id != null) {
 				orderId = Integer.parseInt(id);
 			}
-			int statusId = 0;
-			String status = req.getParameter("statusId");
-			if(status != null) {
-				statusId = Integer.parseInt(status);
-			}
-			
+			*/
 	
 			List<OrderBundle> orderBundlelist;
 			
-			orderBundlelist = odri.findOrderAll(offset, size, statusId);
+			orderBundlelist = odri.findOrderAll(offset, size, status);
 			
 			// ordermanagement.jsp에 넘겨줄 데이터		
 			req.setAttribute("orderBundlelist", orderBundlelist);
@@ -224,10 +224,17 @@ public class orderDetailServlet extends MyServlet{
 
 			int dataCount, total_page;
 			
+			// 주문 상태
+			int status = 0;
+			String ststatusId = req.getParameter("statusId");
+			if(ststatusId != null) {
+				status = Integer.parseInt(ststatusId);
+			}
+			
 			if (keyword.length() != 0) {
-				dataCount = odri.dataCount(condition, keyword);
+				dataCount = odri.dataCount(condition, keyword, status);
 			} else {
-				dataCount = odri.dataCount();
+				dataCount = odri.dataCount(status);
 			}
 			total_page = util.pageCount(dataCount, size);
 
@@ -255,21 +262,18 @@ public class orderDetailServlet extends MyServlet{
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 
-			int statusId = 0;
-			String status = req.getParameter("statusId");
-			if(status != null) {
-				statusId = Integer.parseInt(status);
-			}
+			
 			
 			List<OrderBundle> orderBundlelist;
 			if (keyword.length() != 0) {
-				orderBundlelist = odri.findOrderAll(offset, size, condition, keyword, statusId);
+				orderBundlelist = odri.findOrderAll(offset, size, condition, keyword, status);
 			} else {
-				orderBundlelist = odri.findOrderAll(offset, size, statusId);
+				orderBundlelist = odri.findOrderAll(offset, size, status);
 			}
 			
 			// ordermanagement.jsp에 넘겨줄 데이터		
 			req.setAttribute("orderBundlelist", orderBundlelist);
+			//req.setAttribute("statusId", status);
 			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
@@ -328,10 +332,17 @@ public class orderDetailServlet extends MyServlet{
 
 			int dataCount, total_page;
 			
+			// 주문상태
+			int status = 0;
+			String ststatusId = req.getParameter("statusId");
+			if(ststatusId != null) {
+				status = Integer.parseInt(ststatusId);
+			}
+			
 			if (keyword.length() != 0) {
-				dataCount = odri.dataCount(condition, keyword);
+				dataCount = odri.dataCount(condition, keyword, status);
 			} else {
-				dataCount = odri.dataCount();
+				dataCount = odri.dataCount(status);
 			}
 			total_page = util.pageCount(dataCount, size);
 
@@ -359,11 +370,6 @@ public class orderDetailServlet extends MyServlet{
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 
-			int statusId = 0;
-			String status = req.getParameter("statusId");
-			if(status != null) {
-				statusId = Integer.parseInt(status);
-			}
 			
 			int orderBundleId = 0;
 			String id = req.getParameter("orderBundleId");
@@ -375,9 +381,9 @@ public class orderDetailServlet extends MyServlet{
 			OrderBundle orderBundlelist;
 			
 			if (keyword.length() != 0) {
-				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, statusId, orderBundleId);
+				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, status, orderBundleId);
 			} else {
-				orderBundlelist = odri.findOrderDetail(offset, size, statusId, orderBundleId);
+				orderBundlelist = odri.findOrderDetail(offset, size, status, orderBundleId);
 			}
 			
 			// ordermanagement.jsp에 넘겨줄 데이터		

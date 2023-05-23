@@ -13,7 +13,7 @@
 	</style>
 </head>
 <script>
-    let menuIndex = 6
+    let menuIndex = 5
 </script>
 <body>
 <div class="whole-container">

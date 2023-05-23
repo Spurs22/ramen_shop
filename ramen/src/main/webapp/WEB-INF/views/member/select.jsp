@@ -106,7 +106,7 @@ body {
 						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/pwd.do?mode=update'">내 정보변경</button>
 					</div>
           			<div class="row">
-						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/pwd.do?mode=delete'">회원탈퇴</button>
+						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/delete.do?mode=delete'">회원탈퇴</button>
 					</div>
 					<div class="row">
 						<button type="button" class="cancel-btn" onclick="location.href='${pageContext.request.contextPath}/';">취소하기</button>
