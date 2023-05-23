@@ -271,7 +271,7 @@
 <%--						</div>--%>
 
 							<div style="border: 1px solid black; border-radius: 5px; padding: 10px; margin: 10px 0; gap: 15px; display: flex; flex-direction: column">
-								<div style="display: flex; flex-direction: row; gap: 5px;  justify-content: right">
+								<div style="display: flex; flex-direction: row; gap: 5px;  justify-content: right" id="quantityBundle">
 									<button class="btn btn-dark btnChange minus" onclick="$.clickChangeBtn(this)">-</button>
 									<input type="number" id="cartQuantityInput" style="width: 50px; text-align: center" value="1">
 									<button class="btn btn-dark btnChange plus" onclick="$.clickChangeBtn(this)">+</button>
@@ -394,11 +394,27 @@
 </div>
 
 <script>
+
+
+
     $(document).ready(function () {
-        $('#productPrice').text(${post.price})
-		$('#remainQuantity').text(${post.product.remainQuantity} - 1)
+
         selectMenu(menuIndex)
-    })
+
+        //품절일 때
+        if (${post.product.remainQuantity == 0}) {
+            $('#productPrice').text('품절');
+            $('#quantityBundle').css('display', 'none');
+        } else {
+
+            $('#productPrice').text(${post.price})
+            $('#remainQuantity').text(${post.product.remainQuantity} - 1)
+
+        }
+    });
+
+    $(function () {
+    });
 </script>
 
 <script>
