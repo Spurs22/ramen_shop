@@ -208,7 +208,7 @@
 							</div>
 							<div class="item">${dto.receiveName}</div>
 							<div class="item">${dto.createdDate}</div>
-							<div class="item" style="padding: 0 10px">${dto.postNum} ${dto.address2} ${dto.address1}</div>
+							<div class="item" style="padding: 0 10px">[${dto.postNum}] ${dto.address1} ${dto.address2}</div>
 							<div class="item">${dto.tel}</div>
 							<div class="item">${dto.totalPrice}원</div>
 
