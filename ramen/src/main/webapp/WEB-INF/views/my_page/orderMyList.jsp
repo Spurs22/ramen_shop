@@ -185,7 +185,7 @@
 						<div class="item">주문일</div>
 						<div class="item" style="padding: 0 10px">주소</div>
 						<div class="item">전화번호</div>
-						<div class="item">총 금액</div>
+						<div class="item">결제금액</div>
 						<div class="item">주문상태</div>
 					</div>
 
