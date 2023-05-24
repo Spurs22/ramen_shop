@@ -198,6 +198,9 @@
     let productId = null;
     let nameCheckStatus = false;
 
+    // 유효성 검사
+
+
     $(function () {
         if (${mode.equals('edit')}) {
             let categoryName = '${product.category.label}';
@@ -307,8 +310,6 @@
             });
         }
     });
-
-
 
 
 </script>
