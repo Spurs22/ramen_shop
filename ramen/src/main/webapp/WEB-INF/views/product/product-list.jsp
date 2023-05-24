@@ -137,18 +137,6 @@
 
 		<div class="product-container" id="resultForm"></div>
 	</div>
-
-<%--
-<div>
-	<p>${post.productId}</p>
-	<p>${post.productName}</p>
-	<p>${post.writerId}</p>
-	<p>${post.content}</p>
-	<p>${post.createdDate}</p>
-</div>
---%>
-
-
 </div>
 
 <script>
