@@ -78,7 +78,6 @@ public class OrderServlet extends MyServlet {
 		// 1) 주문 폼
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		String message = null;
 		String userName= "";
 		String userTel = "";
 		String userEmail = "";
@@ -110,7 +109,6 @@ public class OrderServlet extends MyServlet {
 			req.setAttribute("userName", userName);
 			req.setAttribute("userTel", userTel);
 			req.setAttribute("dataCount", dataCount);
-			req.setAttribute("message", message);
 			req.setAttribute("list", list);
 			req.setAttribute("totalPrice", totalPrice);
 
@@ -123,13 +121,29 @@ public class OrderServlet extends MyServlet {
 	
 	private void orderOneForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 1-1) 주문 폼 2 ( 상품 단품 구매시 )
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String userName= "";
+		String userTel = "";
+		String userEmail = "";
+		
+		List<Cart> list = new ArrayList<>();
+		Long productIds=null;
+		int quantity = 0;
+		String productName="";
+		Long price = null;
+		
 		try {
-			Long productIds = Long.parseLong(req.getParameter("productIds"));
-			int quantity = Integer.parseInt(req.getParameter("quantity"));
-			String productName = orderService.orderName(productIds);
-			Long price = orderService.orderPrice(productIds);
+			productIds = Long.parseLong(req.getParameter("productIds"));
+			quantity = Integer.parseInt(req.getParameter("quantity"));
+			productName = orderService.orderName(productIds);
+			price = orderService.orderPrice(productIds);
 			
-			List<Cart> list = new ArrayList<>();
+			long memberId = info.getMemberId();
+			userName = memberRepository.readMember(memberId).getName();
+			userTel = memberRepository.readMember(memberId).getTel();
+			userEmail = memberRepository.readMember(memberId).getEmail();
+			
 			Cart cart = new Cart();
 			cart.setProductId(productIds);
 			cart.setProductName(productName);
@@ -138,9 +152,19 @@ public class OrderServlet extends MyServlet {
 			
 			list.add(cart);
 			
-			Long totalPrice = orderService.orderPrice(productIds);
+			Long totalPrice = 0L;
+			
+			for (Cart c : list) {
+				totalPrice += c.getPrice() * c.getQuantity();
+			}
+			
 			Long dataCount = 1L;
 			
+			req.setAttribute("oneProductId", productIds);
+			req.setAttribute("oneQuantity", quantity);
+			req.setAttribute("userEmail", userEmail);
+			req.setAttribute("userName", userName);
+			req.setAttribute("userTel", userTel);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("list", list);
 			req.setAttribute("totalPrice", totalPrice);
@@ -149,7 +173,7 @@ public class OrderServlet extends MyServlet {
 			e.printStackTrace();
 		}
 
-		forward(req, resp, "/WEB-INF/views/order/order_list.jsp");
+		forward(req, resp, "/WEB-INF/views/order/order_list.jsp?oneProductId="+productIds+"&oneQuantity="+quantity);
 	}
 
 	private void orderSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -161,8 +185,8 @@ public class OrderServlet extends MyServlet {
 		String cp = req.getContextPath();
 		String message = null;
 		String errorMessage=null;
+		Long singleProductId = null;
 		try {
-
 			long memberId = info.getMemberId();
 
 			orderBundle.setMemberId(memberId);
@@ -181,14 +205,24 @@ public class OrderServlet extends MyServlet {
 			for (int i = 0; i < pi.length; i++) {
 				products[i] = Long.parseLong(pi[i]);
 			}
-
+			
 			List<Cart> list = cartService.transferCartList(memberId, products);
-
+			
+			if(req.getParameter("oneProductId")!="") {
+				singleProductId = Long.parseLong(req.getParameter("oneProductId"));
+				int singleQuantity = Integer.parseInt(req.getParameter("oneQuantity"));
+				
+				Cart cart = new Cart();
+				cart.setProductId(singleProductId);
+				cart.setQuantity(singleQuantity);
+				list.add(cart);
+			}
+			
 			List <OrderItem> itemlist = new ArrayList<OrderItem>();
 			for (Cart c : list) {
 				OrderItem orderItem = new OrderItem();
-				long oneprice = orderService.orderPrice(c.getProductId());
-				long price = oneprice * c.getQuantity();
+				Long oneprice = orderService.orderPrice(c.getProductId());
+				Long price = oneprice * c.getQuantity();
 				
 				orderItem.setProductId(c.getProductId());
 				orderItem.setQuantity(c.getQuantity());
@@ -197,7 +231,7 @@ public class OrderServlet extends MyServlet {
 				
 				itemlist.add(orderItem);
 			}
-
+			
 			for(Cart c: list) {
 				try {
 					// 상품 초기화

@@ -172,6 +172,11 @@
 					</tr>
 					</c:forEach>
 				</table>
+				
+				<input type="hidden" name=oneProductId value="${oneProductId}">
+				<input type="hidden" name="oneQuantity" value="${oneQuantity}">
+				
+				
 				<div style="display: flex; flex-direction: row; gap: 15px; width: 100%; margin-top: 15px">
 					<div style="display: flex; flex-direction: column; width: 60%; gap: 15px; ">
 						<p class="title">배송정보</p>
