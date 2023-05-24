@@ -458,23 +458,24 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void articleorderlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 상세 글보기
-		MyUtil util = new MyUtil();
 		MypageOrderRepositoryImpl dao = new MypageOrderRepositoryImpl();
 		
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		String cp = req.getContextPath();
 		
 		try {	
 			// 같은 주문번호
-			// List<OrderItem> list = dao.findOrderDetail();
+			Long orderbundleId = Long.parseLong(req.getParameter("orderBundleId"));
+			
+			// System.out.println(orderbundleId);
+			
+			List<OrderItem> orderItem = dao.findOrderDetail(orderbundleId);
 			
 		
 			
 			String articleUrl = cp+ "/mypage/articleorderlist.do";
 			
-			// req.setAttribute("list", list);
+			req.setAttribute("list", orderItem);
 			req.setAttribute("articleUrl", articleUrl);
 			
 			forward(req, resp, "/WEB-INF/views/my_page/articleorderlist.jsp");

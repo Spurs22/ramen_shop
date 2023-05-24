@@ -64,7 +64,7 @@
 					<tbody>
 						<c:forEach var="dto" items="${list}" varStatus="status">
 						<tr>
-							<td><a class="href" onclick="location.href='${pageContext.request.contextPath}/mypage/articleorderlist.do';">${dto.orderBundleId}&gt;</a></td>
+							<td><a class="href" onclick="location.href='${pageContext.request.contextPath}/mypage/articleorderlist.do?orderBundleId=${dto.orderBundleId}';">${dto.orderBundleId}&gt;</a></td>
 							<td>${dto.deliveryId}</td>
 							<td>'${dto.receiveName}' 님</td>
 							<td>${dto.createdDate}</td>
