@@ -19,6 +19,7 @@
    width: 100%;
    background-color: #fff; 
 }
+
 .sign-up form {
    width: 50%;
    max-width: 40%;
@@ -28,15 +29,17 @@
    border-radius: 10px;
    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);  
 }
-  .sign-up label {
+
+.sign-up label {
    font-size: 18px;
    font-weight: bold;
    color: #333333;
-  }
-  
-  .sign-up input[type="text"],
-  .sign-up input[type="password"],
-  select {
+}
+
+.sign-up input[type="text"],
+.sign-up input[type="password"],
+
+select {
    width: 100%;
    padding: 10px;
    margin-bottom: 20px;
@@ -44,9 +47,9 @@
    border-bottom: 2px solid #e6e6e6;
    background-color: #f8f8f8;
    color: #333333;
-  }
-  
-  .sign-up button[type="button"] {
+}
+
+.sign-up button[type="button"] {
    display: block;
    width: 100%;
    padding: 10px;
@@ -59,21 +62,56 @@
    cursor: pointer;
    transition: background-color 0.3s ease;
 }
-  
-  .sign-up button[type="button"]:hover {
+
+.sign-up button[type="button"]:hover {
    background-color: #FFCD12;
-  }
-  
-  .sign-up .error-message {
+}
+
+.sign-up .error-message {
    color: red;
    font-size: 12px;
    margin-top: 5px;
-  }
-  
-  .sign-up{
+}
+
+.sign-up {
    margin-top: 75px;
-   
-  }
+}
+
+.tel-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333333;
+}
+
+.tel-input-container {
+  display: flex;
+  align-items: center;
+ 
+}
+
+.tel-select {
+  width: 100px;
+  margin-right: 5px;
+  
+  
+}
+
+.tel-separator {
+  margin-right: 5px;
+  margin-left: 5px;
+   line-height: 1;
+}
+
+.tel-input {
+
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-bottom: 2px solid #e6e6e6;
+  background-color: #f8f8f8;
+  color: #333333;
+ 
+}
 </style>
 
 <script type="text/javascript">
@@ -134,6 +172,15 @@ function memberOk() {
         hideErrorMsg(f.email);
     }
 
+    str = f.tel1.value;
+    if(!str){
+    	showErrorMsg(f.tel, "전화번호를 선택해주세요.");
+        return;
+    }
+    
+    
+    
+    /*
     str = f.tel.value;
     if (!str) {
         showErrorMsg(f.tel, "전화번호를 입력해주세요.");
@@ -148,6 +195,7 @@ function memberOk() {
     } else {
         hideErrorMsg(f.tel);
     }
+    */
     
     str = f.postNum.value;
     if (!str) {
@@ -201,62 +249,87 @@ function memberOk() {
 <header>
     <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 </header>
-	
 <main>
-	   <div id="content" style="display: flex; justify-content: center;">
-        <div class="container sign-up">
-          <form name="memberForm" method="POST">   
-            <div class="form-group">
-              <label for="name">이름</label>
-              <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value = "${dto.name}" ${mode=="update" ? "readonly='readonly' ":""}>
-              <p class="error-message"></p>
-            </div>
-            <div class="form-group">
-              <label for="nickname">닉네임</label>
-              <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value = "${dto.nickName}" >
-              <p class="error-message"></p>
-            </div>
-            <div class="form-group">
-              <label for="password">비밀번호</label>
-              <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" autocomplete="off" value = "${dto.password}">
-              <p class="error-message"></p>
-            </div>
-            <div class="form-group">
-              <label for="email">이메일</label>
-              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" value = "${dto.email}" ${mode=="update" ? "readonly='readonly' ":""}>
-              <p class="error-message"></p>
-            </div>  
-            <div class="form-group">
-              <label for="tell">전화번호</label>
-              <input type="text" id="tel" name="tel" placeholder="전화번호를 입력하세요" value = "${dto.tel}">
-              <p class="error-message"></p>
-            </div>
-             <div class="form-group">
-            
-            
-               <button type="button" class="btn" onclick="daumPostcode();">우편번호검색</button>
-                  &nbsp;&nbsp;
-              <input type="text" id="postNum" name="postNum"  placeholder="우편번호를 입력하세요"value = "${dto.postNum}" readonly="readonly">
-              <p class="error-message"></p>
-            </div>
-                <div class="form-group">
-              <label for="tell">주소1</label>
-              <input type="text" id="address1" name="address1"  placeholder="주소를 입력하세요"value = "${dto.address1}"readonly="readonly">
-              <p class="error-message"></p>
-            </div>
-                <div class="form-group">
-              <label for="tell">주소2</label>
-              <input type="text" id="address2" name="address2"  placeholder="주소를 입력하세요"value = "${dto.address2}" >
-              <p class="error-message"></p>
-            </div>
-    
-            <button type="button" onclick="memberOk()" >확인</button>
-            &nbsp;&nbsp;
-            <button type="button" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
-          </form>
+  <div id="content" style="display: flex; justify-content: center;">
+    <div class="container sign-up">
+      <form name="memberForm" method="POST">   
+        <div class="form-group">
+          <label for="name">이름</label>
+          <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value="${dto.name}" ${mode=="update" ? "readonly='readonly' ":""}>
+          <p class="error-message"></p>
         </div>
-        
-      </div>
+        <div class="form-group">
+          <label for="nickname">닉네임</label>
+          <input type="text" id="nickname" name="nickName" placeholder="닉네임을 입력하세요" value="${dto.nickName}">
+          <p class="error-message"></p>
+        </div>
+        <div class="form-group">
+          <label for="password">비밀번호</label>
+          <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" autocomplete="off" value="${dto.password}">
+          <p class="error-message"></p>
+        </div>
+        <div class="form-group">
+          <label for="email">이메일</label>
+          <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" value="${dto.email}" ${mode=="update" ? "readonly='readonly' ":""}>
+          <p class="error-message"></p>
+        </div>  
+        <div class="form-group">
+          <div class="flex-row-container">
+            <div class="tel-title">전화번호</div>
+            <div class="tel-input-container">
+              <select name="tel1" class="tel-select ">
+                <option value="">선택</option>
+	      <option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
+	      <option value="02" ${dto.tel1=="02" ? "selected='selected'" : ""}>02</option>
+	      <option value="031" ${dto.tel1=="031" ? "selected='selected'" : ""}>031</option>
+	      <option value="032" ${dto.tel1=="032" ? "selected='selected'" : ""}>032</option>
+	      <option value="033" ${dto.tel1=="033" ? "selected='selected'" : ""}>033</option>
+	      <option value="041" ${dto.tel1=="041" ? "selected='selected'" : ""}>041</option>
+	      <option value="042" ${dto.tel1=="042" ? "selected='selected'" : ""}>042</option>
+	      <option value="043" ${dto.tel1=="043" ? "selected='selected'" : ""}>043</option>
+	      <option value="044" ${dto.tel1=="044" ? "selected='selected'" : ""}>044</option>
+	      <option value="051" ${dto.tel1=="051" ? "selected='selected'" : ""}>051</option>
+	      <option value="052" ${dto.tel1=="052" ? "selected='selected'" : ""}>052</option>
+	      <option value="053" ${dto.tel1=="053" ? "selected='selected'" : ""}>053</option>
+	      <option value="054" ${dto.tel1=="054" ? "selected='selected'" : ""}>054</option>
+	      <option value="055" ${dto.tel1=="055" ? "selected='selected'" : ""}>055</option>
+	      <option value="061" ${dto.tel1=="061" ? "selected='selected'" : ""}>061</option>
+	      <option value="062" ${dto.tel1=="062" ? "selected='selected'" : ""}>062</option>
+	      <option value="063" ${dto.tel1=="063" ? "selected='selected'" : ""}>063</option>
+	      <option value="064" ${dto.tel1=="064" ? "selected='selected'" : ""}>064</option>
+	      <option value="070" ${dto.tel1=="070" ? "selected='selected'" : ""}>070</option>
+	    </select>
+      		  <div class="tel-separator">-</div>
+              <input type="text" name="tel2" maxlength="4" class="tel-input" value="${dto.tel2}"placeholder="전화번호 입력">
+              <div class="tel-separator">-</div>
+              <input type="text" name="tel3" maxlength="4" class="tel-input" value="${dto.tel3}"placeholder="전화번호 입력">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <button type="button" class="btn" onclick="daumPostcode();">우편번호검색</button>
+          &nbsp;&nbsp;
+          <input type="text" id="postNum" name="postNum" placeholder="우편번호를 입력하세요" value="${dto.postNum}" readonly="readonly">
+          <p class="error-message"></p>
+        </div>
+        <div class="form-group">
+          <label for="address1">주소1</label>
+          <input type="text" id="address1" name="address1" placeholder="주소를 입력하세요" value="${dto.address1}" readonly="readonly">
+          <p class="error-message"></p>
+        </div>
+        <div class="form-group">
+          <label for="address2">주소2</label>
+          <input type="text" id="address2" name="address2" placeholder="주소를 입력하세요" value="${dto.address2}">
+          <p class="error-message"></p>
+        </div>
+
+        <button type="button" onclick="memberOk()">확인</button>
+        &nbsp;&nbsp;
+        <button type="button" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
+      </form>
+    </div>
+  </div>
 </main>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>

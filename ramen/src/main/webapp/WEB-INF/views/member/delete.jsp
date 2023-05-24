@@ -6,7 +6,7 @@
 <html>
 
 <style type="text/css">
-<style type="text/css">
+
 body {
   background-color: #FFFFFF;
   color: #000000;
@@ -40,7 +40,7 @@ body {
   color: #FFCD12;
 }
 
-.members-form input {
+.form-control{
   display: block;
   width: 100%;
   padding: 6px 4px;
@@ -90,6 +90,8 @@ body {
    margin-top: 5px;
 }
 
+
+
 </style>
 
 <script type="text/javascript">
@@ -116,6 +118,7 @@ function sendOk() {
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
+
 <main>
 	<div class="container">
 		<div class="members-form">
@@ -132,7 +135,7 @@ function sendOk() {
 							value="${sessionScope.member.memberId}">
 					</div>
 					<div class="row">
-						<input name="password" type="password" class="form-control" placeholder="패스워드">
+						<input name="password" type="password" class="form-control" style="width: 100%;" placeholder="패스워드">
 					</div>
 					<div class="row">
         		   <p class = "message"> 회원탈퇴시 개인정보 및 모든데이터는 삭제됩니다. </p>

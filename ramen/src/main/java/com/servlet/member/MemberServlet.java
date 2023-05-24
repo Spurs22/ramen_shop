@@ -163,7 +163,10 @@ public class MemberServlet extends MyServlet{
 			dto.setNickName(req.getParameter("nickName"));
 			dto.setPassword(req.getParameter("password"));
 			dto.setEmail(req.getParameter("email"));
-			dto.setTel(req.getParameter("tel"));
+		
+			String tel = req.getParameter("tel1") + "-" + req.getParameter("tel2") + "-" + req.getParameter("tel3");
+			dto.setTel(tel);
+			
             dto.setPostNum(req.getParameter("postNum"));
 			dto.setAddress1(req.getParameter("address1"));
 			dto.setAddress2(req.getParameter("address2"));
@@ -369,7 +372,7 @@ public class MemberServlet extends MyServlet{
 			
 	    try {
 	    	SessionInfo info = (SessionInfo) session.getAttribute("member");
-	        if (info == null) { // 로그아웃 된 경우
+	            if (info == null) { // 로그아웃 된 경우
 	            resp.sendRedirect(cp + "/member/login.do");
 	            return;
 	        }
