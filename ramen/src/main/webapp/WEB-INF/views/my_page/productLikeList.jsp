@@ -108,6 +108,24 @@
             text-align: center;
             color: #F0974E;
         }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 300px;
+            padding: 20px;
+            gap: 30px;
+            height: 90%;
+            overflow: auto;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1px solid gray;
+        }
 	</style>
 </head>
 <script>
@@ -121,37 +139,31 @@
 	</header>
 
 	<div class="main-container shadow-lg">
-		<div class="sub-menu">
-			<table class="table-list">
-				<thead>
-					<tr class="table-list">
-						<th class="num"> 라면 이름 </th>
-						<th class="subject"> 가격 </th>
-						<th class="date"> 찜한 날짜 </th>
-						<th class="heart">찜</th>
-					</tr>
-					</thead>
-					
-					<tbody>
-						<c:forEach var="item" items="${list}" varStatus="status">
-							<tr>
-								<td class="num">${item.product.name}</td>
-								<td class="subject">${item.price}원</td>
-								<td class="date">${item.createdDate}</td>
-								<td><a href="${pageContext.request.contextPath}/product/post-board?id=${item.product.productId}"><i class="fa-solid fa-heart" style="color: red;"> </i></a></td>
-							</tr>
-						</c:forEach>
-					</tbody>
-			</table>
+		<div class="sub-menu w-100">
 
+			<div style="display: flex; flex-direction: column; width: 100%">
+				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
+					<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do'"> 내가 좋아요 한 레시피 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'"> 내가 작성한 글 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'"> 나의 주문내역 </button>
+				</div>
+			</div>
 		</div>
 
-		
-
-
-
-
-</div>
+		<div class="content-container">
+			<div class="product-container" id="resultForm">
+				<c:forEach var="item" items="${list}" varStatus="status">
+					<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=${item.product.productId}">
+						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${item.product.picture == null ? "default2.png" : item.product.picture}"/>
+						<div style="margin-top: 5px; font-weight: 600">${item.product.name}</div>
+						<div style="color: #5d5d5d">${item.price} 원</div>
+						<div class="starBundle-comment"></div>
+					</a>
+				</c:forEach>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>
@@ -168,57 +180,6 @@
     function clickCategory(button) {
         selectedCategory = button.value
 		getList()
-    }
-
-    $(document).ready(function() {
-        $("#searchInput").on("input", function() {
-            getList()
-        });
-    });
-
-    function getList() {
-        let keyword = $('#searchInput').val();
-
-        $.ajax({
-            url: "${pageContext.request.contextPath}/product/search",
-            type: "GET",
-            dataType: "json",
-            data: { keyword: keyword, category: selectedCategory },
-            success: function(data) {
-                // 조회된 회원 정보 출력
-                console.log(data);
-                // let posts = data;
-                let resultForm = $('#resultForm');
-                resultForm.empty();
-
-                console.log(Array.isArray(data));
-
-                // resultForm2.css('display','none')
-
-                $.each(data, function(i, post) {
-                    let userCardTemplate = `<a class="product-item shadow" href="${pageContext.request.contextPath}/product/post-board?id=` + post.productId + `">`
-
-					if (post.picture == null) {
-						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/default2.png"/>`
-					} else {
-						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/` + post.picture + `"/>`
-					}
-
-                    userCardTemplate += `<div style="margin-top: 5px; font-weight: 600">` + post.productName + `</div>
-								<div style="color: #5d5d5d">` + post.price + `원</div>
-								<div class="starBundle-comment">` +
-									generateStars(post.rating)
-								+ `</div>
-							</a>
-                        `;
-                    resultForm.append(userCardTemplate);
-                });
-
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
     }
 
     function generateStars(rating) {
@@ -243,6 +204,32 @@
         }
         return starsHTML;
     }
+
 </script>
 </body>
 </html>
+
+
+<%--			<table class="table-list">--%>
+<%--				<thead>--%>
+<%--					<tr class="table-list">--%>
+<%--						<th class="num"> 번호 </th>--%>
+<%--						<th class="num"> 라면 이름 </th>--%>
+<%--						<th class="subject"> 가격 </th>--%>
+<%--						<th class="date"> 찜한 날짜 </th>--%>
+<%--						<th class="heart">찜</th>--%>
+<%--					</tr>--%>
+<%--				</thead>--%>
+<%--					--%>
+<%--				<tbody>--%>
+<%--					<c:forEach var="item" items="${list}" varStatus="status">--%>
+<%--						<tr>--%>
+<%--							<td class="num">${status.index}</td>--%>
+<%--							<td class="num">${item.product.name}</td>--%>
+<%--							<td class="subject">${item.price}원</td>--%>
+<%--							<td class="date">${item.createdDate}</td>--%>
+<%--							<td><a href="${pageContext.request.contextPath}/product/post-board?id=${item.product.productId}"><i class="fa-solid fa-heart" style="color: red;"> </i></a></td>--%>
+<%--						</tr>--%>
+<%--					</c:forEach>--%>
+<%--				</tbody>--%>
+<%--			</table>--%>

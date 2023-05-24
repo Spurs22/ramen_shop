@@ -22,19 +22,19 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<h3>마이페이지</h3>
-			<div>
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
+<%--			<h3 style="margin-bottom: 30px">마이페이지</h3>--%>
+
+			<div style="display: flex; flex-direction: column">
+				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do'"> 내가 좋아요 한 레시피 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'"> 내가 작성한 글 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'"> 나의 주문내역 </button>
+				</div>
+				<div style="background: #c5c5c5">
+
+				</div>
 			</div>
-			<div>
-			 	<button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do'"> 내가 좋아요 한 레시피 </button>
-			 </div>
-			<div>
-			 	<button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'"> 내가 작성한 글 </button>
-			 </div>
-			<div>
-			 	<button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'"> 나의 주문내역 </button>
-			 </div>
 		</div>
 	</div>
 </div>

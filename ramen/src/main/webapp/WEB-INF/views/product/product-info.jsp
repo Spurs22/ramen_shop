@@ -212,10 +212,7 @@
 				</div>
 
 				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; ">
-					<div class="product-createdDate">${post
-
-
-					.createdDate}</div>
+					<div class="product-createdDate">${post.createdDate}</div>
 					<div class="" style="">${post.product.category.label}</div>
 					<div class="flex-container">
 						<div style="position: relative">
