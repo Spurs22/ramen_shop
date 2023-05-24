@@ -246,14 +246,14 @@
 
 				<%-- 관리자 검증할때 세션에서 롤갖고 쓰셈 --%>
 				<div style="display: flex; flex-direction: row; gap: 5px">
-					<c:if test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='관리자'}">
+					<c:if test="${sessionScope.member.userNickname==dto.nickname}">
 						<button type="button" class="btn"
 								onclick="location.href='${pageContext.request.contextPath}/recipe/update.do?id=${dto.id}';">
 							수정
 						</button>
 					</c:if>
 
-					<c:if test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userNickname=='관리자'}">
+					<c:if test="${sessionScope.member.userNickname==dto.nickname || sessionScope.member.userRoll==1}">
 						<button type="button" class="btn"
 								onclick="deleteRecipe();">
 							삭제
@@ -448,7 +448,7 @@
             }
 
             let id = "${dto.id}";
-            const $tb = $(this).closest("table");
+            const $tb = $(this).closest("div");
             let content = $tb.find("textarea").val().trim();
 
             if (!content) {

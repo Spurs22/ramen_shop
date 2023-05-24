@@ -192,13 +192,20 @@
 				
 				$.each(data, function(i, list) {
 					 let userCardTemplate = `
-						<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=` + list.id + `" style="padding: 30px;"> 
-							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/` + list.picture + `">
-							<div style="font-weight: bold;">` + list.subject+ `</div>
-							<div>` + list.nickname + `</div>
-							<div style="font-size: 14px">조회 수 : ` + list.hitCount + `</div>
-							<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ` + list.recipeLikeCount + `</div>
-							<div style="font-size: 14px">` + list.createdDate + `</div>
+						<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=`+list.id+`" style="">
+
+							<div style="display: flex; flex-direction: row;justify-content: space-between; width: 100%">
+								<div style="font-size: 14px"><i class="fa-solid fa-eye"></i> `+list.hitCount+`</div>
+								<div style="font-size: 14px;">`+list.createdDate+`</div>
+							</div>
+	
+							<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
+								<div style="font-size: 14px;">작성자 : `+list.nickname+`</div>
+								<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> `+list.recipeLikeCount+`</div>
+							</div>
+	
+							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/`+list.picture+` == null ? 'default2.png' : list.picture}">
+							<div style="font-weight: bold; text-align: center; width: 100%; margin-top: 5px">`+list.subject+`</div>
 						</a>
                      `;
 

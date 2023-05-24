@@ -306,6 +306,7 @@ public class RecipeServlet extends MyUploadServlet {
 			String path = context.getRealPath("/resource/picture");
 			
 			System.out.println("여기까지는 오냐");
+			
 			/*
 			Part part = req.getPart("picture");
 

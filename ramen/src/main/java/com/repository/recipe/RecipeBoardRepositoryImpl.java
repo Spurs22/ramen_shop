@@ -184,21 +184,31 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "DELETE FROM recipe_board WHERE id = ? AND member_id = ?";
+			sql = "DELETE FROM recipe_picture WHERE recipe_id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, postId);
-			pstmt.setLong(2, memberId);
 			
 			pstmt.executeUpdate();
 			
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "DELETE FROM recipe_picture WHERE recipe_id = ? ";
+			sql = "DELETE FROM recipe_like WHERE recipe_id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, postId);
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "DELETE FROM recipe_board WHERE id = ? AND member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, postId);
+			pstmt.setLong(2, memberId);
 			
 			pstmt.executeUpdate();
 			

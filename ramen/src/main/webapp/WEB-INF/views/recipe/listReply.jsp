@@ -72,7 +72,7 @@
 			</td>
 			<td>
 				<c:choose>
-					<c:when test="${sessionScope.member.userNickname == vo.nickname || sessionScope.member.userNickname == '관리자'}">
+					<c:when test="${sessionScope.member.userNickname == vo.nickname || sessionScope.member.userRoll == 1}">
 						<span class='deleteReply' data-replyNum='${vo.id}'>삭제</span>
 					</c:when>
 					<c:otherwise>
