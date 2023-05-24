@@ -94,6 +94,7 @@ select {
   margin-right: 5px;
   
   
+  
 }
 
 .tel-separator {
@@ -103,7 +104,7 @@ select {
 }
 
 .tel-input {
-
+  margin-top: 15px;
   padding: 10px;
   margin-bottom: 20px;
   border: none;
