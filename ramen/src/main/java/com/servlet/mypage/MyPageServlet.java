@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
 import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeProduct;
@@ -19,15 +20,22 @@ import com.DTO.SessionInfo;
 import com.repository.recipe.RecipeBoardRepositoryImpl;
 import com.repository.recipe.RecipeCommentRepositoryImpl;
 import com.repository.mypage.MypageOrderRepositoryImpl;
-import com.repository.mypage.MypageProductRepositoryImpl;
 import com.repository.mypage.MypageRecipeBoardListImpl;
+import com.repository.product.ProductLikeRepository;
+import com.repository.product.ProductLikeRepositoryImpl;
 import com.repository.recipe.RecipeLikeRepositoryImpl;
+import com.service.product.ProductLikeService;
+import com.service.product.ProductLikeServiceImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
 @WebServlet("/mypage/*")
 public class MyPageServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
+	
+	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
+	
+	ProductLikeService productLikeService = new ProductLikeServiceImpl(productLikeRepository);
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -87,16 +95,12 @@ public class MyPageServlet extends MyServlet {
 	}
 	
 	protected void main(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		forward(req, resp, "/WEB-INF/views/mypage/main.jsp");
+		forward(req, resp, "/WEB-INF/views/my_page/main.jsp");
 	}
 	
 	
 	protected void productLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내가 찜한 상품리스트
-		MypageProductRepositoryImpl dao = new MypageProductRepositoryImpl();
-		// ProductLikeRepositoryImpl dao = new ProductLikeRepositoryImpl();
-		MyUtil util = new MyUtil();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
@@ -104,44 +108,21 @@ public class MyPageServlet extends MyServlet {
 			
 			
 		try {
-			// Product dto = new Product();
-			String page = req.getParameter("page");
-			int current_page = 1;
-			if(page != null) 
-				current_page = Integer.parseInt(page);
+			int dataCount = productLikeService.getCntLikePost(info.getMemberId());
 			
+			List<ProductBoard> list = productLikeService.findLikePostById(info.getMemberId());
 			
-			int dataCount = dao.likedataCount(info.getMemberId());
-			
-			int size = 5;
-			int total_page = util.pageCount(dataCount, size);
-			if(current_page > total_page) {
-				current_page = total_page;
-			}
-			
-			int offset = (current_page -1) * size;
-			if(offset < 0) offset = 0;
-			
-			
-			List<ProductBoard> list = dao.findLikePostLikeById(info.getMemberId(), offset, size);
-			
-			String listUrl = cp+ "/mypage/productLikeList.do";
-			String articleUrl = cp + "/mypage/productArticle.do?page=" +current_page;
-			
-			String paging = util.paging(current_page, total_page, listUrl);
+			String articleUrl = cp + "/mypage/productArticle.do";
 			
 			req.setAttribute("list", list);
-			req.setAttribute("page", current_page);
-			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("articleUrl", articleUrl);
-			req.setAttribute("paging", paging);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		forward(req, resp, "/WEB-INF/views/mypage/productLikeList.jsp");
+		forward(req, resp, "/WEB-INF/views/my_page/productLikeList.jsp");
 		
 	}
 	
@@ -202,7 +183,7 @@ public class MyPageServlet extends MyServlet {
 			e.printStackTrace();
 		}
 		
-		forward(req, resp, "/WEB-INF/views/mypage/recipeLikeList.jsp");
+		forward(req, resp, "/WEB-INF/views/my_page/recipeLikeList.jsp");
 		
 	}
 	
@@ -340,7 +321,7 @@ public class MyPageServlet extends MyServlet {
 			e.printStackTrace();
 		}
 		
-		forward(req, resp, "/WEB-INF/views/mypage/recipeBoardMyList.jsp");
+		forward(req, resp, "/WEB-INF/views/my_page/recipeBoardMyList.jsp");
 	}
 	
 	protected void recipeMyArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -460,7 +441,7 @@ public class MyPageServlet extends MyServlet {
 			String paging = util.paging(current_page, total_page, listUrl);
 			
 			req.setAttribute("list", list);
-			req.setAttribute("page", page);
+			req.setAttribute("page", current_page);
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("paging", paging);
@@ -472,11 +453,37 @@ public class MyPageServlet extends MyServlet {
 			e.printStackTrace();
 		}
 		
-		forward(req, resp, "/WEB-INF/views/mypage/orderMyList.jsp");
+		forward(req, resp, "/WEB-INF/views/my_page/orderMyList.jsp");
 	}
 	
 	protected void articleorderlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 상세 글보기
+		MyUtil util = new MyUtil();
+		MypageOrderRepositoryImpl dao = new MypageOrderRepositoryImpl();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+		
+		try {	
+			// 같은 주문번호
+			// List<OrderItem> list = dao.findOrderDetail();
+			
+		
+			
+			String articleUrl = cp+ "/mypage/articleorderlist.do";
+			
+			// req.setAttribute("list", list);
+			req.setAttribute("articleUrl", articleUrl);
+			
+			forward(req, resp, "/WEB-INF/views/my_page/articleorderlist.jsp");
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+ "/mypage/orderMyList.jsp");
 	}
 	
 	protected void orderCancel(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

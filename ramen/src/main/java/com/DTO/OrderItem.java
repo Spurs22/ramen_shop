@@ -9,7 +9,7 @@ public class OrderItem {
 	private int quantity;
 	private Long price;
 	private Long finalPrice;
-	
+	private Long totalPrice;
 	
 	private String productName;
 	private String statusName;
@@ -84,6 +84,14 @@ public class OrderItem {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public Long getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Long totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 	
 	

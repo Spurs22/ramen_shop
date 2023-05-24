@@ -5,11 +5,10 @@ public class Notice {
 	private Long memberId;
 	private String subject;
 	private String content;
-	private String ip_address;
-	private int category;
-	private int hit_count;
+	private String ipAddress;
+	private int hitCount;
 	private int notice;
-	private String create_date;
+	private String createdDate;
 	private Long gap;
 	
 	public Long getId() {
@@ -18,10 +17,10 @@ public class Notice {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getmemberId() {
+	public Long getMemberId() {
 		return memberId;
 	}
-	public void setmemberId(Long memberId) {
+	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
 	public String getSubject() {
@@ -36,23 +35,17 @@ public class Notice {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getIp_address() {
-		return ip_address;
+	public String getIpAddress() {
+		return ipAddress;
 	}
-	public void setIp_address(String ip_address) {
-		this.ip_address = ip_address;
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
-	public int getCategory() {
-		return category;
+	public int getHitCount() {
+		return hitCount;
 	}
-	public void setCategory(int category) {
-		this.category = category;
-	}
-	public int getHit_count() {
-		return hit_count;
-	}
-	public void setHit_count(int hitCount) {
-		this.hit_count = hitCount;
+	public void setHitCount(int hitCount) {
+		this.hitCount = hitCount;
 	}
 	public int getNotice() {
 		return notice;
@@ -60,23 +53,17 @@ public class Notice {
 	public void setNotice(int notice) {
 		this.notice = notice;
 	}
-	public String getCreate_date() {
-		return create_date;
+	public String getCreatedDate() {
+		return createdDate;
 	}
-	public void setCreate_date(String create_date) {
-		this.create_date = create_date;
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
-	
 	public Long getGap() {
 		return gap;
 	}
 	public void setGap(Long gap) {
 		this.gap = gap;
 	}
-	
-
-
-	
-	
 	
 }

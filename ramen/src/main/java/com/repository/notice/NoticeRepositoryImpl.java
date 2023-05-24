@@ -22,7 +22,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		long seq;
 		
 		try {
-			sql = "SELECT notice_board_seq.NextVAL FROM dual";
+			sql = "SELECT notice__board_seq.NEXTVAL FROM dual";
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
@@ -38,16 +38,16 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			rs = null;
 			pstmt = null;
 			
-			sql = "INSERT INTO notice_board(id, member_id, subject, content, ip_address, category, hit_count, notice, create_date) "
-					+ "  VALUES (notice_board_seq.nextVAL, ?, ?, ?, ?, ?, 0, ?, SYSDATE) ";
+			sql = "INSERT INTO notice_board(id, member_id, subject, content, ip_address, hit_count, notice, created_date ) "
+					+ "  VALUES (?, ?, ?, ?, ?, 0, ?, SYSDATE) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setLong(1, dto.getmemberId());
-			pstmt.setString(2, dto.getSubject());
-			pstmt.setString(3, dto.getContent());
-			pstmt.setString(4, dto.getIp_address());
-			pstmt.setInt(5, dto.getCategory());
+			pstmt.setLong(1, dto.getId());
+			pstmt.setLong(2, dto.getMemberId());
+			pstmt.setString(3, dto.getSubject());
+			pstmt.setString(4, dto.getContent());
+			pstmt.setString(5, dto.getIpAddress());
 			pstmt.setInt(6, dto.getNotice());
 			
 			pstmt.executeUpdate();
@@ -63,18 +63,17 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public int dataCount(int category) {
+	public int dataCount() {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "SELECT NVL(COUNT(*), 0) FROM notice_board WHERE category = ?";
+			sql = "SELECT NVL(COUNT(*), 0) FROM notice_board ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, category);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -93,7 +92,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public int dataCount(int category, String condition, String keyword) {
+	public int dataCount(String condition, String keyword) {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -101,27 +100,25 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		
 		try {
 			sql = "SELECT NVL(COUNT(*), 0) FROM notice_board n "
-					+ "  JOIN member m ON n.member_id=m.id "
-					+ "  WHERE category = ?";
+					+ "  JOIN member m ON n.member_id=m.id ";
 			
 			if(condition.equals("all")) {
-				sql += "  AND INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
+				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
 			
-			} else if(condition.equals("create_date")) {
+			} else if(condition.equals("created_date")) {
 				keyword = keyword.replaceAll("(\\-|\\.|\\/)", "");
-				sql += "  AND INSTR(create_date, 'YYYY-MM-DD') = ? ";
+				sql += "  WHERE INSTR(n.created_date, 'YYYYMMDD') = ? ";
 				
 			} else {
-				sql += "  AND INSTR(" +condition+ ", ?) >= 1 ";
+				sql += "  WHERE INSTR(" +condition+ ", ?) >= 1 ";
 			}
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, category);
-			pstmt.setString(2, keyword);
+			pstmt.setString(1, keyword);
 			
 			if(condition.equals("all")) {
-				pstmt.setString(3, keyword);
+				pstmt.setString(2, keyword);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -141,24 +138,22 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public List<Notice> listNotice(int category, int offset, int size) {
+	public List<Notice> listNotice(int offset, int size) {
 		List<Notice> list = new ArrayList<Notice>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT n.id, member_id, subject, hit_count, create_date ");
-			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
-			sb.append("  WHERE category = ? ");
+			sb.append("  SELECT n.id, member_id, subject, hit_count, n.created_date ");
+			sb.append("  FROM notice_board n JOIN member m ON m.id = n.member_id ");
 			sb.append("  ORDER BY id DESC ");
 			sb.append("  OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setInt(1, category);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
+			pstmt.setInt(1, offset);
+			pstmt.setInt(2, size);
 			
 			rs = pstmt.executeQuery();
 			
@@ -166,10 +161,10 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				Notice dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setmemberId(rs.getLong("member_id"));
+				dto.setMemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setHit_count(rs.getInt("hit_count"));
-				dto.setCreate_date(rs.getString("create_date"));
+				dto.setHitCount(rs.getInt("hit_count"));
+				dto.setCreatedDate(rs.getString("created_date"));
 				
 				list.add(dto);
 			}
@@ -185,23 +180,22 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public List<Notice> listNotice(int category, int offset, int size, String condition, String keyword) {
+	public List<Notice> listNotice(int offset, int size, String condition, String keyword) {
 		List<Notice> list = new ArrayList<Notice>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT n.id, member_id, subject, hit_count, create_date  ");
+			sb.append("SELECT n.id, member_id, subject, hit_count, n.created_date  ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
-			sb.append("  WHERE category = ? ");
 			
 			if(condition.equals("all")) {
-				sb.append("  AND INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ");
+				sb.append("  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ");
 				
-			} else if (condition.equals("create-date")) {
+			} else if (condition.equals("createdDate")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sb.append(" AND TO_CHAR(create_date, 'YYYYMMDD') = ?");
+				sb.append(" WHERE INSTR (TO_CHAR(n.created_date, 'YYYYMMDD') = ? )");
 				
 			} else {
 				sb.append(" WHERE INSTR(" + condition + ", ?) >= 1 ");
@@ -212,16 +206,15 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setInt(1, category);
 			if (condition.equals("all")) {
-				pstmt.setString(2, keyword);
-				pstmt.setString(3, keyword);
-				pstmt.setInt(4, offset);
-				pstmt.setInt(5, size);
-			} else {
+				pstmt.setString(1, keyword);
 				pstmt.setString(2, keyword);
 				pstmt.setInt(3, offset);
 				pstmt.setInt(4, size);
+			} else {
+				pstmt.setString(1, keyword);
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, size);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -230,11 +223,10 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				Notice dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setmemberId(rs.getLong("member_id"));
+				dto.setMemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setContent(rs.getString("content"));
-				dto.setHit_count(rs.getInt("hit_count"));
-				dto.setCreate_date(rs.getString("create_date"));
+				dto.setHitCount(rs.getInt("hit_count"));
+				dto.setCreatedDate(rs.getString("created_date"));
 				
 				list.add(dto);
 			}
@@ -250,23 +242,21 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public List<Notice> listNotice(int category) {
+	public List<Notice> listNotice() {
 		List<Notice> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT n.id, member_id, subject, content, ip_address, category, hit_count,");
-			sb.append("       notice,  TO_CHAR(create_date, 'YYYY-MM-DD')create_date ");
+			sb.append("  SELECT n.id, member_id, subject, content, ip_address, hit_count,");
+			sb.append("       notice,  TO_CHAR(n.created_date, 'YYYY-MM-DD')created_date ");
 			sb.append("  FROM notice_board n");
 			sb.append("  JOIN member m ON m.id=n.member_id ");
-			sb.append("  WHERE category=? AND notice=1 ");
+			sb.append("  WHERE notice=1 ");
 			sb.append("  ORDER BY id DESC ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
-			
-			pstmt.setInt(1, category);
 			
 			rs = pstmt.executeQuery();
 			
@@ -274,14 +264,13 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				Notice dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setmemberId(rs.getLong("member_id"));
+				dto.setMemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
-				dto.setIp_address(rs.getString("ip_address"));
-				dto.setCategory(rs.getInt("category"));
-				dto.setHit_count(rs.getInt("hit_count"));
+				dto.setIpAddress(rs.getString("ip_address"));
+				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setNotice(rs.getInt("notice"));
-				dto.setCreate_date(rs.getString("create_date"));
+				dto.setCreatedDate(rs.getString("created_date"));
 				
 				list.add(dto);
 			}
@@ -305,10 +294,10 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		String sql;
 		
 		try {
-			sql = " SELECT n.id, member_id, subject, content, ip_address, category, hit_count, notice, create_date "
+			sql = " SELECT n.id, member_id, subject, content, ip_address, hit_count, notice, n.created_date "
 					+ "  FROM notice_board n "
 					+ "  JOIN member m ON m.id=n.member_id "
-					+ "  WHERE id = ? ";
+					+ "  WHERE n.id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -320,14 +309,13 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto = new Notice();
 				
 				dto.setId(rs.getLong("id"));
-				dto.setmemberId(rs.getLong("member_id"));
+				dto.setMemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
-				dto.setIp_address(rs.getString("ip_address"));
-				dto.setCategory(rs.getInt("category"));
-				dto.setHit_count(rs.getInt("hit_count"));
+				dto.setIpAddress(rs.getString("ip_address"));
+				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setNotice(rs.getInt("notice"));
-				dto.setCreate_date(rs.getString("create_date"));
+				dto.setCreatedDate(rs.getString("created_date"));
 			}
 
 		} catch (SQLException e) {
@@ -341,7 +329,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public Notice preReadNotice(int category, Long id, String condition, String keyword) {
+	public Notice preReadNotice(Long id, String condition, String keyword) {
 		Notice dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -352,13 +340,13 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				sb.append("  SELECT n.id, subject ");
 				sb.append("  FROM notice_board n ");
 				sb.append("  JOIN member m ON m.id=n.member_id ");
-				sb.append("  WHERE category = ? AND ( id > ? ) ");
+				sb.append("  WHERE n.id > ?  ");
 				
 				if(condition.equals("all")) {
 					sb.append("  AND  (INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ) ");
-				} else if(condition.equals("create_date")) {
+				} else if(condition.equals("created_date")) {
 					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sb.append("  AND  TO_CHAR(create_date, 'YYYYMMDD') = ? ");
+					sb.append("  AND  TO_CHAR(n.created_date, 'YYYYMMDD') = ? ");
 				} else {
 					sb.append("  AND  INSTR(" +condition+ ", ?) >= 1 ");
 				}
@@ -367,23 +355,21 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				
 				pstmt = conn.prepareStatement(sb.toString());
 				
-				pstmt.setInt(1, category);
-				pstmt.setLong(2, id);
-				pstmt.setString(3, keyword);
+				pstmt.setLong(1, id);
+				pstmt.setString(2, keyword);
 				if(condition.equals("all")) {
-					pstmt.setString(4, keyword);
+					pstmt.setString(3, keyword);
 				}
 				
 			} else {
 				sb.append("  SELECT n.id, subject FROM notice_board n ");
-				sb.append("  WHERE category=? AND id > ? ");
+				sb.append("  WHERE n.id > ? ");
 				sb.append("  ORDER BY id ASC");
 				sb.append("  FETCH FIRST 1 ROWS ONLY ");
 				
 				pstmt = conn.prepareStatement(sb.toString());
 				
-				pstmt.setInt(1, category);
-				pstmt.setLong(2, id);
+				pstmt.setLong(1, id);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -406,7 +392,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public Notice nextReadNotice(int category, Long id, String condition, String keyword) {
+	public Notice nextReadNotice(Long id, String condition, String keyword) {
 		Notice dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -417,12 +403,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				sb.append("  SELECT n.id, subject ");
 				sb.append("  FROM  notice_board n ");
 				sb.append("  JOIN member m ON m.id=n.member_id ");
-				sb.append("  WHERE category=? AND id < ? ");
+				sb.append("  WHERE n.id < ? ");
 				if(condition.equals("all")) {
 					sb.append("  AND ( INSTR(subject, ?) >= 1 OR  INSTR(content, ?) >= 1) ");
-				} else if (condition.equals("create_date")) {
+				} else if (condition.equals("createdDate")) {
 					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sb.append("  AND TO_CHAR(create_date, 'YYYYMMDD') = ? ");
+					sb.append("  AND TO_CHAR(n.created_date, 'YYYYMMDD') = ? ");
 				} else {
 					sb.append("  AND  INSTR(" +condition+ ", ?) >= 1 ");
 				}
@@ -431,22 +417,20 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				
 				pstmt = conn.prepareStatement(sb.toString());
 				
-				pstmt.setInt(1, category);
-				pstmt.setLong(2, id);
-				pstmt.setString(3, keyword);
+				pstmt.setLong(1, id);
+				pstmt.setString(2, keyword);
 				if(condition.equals("all")) {
-					pstmt.setString(4, keyword);
+					pstmt.setString(3, keyword);
 				}
 			} else {
 				sb.append("  SELECT n.id, subject FROM notice_board n ");
-				sb.append("  WHERE category=?  AND  id < ? ");
+				sb.append("  WHERE id < ? ");
 				sb.append("  ORDER BY id DESC ");
 				sb.append("  FETCH FIRST 1 ROWS ONLY ");
 
 				pstmt = conn.prepareStatement(sb.toString());
 				
-				pstmt.setInt(1, category);
-				pstmt.setLong(2, id);
+				pstmt.setLong(1, id);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -468,12 +452,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 	}
 
 	@Override
-	public void updateHit_count(Long id) throws SQLException {
+	public void updateHitCount(Long id) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "  UPDATE notice_board SET hit_count=hit_count+1 WHERE id = ? ";
+			sql = "  UPDATE notice_board SET hit_count = hit_count+1 WHERE id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -500,6 +484,9 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 					+ "  WHERE id =?";
 			
 			pstmt = conn.prepareStatement(sql);
+	
+			
+			
 			
 			pstmt.setInt(1, dto.getNotice());
 			pstmt.setString(2, dto.getSubject());
@@ -549,7 +536,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		try {
 			sql = "DELETE FROM notice_board WHERE id IN (";
 			for(int i = 0; i< ids.length; i++) {
-				sql += "?, "; 
+				sql += "?,"; 
 			}
 			sql = sql.substring(0, sql.length() - 1 ) + ")";
 			

@@ -23,15 +23,15 @@ public class NoticeRepositoryTest {
 		notice.setCategory(1);
 		notice.setNotice(1);
 		*/
-		
+		/*
 		notice.setId((long) 2);
-		notice.setmemberId((long)1);
+		notice.setmemberId(1);
 		notice.setSubject("FAQ");
 		notice.setContent("FAQ임");
 		notice.setIp_address("127.0.0.1");
 		notice.setCategory(2);
 		notice.setNotice(1);
-		
+		*/
 		List<Notice> list = new ArrayList<>();
 		
 		list.add(notice);
