@@ -17,7 +17,7 @@
 	.table-list .quantity { width: 100px; color: #787878; }
 	.table-list .total { width: 250px; color: #787878; }
 	.table-list .status { width: 150px; color: #787878; }
-	.table-list .clickre { text-decoration: nono; color: black; }
+	.table-list .clickre { color: black; }
 	</style>
 </head>
 <script>
@@ -43,7 +43,7 @@
 						<th class="price">제품 가격</th>
 						<th class="quantity">제품 개수</th>
 						<th class="total">총 금액</th>
-						<th class="status">리뷰작성</th>
+						<th class="status">배송상태</th>
 					</tr>
 					</thead>
 					
@@ -55,9 +55,20 @@
 							<td>${dto.price}원</td>
 							<td>${dto.quantity}개</td>
 							<td>${dto.totalPrice}원</td>
-							<c:if test="${dto.statusId==1}">
-								<td><a class="clickre" href="#">리뷰작성하러가기</a></td>
-							</c:if>
+							<c:choose>
+								<c:when test="${dto.statusName == '배송완료'}">
+									<td>${dto.statusName}<a class="clickre" href="#">리뷰작성하러가기</a></td>
+								</c:when>
+								
+								<c:when test="${dto.statusName == '배송중'}">
+									<td>${dto.statusName}</td>
+								</c:when>
+								
+								<c:when test="${dto.statusName == '결제완료'}">
+									<td>${dto.statusName}</td>
+								</c:when>
+							</c:choose>
+							
 						</tr>
 						</c:forEach>
 					</tbody>

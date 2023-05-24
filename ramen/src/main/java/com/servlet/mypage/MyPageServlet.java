@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
-import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
@@ -21,6 +20,7 @@ import com.repository.recipe.RecipeBoardRepositoryImpl;
 import com.repository.recipe.RecipeCommentRepositoryImpl;
 import com.repository.mypage.MypageOrderRepositoryImpl;
 import com.repository.mypage.MypageRecipeBoardListImpl;
+import com.repository.order.OrderRepositoryImpl;
 import com.repository.product.ProductLikeRepository;
 import com.repository.product.ProductLikeRepositoryImpl;
 import com.repository.recipe.RecipeLikeRepositoryImpl;
@@ -54,11 +54,7 @@ public class MyPageServlet extends MyServlet {
 		
 		if(uri.indexOf("main.do") != -1 ) {
 			main(req, resp);
-			
-		} else if(uri.indexOf("productLikeList.do") != -1) {
-			// 내가 찜한 상품 리스트
-			productLikeList(req, resp);
-			
+		
 		} else if (uri.indexOf("productArticle.do") != -1) {
 			// 상품 상세페이지
 			productArticle(req, resp);
@@ -98,34 +94,6 @@ public class MyPageServlet extends MyServlet {
 		forward(req, resp, "/WEB-INF/views/my_page/main.jsp");
 	}
 	
-	
-	protected void productLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 내가 찜한 상품리스트
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
-		String cp = req.getContextPath();
-			
-			
-		try {
-			int dataCount = productLikeService.getCntLikePost(info.getMemberId());
-			
-			List<ProductBoard> list = productLikeService.findLikePostById(info.getMemberId());
-			
-			String articleUrl = cp + "/mypage/productArticle.do";
-			
-			req.setAttribute("list", list);
-			req.setAttribute("dataCount", dataCount);
-			req.setAttribute("articleUrl", articleUrl);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		forward(req, resp, "/WEB-INF/views/my_page/productLikeList.jsp");
-		
-	}
-	
 	protected void productArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 상품 상세 페이지
 		forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
@@ -133,8 +101,7 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void recipeLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내가 좋아요 한 조합레시피 리스트
-		MypageRecipeBoardListImpl dao = new MypageRecipeBoardListImpl();
-		// RecipeLikeRepositoryImpl dao = new RecipeLikeRepositoryImpl();
+		MypageRecipeBoardListImpl mypagerecipeboardlist = new MypageRecipeBoardListImpl();
 		MyUtil util = new MyUtil();
 		
 		HttpSession session = req.getSession();
@@ -150,8 +117,8 @@ public class MyPageServlet extends MyServlet {
 				current_page = Integer.parseInt(page);
 			}
 			
-			int dataCount = dao.dataCount(info.getMemberId());
-			int likedataCount = dao.likedataCount(info.getMemberId());
+			int dataCount = mypagerecipeboardlist.dataCount(info.getMemberId());
+			int likedataCount = mypagerecipeboardlist.likedataCount(info.getMemberId());
 			
 			int size = 10;
 			
@@ -164,7 +131,7 @@ public class MyPageServlet extends MyServlet {
 			int offset = (current_page -1 ) * size;
 			if(offset < 0) offset = 0;
 			
-			List<RecipeBoard> list = dao.findLikePost(info.getMemberId(), offset, size);
+			List<RecipeBoard> list = mypagerecipeboardlist.findLikePost(info.getMemberId(), offset, size);
 			
 			String listUrl =  cp+ "/mypage/recipeLikeList.do";
 			String articleUrl = cp+ "/mypage/recipeArticle.do?page=" +current_page;
@@ -189,9 +156,9 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void recipeLikeArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 좋아요 한 레시피 상세 페이지
-		RecipeBoardRepositoryImpl boarddao = new RecipeBoardRepositoryImpl();
-		RecipeLikeRepositoryImpl likedao = new RecipeLikeRepositoryImpl();
-		RecipeCommentRepositoryImpl commentdao = new RecipeCommentRepositoryImpl();
+		RecipeBoardRepositoryImpl recipeboardrepository = new RecipeBoardRepositoryImpl();
+		RecipeLikeRepositoryImpl recipelikerepository = new RecipeLikeRepositoryImpl();
+		RecipeCommentRepositoryImpl recipecommentrepository = new RecipeCommentRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
 		String cp = req.getContextPath();
@@ -218,9 +185,9 @@ public class MyPageServlet extends MyServlet {
 			}
 			
 			// 조회수 up
-			boarddao.updateHitCount(id);
+			recipeboardrepository.updateHitCount(id);
 			
-			RecipeBoard dto = boarddao.readRecipe(id);
+			RecipeBoard dto = recipeboardrepository.readRecipe(id);
 			if(dto == null) {
 				resp.sendRedirect(cp+ "/mypage/recipeLikeList.do");
 				return;
@@ -236,14 +203,14 @@ public class MyPageServlet extends MyServlet {
 			
 			boolean likeStatus = false;
 			if(info != null) {
-				likeStatus = ! likedao.isLike(info.getMemberId(), id);
+				likeStatus = ! recipelikerepository.isLike(info.getMemberId(), id);
 			}
 			
 			// 이전글 다음글
-			RecipeBoard preReadDto = boarddao.preReadRecipe(dto.getId(), condition, keyword);
-			RecipeBoard nextReadDto = boarddao.nextReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard preReadDto = recipeboardrepository.preReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard nextReadDto = recipeboardrepository.nextReadRecipe(dto.getId(), condition, keyword);
 			
-			int replyCount = commentdao.countComment(id);
+			int replyCount = recipecommentrepository.countComment(id);
 			
 			String articleUrl = cp+ "/recipe/recipe-info.jsp";
 			
@@ -270,8 +237,7 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void recipeBoardMyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내가 작성한 조합레시피 글 목록
-		MypageRecipeBoardListImpl dao = new MypageRecipeBoardListImpl();
-		// RecipeBoardRepositoryImpl dao = new RecipeBoardRepositoryImpl();
+		MypageRecipeBoardListImpl mypagerecipeboardlist = new MypageRecipeBoardListImpl();
 		MyUtil util = new MyUtil();
 				
 		HttpSession session = req.getSession();
@@ -288,8 +254,8 @@ public class MyPageServlet extends MyServlet {
 			}
 			
 			// dataCount에 memberId이여야 dataCount가
-			int dataCount = dao.dataCount(info.getMemberId());
-			int likedataCount = dao.likedataCount(info.getMemberId());
+			int dataCount = mypagerecipeboardlist.dataCount(info.getMemberId());
+			int likedataCount = mypagerecipeboardlist.likedataCount(info.getMemberId());
 			
 			int size = 10;
 			int total_page = util.pageCount(dataCount, size);
@@ -300,7 +266,7 @@ public class MyPageServlet extends MyServlet {
 			int offset = (current_page -1 ) * size;
 			if(offset < 0) offset = 0;
 			
-			List<RecipeBoard> list = dao.findByMemberId(info.getMemberId(), offset, size);
+			List<RecipeBoard> list = mypagerecipeboardlist.findByMemberId(info.getMemberId(), offset, size);
 			
 			String listUrl = cp+ "/mypage/recipeBoardMyList.do";
 			String articleUrl = cp+ "/mypage/recipeArticle.do?page=" +current_page;
@@ -326,9 +292,9 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void recipeMyArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 좋아요 한 레시피 상세 페이지
-		RecipeBoardRepositoryImpl boarddao = new RecipeBoardRepositoryImpl();
-		RecipeLikeRepositoryImpl likedao = new RecipeLikeRepositoryImpl();
-		RecipeCommentRepositoryImpl commentdao = new RecipeCommentRepositoryImpl();
+		RecipeBoardRepositoryImpl recipeboardrepository = new RecipeBoardRepositoryImpl();
+		RecipeLikeRepositoryImpl recipelikerepositoty = new RecipeLikeRepositoryImpl();
+		RecipeCommentRepositoryImpl recipecommentrepository = new RecipeCommentRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
 		String cp = req.getContextPath();
@@ -355,9 +321,9 @@ public class MyPageServlet extends MyServlet {
 			}
 			
 			// 조회수 up
-			boarddao.updateHitCount(id);
+			recipeboardrepository.updateHitCount(id);
 			
-			RecipeBoard dto = boarddao.readRecipe(id);
+			RecipeBoard dto = recipeboardrepository.readRecipe(id);
 			if(dto == null) {
 				resp.sendRedirect(cp+ "/mypage/recipeLikeList.do");
 				return;
@@ -373,14 +339,14 @@ public class MyPageServlet extends MyServlet {
 			
 			boolean likeStatus = false;
 			if(info != null) {
-				likeStatus = ! likedao.isLike(info.getMemberId(), id);
+				likeStatus = ! recipelikerepositoty.isLike(info.getMemberId(), id);
 			}
 			
 			// 이전글 다음글
-			RecipeBoard preReadDto = boarddao.preReadRecipe(dto.getId(), condition, keyword);
-			RecipeBoard nextReadDto = boarddao.nextReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard preReadDto = recipeboardrepository.preReadRecipe(dto.getId(), condition, keyword);
+			RecipeBoard nextReadDto = recipeboardrepository.nextReadRecipe(dto.getId(), condition, keyword);
 			
-			int replyCount = commentdao.countComment(id);
+			int replyCount = recipecommentrepository.countComment(id);
 			
 			String articleUrl = cp+ "/recipe/recipe-info.jsp";
 			
@@ -407,7 +373,7 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void orderMyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내 주문 리스트
-		MypageOrderRepositoryImpl dao = new MypageOrderRepositoryImpl();
+		MypageOrderRepositoryImpl mypageorderrepository = new MypageOrderRepositoryImpl();
 		MyUtil util = new MyUtil();
 		
 		HttpSession session = req.getSession();
@@ -422,7 +388,7 @@ public class MyPageServlet extends MyServlet {
 				current_page = Integer.parseInt(page);
 			}
 			
-			int dataCount = dao.dataCount(info.getMemberId());
+			int dataCount = mypageorderrepository.dataCount(info.getMemberId());
 			
 			int size = 5;
 			int total_page = util.pageCount(dataCount, size);
@@ -433,7 +399,7 @@ public class MyPageServlet extends MyServlet {
 			int offset = (current_page - 1 ) * size;
 			if (offset < 0) offset = 0;
 			
-			List<OrderBundle> list = dao.findOrderAll(info.getMemberId(), offset, size);
+			List<OrderBundle> list = mypageorderrepository.findOrderAll(info.getMemberId(), offset, size);
 			
 			String listUrl = cp + "/mypage/orderMyList.do";
 			String articleUrl = cp+ "/mypage/articleorderlist.do?page=" +current_page;
@@ -458,8 +424,7 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void articleorderlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 상세 글보기
-		MypageOrderRepositoryImpl dao = new MypageOrderRepositoryImpl();
-		
+		MypageOrderRepositoryImpl mypageorderrepository = new MypageOrderRepositoryImpl();
 		
 		String cp = req.getContextPath();
 		
@@ -469,9 +434,7 @@ public class MyPageServlet extends MyServlet {
 			
 			// System.out.println(orderbundleId);
 			
-			List<OrderItem> orderItem = dao.findOrderDetail(orderbundleId);
-			
-		
+			List<OrderItem> orderItem = mypageorderrepository.findOrderDetail(orderbundleId);
 			
 			String articleUrl = cp+ "/mypage/articleorderlist.do";
 			
@@ -489,6 +452,21 @@ public class MyPageServlet extends MyServlet {
 	
 	protected void orderCancel(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 주문 취소
+		OrderRepositoryImpl orderrepository = new OrderRepositoryImpl();
+		
+		String cp = req.getContextPath();
+		
+		try {
+			Long orderId = Long.parseLong(req.getParameter("orderId"));
+			
+			orderrepository.cancelOrder(orderId);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		resp.sendRedirect(cp+ "/mypage/orderMyList.do");
 		
 	}
 }

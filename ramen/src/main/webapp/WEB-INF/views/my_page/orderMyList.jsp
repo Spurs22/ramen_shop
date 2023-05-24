@@ -13,7 +13,7 @@
 .table-list .left { text-align: left; padding-left: 5px; }
 .href { text-decoration: none; color: gray; }
 
-.table-list .num { width: 70px; color: #787878; }
+.table-list .num { width: 40px; color: #787878; }
 .table-list .delivery { width: 70px; color: #787878; }
 .table-list .date { width: 130px; color: #787878; }
 .table-list .addr { width: 300px; color: #787878; }
@@ -50,14 +50,14 @@
 				<table class="table-list">
 					<thead>
 					<tr class="table-list">
-						<th class="num">주문번호</th>
+						<th class="num">번호</th>
 						<th class="delivery">송장번호</th>
 						<th class="receiveName">받는 사람</th>
 						<th class="date">주문일</th>
 						<th class="addr">주소</th>
 						<th class="tel">전화번호</th>
-						<th class="status">주문상태</th>
 						<th class="price">총 금액</th>
+						<th class="status">주문상태</th>
 					</tr>
 					</thead>
 					
@@ -69,9 +69,23 @@
 							<td>'${dto.receiveName}' 님</td>
 							<td>${dto.createdDate}</td>
 							<td>${dto.postNum} ${dto.address2} ${dto.address1}</td>
-							<td>${dto.tel}</td>
-							<td>${dto.statusName}</td>
+							<td>${dto.tel}</td>							
 							<td>${dto.totalPrice}원</td>
+							
+							<c:choose>
+								<c:when test="${dto.statusName == '배송완료'}">
+									<td>${dto.statusName}<button type="button">주문취소</button></td>
+								</c:when>
+								
+								<c:when test="${dto.statusName == '결제완료'}">
+									<td>${dto.statusName}</td>
+								</c:when>
+								
+								<c:when test="${dto.statusName == '배송중'}">
+									<td>${dto.statusName}</td>
+								</c:when>
+							</c:choose>
+
 						</tr>
 						</c:forEach>
 					</tbody>
