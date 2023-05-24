@@ -4,9 +4,16 @@ public class RecipeProduct {
 	private Long recipeId;
 	private int quantity;
 	private Long productId;
-	private String imgName;
+	private String picture;
 	private String name;
-	
+	private int category;
+
+	public int getCategory() {
+		return category;
+	}
+	public void setCategory(int category) {
+		this.category = category;
+	}
 	public String getName() {
 		return name;
 	}
@@ -31,12 +38,11 @@ public class RecipeProduct {
 	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
-	public String getImgName() {
-		return imgName;
+	public String getPicture() {
+		return picture;
 	}
-	public void setImgName(String imgName) {
-		this.imgName = imgName;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
-	
 	
 }

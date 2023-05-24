@@ -36,6 +36,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt.setString(4, recipeboard.getIpAddress());
 			
 			pstmt.executeUpdate();
+			
 			pstmt.close();
 			pstmt = null;
 			
@@ -52,6 +53,14 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				pstmt.close();
 				pstmt = null;
 			}
+			
+			sql = "INSERT INTO recipe_picture (id, recipe_id, picture_path) VALUES (recipe_picture_seq.NEXTVAL, recipe_board_seq.CURRVAL, ?)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, recipeboard.getPicture());
+			
+			pstmt.executeUpdate();
 			
 			conn.commit();
 			
@@ -119,7 +128,24 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				pstmt.close();
 				pstmt = null;
 			}
-			 	
+			
+			sql = "DELETE FROM recipe_picture WHERE recipe_id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, recipeBoard.getRecipeId());
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "INSERT INTO recipe_picture (id, recipe_id, picture_path) VALUES (recipe_picture_seq.NEXTVAL, recipe_board_seq.CURRVAL, ?)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, recipeBoard.getPicture());
+			
+			pstmt.executeUpdate();
+			
 			conn.commit();
 			
 		} catch (SQLException e) {
@@ -166,6 +192,16 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			
 			pstmt.executeUpdate();
 			
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "DELETE FROM recipe_picture WHERE recipe_id = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, postId);
+			
+			pstmt.executeUpdate();
+			
 			conn.commit();
 			
 		} catch (Exception e) {
@@ -197,15 +233,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		RecipeBoard recipe = null;
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount, p.picture "
+			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount, p.picture_path "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
-					+ " JOIN ( "
-					+ " 	SELECT recipe_id, MAX(product_id) AS product_id "
-					+ "		FROM recipe_product "
-					+ " 	GROUP BY recipe_id "
-					+ " ) rp ON r.id = rp.recipe_id "
-					+ " JOIN product p ON rp.product_id = p.id "
+					+ " LEFT OUTER JOIN recipe_picture p ON p.recipe_id = r.id "
 					+ " LEFT OUTER JOIN ( "
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
 					+ "		GROUP BY recipe_id "
@@ -226,7 +257,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipe.setHitCount(rs.getInt("hit_count"));
 				recipe.setCreatedDate(rs.getString("created_date"));
 				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
-				recipe.setPicture(rs.getString("picture"));
+				recipe.setPicture(rs.getString("picture_path"));
 				
 				list.add(recipe);
 			}
@@ -376,15 +407,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		String sql;
 		
 		try {
-			sql = "SELECT r.id, r.member_id, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount, p.picture "
+			sql = "SELECT r.id, r.member_id, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, nickname, NVL(recipeLikeCount, 0) recipeLikeCount, p.picture_path "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
-					+ " JOIN ( "
-					+ " 	SELECT recipe_id, MAX(product_id) AS product_id "
-					+ "		FROM recipe_product "
-					+ " 	GROUP BY recipe_id "
-					+ " ) rp ON r.id = rp.recipe_id "
-					+ " JOIN product p ON rp.product_id = p.id "
+					+ " LEFT OUTER JOIN recipe_picture p ON r.id = p.recipe_id "
 					+ " LEFT OUTER JOIN ( "
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
 					+ "		GROUP BY recipe_id "
@@ -408,7 +434,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeBoard.setCreatedDate(rs.getString("created_date"));
 				recipeBoard.setNickname(rs.getString("nickname"));
 				recipeBoard.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
-				recipeBoard.setPicture(rs.getString("picture"));
+				recipeBoard.setPicture(rs.getString("picture_path"));
 			}
 			
 			pstmt.close();
@@ -416,7 +442,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt = null;
 			rs = null;
 			
-			sql = "SELECT product_id, quantity, name "
+			sql = "SELECT product_id, quantity, name, picture, category_id "
 					+ " FROM recipe_product "
 					+ " JOIN product ON recipe_product.product_id = product.id "
 					+ " WHERE recipe_id = ?";
@@ -433,6 +459,8 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeProduct.setProductId(rs.getLong("product_id"));
 				recipeProduct.setName(rs.getString("name"));
 				recipeProduct.setQuantity(rs.getInt("quantity"));
+				recipeProduct.setPicture(rs.getString("picture"));
+				recipeProduct.setCategory(rs.getInt("category_id"));
 				
 				list.add(recipeProduct);
 			}
@@ -968,15 +996,10 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		List<RecipeBoard> list = new ArrayList<>();
 
 		try {
-			sql = "SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount, p.picture "
+			sql = " SELECT r.id, m.nickname, subject, content, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount, p.picture_path "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON r.member_id = m.id "
-					+ " JOIN ( "
-					+ " 	SELECT recipe_id, MAX(product_id) AS product_id "
-					+ "		FROM recipe_product "
-					+ " 	GROUP BY recipe_id "
-					+ " ) rp ON r.id = rp.recipe_id "
-					+ " JOIN product p ON rp.product_id = p.id "
+					+ " LEFT OUTER JOIN recipe_picture p ON p.recipe_id = r.id "
 					+ " LEFT OUTER JOIN ( "
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
 					+ "		GROUP BY recipe_id "
@@ -1071,7 +1094,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipe.setHitCount(rs.getInt("hit_count"));
 				recipe.setCreatedDate(rs.getString("created_date"));
 				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
-				recipe.setPicture(rs.getString("picture"));
+				recipe.setPicture(rs.getString("picture_path"));
 				
 				list.add(recipe);
 			}

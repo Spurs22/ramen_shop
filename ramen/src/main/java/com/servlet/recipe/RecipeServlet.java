@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -298,8 +300,22 @@ public class RecipeServlet extends MyUploadServlet {
 		    	list.add(product);
 		    }
 		    
-			dto.setRecipeProduct(list);
+		    dto.setRecipeProduct(list);
+		    
+		    ServletContext context = getServletContext();
+			String path = context.getRealPath("/resource/picture");
 			
+			System.out.println("여기까지는 오냐");
+			/*
+			Part part = req.getPart("picture");
+
+			String fileName = doFileUpload(part, path);
+
+			System.out.println(fileName);
+			
+			dto.setPicture(fileName);
+			*/
+
 			recipeBoardService.insertRecipe(dto);
 			
 			state = "true";
@@ -495,6 +511,7 @@ public class RecipeServlet extends MyUploadServlet {
 			}
 			
 			List<RecipeProduct> list = dto.getRecipeProduct();
+			
 			for(RecipeProduct product : list) {
 				product.setName(product.getName());
 				product.setQuantity(product.getQuantity());

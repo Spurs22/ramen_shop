@@ -204,7 +204,7 @@
 		<%-- 구분 --%>
 		
 		<div class="write-step2" style="display: none;">
-		<form name="recipeForm" method="post">
+		<form name="recipeForm" method="post" enctype="multipart/form-data">
 			<table class="contenttb">
 				<tr>
 					<td>
@@ -232,6 +232,12 @@
 				</tr>
 				<tr>
 					<td colspan="2"><textarea class="contenttxt" name="content" id="content">${dto.content}</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="padding: 15px; font-size: 20px; font-weight: bold;">사진</td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="file" class="form-control" aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" id="productImgInput"></td>
 				</tr>
 			</table>
 			

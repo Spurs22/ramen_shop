@@ -111,7 +111,7 @@
 			object-fit: cover;
 			border-radius: 10px;
         }
-
+        
         .product-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -215,7 +215,7 @@
 				<div class="product-container">
 					<c:forEach var="recipe" items="${list}">
 						<div class="product-item" style="position:relative;">
-							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.imgName == null ? "default2.png" : recipe.imgName}">
+							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.picture == null ? "default2.png" : recipe.picture}">
 							${recipe.name}
 							<div style="background: #f5cf73; border-radius: 20px; position: absolute; right: -8px; top: -8px; width: 50px; text-align: center; padding: 5px 8px; border: 1px solid black; font-weight: 550">x ${recipe.quantity}</div>
 						</div>
