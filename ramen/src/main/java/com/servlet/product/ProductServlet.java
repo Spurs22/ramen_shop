@@ -70,6 +70,8 @@ public class ProductServlet extends MyUploadServlet {
 			}
 		} else if (uri.contains("list")) {
 			list(req, resp);
+		} else if (uri.contains("delete-board")) {
+			deleteBoard(req, resp);
 		} else if (uri.contains("delete")) {
 			delete(req, resp);
 		} else if (uri.contains("comment-form" )) {
@@ -100,6 +102,8 @@ public class ProductServlet extends MyUploadServlet {
 			validProductName(req, resp);
 		} else if (uri.contains("manage-product")) {
 			manageProduct(req, resp);
+		} else if (uri.contains("sample")) {
+			sample(req, resp);
 		}
 	}
 
@@ -502,11 +506,13 @@ public class ProductServlet extends MyUploadServlet {
 
 			String currentPicture = productService.findProductByProductId(productId).getPicture();
 
-			// 업로드한 파일이 있다면
+			// 업로드한 파일이 있고, 현재 파일이 있다면 현재 파일 삭제 후 새 파일 업로드.
 			if (fileName != null && currentPicture != null) {
 				FileManager.doFiledelete(path, currentPicture);
 				System.out.println(currentPicture + " 삭제");
 				System.out.println(fileName + " 생성");
+			} else if (fileName == null && currentPicture != null) { // 업로드한 파일이 없고, 현재 파일이 있다면 현재 파일을 객체에 다시 등록
+				fileName = currentPicture;
 			}
 
 			product.setPicture(fileName);
@@ -515,7 +521,7 @@ public class ProductServlet extends MyUploadServlet {
 
 			productService.editProduct(productId, product);
 
-			resp.sendRedirect(req.getContextPath() + "/product/list");
+			resp.sendRedirect(req.getContextPath() + "/product/manage-product");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -546,4 +552,40 @@ public class ProductServlet extends MyUploadServlet {
 			e.printStackTrace();
 		}
 	}
+
+	protected void sample(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			forward(req, resp, "/WEB-INF/views/mypage/mypage-home.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void deleteBoard(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+
+			SessionInfo sessionInfo = SessionUtil.getSessionFromSession(req);
+
+			if (sessionInfo == null) {
+				resp.sendRedirect(req.getContextPath() + "/product/list");
+				return;
+			}
+
+			Long productId = Long.valueOf(req.getParameter("id"));
+			Long memberId = sessionInfo.getMemberId();
+			Long userRoll = sessionInfo.getUserRoll();
+			int i = productBoardService.deletePost(memberId, userRoll, productId);
+
+			if (i == 0) {
+				System.out.println("인증 성공");
+			}
+
+			resp.sendRedirect(req.getContextPath() + "/product/list");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 }

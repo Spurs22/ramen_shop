@@ -9,8 +9,8 @@
 	<style>
 		.product-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 250px;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 340px;
             padding: 20px;
             gap: 30px;
             height: 90%;
@@ -20,13 +20,13 @@
         .product-item {
             width: 100%;
             height: 100%;
-            border-radius: 10px;
+            border-radius: 40px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 3px;
-            padding: 15px;
+            justify-content: space-between;
+            align-items: start;
+            gap: 5px;
+            padding: 25px 30px 30px 30px;
             transition: 0.5s;
             background: #ffffff;
             border: 1px solid #DFE2E6;
@@ -36,7 +36,9 @@
             width: 100%;
             height: 150px;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 20px;
+			border: 1px solid lightgrey;
+			margin: 10px 0;
         }
 
         .product-item:hover {
@@ -124,16 +126,23 @@
 				</form>
 			</div>
 			
-		<div class="content-container" style="height: 85%">
+		<div class="content-container" style="">
 			<div class="product-container" id="resultForm">
 				<c:forEach var="recipe" items="${list}">
-					<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=${recipe.id}" style="padding: 30px;"> 
+					<a class="product-item shadow" href="${pageContext.request.contextPath}/recipe/recipe.do?id=${recipe.id}" style="">
+
+						<div style="display: flex; flex-direction: row;justify-content: space-between; width: 100%">
+							<div style="font-size: 14px"><i class="fa-solid fa-eye"></i> ${recipe.hitCount}</div>
+							<div style="font-size: 14px;">${recipe.createdDate}</div>
+						</div>
+
+						<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
+							<div style="font-size: 14px;">작성자 : ${recipe.nickname}</div>
+							<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
+						</div>
+
 						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.picture == null ? "default2.png" : recipe.picture}">
-						<div style="font-weight: bold;">${recipe.subject}</div>
-						<div>${recipe.nickname}</div>
-						<div style="font-size: 14px">조회 수 : ${recipe.hitCount} 회</div>
-						<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
-						<div style="font-size: 14px">${recipe.createdDate}</div>
+						<div style="font-weight: bold; text-align: center; width: 100%; margin-top: 5px">${recipe.subject}</div>
 					</a>
 				</c:forEach>
 			</div>

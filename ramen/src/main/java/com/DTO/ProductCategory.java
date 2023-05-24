@@ -4,8 +4,7 @@ public enum ProductCategory {
 
 		BONGJI(1, "봉지 라면"),
 		CUP(2, "컵 라면"),
-		BIBIM(3, "비빔 라면"),
-		TOPPING(4, "토핑");
+		TOPPING(3, "토핑");
 
 		private int value;
 		private String label;

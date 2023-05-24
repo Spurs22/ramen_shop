@@ -57,7 +57,7 @@
             width: 100%;
             height: 50px;
             display: grid;
-            grid-template-columns: 20% 30% 25% 10% 15%;
+            grid-template-columns: 20% 30% 20% 18% 12%;
             border-radius: 5px;
             text-align: center;
             padding: 0 5px;
@@ -114,7 +114,7 @@
 				<c:forEach var="product" items="${products}">
 					<div class="shadow-sm product-card">
 						<div style="height: 100%">
-							<img src="${pageContext.request.contextPath}/resource/picture/${product.picture}" style="height: 100px; width: 100px; object-fit: cover; border: 1px solid lightgray; border-radius: 5px"/>
+							<img src="${pageContext.request.contextPath}/resource/picture/${product.picture == null ? "default2.png" : product.picture}" style="height: 100px; width: 100px; object-fit: cover; border: 1px solid lightgray; border-radius: 5px"/>
 						</div>
 						<div>${product.name}</div>
 						<div>${product.category.label}</div>

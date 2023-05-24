@@ -109,6 +109,7 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
+
 			<%--	내용	 --%>
 			<div class="main-banner">
 				<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/00.jpg" style="object-fit: cover">

@@ -1,10 +1,13 @@
 package com.service.product;
 
 
+import com.DTO.Member;
 import com.DTO.ProductBoard;
 import com.DTO.ProductCategory;
+import com.repository.member.MemberRepository;
 import com.repository.product.ProductBoardRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ProductBoardServiceImpl implements ProductBoardService {
@@ -26,8 +29,14 @@ public class ProductBoardServiceImpl implements ProductBoardService {
 	}
 
 	@Override
-	public int deletePost(Long memberId, Long productId) {
-		return productBoardRepository.deletePost(memberId, productId);
+	public int deletePost(Long memberId, Long userRoll, Long productId) {
+		Long writerId = productBoardRepository.findPostByProductId(productId).getWriterId();
+		if (userRoll == 1 || writerId.equals(memberId)) {
+			productBoardRepository.deletePost(memberId, productId);
+		}  else {
+			return -1;
+		}
+		return 0;
 	}
 
 	@Override

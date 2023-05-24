@@ -9,8 +9,5 @@ public class EnumTest {
 		System.out.println(value.getValue());
 		System.out.println(value.getLabel());
 
-		ProductCategory bibim = ProductCategory.BIBIM;
-		System.out.println(bibim.getValue());
-		System.out.println(bibim.getLabel());
 	}
 }

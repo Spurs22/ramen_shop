@@ -200,19 +200,22 @@
 			<div style="display: flex; flex-direction: row; gap: 5px">
 				<c:if test="${sessionScope.member.userRoll == 1}">
 					<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-board?id=${post.product.productId}'">글 수정</button>
-					<button class="btn btn-secondary">글 삭제</button>
+					<button class="btn btn-secondary" onclick="deleteBtn()">글 삭제</button>
 				</c:if>
 			</div>
 		</div>
 
 		<div class="content-container">
 			<div style="display: flex; flex-direction: row; gap: 50px">
-				<div style="width: 50%; aspect-ratio: 1/1">
-					<img class="w-100 h-100" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}" style="object-fit: cover">
+				<div style="width: 50%; aspect-ratio: 1/1; padding: 30px; border: 1px solid black; border-radius: 3px">
+					<img class="w-100 h-100 product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? "default2.png" : post.product.picture}" style="object-fit: scale-down">
 				</div>
 
 				<div style="display: flex; flex-direction: column; gap: 15px; align-items: end; flex: 1; ">
-					<div class="product-createdDate">${post.createdDate}</div>
+					<div class="product-createdDate">${post
+
+
+					.createdDate}</div>
 					<div class="" style="">${post.product.category.label}</div>
 					<div class="flex-container">
 						<div style="position: relative">
@@ -271,7 +274,7 @@
 <%--						</div>--%>
 
 							<div style="border: 1px solid black; border-radius: 5px; padding: 10px; margin: 10px 0; gap: 15px; display: flex; flex-direction: column">
-								<div style="display: flex; flex-direction: row; gap: 5px;  justify-content: right">
+								<div style="display: flex; flex-direction: row; gap: 5px;  justify-content: right" id="quantityBundle">
 									<button class="btn btn-dark btnChange minus" onclick="$.clickChangeBtn(this)">-</button>
 									<input type="number" id="cartQuantityInput" style="width: 50px; text-align: center" value="1">
 									<button class="btn btn-dark btnChange plus" onclick="$.clickChangeBtn(this)">+</button>
@@ -394,11 +397,36 @@
 </div>
 
 <script>
+
+
+
     $(document).ready(function () {
-        $('#productPrice').text(${post.price})
-		$('#remainQuantity').text(${post.product.remainQuantity} - 1)
+
         selectMenu(menuIndex)
-    })
+
+        //품절일 때
+        if (${post.product.remainQuantity == 0}) {
+            $('#productPrice').text('품절');
+            console.log($('#productPrice').next().text(''))
+            $('#quantityBundle').css('display', 'none');
+            // $('#remainQuantity').parent().css('display', 'none')
+            $('#remainQuantity').text(0)
+			$('#addCartBtn').parent().css('display', 'none')
+
+        } else {
+            $('#productPrice').text(${post.price})
+            $('#remainQuantity').text(${post.product.remainQuantity} - 1)
+        }
+    });
+
+    $(function () {
+    });
+
+    function deleteBtn() {
+        if (confirm('게시글을 삭제하시겠습니까?\n게시글과 관련된 모든 글(댓글, 좋아요, 등) 이 삭제됩니다.')) {
+            location.href='${pageContext.request.contextPath}/product/delete-board?id=${post.product.productId}';
+        }
+    }
 </script>
 
 <script>
