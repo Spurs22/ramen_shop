@@ -22,7 +22,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		long seq;
 		
 		try {
-			sql = "SELECT notice__board_seq.NEXTVAL FROM dual";
+			sql = "SELECT notice_board_seq.NEXTVAL FROM dual";
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
@@ -38,8 +38,8 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			rs = null;
 			pstmt = null;
 			
-			sql = "INSERT INTO notice_board(id, member_id, subject, content, ip_address, hit_count, notice, created_date ) "
-					+ "  VALUES (?, ?, ?, ?, ?, 0, ?, SYSDATE) ";
+			sql = "INSERT INTO notice_board(id, member_id, subject, content, hit_count, notice, created_date, ip_address ) "
+					+ "  VALUES (?, ?, ?, ?, 0, ?, SYSDATE, ?) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -47,8 +47,8 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			pstmt.setLong(2, dto.getMemberId());
 			pstmt.setString(3, dto.getSubject());
 			pstmt.setString(4, dto.getContent());
-			pstmt.setString(5, dto.getIpAddress());
-			pstmt.setInt(6, dto.getNotice());
+			pstmt.setInt(5, dto.getNotice());
+			pstmt.setString(6, dto.getIpAddress());
 			
 			pstmt.executeUpdate();
 			
@@ -100,14 +100,14 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		
 		try {
 			sql = "SELECT NVL(COUNT(*), 0) FROM notice_board n "
-					+ "  JOIN member m ON n.member_id=m.id ";
+					+ "  JOIN member m ON n.member_id = m.id ";
 			
 			if(condition.equals("all")) {
 				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
 			
-			} else if(condition.equals("created_date")) {
+			} else if(condition.equals("createdDate")) {
 				keyword = keyword.replaceAll("(\\-|\\.|\\/)", "");
-				sql += "  WHERE INSTR(n.created_date, 'YYYYMMDD') = ? ";
+				sql += "  WHERE TO_CHAR(n.created_date, 'YYYYMMDD') = ? ";
 				
 			} else {
 				sql += "  WHERE INSTR(" +condition+ ", ?) >= 1 ";
@@ -188,14 +188,14 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		
 		try {
 			sb.append("SELECT n.id, member_id, subject, hit_count, n.created_date  ");
-			sb.append("  FROM notice_board n JOIN member m ON m.id=n.member_id ");
+			sb.append("  FROM notice_board n JOIN member m ON m.id = n.member_id ");
 			
 			if(condition.equals("all")) {
 				sb.append("  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ");
 				
 			} else if (condition.equals("createdDate")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sb.append(" WHERE INSTR (TO_CHAR(n.created_date, 'YYYYMMDD') = ? )");
+				sb.append(" WHERE TO_CHAR(n.created_date, 'YYYYMMDD') = ? ");
 				
 			} else {
 				sb.append(" WHERE INSTR(" + condition + ", ?) >= 1 ");
@@ -243,16 +243,16 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 
 	@Override
 	public List<Notice> listNotice() {
-		List<Notice> list = new ArrayList<>();
+		List<Notice> list = new ArrayList<Notice>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT n.id, member_id, subject, content, ip_address, hit_count,");
-			sb.append("       notice,  TO_CHAR(n.created_date, 'YYYY-MM-DD')created_date ");
+			sb.append("  SELECT n.id, member_id, subject, hit_count,");
+			sb.append("    TO_CHAR(n.created_date, 'YYYY-MM-DD') created_date ");
 			sb.append("  FROM notice_board n");
-			sb.append("  JOIN member m ON m.id=n.member_id ");
+			sb.append("  JOIN member m ON m.id = n.member_id ");
 			sb.append("  WHERE notice=1 ");
 			sb.append("  ORDER BY id DESC ");
 			
@@ -266,10 +266,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto.setId(rs.getLong("id"));
 				dto.setMemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setContent(rs.getString("content"));
-				dto.setIpAddress(rs.getString("ip_address"));
 				dto.setHitCount(rs.getInt("hit_count"));
-				dto.setNotice(rs.getInt("notice"));
 				dto.setCreatedDate(rs.getString("created_date"));
 				
 				list.add(dto);
@@ -296,7 +293,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		try {
 			sql = " SELECT n.id, member_id, subject, content, ip_address, hit_count, notice, n.created_date "
 					+ "  FROM notice_board n "
-					+ "  JOIN member m ON m.id=n.member_id "
+					+ "  JOIN member m ON m.id = n.member_id "
 					+ "  WHERE n.id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -339,14 +336,15 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			if(keyword != null && keyword.length() != 0) {
 				sb.append("  SELECT n.id, subject ");
 				sb.append("  FROM notice_board n ");
-				sb.append("  JOIN member m ON m.id=n.member_id ");
+				sb.append("  JOIN member m ON m.id = n.member_id ");
 				sb.append("  WHERE n.id > ?  ");
 				
 				if(condition.equals("all")) {
 					sb.append("  AND  (INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ) ");
-				} else if(condition.equals("created_date")) {
+					
+				} else if(condition.equals("createdDate")) {
 					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sb.append("  AND  TO_CHAR(n.created_date, 'YYYYMMDD') = ? ");
+					sb.append("  AND  (TO_CHAR(n.created_date, 'YYYYMMDD') = ?) ");
 				} else {
 					sb.append("  AND  INSTR(" +condition+ ", ?) >= 1 ");
 				}
@@ -402,15 +400,16 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			if(keyword != null && keyword.length() != 0) {
 				sb.append("  SELECT n.id, subject ");
 				sb.append("  FROM  notice_board n ");
-				sb.append("  JOIN member m ON m.id=n.member_id ");
-				sb.append("  WHERE n.id < ? ");
+				sb.append("  JOIN member m ON m.id = n.member_id ");
+				sb.append("  WHERE (n.id < ?) ");
+				
 				if(condition.equals("all")) {
-					sb.append("  AND ( INSTR(subject, ?) >= 1 OR  INSTR(content, ?) >= 1) ");
+					sb.append("  AND (INSTR(subject, ?) >= 1 OR  INSTR(content, ?) >= 1) ");
 				} else if (condition.equals("createdDate")) {
 					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-					sb.append("  AND TO_CHAR(n.created_date, 'YYYYMMDD') = ? ");
+					sb.append("  AND (TO_CHAR(n.created_date, 'YYYYMMDD') = ?) ");
 				} else {
-					sb.append("  AND  INSTR(" +condition+ ", ?) >= 1 ");
+					sb.append("  AND  (INSTR(" +condition+ ", ?) >= 1) ");
 				}
 				sb.append("  ORDER BY id DESC");
 				sb.append("  FETCH FIRST 1 ROWS ONLY ");
@@ -423,7 +422,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 					pstmt.setString(3, keyword);
 				}
 			} else {
-				sb.append("  SELECT n.id, subject FROM notice_board n ");
+				sb.append("  SELECT id, subject FROM notice_board ");
 				sb.append("  WHERE id < ? ");
 				sb.append("  ORDER BY id DESC ");
 				sb.append("  FETCH FIRST 1 ROWS ONLY ");
@@ -480,14 +479,10 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		String sql;
 		
 		try {
-			sql = " UPDATE notice_board SET notice=?, subject=?, content=? "
-					+ "  WHERE id =?";
+			sql = " UPDATE notice_board SET notice=?, subject=?, content=? WHERE id = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 	
-			
-			
-			
 			pstmt.setInt(1, dto.getNotice());
 			pstmt.setString(2, dto.getSubject());
 			pstmt.setString(3, dto.getContent());
@@ -538,7 +533,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			for(int i = 0; i< ids.length; i++) {
 				sql += "?,"; 
 			}
-			sql = sql.substring(0, sql.length() - 1 ) + ")";
+			sql = sql.substring(0, sql.length() - 1) + ")";
 			
 			pstmt = conn.prepareStatement(sql);
 			

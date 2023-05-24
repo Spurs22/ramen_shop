@@ -127,12 +127,12 @@ public class NoticeServlet extends MyServlet {
 			Date curDate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-			for(Notice dto : list) {
-				Date date = sdf.parse(dto.getCreatedDate());
+			for(Notice notice : list) {
+				Date date = sdf.parse(notice.getCreatedDate());
 				gap = (curDate.getTime() - date.getTime()) / (1000 * 60 * 60);
-				dto.setGap(gap);
+				notice.setGap(gap);
 				
-				dto.setCreatedDate(dto.getCreatedDate().substring(0, 10));
+				notice.setCreatedDate(notice.getCreatedDate().substring(0, 10));
 			}
 			
 			String query = "";
@@ -190,14 +190,14 @@ public class NoticeServlet extends MyServlet {
 
 	protected void writeSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 글 저장
-		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl noticerepository = new NoticeRepositoryImpl();
 		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		String cp = req.getContextPath();
-		String size = req.getParameter("size");
-		//if(size == null) size = "10";
+		// String size = req.getParameter("size");
+		// if(size == null) size = "10";
 		
 		if (req.getMethod().equalsIgnoreCase("GET")) {
 			resp.sendRedirect(cp+ "/notice/list.do");
@@ -222,20 +222,20 @@ public class NoticeServlet extends MyServlet {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 			
-			dao.insertNotice(dto);
+			noticerepository.insertNotice(dto);
+			// noticerepository.insertNotice(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp + "/notice/list.do?size=" +size);
+		resp.sendRedirect(cp + "/notice/list.do");
 	}
 	
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 글보기
 		
 		String cp = req.getContextPath();
-		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
-		MyUtil util = new MyUtil();
+		NoticeRepositoryImpl noticerepository = new NoticeRepositoryImpl();
 		
 		String page = req.getParameter("page");
 		String size = req.getParameter("size");
@@ -257,21 +257,19 @@ public class NoticeServlet extends MyServlet {
 			}
 			
 			// 조회수 증가
-			dao.updateHitCount(id);
+			noticerepository.updateHitCount(id);
 			
 			// 게시물 가져오기
-			Notice dto = dao.readNotice(id);
+			Notice dto = noticerepository.readNotice(id);
 			if(dto == null) {
 				resp.sendRedirect(cp+ "/notice/list.do?" +query);
 				return;
 			}
-			dto.setContent(util.htmlSymbols(dto.getContent()));
-			
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 			
 			// 이전글, 다음글
-			Notice preReadDto = dao.preReadNotice(dto.getId(), condition, keyword);
-			Notice nextReadDto = dao.nextReadNotice(dto.getId(), condition, keyword);
+			Notice preReadDto = noticerepository.preReadNotice(dto.getId(), condition, keyword);
+			Notice nextReadDto = noticerepository.nextReadNotice(dto.getId(), condition, keyword);
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("query", query);
@@ -305,21 +303,22 @@ public class NoticeServlet extends MyServlet {
 			return;
 		}
 		
-		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl noticerepository = new NoticeRepositoryImpl();
 		
 		try {
 			long id = Long.parseLong(req.getParameter("id"));
 			
-			Notice dto = dao.readNotice(id);
+			Notice dto = noticerepository.readNotice(id);
 			
 			if(dto == null) {
-				resp.sendRedirect(cp+ "/notice/list.do?page=" +page+ "&size=" +size );
+				resp.sendRedirect(cp+ "/notice/list.do");
 				return;
 			}
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("page", page);
 			req.setAttribute("size", size);
+			
 			req.setAttribute("mode", "update");
 			
 			forward(req, resp, "/WEB-INF/views/notice/write.jsp");
@@ -329,7 +328,7 @@ public class NoticeServlet extends MyServlet {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp+ "/notice/list.do?page=" +page+ "&size=" +size);
+		resp.sendRedirect(cp+ "/notice/list.do");
 	}
 	
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -350,10 +349,10 @@ public class NoticeServlet extends MyServlet {
 			return;
 		}
 		
-		String page = req.getParameter("page");
-		String size = req.getParameter("size");
+		// String page = req.getParameter("page");
+		// String size = req.getParameter("size");
 		
-		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl noticerepository = new NoticeRepositoryImpl();
 		
 		try {
 			Notice dto = new Notice();
@@ -365,17 +364,17 @@ public class NoticeServlet extends MyServlet {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 
-			dao.updateNotice(dto);
+			noticerepository.updateNotice(dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp+ "/notice/list.do?page=" +page+ "&size=" +size);
+		resp.sendRedirect(cp+ "/notice/list.do");
 	}
 	
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		NoticeRepositoryImpl dao = new NoticeRepositoryImpl();
+		NoticeRepositoryImpl noticerepository = new NoticeRepositoryImpl();
 		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -400,13 +399,13 @@ public class NoticeServlet extends MyServlet {
 				condition = "all";
 				keyword = "";
 			}
-			keyword = URLDecoder.decode(keyword, "utf-8");
+			keyword = URLDecoder.decode(keyword, "UTF-8");
 			
 			if (keyword.length() != 0) {
-				query += "&condition=" +condition+ "&keyword=" +URLEncoder.encode(keyword, "utf-8");
+				query += "&condition=" +condition+ "&keyword=" +URLEncoder.encode(keyword, "UTF-8");
 			}
 			
-			Notice dto = dao.readNotice(id);
+			Notice dto = noticerepository.readNotice(id);
 			
 			if (dto == null) {
 				resp.sendRedirect(cp+ "/notice/list.do?" +query);
@@ -414,7 +413,7 @@ public class NoticeServlet extends MyServlet {
 			}
 			
 	
-			dao.deleteNotice(id);
+			noticerepository.deleteNotice(id);
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -450,13 +449,13 @@ public class NoticeServlet extends MyServlet {
 			String[] nn = req.getParameterValues("ids");
 			Long ids[] = null;
 			ids = new Long[nn.length];
-			for (int i = 0; i < nn.length; i++) {
+			for(int i = 0; i < nn.length; i++) {
 				ids[i] = Long.parseLong(nn[i]);
 			}
 			
-			NoticeRepositoryImpl noticeRep = new NoticeRepositoryImpl();
+			NoticeRepositoryImpl noticerepository = new NoticeRepositoryImpl();
 			
-			noticeRep.deleteNoticeList(ids);
+			noticerepository.deleteNoticeList(ids);
 			
 			
 		} catch (Exception e) {

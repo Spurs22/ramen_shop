@@ -5,6 +5,8 @@
 	<title>Title</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/board2.css" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <style type="text/css">
 .body-main {
@@ -21,13 +23,13 @@
     let menuIndex = 4
     
     <c:if test="${sessionScope.member.userRoll==1}">
-    function deleteNotice() {
-        if(confirm("게시글을 삭제 하시 겠습니까 ? ")) {
-            let query = "id=${dto.id}&${query}";
-            let url = "${pageContext.request.contextPath}/notice/delete.do?" + query;
-        	location.href = url;
-        }
-    }
+	    function deleteNotice() {
+	        if(confirm("게시글을 삭제 하시겠습니까 ? ")) {
+	            let query = "id=${dto.id}&${query}";
+	            let url = "${pageContext.request.contextPath}/notice/delete.do?" + query;
+	        	location.href = url;
+	        }
+	    }
     </c:if>
 </script>
 <body>
@@ -39,8 +41,11 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			<div class="body-main mx-auto">
-			<table class="table table-border table-article">
+			<div class="body-title">
+				<h3><i class="bi bi-clipboard-check"></i>공지사항</h3>
+			</div>
+			<div class="body-main">
+			<table class="table">
 				<thead>
 					<tr>
 						<td colspan="2" align="center">
@@ -55,7 +60,7 @@
 							이름 : ${sessionScope.member.userNickname}
 						</td>
 						<td align="right">
-							${dto.createdDate} | 조회 ${dto.hitCount}
+							${dto.createdDate} | 조회 수  ${dto.hitCount}
 						</td>
 					</tr>
 					
@@ -85,29 +90,29 @@
 				</tbody>
 			</table>
 			
-			<table class="table">
+			<table class="table table-borderless">
 				<tr>
 					<td width="50%">
 						<c:choose>
-							<c:when test="${sessionScope.member.userRoll==1}">
-								<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/notice/update.do?id=${dto.id}&page=${page}&size=${size}';">수정</button>
+							<c:when test="${sessionScope.member.userRoll == 1}">
+								<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/notice/update.do?id=${dto.id}';">수정</button>
 							</c:when>
 							<c:otherwise>
-								<button type="button" class="btn" disabled="disabled">수정</button>
+								<button type="button" class="btn btn-light" disabled="disabled">수정</button>
 							</c:otherwise>
 						</c:choose>
 				    	
 						<c:choose>
-				    		<c:when test="${sessionScope.member.userRoll==1}">
-				    			<button type="button" class="btn" onclick="deleteNotice();">삭제</button>
+				    		<c:when test="${sessionScope.member.userRoll == 1}">
+				    			<button type="button" class="btn btn-light" onclick="deleteNotice();">삭제</button>
 				    		</c:when>
 				    		<c:otherwise>
-				    			<button type="button" class="btn" disabled="disabled">삭제</button>
+				    			<button type="button" class="btn btn-light" disabled="disabled">삭제</button>
 				    		</c:otherwise>
 				    	</c:choose>
 					</td>
-					<td align="right">
-						<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
+					<td class="text-end">
+						<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
 					</td>
 				</tr>
 			</table>
