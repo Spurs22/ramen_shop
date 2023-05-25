@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
+import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeProduct;
 import com.DTO.SessionInfo;
@@ -54,10 +55,10 @@ public class MyPageServlet extends MyServlet {
 		
 		if(uri.indexOf("main.do") != -1 ) {
 			main(req, resp);
-		
-		} else if (uri.indexOf("productArticle.do") != -1) {
-			// 상품 상세페이지
-			productArticle(req, resp);
+			
+		} else if(uri.indexOf("productLikeList.do") != -1) {
+			// 내가 찜한 상품 리스트
+			productLikeList(req, resp);
 			
 		} else if (uri.indexOf("recipeLikeList.do") != -1) {
 			// 내가 좋아요 한 조합레시피 리스트
@@ -94,10 +95,33 @@ public class MyPageServlet extends MyServlet {
 		forward(req, resp, "/WEB-INF/views/my_page/main.jsp");
 	}
 	
-	protected void productArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 상품 상세 페이지
-		forward(req, resp, "/WEB-INF/views/recipe/recipe-info.jsp");
+	protected void productLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 내가 찜한 상품리스트
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String cp = req.getContextPath();
+			
+			
+		try {
+			int dataCount = productLikeService.getCntLikePost(info.getMemberId());
+			
+			List<ProductBoard> list = productLikeService.findLikePostById(info.getMemberId());
+			
+			String articleUrl = cp + "/mypage/productArticle.do";
+			
+			req.setAttribute("list", list);
+			req.setAttribute("dataCount", dataCount);
+			req.setAttribute("articleUrl", articleUrl);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		forward(req, resp, "/WEB-INF/views/my_page/productLikeList.jsp");
+		
 	}
+	
 	
 	protected void recipeLikeList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 내가 좋아요 한 조합레시피 리스트
