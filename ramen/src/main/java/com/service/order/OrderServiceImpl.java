@@ -48,4 +48,9 @@ public class OrderServiceImpl implements OrderService{
 		return orderRepository.ListItems(orderId);
 	}
 
+	@Override
+	public OrderItem findByOrderItemId(Long orderItemId) {
+		return orderRepository.findByOrderItemId(orderItemId);
+	}
+
 }

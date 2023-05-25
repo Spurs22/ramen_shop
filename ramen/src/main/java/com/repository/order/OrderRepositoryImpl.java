@@ -231,7 +231,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT oi.product_id, order_id, status_id, quantity, price, name "
+			sql = "SELECT oi.id, oi.product_id, order_id, status_id, quantity, price, name "
 					+ " FROM order_item oi JOIN product p ON p.id = oi.product_id "
 					+ " WHERE order_id = ? ";
 			pstmt = conn.prepareStatement(sql);
@@ -241,12 +241,13 @@ public class OrderRepositoryImpl implements OrderRepository{
 			
 			while(rs.next()) {
 				OrderItem orderItem = new OrderItem();
-				orderItem.setProductId(rs.getLong(1));
-				orderItem.setOrderItemId(rs.getLong(2));
-				orderItem.setStatusId(rs.getLong(3));
-				orderItem.setQuantity(rs.getInt(4));
-				orderItem.setPrice(rs.getLong(5));
-				orderItem.setProductName(rs.getString(6));
+				orderItem.setOrderItemId(rs.getLong(1));
+				orderItem.setProductId(rs.getLong(2));
+				orderItem.setOrderBundleId(rs.getLong(3));
+				orderItem.setStatusId(rs.getLong(4));
+				orderItem.setQuantity(rs.getInt(5));
+				orderItem.setPrice(rs.getLong(6));
+				orderItem.setProductName(rs.getString(7));
 				
 				list.add(orderItem);
 			}
@@ -258,6 +259,42 @@ public class OrderRepositoryImpl implements OrderRepository{
 		}
 		
 		return list;
+	}
+
+	// [주문아이템 번호에 해당하는 아이템 조회]
+	@Override
+	public OrderItem findByOrderItemId(Long orderItemId) {
+		OrderItem orderItem = new OrderItem();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT id, product_id, order_id, status_id, quantity, price, final_price\r\n"
+					+ "FROM order_item WHERE orderItemId = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, orderItemId);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				orderItem = new OrderItem();
+				orderItem.setOrderItemId(rs.getLong(1));
+				orderItem.setProductId(rs.getLong(2));
+				orderItem.setOrderBundleId(rs.getLong(3));
+				orderItem.setStatusId(rs.getLong(4));
+				orderItem.setQuantity(rs.getInt(5));
+				orderItem.setPrice(rs.getLong(6));
+				orderItem.setFinalPrice(orderItemId);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt, rs);
+		}
+		
+		return orderItem;
 	}
 
 

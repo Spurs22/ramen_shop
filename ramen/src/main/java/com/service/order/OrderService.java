@@ -26,4 +26,7 @@ public interface OrderService {
 	
 	//[ 주문번호에 해당하는 물품리스트 조회 ]
 	List<OrderItem> ListItems(Long orderId); 
+	
+	//[주문아이템 번호에 해당하는 아이템 조회]
+	OrderItem findByOrderItemId(Long orderItemId);
 }
