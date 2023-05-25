@@ -615,8 +615,10 @@ public class ProductServlet extends MyUploadServlet {
 
 	protected void reviewConfirm(HttpServletRequest req, HttpServletResponse resp) {
 		try {
+
 			String content = req.getParameter("content");
-			Float rating = Float.valueOf(req.getParameter("rating"));
+			Double rating = Double.valueOf(req.getParameter("rating"));
+			Long productId = Long.valueOf(req.getParameter("product-id"));
 
 			Long memberId = SessionUtil.getMemberIdFromSession(req);
 
@@ -624,8 +626,11 @@ public class ProductServlet extends MyUploadServlet {
 				resp.sendRedirect(req.getContextPath() + "/home");
 				return;
 			}
+			ProductComment comment = new ProductComment(memberId, productId, rating, content);
 
-			
+			productCommentService.createComment(comment);
+
+			resp.sendRedirect(req.getContextPath() + "/product/post-board?id=" + productId);
 
 		} catch (Exception e) {
 			e.printStackTrace();

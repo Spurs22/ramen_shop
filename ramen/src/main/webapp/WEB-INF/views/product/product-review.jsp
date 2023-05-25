@@ -128,6 +128,7 @@
 						<div class="rating-container">
 							<div class="rating-label">평점을 매겨주세요</div>
 							<input type="hidden" name="rating" id="rating" value="0">
+							<input type="hidden" name="product-id" value="${post.product.productId}">
 							<div class="starBundle">
 								<i class="fa-regular fa-star rate"></i>
 								<i class="fa-regular fa-star rate"></i>

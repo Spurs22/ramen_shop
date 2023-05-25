@@ -32,6 +32,13 @@ public class ProductComment {
 		this.content = content;
 	}
 
+	public ProductComment(Long writerId, Long boardId, Double rating, String content) {
+		this.writerId = writerId;
+		this.boardId = boardId;
+		this.rating = rating;
+		this.content = content;
+	}
+
 	public Long getWriterId() {
 		return writerId;
 	}
