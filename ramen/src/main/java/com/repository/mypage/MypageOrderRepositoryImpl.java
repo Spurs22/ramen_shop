@@ -117,12 +117,13 @@ public class MypageOrderRepositoryImpl implements MypageOrderRepository {
 	    
 	    try {
 			sb.append("  SELECT oi.id, oi.product_id, oi.order_id, oi.status_id, oi.quantity, oi.price, ");
-			sb.append("  (quantity*price) as total, os.status_name ");
+			sb.append("  (quantity*price) as total, os.status_name, p.name, p.picture ");
 			sb.append("  FROM order_item oi ");
 			sb.append("  LEFT JOIN order_bundle ob ON ob.id = oi.order_id ");
 			sb.append("  JOIN order_status os ON os.id = oi.status_id ");
+			sb.append("  JOIN product p ON p.id = oi.product_id ");
 			sb.append("  WHERE oi.order_id = ? ");
-			sb.append("  GROUP BY oi.id, oi.product_id, oi.order_id, oi.status_id, oi.quantity, oi.price, os.status_name ");
+			sb.append("  GROUP BY oi.id, oi.product_id, oi.order_id, oi.status_id, oi.quantity, oi.price, os.status_name, p.name, p.picture ");
 			sb.append("  ORDER BY oi.product_id DESC ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
@@ -142,6 +143,8 @@ public class MypageOrderRepositoryImpl implements MypageOrderRepository {
 				dto.setPrice(rs.getLong(6));
 				dto.setTotalPrice(rs.getLong(7));
 				dto.setStatusName(rs.getString(8));
+				dto.setProductName(rs.getString(9));
+				dto.setPicture(rs.getString(10));
 				
 				listitem.add(dto);
 			}

@@ -129,8 +129,6 @@
 		.fa-trash-can:hover {
 			transform: scale(1.1);
 		}
-		
-		
 		.cart-box table {
 		    margin: 0px auto;
 		    

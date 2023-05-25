@@ -299,7 +299,7 @@
 				<form name="replyForm" method="post">
 					<div class="form-header">
 						<span style="font-weight: bold"><i class="fa-regular fa-comment"></i> 댓글 <span
-								id="replyCount">${replyCount}개</span></span>
+								id="replyCount">${replyCount}</span></span>
 					</div>
 
 					<div style="width: 100%; text-align: right; margin-top: 10px">
