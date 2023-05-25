@@ -395,10 +395,10 @@ public class ProductServlet extends MyUploadServlet {
 			}
 
 			Long productId = Long.valueOf(req.getParameter("product-id"));
-			Long orderId = Long.valueOf(req.getParameter("order-id"));
+			Long orderItemId = Long.valueOf(req.getParameter("order-id"));
 
 			// 이미 남긴 리뷰가 있는지, 구매했는지, 확인
-			OrderItem orderItem = orderService.findByOrderItemId(orderId);
+			OrderItem orderItem = orderService.findByOrderItemId(orderItemId);
 			List<ProductComment> productComment = productCommentService.findCommentsByProductId(productId);
 			boolean check = false;
 			for (ProductComment comment : productComment) {
@@ -420,6 +420,7 @@ public class ProductServlet extends MyUploadServlet {
 			}
 
 			req.setAttribute("post", post);
+			req.setAttribute("orderItemId", orderItemId);
 
 			String path = "/WEB-INF/views/product/product-review.jsp";
 			forward(req, resp, path);
@@ -619,6 +620,7 @@ public class ProductServlet extends MyUploadServlet {
 			String content = req.getParameter("content");
 			Double rating = Double.valueOf(req.getParameter("rating"));
 			Long productId = Long.valueOf(req.getParameter("product-id"));
+			Long orderItemId = Long.valueOf(req.getParameter("order-item-id"));
 
 			Long memberId = SessionUtil.getMemberIdFromSession(req);
 
@@ -626,7 +628,8 @@ public class ProductServlet extends MyUploadServlet {
 				resp.sendRedirect(req.getContextPath() + "/home");
 				return;
 			}
-			ProductComment comment = new ProductComment(memberId, productId, rating, content);
+			ProductComment comment = new ProductComment(memberId, orderItemId, rating, content);
+			System.out.println(comment);
 
 			productCommentService.createComment(comment);
 

@@ -367,11 +367,11 @@
 							${comment.content}
 						</div>
 
-						<div class="comment-img-container">
-							<img src="${pageContext.request.contextPath}/resource/picture/1.png">
-							<img src="${pageContext.request.contextPath}/resource/picture/1.png">
-							<img src="${pageContext.request.contextPath}/resource/picture/1.png">
-						</div>
+<%--						<div class="comment-img-container">--%>
+<%--							<img src="${pageContext.request.contextPath}/resource/picture/1.png">--%>
+<%--							<img src="${pageContext.request.contextPath}/resource/picture/1.png">--%>
+<%--							<img src="${pageContext.request.contextPath}/resource/picture/1.png">--%>
+<%--						</div>--%>
 					</div>
 
 				</c:forEach>
@@ -385,13 +385,8 @@
 </footer>
 
 <script>
-
-
-
     $(document).ready(function () {
-
         selectMenu(menuIndex)
-
         //품절일 때
         if (${post.product.remainQuantity == 0}) {
             $('#productPrice').text('품절');
@@ -405,9 +400,6 @@
             $('#productPrice').text(${post.price})
             $('#remainQuantity').text(${post.product.remainQuantity} - 1)
         }
-    });
-
-    $(function () {
     });
 
     function deleteBtn() {

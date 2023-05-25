@@ -20,7 +20,7 @@ public class ProductCommentRepositoryImpl implements ProductCommentRepository {
 		String sql;
 
 		try {
-			sql = "INSERT INTO PRODUCT_COMMENT (MEMBER_ID, PRODUCT_BOARD_ID, RATING, PRODUCT_BOARD_COMMENT, CREATED_DATE)" +
+			sql = "INSERT INTO PRODUCT_COMMENT (MEMBER_ID, ORDER_ITEM_ID, RATING, PRODUCT_BOARD_COMMENT, CREATED_DATE)" +
 					" VALUES (?,?,?,?, sysdate)";
 
 			pstmt = conn.prepareStatement(sql);
