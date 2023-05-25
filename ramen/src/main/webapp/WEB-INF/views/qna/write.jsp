@@ -5,6 +5,8 @@
 	<title>Title</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/board2.css" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 	<style type="text/css">
 	.body-main { max-width: 800px; padding-top: 15px; }
@@ -21,7 +23,7 @@
 <script type="text/javascript">
     let menuIndex = 4
     
-    function sendBoard() {
+    function sendOk() {
         const f = document.boardForm;
     	let str;
     	
@@ -56,39 +58,39 @@
 			<div class="container body-container">
 			    <div class="body-title">
 					<h2><i class="fas fa-chalkboard-teacher"></i> 질문과 답변 </h2>
-			    </div>ㄴ
+			    </div>
 			    
-			    <div class="body-main mx-auto">
+			    <div class="body-main">
 					<form name="boardForm" method="post">
-						<table class="table table-border table-form">
+						<table class="table write-form mt-5">
 							<tr> 
-								<td>제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+								<td class="table-light col-sm-2" scope="row">제목</td>
 								<td> 
-									<input type="text" name="subject" maxlength="100" class="form-control" value="${dto.subject}">
+									<input type="text" name="subject" class="form-control" value="${dto.subject}">
 								</td>
 							</tr>
 							
 							<tr> 
-								<td>작성자</td>
+								<td class="table-light col-sm-2" scope="row">작성자명</td>
 								<td> 
-									<p>${sessionScope.member.userNickname}</p>
+									<p class="form-control-plaintext">${sessionScope.member.userNickname}</p>
 								</td>
 							</tr>
 							
 							<tr> 
-								<td valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+								<td class="table-light col-sm-2" scope="row">내용</td>
 								<td> 
-									<textarea name="content" class="form-control">${dto.content}</textarea>
+									<textarea name="content" id="content" class="form-control">${dto.content}</textarea>
 								</td>
 							</tr>
 						</table>
 						
-						<table class="table">
+						<table class="table table-borderless">
 							<tr> 
-								<td align="center">
-									<button type="button" class="btn" onclick="sendBoard();">${mode=='update'?'수정완료':(mode=='reply'? '답변완료':'등록하기')}</button>
-									<button type="reset" class="btn">다시입력</button>
-									<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">${mode=='update'?'수정취소':(mode=='reply'? '답변취소':'등록취소')}</button>
+								<td class="text-center">
+									<button type="button" class="btn btn-dark" onclick="sendOk();">${mode=='update'?'수정완료':(mode=='reply'? '답변완료':'등록하기')}</button>
+									<button type="reset" class="btn btn-light">다시입력</button>
+									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">${mode=='update'?'수정취소':(mode=='reply'? '답변취소':'등록취소')}</button>
 									<c:if test="${mode=='update'}">
 										<input type="hidden" name="id" value="${dto.id}">
 										<input type="hidden" name="page" value="${page}">
