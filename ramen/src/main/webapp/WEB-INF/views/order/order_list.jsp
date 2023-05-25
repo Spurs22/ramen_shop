@@ -200,7 +200,7 @@
 									   style="background: #ececec;"
 									   class="form-control" value="${order.address1}"
 									   readonly="readonly">
-								<input type="text" name="zip2" id="zip2" maxlength="7"
+								<input type="text" name="zip2" id="zip2" maxlength="10"
 									   class="form-control" value="${order.address2}">
 							</div>
 						</div>
