@@ -244,14 +244,14 @@ public class OrderServlet extends MyServlet {
 					//resp.sendRedirect(cp+"/cart/list.do?message="+message);
 					//return;
 				}
-				
-				long order_id = orderService.createOrderBundle(orderBundle, itemlist);
-				
 				// 장바구니에서 결제한 물품 초기화
 				cartService.deleteCart(memberId, c.getProductId());
-				
-				resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
 			}
+			
+			long order_id = orderService.createOrderBundle(orderBundle, itemlist);
+			resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
+			
+			
 			req.setAttribute("errorMessage", errorMessage);
 			req.setAttribute("message", message);
 			
