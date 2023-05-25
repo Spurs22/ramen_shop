@@ -211,10 +211,12 @@ public class OrderServlet extends MyServlet {
 			if(req.getParameter("oneProductId")!="") {
 				singleProductId = Long.parseLong(req.getParameter("oneProductId"));
 				int singleQuantity = Integer.parseInt(req.getParameter("oneQuantity"));
-				
+				String singlePicture = productService.findProductByProductId(singleProductId).getPicture();
+						
 				Cart cart = new Cart();
 				cart.setProductId(singleProductId);
 				cart.setQuantity(singleQuantity);
+				cart.setPicture(singlePicture);
 				list.add(cart);
 			}
 			

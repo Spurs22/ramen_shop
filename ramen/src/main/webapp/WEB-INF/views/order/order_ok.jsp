@@ -118,7 +118,11 @@
 
 							<c:forEach var="order" items="${list2}">
 								<tr>
-									<td class="itemtd"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100px;"></td>
+									<td class="itemtd">
+									<img class="product-img"
+												src="${pageContext.request.contextPath}/resource/picture/${order.picture}"
+												style="height: 100px;">
+									</td>
 									<td class="itemtd">${order.productName}</td>
 									<td class="itemtd">${order.quantity}</td>
 									<td class="itemtd">${order.price}</td>

@@ -10,9 +10,18 @@ public class OrderItem {
 	private Long price;
 	private Long finalPrice;
 	private Long totalPrice;
+	private String picture;
 	
 	private String productName;
 	private String statusName;
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 
 	public Long getOrderItemId() {
 		return orderItemId;
