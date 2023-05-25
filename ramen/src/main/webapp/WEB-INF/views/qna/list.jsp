@@ -48,7 +48,7 @@
 			<main>
 				<div class="container body-container">
 				    <div class="body-title">
-						<h2><i class="fas fa-chalkboard-teacher"></i> 질문과 답변 </h2>
+						<h2><i class="bi bi-clipboard-check"></i> 질문과 답변 </h2>
 				    </div>
 				    
 				    <div class="body-main">
