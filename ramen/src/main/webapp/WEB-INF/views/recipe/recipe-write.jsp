@@ -125,9 +125,8 @@
             grid-template-columns: repeat(3, 1fr);
             grid-auto-rows: 250px;
             padding: 30px;
-            height: 300px;
+            min-height: 100px;
 			gap: 10px;            
-			overflow: auto;
 			justify-content: center;
 			align-content: center;
 		}
@@ -381,6 +380,11 @@
 		
 		if(productIds == null || productIds.size < 1) {
 			alert('상품을 등록해주세요.');
+			return;
+		}
+		
+		if(addedProducts.length < 2) {
+			alert('2가지 이상의 상품을 조합해주세요.');
 			return;
 		}
 		

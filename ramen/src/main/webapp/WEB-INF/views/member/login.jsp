@@ -19,18 +19,13 @@
 	padding-bottom: 0; 
 }
 
-body {
-  background-color: #FFFFFF;
-  color: #FFFFFF;
-  font-family: Arial, sans-serif;
-}
-
 .members-form {
-  max-width: 360px;
+  max-width: 360px;q
   margin: 0 auto;
   background: #fefeff;
   padding: 50px 30px 20px;
   box-shadow: 0 0 15px 0 rgba(2, 59, 109, 0.1);
+  margin: 0 auto;
 }
 
 .members-form .row {
@@ -147,16 +142,12 @@ function sendLogin() {
 	
 <main>
 	<div class="container body-container">
-		<div class="body-title">
-			<h2><i class="fa-solid fa-lock"></i> Login </h2>
-		</div>
-		
 		<div class="body-main">
 			<div style="margin: 0 -15px 50px -15px"></div>
 			<form name="loginForm" method="post">
 				<div class="members-form">
 					<div class="row text-center">
-  						<h3 class = "btit" >LOGIN</h3>
+  						<h3 class = "btit" ><i class="fa-solid fa-lock"></i> LOGIN</h3>
 					</div>
 					<div class="row">
 						<label for="login-userId"> </label>
