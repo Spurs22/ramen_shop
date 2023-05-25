@@ -174,7 +174,8 @@
 					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 				</div>
 
-				<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+
+				<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; margin-top: 10px" action="${pageContext.request.contextPath}/notice/list.do" method="post">
 
 					<button type="button" class="btn btn-light" style=""
 							onclick="location.href='${pageContext.request.contextPath}/notice/list.do';">
