@@ -330,14 +330,14 @@ public class orderDetailServlet extends MyServlet{
 			// 게시물 가져오기
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
-			/*
+			
 			int orderBundleId = 0;
 			String orderId = req.getParameter("orderBundleId");
 			if(orderId != null) {
 				orderBundleId = Integer.parseInt(orderId);
 			}
-			*/
-			Long orderBundleId = Long.parseLong(req.getParameter("orderBundleId"));
+			
+			//Long orderBundleId = Long.parseLong(req.getParameter("orderBundleId"));
 			
 			OrderBundle orderBundlelist;
 			List<OrderItem> orderitems;
@@ -454,6 +454,7 @@ public class orderDetailServlet extends MyServlet{
 			List<OrderStatistics> os = odri.salesStatisticsByProduct(proid);
 		
 			req.setAttribute("os",os);
+			req.setAttribute("priod",proid);
 		
 		} catch (Exception e) {
 			e.printStackTrace();

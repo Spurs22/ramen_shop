@@ -207,7 +207,7 @@ private Connection conn = DBConn.getConnection();
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	
 	@Override
-	public OrderBundle findOrderDetail(int offset, int size, int statusId, Long orderBundleId) {
+	public OrderBundle findOrderDetail(int offset, int size, int statusId, int orderBundleId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
@@ -341,7 +341,7 @@ private Connection conn = DBConn.getConnection();
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	 - 검색
 	@Override
-	public OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, Long orderBundleId) {
+	public OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, int orderBundleId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
