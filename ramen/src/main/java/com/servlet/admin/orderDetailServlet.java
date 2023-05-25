@@ -6,12 +6,14 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.DTO.OrderBundle;
+import com.DTO.OrderItem;
 import com.DTO.OrderStatistics;
 import com.DTO.SessionInfo;
 import com.repository.admin.OrderDetailRepositoryImpl;
@@ -19,6 +21,7 @@ import com.repository.order.OrderRepositoryImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
+@MultipartConfig
 @WebServlet("/admin/*")
 public class orderDetailServlet extends MyServlet{
 	private static final long serialVersionUID = 1L;
@@ -60,10 +63,7 @@ public class orderDetailServlet extends MyServlet{
 		*/
 		
 		// uri에 따른 작업 구분
-		if(uri.indexOf("main.do") != -1) { 
-			// 관리자 메인화면
-			adminMain(req,resp);
-		} else if(uri.indexOf("deliverymanagement.do") != -1) {
+		if(uri.indexOf("deliverymanagement.do") != -1) { 
 			// 배송관리
 			deliverymanagement(req,resp);
 		} else if(uri.indexOf("ordermanagement.do") != -1) {
@@ -76,22 +76,6 @@ public class orderDetailServlet extends MyServlet{
 			// 매출통계 메인화면
 			salesStatistics(req,resp);
 		} 
-	}
-	
-	protected void adminMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 관리자 메인 화면
-		// 버튼 눌러서 이동(배송관리 | 주문관리 | 매출통계)
-
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		if (info == null) {
-			forward(req, resp, "/WEB-INF/views/member/login.jsp");
-			return;
-		}
-		
-		forward(req, resp, "/WEB-INF/views/admin/main.jsp"); // jsp로 포워딩
-
 	}
 	
 	protected void deliverymanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -171,7 +155,8 @@ public class orderDetailServlet extends MyServlet{
 			e.printStackTrace();
 		}
 		//resp.sendRedirect(cp + "/admin/deliverymanagement.do?page=" + page);
-		forward(req,resp,"/WEB-INF/views/admin/deliverymanagement.jsp");
+		// forward(req,resp,"/WEB-INF/views/admin/deliverymanagement.jsp");
+		 forward(req,resp,"/WEB-INF/views/admin/deliverymanagement.jsp");
 		
 	}
 	
@@ -235,19 +220,13 @@ public class orderDetailServlet extends MyServlet{
 			// 게시물 가져오기
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
-				
-			// 페이징처리
-			String query = "status=" + status;	
-			String listUrl = cp + "/admin/ordermanagement.do?size=" + size;
-			String listDetailUrl = cp + "/admin/ordermanagement.do?page=" + current_page;
-			if (keyword.length() != 0) {
-				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-				listUrl += "&" + query;
-				listDetailUrl += "&" + query;
+			
+			int orderBundleId = 0;
+			String orderId = req.getParameter("orderBundleId");
+			if(orderId != null) {
+				orderBundleId = Integer.parseInt(orderId);
 			}
 			
-			String paging = util.paging(current_page, total_page, listUrl);
-
 			List<OrderBundle> orderBundlelist;
 			if (keyword.length() != 0) {
 				orderBundlelist = odri.findOrderAll(offset, size, condition, keyword, status);
@@ -255,6 +234,21 @@ public class orderDetailServlet extends MyServlet{
 				orderBundlelist = odri.findOrderAll(offset, size, status);
 			}
 			
+			// 페이징처리
+			String query = "status=" + status;
+			String orderIdURL = "orderBundleId" + orderId;
+			String listUrl = cp + "/admin/ordermanagement.do" + size;
+			String articleUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page;
+			if (keyword.length() != 0) {
+				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+				listUrl += "&" + query;
+				articleUrl += "&" + query;
+				orderId += "&" + query + "&" + orderIdURL;
+			}
+			orderId += "&" + query + "&" + orderIdURL; 
+			
+			String paging = util.paging(current_page, total_page, listUrl);
+
 			// ordermanagement.jsp에 넘겨줄 데이터		
 			req.setAttribute("orderBundlelist", orderBundlelist);
 			req.setAttribute("status", status);
@@ -262,14 +256,13 @@ public class orderDetailServlet extends MyServlet{
 			req.setAttribute("total_page", total_page);
 			req.setAttribute("dataCount", dataCount);
 			req.setAttribute("size", size);
-			req.setAttribute("articleUrl", listDetailUrl);
+			req.setAttribute("articleUrl", articleUrl);
 			req.setAttribute("paging", paging);
 			req.setAttribute("condition", condition);
 			req.setAttribute("keyword", keyword);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		// JSP로 포위딩
 		forward(req,resp,"/WEB-INF/views/admin/ordermanagement.jsp");
 		
@@ -337,34 +330,45 @@ public class orderDetailServlet extends MyServlet{
 			// 게시물 가져오기
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
-					
+			/*
+			int orderBundleId = 0;
+			String orderId = req.getParameter("orderBundleId");
+			if(orderId != null) {
+				orderBundleId = Integer.parseInt(orderId);
+			}
+			*/
+			Long orderBundleId = Long.parseLong(req.getParameter("orderBundleId"));
+			
+			OrderBundle orderBundlelist;
+			List<OrderItem> orderitems;
+			
+			if (keyword.length() != 0) {
+				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, status, orderBundleId);
+				orderitems = orderBundlelist.getOrderItems();
+			} else {
+				orderBundlelist = odri.findOrderDetail(offset, size, status, orderBundleId);
+				orderitems = orderBundlelist.getOrderItems();
+			}
+			
 			// 페이징 처리
 			String query = "status=" + status;
-			String listUrl = cp + "/admin/ordermanagement.do" + size;
-			String listDetailUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page;
-			if (keyword.length() != 0) {
+			String orderIdUrl = "orderBundleId=" + orderBundleId;
+			String listUrl = cp + "/admin/ordermanagement.do?size=" + size;
+			String listDetailUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page + "&size=" + size;
+			if (keyword.length() != 0) { // 검색할 때
 				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+				listUrl += "&" + query;
+				listDetailUrl += "&" + query;
+			} else {
+				query += "&" + orderIdUrl;
 				listUrl += "&" + query;
 				listDetailUrl += "&" + query;
 			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 			
-			int orderBundleId = 0;
-			String id = req.getParameter("orderBundleId");
-			if(id != null) {
-				orderBundleId = Integer.parseInt(id);
-			}
-			
-			OrderBundle orderBundlelist;
-			
-			if (keyword.length() != 0) {
-				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, status, orderBundleId);
-			} else {
-				orderBundlelist = odri.findOrderDetail(offset, size, status, orderBundleId);
-			}
-			
 			// ordermanagement.jsp에 넘겨줄 데이터		
+			req.setAttribute("orderitems", orderitems);
 			req.setAttribute("orderBundlelist", orderBundlelist);
 			req.setAttribute("status", status);
 			req.setAttribute("page", current_page);

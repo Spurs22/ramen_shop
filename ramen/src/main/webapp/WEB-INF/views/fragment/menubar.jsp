@@ -114,20 +114,19 @@
             </span>
         </div>
         <c:if test="${sessionScope.member.userRoll == 0}">
-            <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/main.do'">
+            <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'">
                 <span>
                     마이페이지
                 </span>
             </div>
         </c:if>
         <c:if test="${sessionScope.member.userRoll == 1}">
-            <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/admin/main.do'">
+            <div class="menubar-item" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">
                 <span>
                     관리자페이지
                 </span>
             </div>
         </c:if>
-
     </div>
 
 <!--<script>-->

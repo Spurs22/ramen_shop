@@ -5,7 +5,7 @@
 	<title>주문관리</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
-
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 	<style>
 	.whole-container{
 		width: 80%;
@@ -27,15 +27,7 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			 
-			<table class="table">
-				<tr>
-					<td>
-						${dataCount}개(${page}/${total_page} 페이지)
-					</td>
-				</tr>
-			</table>
-			
+			 		
 			<table class="table table-border table-list">
 				<thead>
 					<tr>
@@ -50,6 +42,8 @@
 						<td class="userEmail">사용자이메일</td>
 						<td class="userEmail">주문상태</td>
 					</tr>
+				</thead>
+				<tbody>
 					<tr>
 						<td>${orderBundlelist.orderBundleId}</td>
 						<td>${orderBundlelist.createdDate}</td>
@@ -62,9 +56,11 @@
 						<td>${orderBundlelist.userEmail}</td>
 						<td>${orderBundlelist.statusName}</td>
 					</tr>
-				</thead>
-				
-				<tbody>
+				</tbody>
+			</table>
+			
+			<table class="table table-border table-list">
+				<thead>
 					<tr>
 						<th class="orderItemId">주문상세번호</th>
 						<th class="productName">상품명</th>
@@ -72,27 +68,27 @@
 						<th class="quantity">수량</th>
 						<th class="finalPrice">합계</th>
 					</tr>
-					
-					<c:forEach var="orderBundle" items="${orderBundlelist}">
+				</thead>
+				<tbody>
+					<c:forEach var="orderitems" items="${orderitems}">
 						<tr>
-							<td>${orderBundle.orderItemId}</td>
-							<td>${orderBundle.productName}</td>
-							<td>${orderBundle.price}</td>
-							<td>${orderBundle.quantity}</td>
-							<td>${orderBundle.finalPrice}</td>
+							<td>${orderitems.orderItemId}</td>
+							<td>${orderitems.productName}</td>
+							<td>${orderitems.price}</td>
+							<td>${orderitems.quantity}</td>
+							<td>${orderitems.finalPrice}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 
-			<table class="table">
-				<tr>
-					<td class="text-end">
-							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?${query}';">리스트</button>
-					</td>
-				</tr>
-			</table>
-			${paging}
+			<div>
+				<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?${query}';">리스트</button>
+			</div>
+
+			<div class="page-navigation">
+				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+			</div>
 		</div>
 	</div>
 </div>
@@ -102,5 +98,6 @@
         selectMenu(menuIndex)
     })
 </script>
+
 </body>
 </html>

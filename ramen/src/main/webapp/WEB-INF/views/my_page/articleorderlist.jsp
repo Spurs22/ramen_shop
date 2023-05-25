@@ -40,7 +40,6 @@
 					<thead>
 					<tr class="table-list">
 						<th class="num">주문 번호</th>
-						<th class="product">제품 번호</th>
 						<th class="picture">제 품</th>
 						<th class="name">제품 이름</th>
 						<th class="price">제품 가격</th>
@@ -54,7 +53,6 @@
 						<c:forEach var="dto" items="${list}" varStatus="status">
 						<tr>
 							<td>${dto.orderItemId}</td>
-							<td>${dto.productId}</td>
 							<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="height: 100px;"></td>
 							<td>${dto.productName}</td>
 							<td>${dto.price}원</td>

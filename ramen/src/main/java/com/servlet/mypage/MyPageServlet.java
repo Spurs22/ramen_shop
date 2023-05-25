@@ -88,7 +88,6 @@ public class MyPageServlet extends MyServlet {
 			// 주문 취소
 			orderCancel(req, resp);
 		}
-		
 	}
 	
 	protected void main(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

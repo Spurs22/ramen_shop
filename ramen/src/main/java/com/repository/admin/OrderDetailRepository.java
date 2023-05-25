@@ -18,10 +18,10 @@ public interface OrderDetailRepository {
 	List<OrderBundle> findOrderAll(int offset, int size, String condition, String keyword, int statusId);
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)
-	OrderBundle findOrderDetail(int offset, int size, int statusId, int orderBundleId);
+	OrderBundle findOrderDetail(int offset, int size, int statusId, Long orderBundleId);
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O) - 검색할 때
-	OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, int orderBundleId);
+	OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, Long orderBundleId);
 	
 	// 데이터 개수
 	int dataCount(int statusId);

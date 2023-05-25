@@ -75,22 +75,22 @@
 		</header>
 
 		<div class="main-container shadow-lg">
-			<div class="content-container">
-				<div class="sub-menu w-100">
-					<div style="display: flex; flex-direction: column; width: 100%">
-						<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
-							<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
-							<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do'"> 내가 좋아요 한 레시피 </button>
-							<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'"> 내가 작성한 글 </button>
-							<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'"> 나의 주문내역 </button>
-						</div>
+			<div class="sub-menu w-100">
+				<div style="display: flex; flex-direction: column; width: 100%">
+					<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
+						<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
+						<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do'"> 내가 좋아요 한 레시피 </button>
+						<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'"> 내가 작성한 글 </button>
+						<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'"> 나의 주문내역 </button>
 					</div>
 				</div>
+			</div>
 
+			<div class="content-container">
 				<div>
-					<table style="margin: 10px 0">
-						<td> ${dataCount}개 (${page}/${total_page} 페이지) </td>
-					</table>
+					<div style="margin: 10px 0">
+						${dataCount}개 (${page}/${total_page} 페이지)
+					</div>
 
 					<div style="display: flex; flex-direction: column; gap: 10px">
 						<div style="" class="table-header bg-light">

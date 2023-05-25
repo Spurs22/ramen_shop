@@ -5,7 +5,14 @@ public class OrderStatistics {
 	private Long sumfinal_price;
 	private Long productid;
 	private String productname;
+	private String picture;
 	
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 	public Long getSumquantity() {
 		return sumquantity;
 	}

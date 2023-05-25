@@ -7,7 +7,7 @@
 	<title>주문관리</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
-
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 	<style>
 	.whole-container{
 		width: 80%;
@@ -40,6 +40,20 @@
 
 
 	<div class="main-container shadow-lg">
+		<div>
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do';">배송관리</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do';">주문관리</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">매출통계</button>
+			</div>
+		</div>
+		
 		<div class="content-container">
 			<div>
 				<ul class="nav nav-pills nav-fill">
@@ -92,7 +106,7 @@
 			<table class="table table-border table-list">
 				<thead>
 					<tr>
-						<th class="orderBundleId">주문번호</th>
+						<th class="orderBundleId" >주문번호</th>
 						<th class="createdDate">주문일</th>
 						<th class="userEmail">주문자이메일</th>
 						<th class="tel">전화번호</th>
@@ -106,8 +120,8 @@
 				<tbody>
 					<c:forEach var="orderBundle" items="${orderBundlelist}" >
 						<tr>
-							<td>
-								<a href="${articleUrl}&num=${orderBundle.orderBundleId}" class="text-reset">${orderBundle.orderBundleId}</a>
+							<td onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement_detail.do?orderId=${orderBundle.orderBundleId}';">
+								${orderBundle.orderBundleId}
 							</td>
 							<td>${orderBundle.createdDate}</td>
 							<td>${orderBundle.userEmail}</td>
