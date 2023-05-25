@@ -6,6 +6,7 @@
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <style>
 .table-list thead > tr:first-child{ background: #f8f8f8; }
@@ -42,7 +43,7 @@
 		</div>
 
 		<div class="content-container">
-			<div><h2> 내가 좋아요 한 조합레시피 글 리스트 </h2></div>
+			<div><h3><i class="bi bi-bookmark-heart"></i>내가 좋아요 한 조합레시피 글</h3></div>
 			
 			<div>
 				<table>
@@ -90,5 +91,8 @@
         selectMenu(menuIndex)
     })
 </script>
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
 </html>

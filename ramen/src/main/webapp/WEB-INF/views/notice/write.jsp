@@ -121,5 +121,8 @@
         selectMenu(menuIndex)
     })
 </script>
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
 </html>
