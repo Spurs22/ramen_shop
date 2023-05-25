@@ -212,24 +212,24 @@
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 					<input type="radio" class="btn-check" name="category" id="btnradio1" autocomplete="off" value="1"
 						   onclick="clickCategory(this)" checked>
-					<label class="btn btn-outline-primary" for="btnradio1">봉지 라면</label>
+					<label class="btn btn-outline-secondary" for="btnradio1">봉지 라면</label>
 	
 					<input type="radio" class="btn-check" name="category" id="btnradio2" autocomplete="off" value="2"
 						   onclick="clickCategory(this)">
-					<label class="btn btn-outline-primary" for="btnradio2">컵 라면</label>
+					<label class="btn btn-outline-secondary" for="btnradio2">컵 라면</label>
 	
 					<input type="radio" class="btn-check" name="category" id="btnradio3" autocomplete="off" value="3"
 						   onclick="clickCategory(this)">
-					<label class="btn btn-outline-primary" for="btnradio3">토핑</label>
+					<label class="btn btn-outline-secondary" for="btnradio3">토핑</label>
 				</div>
 	
 				<div style="display: flex; flex-direction: row; gap: 5px" >
 					<input type="text" class="search-box" id="searchInput">
-					<button class="btn btn-primary" id="searchButton">검색</button>
+					<button class="btn btn-secondary" id="searchButton">검색</button>
 				</div>
 	
 				<div style="display: flex; flex-direction: row; gap: 5px">
-					<button type="button" class="btn btn-success btnwrite1toggle" onclick="">다음</button>
+					<button type="button" class="btn btn-warning btnwrite1toggle" onclick="">다음</button>
 				</div>
 			</div>
 	
@@ -256,12 +256,12 @@
 				<tr>
 					<td>
 						<div style="display: flex; flex-direction: row; gap: 5px">
-							<button type="button" class="btn btn-success btnwrite2toggle">이전</button>
+							<button type="button" class="btn btn-warning btnwrite2toggle">이전</button>
 						</div>
 					</td>
 					<td style="text-align: right;">
 						<div style="display: flex; flex-direction: row; gap: 5px; justify-content: flex-end;">
-							<button class="btn btn-primary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
+							<button class="btn btn-secondary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
 							<c:if test="${mode == 'update'}">
 								<input type="hidden" name="recipeId" value="${recipeId}">
 							</c:if>

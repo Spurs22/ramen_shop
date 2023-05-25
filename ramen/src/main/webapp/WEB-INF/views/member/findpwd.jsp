@@ -7,6 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <style type="text/css">
 body {
@@ -14,12 +16,8 @@ body {
   color: #000000;
   font-family: Arial, sans-serif;
 }
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; 
+.main-container {
+	padding-bottom: 50px;
 }
 
 .members-form {
@@ -27,6 +25,7 @@ body {
   background: #fefeff;
   padding: 50px 30px 20px;
   box-shadow: 0 0 15px 0 rgba(2, 59, 109, 0.1);
+  margin: 0 auto;
 }
 
 .members-form .row {
@@ -50,16 +49,6 @@ body {
 
 .members-form button {
   padding: 10px 30px;
-  font-size: 15px;
-  width: 100%;
-  background-color: #FFBB00;
-  color: #FFFFFF;
-  border: none;
-  cursor: pointer;
-}
-
-.members-form button:hover {
-  background-color: #FF9900;
 }
 
 .members-title {
@@ -77,17 +66,6 @@ body {
   text-align: center;
 }
 
-.btnConfirm {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.cancel-btn {
-  width: 100%;
-    border: 2px solid #FFFFFF; 
- }
- 
- 
 .error-message {
    color: red;
    font-size: 12px;
@@ -130,9 +108,16 @@ function sendOk() {
 </script>
 </head>
 <body>
+<div class="whole-container">
 
-<main>
-	<div class="container">
+	<header>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+	</header>
+
+	<div class="main-container shadow-lg">
+		<div class="content-container">
+		
+		
 		<div class="members-form">
 			<div class="members-title">
 				<h3>임시비밀번호 발급</h3>
@@ -147,18 +132,20 @@ function sendOk() {
 					<p class="error-message"></p>
 					</div>
           			<div class="row">
-						<button type="button" class="btnConfirm" onclick="sendOk();">확인</button>
+						<button type="button" class="btn btn-secondary" onclick="sendOk();">확인</button>
 					</div>
 					<div class="row">
-						<button type="button" class="cancel-btn" onclick="location.href='${pageContext.request.contextPath}/';">취소하기</button>
+						<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/';">취소하기</button>
 					</div>
 				</form>
 			</div>
 		</div>
+
+		</div>
 	</div>
-</main>
-
-
-
+</div>
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
 </html>

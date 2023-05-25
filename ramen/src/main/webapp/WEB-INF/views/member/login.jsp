@@ -10,9 +10,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>spring</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 
 <style type="text/css">
+.main-container {
+	padding-top: 0;
+	padding-bottom: 0; 
+}
+
 body {
   background-color: #FFFFFF;
   color: #FFFFFF;
@@ -47,16 +53,6 @@ body {
 
 .members-form button {
   padding: 10px 30px;
-  font-size: 15px;
-  width: 97%;
-  background-color: #FFBB00;
-  color: #FFFFFF;
-  border: none;
-  cursor: pointer;
-}
-
-.members-form button:hover {
-  background-color: #FF9900;
 }
 
 .members-message {
@@ -79,7 +75,7 @@ body {
 .divider {
   margin: 0;
   padding: 0;
-  color: #FFBB00;
+  color: #333;
 }
 
 .link-btn {
@@ -87,7 +83,7 @@ body {
   padding: 5px 10px;
   margin: 0 0 0 5px;
   font-size: 14px;
-  color: #FFBB00;
+  color: #333;
   text-decoration: none;
   border: none;
   background-color: transparent;
@@ -140,10 +136,14 @@ function sendLogin() {
 
 </head>
 <body>
+<div class="whole-container">
 
-<header>
-   
-</header>
+	<header>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+	</header>
+
+	<div class="main-container shadow-lg">
+		<div class="content-container">
 	
 <main>
 	<div class="container body-container">
@@ -168,7 +168,7 @@ function sendLogin() {
 							placeholder="비밀번호">
 					</div>
 					<div class="row text-center">
-						<button type="button" class="btn btn-primary" onclick="sendLogin();">Login</button>
+						<button type="button" class="btn btn-secondary" onclick="sendLogin();">Login</button>
 					</div>
 					<p class="text-center">
 					 <p class="text-center">
@@ -190,6 +190,9 @@ function sendLogin() {
 		</div>
 	</div>
 </main>
+		</div>
+	</div>
+</div>
 <footer>
 	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
 </footer>

@@ -8,26 +8,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>spring</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 
 <style type="text/css">
-#content {
+
+.main-container {
+	padding-top: 10px;
+}
+.content {
    display: flex;
    justify-content: center;
    border: 1px solid #fff;
-   height: 700px;
    width: 100%;
    background-color: #fff; 
 }
 
 .sign-up form {
-   width: 50%;
-   max-width: 40%;
+   width: 100%;
    margin: 0 auto;
    background-color: #ffffff;
    padding: 30px;
    border-radius: 10px;
-   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);  
 }
 
 .sign-up label {
@@ -53,18 +55,8 @@ select {
    display: block;
    width: 100%;
    padding: 10px;
-   border: none;
-   background-color: #FF9900; 
-   color: #ffffff;
-   font-size: 18px;
    font-weight: bold;
    border-radius: 5px;
-   cursor: pointer;
-   transition: background-color 0.3s ease;
-}
-
-.sign-up button[type="button"]:hover {
-   background-color: #FFCD12;
 }
 
 .sign-up .error-message {
@@ -246,14 +238,18 @@ function memberOk() {
 </script>
 </head>
 <body>
+<div class="whole-container">
 
-<header>
-    <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
-</header>
-<main>
-  <div id="content" style="display: flex; justify-content: center;">
-    <div class="container sign-up">
-      <form name="memberForm" method="POST">   
+	<header>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+	</header>
+
+	<div class="main-container shadow-lg">
+		<div class="content-container">
+		
+<!--   <div class="content" id="content" style="display: flex; justify-content: center;"> -->
+    <div class="member-container sign-up">
+      <form class="shadow-sm" name="memberForm" method="POST" style="border: 1px solid #eee">   
         <div class="form-group">
           <label for="name">이름</label>
           <input type="text" id="name" name="name" placeholder="이름을 입력하세요" value="${dto.name}" ${mode=="update" ? "readonly='readonly' ":""}>
@@ -309,7 +305,7 @@ function memberOk() {
         </div>
 
         <div class="form-group">
-          <button type="button" class="btn" onclick="daumPostcode();">우편번호검색</button>
+          <button type="button" class="btn btn-secondary" onclick="daumPostcode();">우편번호검색</button>
           &nbsp;&nbsp;
           <input type="text" id="postNum" name="postNum" placeholder="우편번호를 입력하세요" value="${dto.postNum}" readonly="readonly">
           <p class="error-message"></p>
@@ -325,14 +321,15 @@ function memberOk() {
           <p class="error-message"></p>
         </div>
 
-        <button type="button" onclick="memberOk()">확인</button>
+        <button type="button" class="btn btn-secondary" onclick="memberOk()">확인</button>
         &nbsp;&nbsp;
-        <button type="button" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
+        <button type="button" class="btn btn-secondary" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
       </form>
     </div>
   </div>
-</main>
-
+		</div>
+	</div>
+</div>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
     function daumPostcode() {
@@ -377,6 +374,8 @@ function memberOk() {
         }).open();
     }
 </script>
-
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
 </html>

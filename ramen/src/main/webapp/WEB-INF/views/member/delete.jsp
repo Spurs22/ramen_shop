@@ -6,25 +6,27 @@
 <html>
 
 <style type="text/css">
-
+.main-container {
+	padding-bottom: 0;
+	padding-top: 0;
+}
 body {
   background-color: #FFFFFF;
   color: #000000;
   font-family: Arial, sans-serif;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; 
-}
 
 .members-form {
   width: 400px;
   background: #fefeff;
   padding: 50px 30px 20px;
   box-shadow: 0 0 15px 0 rgba(2, 59, 109, 0.1);
+  margin: 0 auto;
+}
+
+.members-form button {
+  padding: 10px 30px;
 }
 
 .members-form .row {
@@ -46,20 +48,6 @@ body {
   padding: 6px 4px;
 }
 
-.members-form button {
-  padding: 10px 30px;
-  font-size: 15px;
-  width: 100%;
-  background-color: #FFBB00;
-  color: #FFFFFF;
-  border: none;
-  cursor: pointer;
-}
-
-.members-form button:hover {
-  background-color: #FF9900;
-}
-
 .members-title {
   text-align: center; 
   margin-bottom: 20px;
@@ -75,15 +63,10 @@ body {
   text-align: center;
 }
 
-.btnConfirm {
-  width: 100%;
-  margin-bottom: 10px;
+.btn {
+	padding: 5px 0;
 }
 
-.cancel-btn {
-  width: 100%;
-    border: 2px solid #FFFFFF; 
- }
 .message {
    color: red;
    font-size: 12px;
@@ -115,12 +98,19 @@ function sendOk() {
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
+<div class="whole-container">
 
-<main>
-	<div class="container">
+	<header>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+	</header>
+
+	<div class="main-container shadow-lg">
+		<div class="content-container">
 		<div class="members-form">
 			<div class="members-title">
 				<h3>회원탈퇴</h3>
@@ -139,11 +129,11 @@ function sendOk() {
 					</div>
 					<div class="row">
         		   <p class = "message"> 회원탈퇴시 개인정보 및 모든데이터는 삭제됩니다. </p>
-						<button type="button" class="btnConfirm" onclick="sendOk();">확인</button>
+						<button type="button" class="btn btn-secondary" onclick="sendOk();">확인</button>
 						<input type="hidden" name="mode" value="${mode}">
 					</div>
 					<div class="row">
-						<button type="button" class="cancel-btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
+						<button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
 					</div>
 					<div class="row">
 						${message}
@@ -151,7 +141,11 @@ function sendOk() {
 				</form>
 			</div>
 		</div>
+		</div>
 	</div>
-</main>
+</div>
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
 </html>

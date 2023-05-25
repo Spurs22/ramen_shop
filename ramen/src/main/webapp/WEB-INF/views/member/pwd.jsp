@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>spring</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 
 <style type="text/css">
@@ -18,18 +19,12 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; 
-}
-
 .members-form {
   width: 400px;
   background: #fefeff;
   padding: 50px 30px 20px;
   box-shadow: 0 0 15px 0 rgba(2, 59, 109, 0.1);
+  margin: 0 auto;
 }
 
 .members-form .row {
@@ -53,16 +48,6 @@ body {
 
 .members-form button {
   padding: 10px 30px;
-  font-size: 15px;
-  width: 100%;
-  background-color: #FFBB00;
-  color: #FFFFFF;
-  border: none;
-  cursor: pointer;
-}
-
-.members-form button:hover {
-  background-color: #FF9900;
 }
 
 .members-title {
@@ -80,15 +65,6 @@ body {
   text-align: center;
 }
 
-.btnConfirm {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.cancel-btn {
-  width: 100%;
-    border: 2px solid #FFFFFF; 
- }
 </style>
 
 <script type="text/javascript">
@@ -109,14 +85,14 @@ function sendOk() {
 
 </head>
 <body>
+<div class="whole-container">
 
-<header>
-  
-</header>
-	
+	<header>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+	</header>
 
-<main>
-	<div class="container">
+	<div class="main-container shadow-lg">
+		<div class="content-container">
 		<div class="members-form">
 			<div class="members-title">
 				<h3>패스워드 재확인</h3>
@@ -134,11 +110,11 @@ function sendOk() {
 						<input name="password" type="password" class="form-control" placeholder="패스워드">
 					</div>
 					<div class="row">
-						<button type="button" class="btnConfirm" onclick="sendOk();">확인</button>
+						<button type="button" class="btn btn-secondary" onclick="sendOk();">확인</button>
 						<input type="hidden" name="mode" value="${mode}">
 					</div>
 					<div class="row">
-						<button type="button" class="cancel-btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
+						<button type="button" class="btn btn-secondary" onclick="javascript:location.href='${pageContext.request.contextPath}/';">취소하기</button>
 					</div>
 					<div class="row">
 						${message }
@@ -147,8 +123,8 @@ function sendOk() {
 			</div>
 		</div>
 	</div>
-</main>
-
+		</div>
+	</div>
 <footer>
 	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
 </footer>

@@ -95,18 +95,18 @@
 				<form name="radioForm" action="${pageContext.request.contextPath}/recipe/list.do" method="post">
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="btnradio1" autocomplete="off" onclick="clickBtnradio(this)" checked>
-						<label class="btn btn-outline-primary" for="btnradio1">최신순</label>
+						<label class="btn btn-outline-secondary" for="btnradio1">최신순</label>
 		
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="btnradio2" autocomplete="off" onclick="clickBtnradio(this)">
-						<label class="btn btn-outline-primary" for="btnradio2">조회순</label>
+						<label class="btn btn-outline-secondary" for="btnradio2">조회순</label>
 						
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="btnradio3" autocomplete="off" onclick="clickBtnradio(this)">
-						<label class="btn btn-outline-primary" for="btnradio3">좋아요순</label>
+						<label class="btn btn-outline-secondary" for="btnradio3">좋아요순</label>
 					</div>
 				</form>
 				
 				<div>
-					<button type="button" class="btn btn-success" onclick="location.href='${pageContext.request.contextPath}/recipe/write.do';">글올리기</button>
+					<button type="button" class="btn btn-warning" onclick="location.href='${pageContext.request.contextPath}/recipe/write.do';">글올리기</button>
 					
 				</div>
 				
@@ -114,7 +114,7 @@
 			
 			<div class="sub-menu">
 				<form name="searchForm" action="${pageContext.request.contextPath}/recipe/list.do" method="post" style="display: flex; flex-direction: row; height: 100%; width: 100%; gap: 8px;">
-					<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do';" title="새로고침" style="height: 100%;"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+					<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/recipe/list.do';" title="새로고침" style="height: 100%;"><i class="fa-solid fa-arrow-rotate-right"></i></button>
 					<select name="condition" id="conditionval" class="form-select" style="width: 125px;" onchange="clickCondition();">
 						<option value="all"  			${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 						<option value="nickname" 	    ${condition=="nickname"?"selected='selected'":"" }>작성자</option>
@@ -123,7 +123,7 @@
 						<option value="content"			${condition=="content"?"selected='selected'":"" }>내용</option>
 					</select>
 					<input type="text" name="keyword" id="searchInput" value="${keyword}" class="form-control" style="width: 370px;">
-					<button type="button" class="btn btn-primary">검색</button>
+					<button type="button" class="btn btn-secondary">검색</button>
 				</form>
 			</div>
 			

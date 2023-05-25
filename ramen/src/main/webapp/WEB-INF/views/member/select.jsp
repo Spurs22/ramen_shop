@@ -7,6 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
@@ -21,7 +23,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
+  min-height: 100px; 
 }
 
 .members-form {
@@ -52,16 +54,6 @@ body {
 
 .members-form button {
   padding: 10px 30px;
-  font-size: 15px;
-  width: 100%;
-  background-color: #FFBB00;
-  color: #FFFFFF;
-  border: none;
-  cursor: pointer;
-}
-
-.members-form button:hover {
-  background-color: #FF9900;
 }
 
 .members-title {
@@ -79,18 +71,17 @@ body {
   text-align: center;
 }
 
-.btnConfirm {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.cancel-btn {
-  width: 100%;
-    border: 2px solid #FFFFFF; 
- }
 </style>
 </head>
 <body>
+<div class="whole-container">
+
+	<header>
+		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+	</header>
+
+	<div class="main-container shadow-lg">
+		<div class="content-container">
 <main>
 	<div class="container">
 		<div class="members-form">
@@ -103,21 +94,22 @@ body {
 				       원하는 메뉴를 선택해주세요
 				    </div>
 					<div class="row">
-						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/pwd.do?mode=update'">내 정보변경</button>
+						<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/member/pwd.do?mode=update'">내 정보변경</button>
 					</div>
           			<div class="row">
-						<button type="button" class="btnConfirm" onclick="location.href='${pageContext.request.contextPath}/member/delete.do?mode=delete'">회원탈퇴</button>
+						<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/member/delete.do?mode=delete'">회원탈퇴</button>
 					</div>
 					<div class="row">
-						<button type="button" class="cancel-btn" onclick="location.href='${pageContext.request.contextPath}/';">취소하기</button>
+						<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/';">취소하기</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 </main>
-
-
+		</div>
+	</div>
+</div>
 <footer>
 	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
 </footer>
