@@ -271,7 +271,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 		
 		try {
 			sql = " SELECT id, product_id, order_id, status_id, quantity, price, final_price "
-					+ " FROM order_item WHERE orderItemId = ? ";
+					+ " FROM order_item WHERE id = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, orderItemId);
