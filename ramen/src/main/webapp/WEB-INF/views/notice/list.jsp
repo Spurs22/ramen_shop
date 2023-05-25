@@ -174,48 +174,39 @@
 					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 				</div>
 
-				<div style="display: flex; flex-direction: column; width: 100%">
-					<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between" action="${pageContext.request.contextPath}/notice/list.do" method="post">
 
-						<button type="button" class="btn btn-light" style=""
-								onclick="location.href='${pageContext.request.contextPath}/notice/list.do';">
-								<i class="bi bi-arrow-clockwise"></i></button>
+				<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; margin-top: 10px" action="${pageContext.request.contextPath}/notice/list.do" method="post">
 
-						<div style="display: flex; flex-direction: row; justify-content: center; gap: 10px">
-							<select name="condition" class="form-select" style="width: 130px">
-								<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
-								<option value="createdDate"  ${condition=="createdDate"?"selected='selected'":"" }>등록일</option>
-								<option value="subject"  ${condition=="subject"?"selected='selected'":"" }>제목</option>
-								<option value="content"  ${condition=="content"?"selected='selected'":"" }>내용</option>
-							</select>
+					<button type="button" class="btn btn-light" style=""
+							onclick="location.href='${pageContext.request.contextPath}/notice/list.do';">
+							<i class="bi bi-arrow-clockwise"></i></button>
 
-							<input type="text" name="keyword" value="${keyword}" class="form-control">
+					<div style="display: flex; flex-direction: row; justify-content: center; gap: 10px">
+						<select name="condition" class="form-select" style="width: 130px">
+							<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
+							<option value="createdDate"  ${condition=="createdDate"?"selected='selected'":"" }>등록일</option>
+							<option value="subject"  ${condition=="subject"?"selected='selected'":"" }>제목</option>
+							<option value="content"  ${condition=="content"?"selected='selected'":"" }>내용</option>
+						</select>
 
-							<input type="hidden" name="size" value="${size}">
-							<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
-						</div>
+						<input type="text" name="keyword" value="${keyword}" class="form-control">
 
-						<c:choose>
-							<c:when test="${sessionScope.member.userRoll == 1}">
-								<button type="button" class="btn btn-light"
-										onclick="location.href='${pageContext.request.contextPath}/notice/write.do';">글올리기
-								</button>
-							</c:when>
+						<input type="hidden" name="size" value="${size}">
+						<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
+					</div>
 
-							<c:otherwise>
-								<div></div>
-							</c:otherwise>
-						</c:choose>
-					</form>
-				</div>
+					<c:choose>
+						<c:when test="${sessionScope.member.userRoll == 1}">
+							<button type="button" class="btn btn-light"
+									onclick="location.href='${pageContext.request.contextPath}/notice/write.do';">글올리기
+							</button>
+						</c:when>
 
-				<div>
-					<c:if test="${sessionScope.member.userRoll == 1}">
-						<button type="button" class="btn btn-light"
-								onclick="location.href='${pageContext.request.contextPath}/notice/write.do';">글올리기
-						</button>
-					</c:if>
-				</div>
+						<c:otherwise>
+							<div></div>
+						</c:otherwise>
+					</c:choose>
+				</form>
 			</div>
 		</div>
 	</div>
