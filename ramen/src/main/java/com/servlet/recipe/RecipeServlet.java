@@ -218,9 +218,9 @@ public class RecipeServlet extends MyUploadServlet {
 			json.put("recipeLikeCount", board.getRecipeLikeCount());
 			json.put("picture", board.getPicture());
 			
-			jarr.put(json);
+			System.out.println("안녕"+board.getPicture());
 			
-			System.out.println(board.getId()+","+board.getSubject());
+			jarr.put(json);
 		}
 		
 		resp.setContentType("text/html;charset=utf-8");

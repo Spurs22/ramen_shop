@@ -82,6 +82,7 @@
 <script>
     let menuIndex = 3
 </script>
+
 <body>
 <div class="whole-container">
 
@@ -141,7 +142,7 @@
 							<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
 						</div>
 
-						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.picture == null ? "default2.png" : recipe.picture}">
+						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.picture == null ? "default2.png" : recipe.picture}"/>
 						<div style="font-weight: bold; text-align: center; width: 100%; margin-top: 5px">${recipe.subject}</div>
 					</a>
 				</c:forEach>
@@ -202,14 +203,20 @@
 							<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
 								<div style="font-size: 14px;">작성자 : `+list.nickname+`</div>
 								<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> `+list.recipeLikeCount+`</div>
-							</div>
-	
-							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/`+list.picture+` == null ? 'default2.png' : list.picture}">
-							<div style="font-weight: bold; text-align: center; width: 100%; margin-top: 5px">`+list.subject+`</div>
-						</a>
+							</div>`;
+							
+							if(list.picture == null) {
+								userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/default2.png"/>`
+							} else {
+								userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/`+list.picture +`"/>`
+							}
+							
+							userCardTemplate += `<div style="font-weight: bold; text-align: center; width: 100%; margin-top: 5px">`+list.subject+`</div>
+						 </a>
                      `;
 
                 	 resultForm.append(userCardTemplate);
+                	 console.log(list.picture);
 				});
 			},
 			error: function(xhr, status, error) {
@@ -218,5 +225,9 @@
 		});
 	}
 </script>
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
+
 </html>

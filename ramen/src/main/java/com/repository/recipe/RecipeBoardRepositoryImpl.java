@@ -1107,8 +1107,6 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
 				recipe.setPicture(rs.getString("picture_path"));
 				
-				System.out.println("안녕" + recipe.getPicture());
-				
 				list.add(recipe);
 			}
 			

@@ -147,11 +147,13 @@
 		.subjecttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 40px; padding: 10px; border-radius: 5px; background: #f6f6f6;}
 		
 		.quantity-btn { border: 1px solid gray; border-radius: 3px;}
+		
 	</style>
 </head>
 <script>
     let menuIndex = 3
 </script>
+
 <body>
 <div class="whole-container">
 
@@ -322,13 +324,17 @@
     
     $(function() {
         $(".btnwrite1toggle").on("click", function() {
-          $(".write-step1").hide();
-          $(".write-step2").show();
+			if(addedProducts.length < 2) {
+				alert('2가지 이상의 상품을 조합해주세요.');
+				return;
+			}
+        	$(".write-step1").hide();
+          	$(".write-step2").show();
         });
 
         $(".btnwrite2toggle").on("click", function() {
-          $(".write-step2").hide();
-          $(".write-step1").show();
+          	$(".write-step2").hide();
+          	$(".write-step1").show();
         });
       });
     
@@ -501,5 +507,8 @@
     }
     
 </script>
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 </body>
 </html>
