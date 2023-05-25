@@ -24,6 +24,7 @@
             height: 300px;
 			gap: 3px;            
 			overflow: auto;
+			justify-content: center;
         }
 
         .product-item {
@@ -40,7 +41,7 @@
         }
 
         .product-img {
-            width: 70%;
+            width: 100%;
             height: 100px;
             object-fit: cover;
             border-radius: 5px;
@@ -93,11 +94,6 @@
 		.table-container {
 			width: 100%;
 		}
-		.quantity-cell {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
 	
 		.quantity-btn {
 			border: none;
@@ -107,7 +103,13 @@
 			height: 30px;
 		}
 	
-		.product-quantity{ border: none; width: 40px; text-align: center; outline: none; text-align: center;}
+		.product-quantity {
+            border: none;
+            outline: none;
+			text-align: center;
+			width: 50px;
+        }
+
 		
 		.contenttb { width: 100%; padding: 20px; }
 		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 10px; border-radius: 5px; background: #ffffff;}
@@ -122,23 +124,25 @@
 			display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-auto-rows: 250px;
-            padding: 20px;
+            padding: 30px;
             height: 300px;
 			gap: 10px;            
 			overflow: auto;
+			justify-content: center;
+			align-content: center;
 		}
 		
 		.cart-product {
 			position: relative;
-			width: 90%;
+			width: 100%;
             height: 100%;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            gap: 0px;
-            padding: 10px;
+			align-content: center;
+            padding: 20px 30px;
             transition: 0.5s;
             background: #ffffff;
             border: 1px solid #f8f8ff;
@@ -174,6 +178,7 @@
 		}
 		
 		.cart-quantity {
+			display: block;
 			margin-bottom: 5px;
 		}
 		
@@ -435,15 +440,16 @@
     	let out = "";
 		// 체크 포인트
 		out += "<div class='cart-product shadow xm'>";
-	    out += "<p class='delete-p'><button type='button' class='delete-btn'><i class='fa-solid fa-xmark'></i></button></p>";
-		out += "<img class='product-img' src='${pageContext.request.contextPath}/resource/picture/${"+picture+" == null ? 'default2.png' : "+picture+"}'>";
-	    out += "<p class='cart-name'>" + name + "</p>";
-	    out += "<p class='cart-quantity'>";
-	    out += "<button type='button' class='quantity-btn minus' data-product-id='" + productId + "'><i class='fa-solid fa-minus'></i></button>";
-	    out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1' readonly='readonly'></span>";
-	    out += "<button type='button' class='quantity-btn plus' data-product-id='" + productId + "'><i class='fa-solid fa-plus'></i></button>";
-	    out += "<input type='hidden' class='product-id' name='productId' value='" + productId + "'>";
-	    out += "</p>";
+			out += "<p class='delete-p'><button type='button' class='delete-btn'><i class='fa-solid fa-xmark'></i></button></p>";
+			out += "<img class='product-img' src='${pageContext.request.contextPath}/resource/picture/${"+picture+" == null ? 'default2.png' : "+picture+"}'>";
+			out += "<p class='cart-name'>" + name + "</p>";
+			out += "<div style='display: flex; flex-direction: row; justify-content: space-between; width: 100%'>"
+				out += "<button type='button' class='quantity-btn minus' data-product-id='" + productId + "'><i class='fa-solid fa-minus'></i></button>";
+				out += "<input name='product-quantity' class='product-quantity' value='1' readonly='readonly'>";
+        		// out += "<input name='product-quantity' value='1' readonly='readonly' style='text-align: center; width: 30px'>";
+				out += "<button type='button' class='quantity-btn plus' data-product-id='" + productId + "'><i class='fa-solid fa-plus'></i></button>";
+			out += "</div>"
+			out += "<input type='hidden' class='product-id' name='productId' value='" + productId + "'>";
 	    out += "</div>";
 
 	    $(".select-product").append(out);
