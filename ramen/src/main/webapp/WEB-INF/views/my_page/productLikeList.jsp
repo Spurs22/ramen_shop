@@ -27,9 +27,6 @@
 		.table-list .hit { width: 70px; color: #787878; }
 		.table-list .heart { width: 70px; color: #787878; }
 
-		.main-container {
-            padding: 70px 70px 110px 70px
-		}
 
         .product-container {
             display: grid;
@@ -70,33 +67,10 @@
             /*filter: brightness(95%);*/
         }
 
-        .sub-menu button {
-            border-radius: 5px;
-        }
-
-        .sub-menu {
-            width: 100%;
-            height: 40px;
-            display: flex;
-            flex-direction: row;
-            gap: 5px;
-            justify-content: space-between;
-			margin-bottom: 20px;
-			padding: 0 20px;
-        }
-
 		a {
 			text-decoration: none;
 			color: black;
 		}
-
-        .search-box {
-            border: 1px solid #DFE2E6;
-            border-radius: 5px;
-            width: 150px;
-            padding: 0 5px;
-
-        }
 
         .starBundle-comment {
             display: grid;
@@ -140,7 +114,6 @@
 
 	<div class="main-container shadow-lg">
 		<div class="sub-menu w-100">
-
 			<div style="display: flex; flex-direction: column; width: 100%">
 				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
 					<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
