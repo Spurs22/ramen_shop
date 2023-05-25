@@ -27,7 +27,8 @@
 
 	<div class="main-container shadow-lg">
 		<div class="content-container">
-			 		
+			<div style="margin-bottom: 20px"><button class="btn btn-outline-secondary" onclick="history.back()">뒤로가기</button></div>
+
 			<table class="table table-border table-list">
 				<thead>
 					<tr>

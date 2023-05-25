@@ -29,22 +29,23 @@
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
-
-
 	<div class="main-container shadow-lg">
-		<div>
-			<div>
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do';">배송관리</button>
-			</div>
-			
-			<div>
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do';">주문관리</button>
-			</div>
-			
-			<div>
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">매출통계</button>
+		<div class="sub-menu w-100">
+			<div style="display: flex; flex-direction: column; width: 100%">
+				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
+					<button class="btn btn-primary"
+							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">배송관리
+					</button>
+					<button class="btn btn-outline-primary"
+							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do'">주문관리
+					</button>
+					<button class="btn btn-outline-primary"
+							onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do'">매출통계
+					</button>
+				</div>
 			</div>
 		</div>
+
 		<div class="content-container">
 			<form action="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do';">
 			<div>
