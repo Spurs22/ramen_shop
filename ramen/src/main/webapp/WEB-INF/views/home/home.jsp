@@ -7,6 +7,10 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 
 	<style>
+		.main-container {
+			padding-bottom: 50px;
+		}
+
         .main-banner {
 			width: 100%;
 			min-height: 280px;
@@ -154,18 +158,6 @@
 						<span class="visually-hidden">Next</span>
 					</button>
 				</div>
-			</div>
-
-			<div class="main-banner">
-				<div class="container-label">배너</div>
-			</div>
-
-			<div class="main-banner">
-				<div class="container-label">배너</div>
-			</div>
-
-			<div class="main-banner">
-				<div class="container-label">배너</div>
 			</div>
 		</div>
 	</div>

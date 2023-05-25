@@ -108,9 +108,8 @@
 	<div class="main-container shadow-lg" style="padding-bottom: 40px">
 		<div class="content-container">
 			<div class="container-fluid mb-5">
-				<button class="btn btn-outline-secondary" type="reset" id="foldBtn" style="width: 100px; height: 45px" onclick="history.back()">뒤로가기</button>
-				<form method="post" action=""
-					  class="flex-col-container shadow align-top" name="commentForm" id="commentForm">
+				<button class="btn btn-outline-secondary" style="width: 100px; height: 45px" onclick="history.back()">뒤로가기</button>
+				<form method="post" action="${pageContext.request.contextPath}/product/review-confirm" class="flex-col-container shadow align-top" name="commentForm" id="commentForm">
 
 					<div style="height: 130px; display: flex; flex-direction: row; gap: 20px">
 						<img src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}" style="height: 100%; width: 130px;object-fit: cover; border: 1px solid black">
@@ -124,12 +123,11 @@
 						<textarea name="content" class="w-100 h-100" style="width: 100%; padding: 10px" placeholder="리뷰를 작성해주세요."></textarea>
 					</div>
 
-
 					<!--            <div class="p-3 row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 gap-container">-->
 					<div class="rating-container-bundle " id="rate-container">
 						<div class="rating-container">
 							<div class="rating-label">평점을 매겨주세요</div>
-							<input type="hidden" name="taste" id="taste-rate" value="0">
+							<input type="hidden" name="rating" id="rating" value="0">
 							<div class="starBundle">
 								<i class="fa-regular fa-star rate"></i>
 								<i class="fa-regular fa-star rate"></i>
@@ -145,7 +143,6 @@
 					</div>
 				</form>
 			</div>
-
 		</div>
 	</div>
 </div>
@@ -161,18 +158,9 @@
 </script>
 
 <script>
-    let comment = document.getElementsByClassName('comment-input')[0];
-    let ratingCon = document.getElementsByClassName('rating-container-bundle')[0];
-    let commentBtnCon = document.getElementById('comment-btn-container')
-    // let ratingBtn = document.getElementById('rating-btn');
-    // let ratingBtn_status = false;
-
     let starBundles = document.getElementsByClassName('starBundle')[0];
     let STAR_COLOR_DEFAULT = '#F0974E'
     let STAR_COLOR_HOVER = '#dc843b'
-    let taste = document.getElementById('taste-rate');
-    let price = document.getElementById('price-rate');
-    let distance = document.getElementById('distance-rate');
     let commentForm = document.getElementById('commentForm');
 
     let rateValue = 0
@@ -206,6 +194,7 @@
 
     function getRating() {
 		rateValue = rating + (lastStarIsFull ? 1 : 0.5);
+        $('#rating').val(rateValue);
     }
 
 	let starBundle = starBundles.getElementsByTagName('i');

@@ -80,8 +80,6 @@ public class ProductServlet extends MyUploadServlet {
 			deleteBoard(req, resp);
 		} else if (uri.contains("delete")) {
 			delete(req, resp);
-		} else if (uri.contains("comment-form" )) {
-			commentForm(req, resp);
 		} else if (uri.contains("search")) {
 			searchKeyword(req, resp);
 		} else if (uri.contains("like")) {
@@ -90,6 +88,8 @@ public class ProductServlet extends MyUploadServlet {
 			addCart(req, resp);
 		} else if (uri.contains("review-form")) {
 			reviewForm(req, resp);
+		} else if (uri.contains("review-confirm")) {
+			reviewConfirm(req, resp);
 		} else if (uri.contains("add-form")) {
 			productAddForm(req, resp);
 		} else if (uri.contains("post-product")) {
@@ -382,12 +382,10 @@ public class ProductServlet extends MyUploadServlet {
 
 	}
 
-	protected void commentForm(HttpServletRequest req, HttpServletResponse resp) {
-
-	}
 
 	protected void reviewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("review-form");
+		System.out.println(req.getRequestURI());
 
 		try {
 			Long memberId = SessionUtil.getMemberIdFromSession(req);
@@ -400,16 +398,26 @@ public class ProductServlet extends MyUploadServlet {
 			Long orderId = Long.valueOf(req.getParameter("order-id"));
 
 			// 이미 남긴 리뷰가 있는지, 구매했는지, 확인
+			OrderItem orderItem = orderService.findByOrderItemId(orderId);
+			List<ProductComment> productComment = productCommentService.findCommentsByProductId(productId);
+			boolean check = false;
+			for (ProductComment comment : productComment) {
+				if (comment.getWriterId().equals(memberId)) {
+					check = true;
+				}
+			}
 
+			if (orderItem.getStatusId() != 3 || check) {
+				resp.sendRedirect(req.getContextPath() + req.getRequestURI());
+				return;
+			}
 
 			//
 			ProductBoard post = productBoardService.findPostByProductId(productId);
 			if (post == null) {
-				resp.sendRedirect(req.getContextPath() + "/home");
+				resp.sendRedirect(req.getContextPath() + req.getRequestURI());
 				return;
 			}
-
-
 
 			req.setAttribute("post", post);
 
@@ -599,6 +607,25 @@ public class ProductServlet extends MyUploadServlet {
 			}
 
 			resp.sendRedirect(req.getContextPath() + "/product/list");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void reviewConfirm(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			String content = req.getParameter("content");
+			Float rating = Float.valueOf(req.getParameter("rating"));
+
+			Long memberId = SessionUtil.getMemberIdFromSession(req);
+
+			if (memberId == null) {
+				resp.sendRedirect(req.getContextPath() + "/home");
+				return;
+			}
+
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
