@@ -123,11 +123,11 @@
 					</thead>
 					
 					<tbody>
-						<c:forEach var="dto" items="${listNotice}">
+						<c:forEach var="dto" items="${list}">
 						  <tr>
 						  	<c:if test="${sessionScope.member.userRoll==1}">
 						  	  <td>
-						  	  	<input type="checkbox" name="ids" value="${dto.id}">
+						  	  	<input type="checkbox" class="form-check-input" name="ids" value="${dto.id}">
 						  	  </td>
 						  	</c:if>
 						  	<td><span class="badge bg-primary">공지</span></td>
@@ -140,7 +140,7 @@
 						  </tr>
 						</c:forEach>
 						
-						<c:forEach var="dto" items="${listNotice}">
+						<c:forEach var="dto" items="${list}" varStatus="status ">
 						  <tr>
 						    <c:if test="${sessionScope.member.userRoll==1}">
 						      <td>

@@ -19,7 +19,7 @@
 	.table-list .num { width: 60px; color: #787878; }
 	.table-list .subject { color: #787878; }
 	.table-list .name { width: 100px; color: #787878; }
-	.table-list .date { width: 100px; color: #787878; }
+	.table-list .date { width: 150px; color: #787878; }
 	.table-list .hit { width: 70px; color: #787878; }
 	
 	.subject-a { text-decoration :none; color : black; }
