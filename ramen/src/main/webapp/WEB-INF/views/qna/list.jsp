@@ -70,6 +70,18 @@
 <script type="text/javascript">
     let menuIndex = 4
 
+    function changeList() {
+        const f = document.listForm;
+        f.page.value = "1";
+        f.action = "${pageContext.request.contextPath}/qna/list.do";
+        f.submit();
+    }
+
+    function searchList() {
+        const f = document.searchForm;
+        f.submit();
+    }
+    
     function serachList() {
         const f = document.searchForm;
         f.submit();
@@ -98,7 +110,7 @@
 
 		<div class="content-container">
 			<div class="body-title">
-				<h2><i class="bi bi-clipboard-check"></i> 질문과 답변 </h2>
+				<h2><i class="bi bi-wechat"></i> 질문과 답변 </h2>
 			</div>
 
 			<div class="body-main">
@@ -139,7 +151,7 @@
 					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 				</div>
 
-				<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; margin-top: 10px" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+				<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; margin-top: 10px" action="${pageContext.request.contextPath}/qna/list.do" method="post">
 					<button type="button" class="btn btn-light" style=""
 							onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">
 						<i class="bi bi-arrow-clockwise"></i></button>
@@ -154,7 +166,7 @@
 						</select>
 
 						<input type="text" name="keyword" value="${keyword}" class="form-control">
-						<button type="button" class="btn btn-light" onclick="searchList();"><i class="bi bi-search"></i></button>
+						<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
 					</div>
 
 					<c:choose>

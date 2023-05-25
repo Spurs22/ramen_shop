@@ -12,7 +12,12 @@
 
 	.table-article tr > td { padding-left: 5px; padding-right: 5px; }
 	
-	.text-reset { text-decoration: none; color : black; }
+	.text-reset { 
+		text-decoration: none; color : black; 
+	}
+	
+	.point :hover { cursor: pointer; }
+
 	</style>
 	
 </head>
@@ -53,9 +58,6 @@
 		<div class="content-container">
 			<main>
 			<div class="container body-container">
-			    <div class="body-title">
-					<h2><i class="bi bi-clipboard-check"></i> 질문과 답변 </h2>
-			    </div>
 			    
 			    <div class="body-main">
 					<table class="table">
@@ -63,7 +65,7 @@
 							<tr>
 								<td colspan="2" align="center">
 									<c:if test="${dto.depth!=0}">[Re] </c:if>
-									${dto.subject}
+									<h4>${dto.subject}</h4> 
 								</td>
 							</tr>
 						</thead>
@@ -79,7 +81,7 @@
 							</tr>
 							
 							<tr>
-								<td colspan="2" valign="top" height="200">
+								<td colspan="2" valign="top" height="200" style="font-size: 20px;">
 									${dto.content}
 								</td>
 							</tr>
@@ -89,7 +91,7 @@
 									이전글  :
 									<c:if test="${not empty preReadDto}">
 										<a class="text-reset" href="${pageContext.request.contextPath}/qna/article.do?${query}&id=${preReadDto.id}">${preReadDto.subject}</a>
-										 <a><i class="bi bi-chevron-double-up"></i></a>
+										 <a class="point"><i class="bi bi-chevron-double-up"></i></a>
 									</c:if>
 								</td>
 							</tr>
@@ -98,7 +100,7 @@
 									다음글 :
 									<c:if test="${not empty nextReadDto}">
 										<a class="text-reset" href="${pageContext.request.contextPath}/qna/article.do?${query}&id=${nextReadDto.id}">${nextReadDto.subject}</a>
-										<a><i class="bi bi-chevron-double-down"></i></a>
+										<a class="point"><i class="bi bi-chevron-double-down"></i></a>
 									</c:if>
 								</td>
 							</tr>

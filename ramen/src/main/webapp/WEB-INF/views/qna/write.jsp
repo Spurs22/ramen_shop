@@ -53,12 +53,23 @@
 	</header>
 
 	<div class="main-container shadow-lg">
+	
+		<div class="sub-menu w-100">
+			<div style="display: flex; flex-direction: column; width: 100%">
+				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
+					<button class="btn btn-outline-primary"
+							onclick="location.href='${pageContext.request.contextPath}/notice/list.do'">공지사항
+					</button>
+					<button class="btn btn-primary"
+							onclick="location.href='${pageContext.request.contextPath}/qna/list.do'">문의사항
+					</button>
+				</div>
+			</div>
+		</div>
+		
 		<div class="content-container">
 			<main>
 			<div class="container body-container">
-			    <div class="body-title">
-					<h2><i class="fas fa-chalkboard-teacher"></i> 질문과 답변 </h2>
-			    </div>
 			    
 			    <div class="body-main">
 					<form name="boardForm" method="post">

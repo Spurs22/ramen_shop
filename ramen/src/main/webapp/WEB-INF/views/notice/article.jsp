@@ -17,6 +17,9 @@
 .table-article tr > td { padding-left: 5px; padding-right: 5px; }
 
 .text-reset { text-decoration: none; color : black; }
+
+.point :hover { cursor: pointer; }
+
 </style>
 </head>
 
@@ -56,15 +59,12 @@
 		</div>
 		
 		<div class="content-container">
-			<div class="body-title">
-				<h3><i class="bi bi-clipboard-check"></i>공지사항</h3>
-			</div>
 			<div class="body-main">
 			<table class="table">
 				<thead>
 					<tr>
 						<td colspan="2" align="center">
-							${dto.subject}
+							<h4>${dto.subject}</h4> 
 						</td>
 					</tr>
 				</thead>
@@ -80,7 +80,7 @@
 					</tr>
 					
 					<tr>
-						<td colspan="2" valign="top" height="200">
+						<td colspan="2" valign="top" height="200" style="font-size: 20px;">
 							${dto.content}
 						</td>
 					</tr>
@@ -91,7 +91,7 @@
 							이전글 :
 							<c:if test="${not empty preReadDto}">
 								<a class="text-reset" href="${pageContext.request.contextPath}/notice/article.do?${query}&id=${preReadDto.id}">${preReadDto.subject}</a>
-								<a><i class="bi bi-chevron-double-up"></i></a>
+								<a class="point"><i class="bi bi-chevron-double-up"></i></a>
 							</c:if>
 						</td>
 					</tr>
@@ -100,7 +100,7 @@
 							다음글 :
 							<c:if test="${not empty nextReadDto}">
 								<a class="text-reset" href="${pageContext.request.contextPath}/notice/article.do?${query}&id=${nextReadDto.id}">${nextReadDto.subject}</a>
-								<a><i class="bi bi-chevron-double-down"></i></a>
+								<a class="point"><i class="bi bi-chevron-double-down"></i></a>
 							</c:if>
 						</td>
 					</tr>

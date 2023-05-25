@@ -230,7 +230,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 		try {
 			sb.append("  SELECT q.id, member_id, subject, groupNum, orderNo, depth, hit_count, ");
 			sb.append("      TO_CHAR(q.created_date, 'YYYY-MM-DD') created_date, m.nickname ");
-			sb.append("  FORM Qna q  ");
+			sb.append("  FROM Qna q  ");
 			sb.append("  JOIN member m ON q.member_id = m.id ");
 
 			if (condition.equals("all")) {
