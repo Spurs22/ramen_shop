@@ -58,9 +58,9 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="content-container">
-		<form action="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">
+<%--		<form action="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">--%>
 <%--			<div>--%>
 <%--				<ul class="nav nav-pills nav-fill">--%>
 <%--				  <li class="nav-item">--%>
@@ -80,10 +80,7 @@
 <%--				  </li>--%>
 <%--				</ul>--%>
 <%--			</div>--%>
-
-
-			
-			<div>
+<%--			<div>--%>
 				<table class="table table-border table-list">
 				<thead>
 					<tr>
@@ -116,7 +113,9 @@
     $(document).ready(function () {
         selectMenu(menuIndex)
 
-        let proid = ${proid};
+        let proid = '${proid}';
+        console.log(proid)
+
         let children = $('.status-group').children();
         let c = $(children).eq(proid);
         $(c).removeClass('btn-outline-secondary')

@@ -454,7 +454,7 @@ public class orderDetailServlet extends MyServlet{
 			List<OrderStatistics> os = odri.salesStatisticsByProduct(proid);
 		
 			req.setAttribute("os",os);
-			req.setAttribute("priod",proid);
+			req.setAttribute("proid",proid);
 		
 		} catch (Exception e) {
 			e.printStackTrace();
