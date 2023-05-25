@@ -251,7 +251,6 @@
 				<div class="recipe-label">레시피 설명</div>
 				<textarea class="content-text" readonly="readonly">${dto.content}</textarea>
 
-				<%-- 관리자 검증할때 세션에서 롤갖고 쓰셈 --%>
 				<div style="display: flex; flex-direction: row; gap: 5px">
 					<c:if test="${sessionScope.member.userNickname==dto.nickname}">
 						<button type="button" class="btn"

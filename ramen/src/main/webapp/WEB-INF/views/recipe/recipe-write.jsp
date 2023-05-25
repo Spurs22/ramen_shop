@@ -66,11 +66,7 @@
 			margin-bottom: 20px;
 			padding: 0 20px;
         }
-		.cart-box > tr {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+		
 		a {
 			text-decoration: none;
 			color: black;
@@ -111,41 +107,79 @@
 			height: 30px;
 		}
 	
+		.product-quantity{ border: none; width: 40px; text-align: center; outline: none;}
+		
+		.contenttb { width: 100%; padding: 20px; }
+		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 10px; border-radius: 5px; background: #ffffff;}
+		.subjecttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 40px; padding: 10px; border-radius: 5px; background: #ffffff;}
+		
+		.quantity-btn { border: 1px solid lightgray; border-radius: 3px;}
+		
+		.cart-box {
+			
+		}
+		.select-product {
+			display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 250px;
+            padding: 20px;
+            height: 300px;
+			gap: 10px;            
+			overflow: auto;
+		}
+		
+		.cart-product {
+			position: relative;
+			width: 90%;
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0px;
+            padding: 10px;
+            transition: 0.5s;
+            background: #ffffff;
+            border: 1px solid #f8f8ff;
+		}
+		
 		.delete-btn {
+			position: absolute;
+			top: 10px;
+			right: 10px;
 			border: none;
 			background-color: transparent;
 			color: gray;
-			cursor: pointer;
+			right: 0;
+			margin-right: 5px;
+		}
+		
+		.delete-p {
+			width: 100%;
 		}
 	
-		.delete-btn:hover {
-			color: navy;
-		}
-	
-		.fa-trash-can {
+		.fa-xmark {
 			font-size: 18px;
 		}
 	
-		.fa-trash-can:hover {
+		.fa-xmark {
 			transform: scale(1.1);
+			color: navy;
+			cursor: pointer;
 		}
-		.cart-box table {
-		    margin: 0px auto;
-		    
+		.cart-name {
+			font-weight: 600;
+			margin-bottom: 5px;
 		}
-		.cart-box tr {
-		    height: 40px;
+		
+		.cart-quantity {
+			margin-bottom: 5px;
 		}
-		.hightlight { background: #f6f6f6; border-top: 2px solid black; border-bottom: 2px solid black; text-align: center;}
-		.product-quantity{ border: none; width: 40px; text-align: center; outline: none;}
 		
-		
-		.contenttb { width: 100%; padding: 20px; }
-		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 10px; border-radius: 5px; background: #f6f6f6;}
-		.subjecttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 40px; padding: 10px; border-radius: 5px; background: #f6f6f6;}
-		
-		.quantity-btn { border: 1px solid gray; border-radius: 3px;}
-		
+		.quantity-btn:hover {
+			background: #f8f8ff;
+		}
 	</style>
 </head>
 <script>
@@ -189,7 +223,7 @@
 	
 			<div class="product-container" id="resultForm">
 				<c:forEach var="post" items="${posts}">
-					<a class="product-item" onclick="addToCart('${post.product.productId}', '${post.price}', '${post.product.name}')">
+					<a class="product-item" onclick="addToCart('${post.product.productId}', '${post.price}', '${post.product.name}', '${post.product.picture}')">
 						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? "default2.png" : post.product.picture}">
 						<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">${post.product.name}</div>
 						<div style="color: #5d5d5d; font-size: 11px;">${post.price}원</div>
@@ -246,14 +280,7 @@
 		</div>
 		
 		<div class="cart-box">
-			<table>
-				<tr class='hightlight'>
-					<td style="width:200px;">상품명</td>
-					<td style="width:100px;">수량</td>
-					<td style="width:100px;">삭제</td>
-				</tr>
-				<tbody class="select-product"></tbody>
-			</table>
+			<div class="select-product"></div>
 		</div>
 		
 	</div>
@@ -387,7 +414,7 @@
     
     let addedProducts = [];
     
-    function addToCart(productId, price, name) {
+    function addToCart(productId, price, name, picture) {
     	// 이미 추가된 상품인지 체크
     	var isAlreadyAdded = addedProducts.some(function(product) {
 			return product.productId === productId;
@@ -399,27 +426,26 @@
 		}
     	
     	let out = "";
-    	
-    	out += "<tr style='border-bottom: 1px solid gray;' data-product-id='" + productId + "'>";
-		out += "<td style='width: 200px; padding-left: 16px;'>"+ name +"</td>"	
-		out += "<td style='width: 100px;' class='quantity-cell'>";
-		out += "<button type='button' class='quantity-btn minus'>&lt;</button>";
-		out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1' readonly='readonly'></span>";
-		out += "<button type='button' class='quantity-btn plus'>&gt;</button>";
-		out += "<input type='hidden' class='product-id' name='productId' value='" + productId + "'>";
-		out += "</td>";
-		out += "<td style='text-align: center; width:100px'>";
-		out += "<button type='button' class='delete-btn'><i class='fa-solid fa-trash-can'></i></button>";		
-		out += "</td>";
-		out += "</tr>";
-		
-		$(".select-product").append(out);
+		// 체크 포인트
+		out += "<div class='cart-product shadow xm'>";
+	    out += "<p class='delete-p'><button type='button' class='delete-btn'><i class='fa-solid fa-xmark'></i></button></p>";
+		out += "<img class='product-img' src='${pageContext.request.contextPath}/resource/picture/${"+picture+" == null ? 'default2.png' : "+picture+"}'>";
+	    out += "<p class='cart-name'>" + name + "</p>";
+	    out += "<p class='cart-quantity'>";
+	    out += "<button type='button' class='quantity-btn minus' data-product-id='" + productId + "'>&lt;</button>";
+	    out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1' readonly='readonly'></span>";
+	    out += "<button type='button' class='quantity-btn plus' data-product-id='" + productId + "'>&gt;</button>";
+	    out += "<input type='hidden' class='product-id' name='productId' value='" + productId + "'>";
+	    out += "</p>";
+	    out += "</div>";
+
+	    $(".select-product").append(out);
 		
 		var product = {
-		    productId: productId,
-		    quantity: $('.product-quantity').val()
-		};
-		
+	        productId: productId,
+	        quantity: 1
+	    };
+	
 		addedProducts.push(product);
 		
 		makeString();
@@ -443,12 +469,12 @@
 	    
 	    console.log(productIds);
 	}
-    
+
     // 레시피 상품 삭제
     $(document).on("click", ".delete-btn", function() {
-		$(this).closest("tr").remove();
+		$(this).closest("div").remove();
 		
-		const productId = $(this).closest("tr").find(".productId").val();
+		const productId = $(this).closest("div").find(".productId").val();
 		const index = addedProducts.findIndex(product => product.id === productId);
 		
 		if (index !== -1) {
@@ -457,49 +483,45 @@
 	});
     
     $(document).on("click", ".minus", function() {
-    	let tr = $(this).closest("tr");
-        let quantityInput = tr.find('.product-quantity');
+        let div = $(this).closest("div");
+        let quantityInput = div.find('.product-quantity');
         let value = parseInt(quantityInput.val());
-    	
+
         if (value > 1) {
             value--;
             quantityInput.val(value);
-            
-            let productId = tr.data('productId'); // tr 요소에서 productId 값을 가져옴
+
+            let productId = div.find('.quantity-btn').data('product-id');
             updateProductQuantity(productId.toString(), value.toString());
         }
-        
+
         console.log(addedProducts);
         makeString();
-	});
-    
-    
-    // 수량 조절
+    });
+
     $(document).on("click", ".plus", function() {
-    	let tr = $(this).closest("tr");
-        let quantityInput = tr.find('.product-quantity');
+        let div = $(this).closest("div");
+        let quantityInput = div.find('.product-quantity');
         let value = parseInt(quantityInput.val());
-        
+
         if (value < 10) {
             value++;
             quantityInput.val(value);
-            
-            let productId = tr.data('productId'); // tr 요소에서 productId 값을 가져옴
+
+            let productId = div.find('.quantity-btn').data('product-id');
             updateProductQuantity(productId.toString(), value.toString());
         }
-        
+
         console.log(addedProducts);
         makeString();
-	});
-    
+    });
+
     function updateProductQuantity(productId, quantity) {
-        // addedProducts 배열에서 productId에 해당하는 객체를 찾음
         let product = addedProducts.find(item => item.productId === productId);
-        
+
         if (product) {
-            product.quantity = quantity; // 수량을 변경
+            product.quantity = quantity;
         } else {
-            // productId에 해당하는 객체가 없는 경우 새로운 객체를 addedProducts 배열에 추가
             addedProducts.push({ productId, quantity });
         }
     }
