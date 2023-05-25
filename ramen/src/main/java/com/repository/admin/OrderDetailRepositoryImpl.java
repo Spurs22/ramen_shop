@@ -207,7 +207,7 @@ private Connection conn = DBConn.getConnection();
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	
 	@Override
-	public OrderBundle findOrderDetail(int offset, int size, int statusId, int orderBundleId) {
+	public OrderBundle findOrderDetail(int offset, int size, int statusId, Long orderBundleId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
@@ -219,8 +219,8 @@ private Connection conn = DBConn.getConnection();
 			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email, b.tel, ");
 			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, ");
 			sb.append(" d.status_name, b.delivery_id, NVL(tot,0) tot ");
-			sb.append(" FROM member a ");
-			sb.append(" JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" FROM order_bundle b  ");
+			sb.append(" JOIN member a ON a.id = b.member_id ");
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
@@ -229,22 +229,26 @@ private Connection conn = DBConn.getConnection();
 			
 			// status주문상태 검색 조건
 			if(statusId == 1) {
-				sb.append(" WHERE d.id = 1 AND orderBundleId = ?");
+				sb.append(" WHERE c.status_id = 1 AND b.id = ?");
 			} else if(statusId == 2) {
-				sb.append(" WHERE d.id = 2 AND  orderBundleId = ?");
+				sb.append(" WHERE c.status_id = 2 AND b.id = ?");
 			} else if(statusId == 3) {
-				sb.append(" WHERE d.id = 3 AND  orderBundleId = ?");
+				sb.append(" WHERE c.status_id = 3 AND b.id = ?");
 			} else if(statusId == 4) {
-				sb.append(" WHERE d.id = 4 AND  orderBundleId = ?");
+				sb.append(" WHERE c.status_id = 4 AND b.id = ?");
 			}
-			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setInt(1, orderBundleId);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, size);
+			if(statusId>= 1 && statusId <=4) {
+				pstmt.setLong(1, orderBundleId);		
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, size);
+			} else {				
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, size);
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -276,29 +280,34 @@ private Connection conn = DBConn.getConnection();
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
 			sb.append(" c.price, sum(c.final_price * c.quantity), d.name, e.status_name ");
-			sb.append(" FROM member a  ");
-			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" FROM  order_bundle b   ");
+			sb.append(" INNER JOIN member a ON a.id = b.member_id ");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" INNER JOIN product d ON d.id = c.product_id ");
 			sb.append(" INNER JOIN order_status e ON c.status_id = e.id ");
 			
 			// status주문상태 검색 조건
 			if(statusId == 1) {
-				sb.append(" WHERE e.id = 1");
+				sb.append(" WHERE c.status_id = 1 AND b.id = ?");
 			} else if(statusId == 2) {
-				sb.append(" WHERE e.id = 2");
+				sb.append(" WHERE c.status_id = 2 AND b.id = ?");
 			} else if(statusId == 3) {
-				sb.append(" WHERE e.id = 3");
+				sb.append(" WHERE c.status_id = 3 AND b.id = ?");
 			} else if(statusId == 4) {
-				sb.append(" WHERE e.id = 4");
+				sb.append(" WHERE c.status_id = 4 AND b.id = ?");
 			}
-			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setInt(1, offset);
-			pstmt.setInt(2, size);
+			if(statusId>= 1 && statusId <=4) {
+				pstmt.setLong(1, orderBundleId);		
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, size);
+			} else {
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, size);				
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -313,7 +322,7 @@ private Connection conn = DBConn.getConnection();
 				orderItem.setStatusId(rs.getLong("status_id"));
 				orderItem.setQuantity(rs.getInt("quantity"));
 				orderItem.setPrice(rs.getLong("price"));
-				orderItem.setFinalPrice(rs.getLong("final_price"));
+				orderItem.setFinalPrice(rs.getLong(7));
 				orderItem.setProductName(rs.getString("name"));
 				orderItem.setStatusName(rs.getString("status_name"));
 
@@ -332,7 +341,7 @@ private Connection conn = DBConn.getConnection();
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	 - 검색
 	@Override
-	public OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, int orderBundleId) {
+	public OrderBundle findOrderDetail(int offset, int size, String condition, String keyword, int statusId, Long orderBundleId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
@@ -344,8 +353,8 @@ private Connection conn = DBConn.getConnection();
 			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email useremail, b.tel, ");
 			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, ");
 			sb.append(" d.status_name, b.delivery_id, NVL(tot,0) tot ");
-			sb.append(" FROM member a ");
-			sb.append(" JOIN order_bundle b ON a.id = b.member_id ");
+			sb.append(" FROM order_bundle b ");
+			sb.append(" JOIN member a ON a.id = b.member_id ");
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
@@ -634,7 +643,7 @@ private Connection conn = DBConn.getConnection();
       
 		try {
 			// 
-			sb.append("SELECT b.product_id, a.name, sum(b.quantity) as 판매수량, ");
+			sb.append("SELECT b.product_id, a.picture, a.name, sum(b.quantity) as 판매수량, ");
 			sb.append(" sum(b.final_price) as 최종매출액 ");
 			sb.append(" FROM order_item b ");
 			sb.append(" JOIN product a ON a.id = b.product_id ");
@@ -657,7 +666,7 @@ private Connection conn = DBConn.getConnection();
 			} else {
 				// 전체
 			}
-			sb.append(" GROUP BY b.product_id, a.name");
+			sb.append(" GROUP BY b.product_id, a.picture, a.name");
 			sb.append(" ORDER BY b.product_id ");
 
 			pstmt = conn.prepareStatement(sb.toString());
@@ -667,9 +676,10 @@ private Connection conn = DBConn.getConnection();
 			while(rs.next()) {
 				OrderStatistics os = new OrderStatistics();
 				os.setProductid(rs.getLong(1));
-				os.setProductname(rs.getString(2));
-				os.setSumquantity(rs.getLong(3));
-				os.setSumfinal_price(rs.getLong(4));
+				os.setPicture(rs.getString(2));
+				os.setProductname(rs.getString(3));
+				os.setSumquantity(rs.getLong(4));
+				os.setSumfinal_price(rs.getLong(5));
 				
 				osList.add(os);
 			}

@@ -5,7 +5,7 @@
 	<title>매출통계</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
-
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 	<style>
 	.whole-container{
 		width: 80%;
@@ -29,6 +29,20 @@
 	</header>
 
 	<div class="main-container shadow-lg">
+		<div>
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do';">배송관리</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do';">주문관리</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">매출통계</button>
+			</div>
+		</div>
+		
 		<div class="content-container">
 		<form action="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">
 			<div>
@@ -56,6 +70,7 @@
 				<thead>
 					<tr>
 						<th class="productid">상품번호</th>
+						<th class="productname">상품사진</th>
 						<th class="productname">상품명</th>
 						<th class="sumquantity">판매수량</th>
 						<th class="sumfinal_price">총매출합계</th>
@@ -65,6 +80,7 @@
 					<c:forEach var="sals" items="${os}">
 						<tr>
 							<td>${sals.productid}</td>
+							<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${sals.picture}" style="height: 100px;"></td>
 							<td>${sals.productname}</td>
 							<td>${sals.sumquantity}</td>
 							<td>${sals.sumfinal_price}</td>

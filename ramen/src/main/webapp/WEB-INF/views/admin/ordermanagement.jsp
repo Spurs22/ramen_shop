@@ -7,7 +7,7 @@
 	<title>주문관리</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
-
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
 	<style>
 	.whole-container{
 		width: 80%;
@@ -40,6 +40,20 @@
 
 
 	<div class="main-container shadow-lg">
+		<div>
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do';">배송관리</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do';">주문관리</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do';">매출통계</button>
+			</div>
+		</div>
+		
 		<div class="content-container">
 			<div>
 				<ul class="nav nav-pills nav-fill">
@@ -106,7 +120,7 @@
 				<tbody>
 					<c:forEach var="orderBundle" items="${orderBundlelist}" >
 						<tr>
-							<td onclick="location.href='${pageContext.request.contextPath}/mypage/ordermanagement_detail.do?orderId='${orderBundle.orderBundleId}'">
+							<td onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement_detail.do?orderId=${orderBundle.orderBundleId}';">
 								${orderBundle.orderBundleId}
 							</td>
 							<td>${orderBundle.createdDate}</td>
