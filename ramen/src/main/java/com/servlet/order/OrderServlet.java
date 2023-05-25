@@ -251,9 +251,6 @@ public class OrderServlet extends MyServlet {
 			long order_id = orderService.createOrderBundle(orderBundle, itemlist);
 			resp.sendRedirect(cp+"/order/order_complete.do?order_id="+order_id);
 			
-			req.setAttribute("errorMessage", errorMessage);
-			req.setAttribute("message", message);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
