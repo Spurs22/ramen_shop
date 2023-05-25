@@ -192,7 +192,7 @@ public class OrderServlet extends MyServlet {
 			orderBundle.setMemberId(memberId);
 			orderBundle.setReceiveName(req.getParameter("receiveName"));
 
-			String tel = req.getParameter("tel1") + "-" + req.getParameter("tel2") + "-" + req.getParameter("tel1");
+			String tel = req.getParameter("tel1") + "-" + req.getParameter("tel2") + "-" + req.getParameter("tel3");
 			orderBundle.setTel(tel);
 
 			orderBundle.setPostNum(req.getParameter("zip"));
