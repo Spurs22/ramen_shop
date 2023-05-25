@@ -13,10 +13,23 @@
 	}
 	</style>
 	<script type="text/javascript">
-	function registration() {
-		const f = document.searchForm;
-		f.submit();
-	}
+	$(function(){
+		$(".btnRegistration").click(function(){
+			let orderBundleId = $(this).attr("data-orderBundleId");
+			let deliveryId = $(this).closest("td").find("input[name=deliveryId]").val().trim();
+			if( ! deliveryId ) {
+				$(this).closest("td").find("input[name=deliveryId]").focus();
+				return false;
+			}
+			
+			
+			let qs = "orderId="+orderBundleId+"&deliveryId="+deliveryId;
+
+			let url = "${pageContext.request.contextPath}/admin/delivery_ok.do?" + qs;
+			
+			
+		});
+	})
 	</script>
 </head>
 <script>
@@ -37,7 +50,7 @@
 							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">배송관리
 					</button>
 					<button class="btn btn-outline-primary"
-							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do'">주문관리
+							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?status=1'">주문관리
 					</button>
 					<button class="btn btn-outline-primary"
 							onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do'">매출통계
@@ -60,7 +73,7 @@
 				</tr>
 			</table>
 			
-			<table class="table table-border table-list">
+			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
 						<th class="orderBundleId">주문번호</th>
@@ -84,8 +97,9 @@
 							<td>${orderBundle.receiveName}</td>
 							<td>${orderBundle.statusName}</td>
 							<td>
-								<input type="text" name="deliveryId" value="${deliveryId}" class="form-control">
-								<button type="button" class="btn" onclick="registration()">입력</button>
+								<input type="text" name="deliveryId" value="${deliveryId}" class="form-control" size=13 maxlength=12>
+								<button type="button" class="btn btnRegistration" data-orderBundleId="${orderBundle.orderBundleId}" style="margin:5px 0 0 0; background-color:#eee; text-align:center;">
+									입력</button>
 							</td>
 							<td>${orderBundle.totalPrice}</td>
 						</tr>

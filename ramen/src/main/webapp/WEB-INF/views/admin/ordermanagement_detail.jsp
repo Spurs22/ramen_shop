@@ -29,7 +29,7 @@
 		<div class="content-container">
 			<div style="margin-bottom: 20px"><button class="btn btn-outline-secondary" onclick="history.back()">뒤로가기</button></div>
 
-			<table class="table table-border table-list">
+			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
 						<td class="orderBundleId">주문번호</td>
@@ -60,7 +60,7 @@
 				</tbody>
 			</table>
 			
-			<table class="table table-border table-list">
+			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
 						<th class="orderItemId">주문상세번호</th>

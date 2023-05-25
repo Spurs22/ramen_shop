@@ -46,7 +46,7 @@
 							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">배송관리
 					</button>
 					<button class="btn btn-primary"
-							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do'">주문관리
+							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?status=1'"> 주문관리
 					</button>
 					<button class="btn btn-outline-primary"
 							onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do'">매출통계
@@ -101,7 +101,7 @@
 			</tr>
 		</table>
 
-		<table class="table table-border table-list">
+		<table class="table table-border table-list" style="text-align:center;">
 			<thead>
 			<tr>
 				<th class="orderBundleId">주문번호</th>
@@ -137,7 +137,7 @@
 		</div>
 	</div>
 </div>
-</div>
+
 
 <script>
     $(document).ready(function () {

@@ -27,8 +27,8 @@ private Connection conn = DBConn.getConnection();
 
 		try {
 			sql = "UPDATE order_bundle "
-					+ " SET status_id = 2  "
-					+ " WHERE delivery_id = ?" ;
+					+ " SET delivery_id = ? , status_id = 2  "
+					+ " WHERE id = ?" ;
 			pstmt = conn.prepareStatement(sql);
 			 
 			pstmt.setLong(1, deliveryId);
@@ -279,7 +279,7 @@ private Connection conn = DBConn.getConnection();
 			// 주문번호, 주문상세번호, 상품명, 단가, 수량, 상품별합계, 주문상태명, 우편번호, 주소1, 주소2
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
-			sb.append(" c.price, sum(c.final_price * c.quantity), d.name, e.status_name ");
+			sb.append(" c.price, sum(c.final_price * c.quantity) tot, d.name, e.status_name ");
 			sb.append(" FROM  order_bundle b   ");
 			sb.append(" INNER JOIN member a ON a.id = b.member_id ");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id ");
@@ -322,7 +322,7 @@ private Connection conn = DBConn.getConnection();
 				orderItem.setStatusId(rs.getLong("status_id"));
 				orderItem.setQuantity(rs.getInt("quantity"));
 				orderItem.setPrice(rs.getLong("price"));
-				orderItem.setFinalPrice(rs.getLong(7));
+				orderItem.setFinalPrice(rs.getLong("tot"));
 				orderItem.setProductName(rs.getString("name"));
 				orderItem.setStatusName(rs.getString("status_name"));
 

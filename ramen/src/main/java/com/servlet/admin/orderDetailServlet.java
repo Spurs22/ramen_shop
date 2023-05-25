@@ -75,7 +75,9 @@ public class orderDetailServlet extends MyServlet{
 		} else if(uri.indexOf("sales_statistics.do") != -1) {
 			// 매출통계 메인화면
 			salesStatistics(req,resp);
-		} 
+		} else if(uri.indexOf("delivery_ok.do") != -1) {
+			deliveryok(req,resp);
+		}
 	}
 	
 	protected void deliverymanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -112,7 +114,6 @@ public class orderDetailServlet extends MyServlet{
 				status = Integer.parseInt(ststatusId);
 			}
 		
-			
 			dataCount = odri.dataCount(status);
 			
 			total_page = util.pageCount(dataCount, size);
@@ -154,10 +155,31 @@ public class orderDetailServlet extends MyServlet{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//resp.sendRedirect(cp + "/admin/deliverymanagement.do?page=" + page);
-		// forward(req,resp,"/WEB-INF/views/admin/deliverymanagement.jsp");
 		 forward(req,resp,"/WEB-INF/views/admin/deliverymanagement.jsp");
 		
+	}
+	protected void deliveryok(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 송장번호 등록 완료
+	
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		String cp = req.getContextPath();
+		try {
+			
+			Long orderId = Long.parseLong(req.getParameter("orderId"));
+			Long deliveryId = Long.parseLong(req.getParameter("deliveryId"));
+			
+			odri.setDeliveryNumber(orderId, deliveryId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp + "/admin/deliverymanagement.do");
 	}
 	
 	protected void ordermanagement(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
