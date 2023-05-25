@@ -27,15 +27,15 @@ public class QnaServlet extends MyServlet {
 
 		String uri = req.getRequestURI();
 
+		/*
 		// 세션 정보
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
+		// HttpSession session = req.getSession();
+		// SessionInfo info = (SessionInfo) session.getAttribute("member");
 		if (info == null) {
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
 		}
-		
+		*/
 		if(uri.indexOf("list.do") != -1 ) {
 			list(req, resp);
 		} else if(uri.indexOf("write.do") != -1) {

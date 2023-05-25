@@ -181,7 +181,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 		
 		try {
 			sb.append("  SELECT q.id, member_id, subject, groupNum, orderNo, depth, hit_count, ");
-			sb.append("      TO_CHAR(q.created_date, 'YYYY-MM-DD') created_date ");
+			sb.append("      TO_CHAR(q.created_date, 'YYYY-MM-DD') created_date, m.nickname ");
 			sb.append("  FROM Qna q  ");
 			sb.append("  JOIN member m ON q.member_id = m.id ");
 			sb.append("  ORDER BY groupNum DESC, orderNo ASC  ");
@@ -205,6 +205,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 				dto.setDepth(rs.getInt(6));
 				dto.setHitCount(rs.getInt(7));
 				dto.setCreatedDate(rs.getString(8));
+				dto.setNickname(rs.getString(9));
 				
 				list.add(dto);
 			}
@@ -228,7 +229,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 		
 		try {
 			sb.append("  SELECT q.id, member_id, subject, groupNum, orderNo, depth, hit_count, ");
-			sb.append("      TO_CHAR(q.created_date, 'YYYY-MM-DD') created_date ");
+			sb.append("      TO_CHAR(q.created_date, 'YYYY-MM-DD') created_date, m.nickname ");
 			sb.append("  FORM Qna q  ");
 			sb.append("  JOIN member m ON q.member_id = m.id ");
 
@@ -268,6 +269,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 				dto.setDepth(rs.getInt(6));
 				dto.setHitCount(rs.getInt(7));
 				dto.setCreatedDate(rs.getString(8));
+				dto.setNickname(rs.getString(9));
 				
 				list.add(dto);
 			}
@@ -316,7 +318,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 		
 		try {
 			sql = " SELECT q.id, member_id, subject, content, q.created_date, hit_count, "
-					+ "   groupNum, depth, orderNo, parent "
+					+ "   groupNum, depth, orderNo, parent, m.nickname "
 					+ "   FROM Qna q "
 					+ "   JOIN member m ON q.member_id = m.id "
 					+ "   WHERE q.id = ? ";
@@ -340,6 +342,7 @@ public class QnaRepositoryImpl implements QnaRepository {
 				dto.setDepth(rs.getInt(8));
 				dto.setOrderNo(rs.getInt(9));
 				dto.setParent(rs.getLong(10));
+				dto.setNickname(rs.getString(11));
 			}
 			
 		} catch (SQLException e) {

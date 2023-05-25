@@ -12,6 +12,8 @@ public class QnA {
 	private int depth;
 	private long parent;
 	
+	private String nickname;
+	
 	public long getId() {
 		return id;
 	}
@@ -71,6 +73,12 @@ public class QnA {
 	}
 	public void setParent(long parent) {
 		this.parent = parent;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	
 	

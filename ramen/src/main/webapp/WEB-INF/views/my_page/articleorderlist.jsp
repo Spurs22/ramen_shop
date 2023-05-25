@@ -15,6 +15,7 @@
 	.table-list .product { width: 150px; color: #787878; }
 	.table-list .price { width: 200px; color: #787878; }
 	.table-list .quantity { width: 100px; color: #787878; }
+	.table-list .picture { width: 100px; color: #787878; }
 	.table-list .total { width: 250px; color: #787878; }
 	.table-list .status { width: 150px; color: #787878; }
 	.table-list .name { width: 150px; color: #787878; }
@@ -40,7 +41,7 @@
 					<thead>
 						<tr class="table-list">
 							<th class="num">주문 번호</th>
-							<th class="picture">제 품</th>
+							<th class="picture">이미지</th>
 							<th class="name">제품 이름</th>
 							<th class="price">제품 가격</th>
 							<th class="quantity">제품 개수</th>

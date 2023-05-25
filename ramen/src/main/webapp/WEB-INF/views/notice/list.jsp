@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 
 	<style type="text/css">
-
+	.text-reset { text-decoration: none; color : black; }
 	</style>
 
 </head>
@@ -86,17 +86,24 @@
 			<div class="body-main">
 				<form name="listForm" method="post">
 					<div class="row board-list-header">
-						<div class="col-auto-me-auto">
+						<p>
+							${dataCount}개(${page}/${total_page} 페이지)
+						</p>
+						<div class="col-1">
+							<a>
 							<c:if test="${sessionScope.member.userRoll==1}">
 								<button type="button" class="btn btn-light" id="btnDeleteList" title="삭제">
 									<i class="bi bi-trash3-fill"></i>
 								</button>
 							</c:if>
-							<c:if test="${sessionScope.member.userRoll==1}">
+							</a>
+							<a>
+							<c:if test="${sessionScope.member.userRoll!=1}">
 								<p class="form-control-plaintext">
-										${dataCount}개(${page}/${total_page}페이지)
+									${dataCount}개(${page}/${total_page}페이지)
 								</p>
 							</c:if>
+							</a>
 						</div>
 						<div class="col-auto">
 							<c:if test="${dataCount!=0}">
@@ -142,13 +149,13 @@
 								<td class="left">
 									<a href="${articleUrl}&id=${dto.id}" class="text-reset">${dto.subject}</a>
 								</td>
-								<td>${sessionScope.member.userNickname}</td>
+								<td>${dto.nickname}</td>
 								<td style="width: 150px;">${dto.createdDate}</td>
 								<td>${dto.hitCount}</td>
 							</tr>
 						</c:forEach>
 
-						<c:forEach var="dto" items="${list}" varStatus="status ">
+						<c:forEach var="dto" items="${list}" varStatus="status">
 							<tr>
 								<c:if test="${sessionScope.member.userRoll==1}">
 									<td>
@@ -161,7 +168,7 @@
 									<c:if test="${dto.gap<1}"><img style="width: 30px;"
 																   src="${pageContext.request.contextPath}/resource/picture/new2.gif"></c:if>
 								</td>
-								<td>${sessionScope.member.userNickname}</td>
+								<td>${dto.nickname}</td>
 								<td>${dto.createdDate}</td>
 								<td>${dto.hitCount}</td>
 							</tr>

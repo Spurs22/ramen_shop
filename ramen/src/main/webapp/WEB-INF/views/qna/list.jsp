@@ -59,6 +59,10 @@
         .subject-a :hover {
             cursor: pointer;
         }
+        
+        .text-reset { 
+        	text-decoration: none; color : black; 
+        }
 
 	</style>
 
@@ -123,7 +127,7 @@
 								<c:if test="${dto.depth!=0}">└&nbsp;</c:if>
 								<a href="${articleUrl}&id=${dto.id}" class="text-reset">${dto.subject}</a>
 							</td>
-							<td>${sessionScope.member.userNickname}</td>
+							<td>${dto.nickname}</td>
 							<td>${dto.createdDate}</td>
 							<td>${dto.hitCount}</td>
 						</tr>
@@ -145,13 +149,12 @@
 							<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 							<option value="createdDate"  ${condition=="createdDate"?"selected='selected'":"" }>등록일</option>
 							<option value="subject"  ${condition=="subject"?"selected='selected'":"" }>제목</option>
+							<option value="nickname"  ${condition=="nickname"?"selected='selected'":"" }>작성자</option>
 							<option value="content"  ${condition=="content"?"selected='selected'":"" }>내용</option>
 						</select>
 
 						<input type="text" name="keyword" value="${keyword}" class="form-control">
-
-						<input type="hidden" name="size" value="${size}">
-						<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
+						<button type="button" class="btn btn-light" onclick="searchList();"><i class="bi bi-search"></i></button>
 					</div>
 
 					<c:choose>

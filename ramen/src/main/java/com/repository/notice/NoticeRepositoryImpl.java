@@ -144,7 +144,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("  SELECT n.id, member_id, subject, hit_count, n.created_date ");
+			sb.append("  SELECT n.id, member_id, subject, hit_count, n.created_date, m.nickname ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id = n.member_id ");
 			sb.append("  ORDER BY id DESC ");
 			sb.append("  OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
@@ -164,6 +164,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto.setSubject(rs.getString("subject"));
 				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setCreatedDate(rs.getString("created_date"));
+				dto.setNickname(rs.getString("nickname"));
 				
 				list.add(dto);
 			}
@@ -186,7 +187,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("SELECT n.id, member_id, subject, hit_count, n.created_date  ");
+			sb.append("SELECT n.id, member_id, subject, hit_count, n.created_date, m.nickname  ");
 			sb.append("  FROM notice_board n JOIN member m ON m.id = n.member_id ");
 			
 			if(condition.equals("all")) {
@@ -226,6 +227,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto.setSubject(rs.getString("subject"));
 				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setCreatedDate(rs.getString("created_date"));
+				dto.setNickname(rs.getString("nickname"));
 				
 				list.add(dto);
 			}
@@ -249,7 +251,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		
 		try {
 			sb.append("  SELECT n.id, member_id, subject, hit_count,");
-			sb.append("    TO_CHAR(n.created_date, 'YYYY-MM-DD') created_date ");
+			sb.append("    TO_CHAR(n.created_date, 'YYYY-MM-DD') created_date, m.nickname ");
 			sb.append("  FROM notice_board n");
 			sb.append("  JOIN member m ON m.id = n.member_id ");
 			sb.append("  WHERE notice=1 ");
@@ -267,6 +269,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto.setSubject(rs.getString("subject"));
 				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setCreatedDate(rs.getString("created_date"));
+				dto.setNickname(rs.getString("nickname"));
 				
 				list.add(dto);
 			}
@@ -290,7 +293,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		String sql;
 		
 		try {
-			sql = " SELECT n.id, member_id, subject, content, hit_count, notice, n.created_date "
+			sql = " SELECT n.id, member_id, subject, content, hit_count, notice, n.created_date, m.nickname "
 					+ "  FROM notice_board n "
 					+ "  JOIN member m ON m.id = n.member_id "
 					+ "  WHERE n.id = ? ";
@@ -311,6 +314,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setNotice(rs.getInt("notice"));
 				dto.setCreatedDate(rs.getString("created_date"));
+				dto.setNickname(rs.getString("nickname"));
 			}
 
 		} catch (SQLException e) {

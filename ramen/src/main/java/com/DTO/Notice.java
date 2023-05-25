@@ -10,6 +10,8 @@ public class Notice {
 	private String createdDate;
 	private Long gap;
 	
+	private String nickname;
+	
 	public Long getId() {
 		return id;
 	}
@@ -58,6 +60,12 @@ public class Notice {
 	}
 	public void setGap(Long gap) {
 		this.gap = gap;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	
 }

@@ -33,15 +33,18 @@ public class NoticeServlet extends MyServlet {
 		
 		String uri = req.getRequestURI();
 		
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
-		String cp = req.getContextPath();
+		// String cp = req.getContextPath();
 		
+		// HttpSession session = req.getSession();
+		// SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		/*
 		if(info == null && uri.indexOf("list.do") == -1) {
 			resp.sendRedirect(cp+ "/member/login.do");
 			return;
 		}
+		*/
 		
 		
 		if(uri.indexOf("list.do") != -1 ) {

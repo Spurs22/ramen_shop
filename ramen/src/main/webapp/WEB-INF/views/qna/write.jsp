@@ -73,7 +73,7 @@
 							<tr> 
 								<td class="table-light col-sm-2" scope="row">작성자명</td>
 								<td> 
-									<p class="form-control-plaintext">${sessionScope.member.userNickname}</p>
+									<p class="form-control-plaintext">${dto.nickname}</p>
 								</td>
 							</tr>
 							
