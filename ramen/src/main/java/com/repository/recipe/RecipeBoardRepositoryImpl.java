@@ -139,10 +139,11 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "INSERT INTO recipe_picture (id, recipe_id, picture_path) VALUES (recipe_picture_seq.NEXTVAL, recipe_board_seq.CURRVAL, ?)";
+			sql = "INSERT INTO recipe_picture (id, recipe_id, picture_path) VALUES (recipe_picture_seq.NEXTVAL, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, recipeBoard.getPicture());
+			pstmt.setLong(1, recipeBoard.getRecipeId());
+			pstmt.setString(2, recipeBoard.getPicture());
 			
 			pstmt.executeUpdate();
 			
@@ -1105,6 +1106,8 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipe.setCreatedDate(rs.getString("created_date"));
 				recipe.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
 				recipe.setPicture(rs.getString("picture_path"));
+				
+				System.out.println("안녕" + recipe.getPicture());
 				
 				list.add(recipe);
 			}

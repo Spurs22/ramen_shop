@@ -216,11 +216,8 @@ public class RecipeServlet extends MyUploadServlet {
 			json.put("createdDate", board.getCreatedDate());
 			json.put("nickname", board.getNickname());
 			json.put("recipeLikeCount", board.getRecipeLikeCount());
+			json.put("picture", board.getPicture());
 			
-			String picture = (board.getPicture()==null ? "default2.png" : board.getPicture());
-			json.put("picture", picture);
-			
-			System.out.println("사진 확인 : " + picture);
 			jarr.put(json);
 			
 			System.out.println(board.getId()+","+board.getSubject());
@@ -305,9 +302,6 @@ public class RecipeServlet extends MyUploadServlet {
 		    ServletContext context = getServletContext();
 			String path = context.getRealPath("/resource/picture");
 			
-			System.out.println("여기까지는 오냐");
-			
-			/*
 			Part part = req.getPart("picture");
 
 			String fileName = doFileUpload(part, path);
@@ -315,7 +309,6 @@ public class RecipeServlet extends MyUploadServlet {
 			System.out.println(fileName);
 			
 			dto.setPicture(fileName);
-			*/
 
 			recipeBoardService.insertRecipe(dto);
 			
@@ -413,10 +406,21 @@ public class RecipeServlet extends MyUploadServlet {
 		    	
 		    	list.add(product);
 		    }
-			
+		    
 			board.setRecipeProduct(list);
 			
 			board.setMemberId(info.getMemberId());
+			
+			ServletContext context = getServletContext();
+			String path = context.getRealPath("/resource/picture");
+			
+			Part part = req.getPart("picture");
+
+			String fileName = doFileUpload(part, path);
+
+			System.out.println(fileName);
+			
+			board.setPicture(fileName);
 			
 			recipeBoardService.updateRecipe(board);
 			

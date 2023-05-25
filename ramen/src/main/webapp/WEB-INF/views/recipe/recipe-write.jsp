@@ -217,7 +217,7 @@
 						<div style="display: flex; flex-direction: row; gap: 5px; justify-content: flex-end;">
 							<button class="btn btn-primary" type="button" onclick="sendOk();">${mode =='update' ? '수정' : '등록' }</button>
 							<c:if test="${mode == 'update'}">
-								<input type="hidden" name="id" value="${recipeId}">
+								<input type="hidden" name="recipeId" value="${recipeId}">
 							</c:if>
 						</div>
 					</td>
@@ -237,9 +237,9 @@
 				<tr>
 					<td colspan="2" style="padding: 15px; font-size: 20px; font-weight: bold;">사진</td>
 				</tr>
-		<!--    <tr>
+				<tr>
 					<td colspan="2"><input type="file" class="form-control" aria-label="Upload" accept="image/jpeg,image/png,image/gif" name="picture" id="productImgInput"></td>
-				</tr> -->
+				</tr>
 			</table>
 			
 		</form>
@@ -355,11 +355,18 @@
 			return;
 		}
 		
+		let formData = new FormData(f);
+        formData.append("productIds", productIds);
+        formData.append("quantities",quantities);
+		
 		$.ajax({
 	        url: "${pageContext.request.contextPath}/recipe/${mode}_ok.do",
 	        type: "POST",
 	        dataType: "json",
-	        data: { subject: f.subject.value, content: f.content.value, productIds: productIds, quantities: quantities, recipeId: f.id.value },
+	        processData: false,
+	        contentType: false,
+	        data: formData,
+	        <!-- data: { subject: f.subject.value, content: f.content.value, productIds: productIds, quantities: quantities, recipeId: f.id.value }, -->
 	        success: function(data) {
 	        	let state = data.state;
 	        	if(state == "true") {

@@ -166,6 +166,12 @@
             font-size: 18px;
 
         }
+        
+        .recipe-info {
+        	text-decoration: none;
+			color: black;
+        }
+        
 	</style>
 </head>
 <script>
@@ -214,12 +220,13 @@
 				<div class="recipe-label" style="padding-bottom: 0">조합 상품</div>
 				<div class="product-container">
 					<c:forEach var="recipe" items="${list}">
+					<a class="recipe-info" onclick="href='${pageContext.request.contextPath}/product/post-board?id=${recipe.productId}'">
 						<div class="product-item" style="position:relative;">
 							<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${recipe.picture == null ? "default2.png" : recipe.picture}">
 							${recipe.name}
 							<div style="background: #f5cf73; border-radius: 20px; position: absolute; right: -8px; top: -8px; width: 50px; text-align: center; padding: 5px 8px; border: 1px solid black; font-weight: 550">x ${recipe.quantity}</div>
 						</div>
-
+					</a>
 					</c:forEach>
 				</div>
 
