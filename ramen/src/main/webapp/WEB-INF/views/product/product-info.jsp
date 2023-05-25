@@ -378,20 +378,11 @@
 			</div>
 		</div>
 	</div>
-
-	<%--
-	<div>
-		<p>${post.productId}</p>
-		<p>${post.productName}</p>
-		<p>${post.writerId}</p>
-		<p>${post.content}</p>
-		<p>${post.createdDate}</p>
-	</div>
-
-	--%>
-
-
 </div>
+
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
 
 <script>
 
@@ -622,6 +613,5 @@
         });
     });
 </script>
-
 </body>
 </html>

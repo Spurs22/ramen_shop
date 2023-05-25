@@ -91,13 +91,13 @@
 	</div>
 
 	<div class="info">
-		<span>사업자등록번호 201-81-21515</span>
-		<span>(주)스타벅스 코리아 대표이사 이석구</span>
-		<span>TEL : 02) 3015-1100 / FAX : 02) 3015-1106</span>
-		<span>개인정보 책임자 : 강기원</span>
+		<span>사업자등록번호 111-11-11111</span>
+		<span>(주)섞었더 라면 코리아 대표이사 ooo</span>
+		<span>TEL : 02) 1234-5678 / FAX : 02) 1234-5678</span>
+		<span>개인정보 책임자 : ooo</span>
 	</div>
 
 	<p class="copyright">
-		&copy; <span class="this-year"></span> Starbucks Coffee Company. All Rights Reseved.
+		&copy; <span class="this-year"></span> if mixed ramen Company. All Rights Reseved.
 	</p>
 </div>

@@ -184,6 +184,10 @@
 	</div>
 </div>
 
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
+
 <script>
     let submitBtn = document.getElementById('submitButton');
     let form = document.getElementById('form');
@@ -229,25 +233,37 @@
         reader.readAsDataURL(productImgInput.files[0]);
     });
 
-    submitBtn.addEventListener('click', function () {
-        if (${mode.equals('post')}) {
-            if (!nameCheckStatus) {
-                alert('아이디 중복 검사를 먼저 해주세요.')
-                return
-            }
 
-            if (confirm("등록 하시겠습니까?")) {
-				form.submit();
-            }
-        } else {
-            if (confirm("수정 하시겠습니까?")) {
-				form.submit();
-            }
-        }
+    // 폼 전송 함수
+    submitBtn.addEventListener('click', function () {
+
+		if (!nameCheckStatus) {
+			alert('아이디 중복 검사를 먼저 해주세요.')
+			return
+		}
+
+		if (Number(categoryInput.val()) === 0) {
+			alert('카테고리를 선택해주세요.')
+			categoryInput.focus()
+			return
+		}
+
+		if (!isDigitNumber(quantityInput.val())) {
+			alert('재고를 입력해 주세요.\n한자리 이상의 정수만 입력 가능합니다.')
+			quantityInput.focus()
+			return
+		}
+
+		if (${mode.equals('post')}) {
+			if (!confirm("등록 하시겠습니까?")) return;
+		} else {
+			if (!confirm("수정 하시겠습니까?")) return;
+		}
+
+        form.submit();
     });
 
     $(function () {
-
 		// 카테고리 미리보기
         categoryInput.change(function () {
             let $categoryPreview = $('#category-preview');
@@ -260,9 +276,16 @@
         });
 
         $("#productNameCheckBtn").click(function () {
-
             let url = "${pageContext.request.contextPath}/product/valid-product-name}";
             let name = $('#productName')
+
+			// 상품명이 빈 문자열일때 리턴
+            if (name.val().trim() === '') {
+                alert('상품명을 입력해 주세요.')
+				name.focus()
+				return
+            }
+
             let qs = "name=" + name.val();
 
             const fn = function (data) {
@@ -284,7 +307,6 @@
         quantityInput.change(function () {
             $('#quantity-preview').text(quantityInput.val());
         });
-
 
         function ajaxFun(url, method, query, dataType, fn) {
             $.ajax({
@@ -310,8 +332,6 @@
             });
         }
     });
-
-
 </script>
 
 <script>

@@ -13,6 +13,7 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/js/menu.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resource/js/validationScript.js"></script>
 
 
 

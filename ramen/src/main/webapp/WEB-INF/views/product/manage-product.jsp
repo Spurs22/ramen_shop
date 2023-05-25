@@ -85,50 +85,50 @@
     let menuIndex = 2
 </script>
 <body>
-<div class="whole-container">
+	<div class="whole-container">
+		<header>
+			<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
+		</header>
 
-	<header>
-		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
-	</header>
+		<div class="main-container shadow-lg" style="padding: 70px 70px 110px 70px">
+			<div class="sub-menu">
+				<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%">
+					<button type="button" class="btn btn-outline-secondary" style="width: 90px" onclick="location.href='${pageContext.request.contextPath}/product/list'">뒤로가기</button>
+					<input type="text" style="width: 150px; padding: 0 5px">
+				</div>
 
-	<div class="main-container shadow-lg" style="padding: 70px 70px 110px 70px">
-
-		<div class="sub-menu">
-			<div style="display: flex; flex-direction: row; gap: 5px; justify-content: space-between; width: 100%">
-				<button type="button" class="btn btn-outline-secondary" style="width: 90px" onclick="location.href='${pageContext.request.contextPath}/product/list'">뒤로가기</button>
-				<input type="text" style="width: 150px; padding: 0 5px">
-<%--								<button class="btn btn-primary">검색</button>--%>
+				<div class="shadow-sm product-card-menu bg-secondary">
+					<div>상품 이미지</div>
+					<div>상품명</div>
+					<div>카테고리</div>
+					<div>재고</div>
+				</div>
 			</div>
 
-			<div class="shadow-sm product-card-menu bg-secondary">
-				<div>상품 이미지</div>
-				<div>상품명</div>
-				<div>카테고리</div>
-				<div>재고</div>
-			</div>
-
-		</div>
-
-		<div class="content-container" style="flex: 1; ">
-			<div class="product-card-container">
-				<c:forEach var="product" items="${products}">
-					<div class="shadow-sm product-card">
-						<div style="height: 100%">
-							<img src="${pageContext.request.contextPath}/resource/picture/${product.picture == null ? "default2.png" : product.picture}" style="height: 100px; width: 100px; object-fit: cover; border: 1px solid lightgray; border-radius: 5px"/>
+			<div class="content-container" style="flex: 1; ">
+				<div class="product-card-container">
+					<c:forEach var="product" items="${products}">
+						<div class="shadow-sm product-card">
+							<div style="height: 100%">
+								<img src="${pageContext.request.contextPath}/resource/picture/${product.picture == null ? "default2.png" : product.picture}" style="height: 100px; width: 100px; object-fit: cover; border: 1px solid lightgray; border-radius: 5px"/>
+							</div>
+							<div>${product.name}</div>
+							<div>${product.category.label}</div>
+							<div>${product.remainQuantity}</div>
+							<div style="display: flex; flex-direction: column; gap: 5px; width: 100%; padding: 5px">
+								<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-product?id=' + ${product.productId}">수정</button>
+								<button class="btn btn-outline-danger">삭제</button>
+							</div>
 						</div>
-						<div>${product.name}</div>
-						<div>${product.category.label}</div>
-						<div>${product.remainQuantity}</div>
-						<div style="display: flex; flex-direction: column; gap: 5px; width: 100%; padding: 5px">
-							<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-product?id=' + ${product.productId}">수정</button>
-							<button class="btn btn-outline-danger">삭제</button>
-						</div>
-					</div>
-				</c:forEach>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>
 
+	<footer>
+		<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+	</footer>
 
 	<script>
         $(document).ready(function () {

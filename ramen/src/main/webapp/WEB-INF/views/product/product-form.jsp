@@ -113,6 +113,12 @@
 			margin-top: 35px;
 		}
 
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
 	</style>
 </head>
 <script>
@@ -144,18 +150,18 @@
 			<div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">상품명</span></div>
-					<input class="form-control product-info" id="productName" disabled value="${mode == "post" ? "" : editBoard.product.productId}">
+					<input class="form-control product-info" id="productName" disabled value="${mode.equals("post") ? "" : editBoard.product.productId}">
 				</div>
 
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">카테고리</span></div>
-					<input class="form-control product-info" id="category" disabled value="${mode == "post" ? "" : editBoard.product.category.getLabel()}">
+					<input class="form-control product-info" id="category" disabled value="${mode.equals("post") ? "" : editBoard.product.category.getLabel()}">
 				</div>
 
 				<div class="input-group">
 					<div class="input-group-text" style="width: 85px;"><span style="margin: auto">재고</span></div>
-					<input class="form-control product-info" id="quantity" disabled value="${mode == "post" ? "" : editBoard.product.remainQuantity}">
+					<input class="form-control product-info" id="quantity" disabled value="${mode.equals("post") ? "" : editBoard.product.remainQuantity}">
 				</div>
 			</div>
 
@@ -169,18 +175,18 @@
 
 					<div class="input-group" style="width: 50%">
 						<div class="input-group-text" style="width: 85px;"><span style="margin: auto">가격</span></div>
-						<input class="form-control product-info" id="price" name="price" value="${editBoard == null ? "" : editBoard.price}">
+						<input type="number" class="form-control product-info" id="price" name="price" value="${mode.equals("post") ? "" : editBoard.price}">
 					</div>
 
 				</div>
 
 				<div class="input-group">
 					<span class="input-group-text">상세 설명</span>
-					<textarea class="form-control" aria-label="With textarea" name="content" id="content">${mode == "post" ? "" : editBoard.content}</textarea>
+					<textarea class="form-control" aria-label="With textarea" name="content" id="content">${mode.equals("post") ? "" : editBoard.content}</textarea>
 				</div>
 
 				<input type="hidden" name="formType" value="{mode}">
-				<input type="hidden" name="productId" id="productId" value="${mode == "post" ? "" : editBoard.product.productId}">
+				<input type="hidden" name="productId" id="productId" value="${mode.equals("post") ? "" : editBoard.product.productId}">
 				<div class="selected-product" id="imgPool">
 
 				</div>
@@ -225,6 +231,10 @@
 	</div>
 </div>
 
+<footer>
+	<jsp:include page="/WEB-INF/views/fragment/footer.jsp"/>
+</footer>
+
 <script>
     let submitBtn = document.getElementById('submitButton');
     let form = document.getElementById('form');
@@ -232,13 +242,14 @@
     let quantityInput = document.getElementById('quantity');
     let productNameInput = document.getElementById('productName');
     let productIdInput = document.getElementById('productId');
+    let priceInput = document.getElementById('price');
+    let contentInput = document.getElementById('content');
 
-    var modal = new bootstrap.Modal(document.getElementById('selectProductModal'), {
+    let modal = new bootstrap.Modal(document.getElementById('selectProductModal'), {
         keyboard: false
     })
 
     function selectProduct(productId, name, remainQuantity, category) {
-        // alert(productId + '' + name + '' + price + '' + remainQuantity + '' + category)
         productIdInput.value = productId;
         categoryInput.value = category;
         productNameInput.value = name;
@@ -248,23 +259,36 @@
     }
 
     submitBtn.addEventListener('click', function () {
-        if (${editBoard == null}) {
-            if (confirm("등록 하시겠습니까?")) {
-                if (productIdInput.value) {
-                    form.submit();
-                } else {
-                    alert('상품을 선택하세요.')
-                }
-            }
-        } else {
-            if (confirm("수정 하시겠습니까?")) {
-                if (productIdInput.value) {
-                    form.submit();
-                } else {
-                    alert('상품을 선택하세요.')
-                }
-            }
+        let msg
+
+        if (!productIdInput.value) {
+            alert('상품을 선택하세요.')
+			return;
         }
+
+        if (!isPriceFormat(priceInput.value)) {
+            alert("가격은 100원 이상, 최소 10원 단위로 입력 가능합니다.")
+			return;
+		}
+
+        if (isNull(contentInput.value.trim())) {
+            if(!confirm('상세 설명이 없습니다.\n입력하지 않고 제출하시겠습니까?')) return
+		}
+
+
+        if (${mode.equals('post')}) {
+            msg = '등록 하시겠습니까?'
+        } else {
+            msg = '수정 하시겠습니까?'
+        }
+
+		if (confirm(msg)) {
+			if (productIdInput.value) {
+				form.submit();
+			} else {
+				alert('상품을 선택하세요.')
+			}
+		}
     });
 
     let productImgInput = document.getElementById('imgInput');

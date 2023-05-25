@@ -96,6 +96,14 @@
     .header-right a {
         margin-left: 10px;
     }
+
+	.d-block {
+		object-fit: cover;
+	}
+	
+	.d-block:hover {
+        cursor: pointer;
+	}
 	</style>
 </head>
 <script>
@@ -128,13 +136,13 @@
 					</div>
 					<div class="carousel-inner" style="height: 400px">
 						<div class="carousel-item active">
-							<img src="${pageContext.request.contextPath}/resource/picture/jjapaguri.png" class="d-block w-100" alt="...">
+							<img src="${pageContext.request.contextPath}/resource/picture/jjapaguri.png" class="d-block h-100 w-100" alt="...">
 						</div>
 						<div class="carousel-item">
-							<img src="${pageContext.request.contextPath}/resource/picture/buldakgeti.png" class="d-block w-100" alt="...">
+							<img src="${pageContext.request.contextPath}/resource/picture/buldakgeti.png" class="d-block h-100 w-100" alt="...">
 						</div>
 						<div class="carousel-item">
-							<img src="${pageContext.request.contextPath}/resource/picture/spabuldak.png" class="d-block w-100" alt="...">
+							<img src="${pageContext.request.contextPath}/resource/picture/spabuldak.png" class="d-block h-100 w-100" alt="...">
 						</div>
 					</div>
 					<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
