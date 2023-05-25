@@ -92,7 +92,7 @@
 			<table class="table table-border table-list">
 				<thead>
 					<tr>
-						<th class="orderBundleId">주문번호</th>
+						<th class="orderBundleId" >주문번호</th>
 						<th class="createdDate">주문일</th>
 						<th class="userEmail">주문자이메일</th>
 						<th class="tel">전화번호</th>
@@ -106,8 +106,8 @@
 				<tbody>
 					<c:forEach var="orderBundle" items="${orderBundlelist}" >
 						<tr>
-							<td>
-								<a href="${articleUrl}&num=${orderBundle.orderBundleId}" class="text-reset">${orderBundle.orderBundleId}</a>
+							<td onclick="location.href='${pageContext.request.contextPath}/mypage/ordermanagement_detail.do?orderId='${orderBundle.orderBundleId}'">
+								${orderBundle.orderBundleId}
 							</td>
 							<td>${orderBundle.createdDate}</td>
 							<td>${orderBundle.userEmail}</td>

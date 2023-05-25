@@ -73,13 +73,13 @@
 						<th class="finalPrice">합계</th>
 					</tr>
 					
-					<c:forEach var="orderBundle" items="${orderBundlelist}">
+					<c:forEach var="orderitems" items="${orderitems}">
 						<tr>
-							<td>${orderBundle.orderItemId}</td>
-							<td>${orderBundle.productName}</td>
-							<td>${orderBundle.price}</td>
-							<td>${orderBundle.quantity}</td>
-							<td>${orderBundle.finalPrice}</td>
+							<td>${orderitems.orderItemId}</td>
+							<td>${orderitems.productName}</td>
+							<td>${orderitems.price}</td>
+							<td>${orderitems.quantity}</td>
+							<td>${orderitems.finalPrice}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -92,7 +92,9 @@
 					</td>
 				</tr>
 			</table>
-			${paging}
+			<div class="page-navigation">
+			${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+			</div>
 		</div>
 	</div>
 </div>

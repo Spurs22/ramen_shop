@@ -60,7 +60,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
-			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append("       SELECT order_id, sum(final_price * quantity) tot FROM order_item  GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
 			
 			// status주문상태 검색 조건
@@ -124,7 +124,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
-			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item GROUP BY order_id ");
+			sb.append("       SELECT order_id, sum(final_price * quantity) tot FROM order_item GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
 			
 			// status 상태조건, condition 검색조건
@@ -224,26 +224,27 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
-			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append("       SELECT order_id, sum(final_price * quantity) tot FROM order_item  GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
 			
 			// status주문상태 검색 조건
 			if(statusId == 1) {
-				sb.append(" WHERE d.id = 1");
+				sb.append(" WHERE d.id = 1 AND orderBundleId = ?");
 			} else if(statusId == 2) {
-				sb.append(" WHERE d.id = 2");
+				sb.append(" WHERE d.id = 2 AND  orderBundleId = ?");
 			} else if(statusId == 3) {
-				sb.append(" WHERE d.id = 3");
+				sb.append(" WHERE d.id = 3 AND  orderBundleId = ?");
 			} else if(statusId == 4) {
-				sb.append(" WHERE d.id = 4");
+				sb.append(" WHERE d.id = 4 AND  orderBundleId = ?");
 			}
 			sb.append(" ORDER BY b.created_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setInt(1, offset);
-			pstmt.setInt(2, size);
+			pstmt.setInt(1, orderBundleId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, size);
 			
 			rs = pstmt.executeQuery();
 			
@@ -274,7 +275,7 @@ private Connection conn = DBConn.getConnection();
 			// 주문번호, 주문상세번호, 상품명, 단가, 수량, 상품별합계, 주문상태명, 우편번호, 주소1, 주소2
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
-			sb.append(" c.price, c.final_price, d.name, e.status_name ");
+			sb.append(" c.price, sum(c.final_price * c.quantity), d.name, e.status_name ");
 			sb.append(" FROM member a  ");
 			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id ");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id ");
@@ -348,7 +349,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" JOIN order_status d ON c.status_id = d.id ");
 			sb.append(" LEFT OUTER JOIN( ");
-			sb.append("       SELECT order_id, sum(final_price) tot FROM order_item  GROUP BY order_id ");
+			sb.append("       SELECT order_id, sum(final_price * quantity) tot FROM order_item  GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
 			
 			// status 상태조건, condition 검색조건
@@ -428,7 +429,7 @@ private Connection conn = DBConn.getConnection();
 			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
-			sb.append(" c.price, c.final_price, d.name, e.status_name ");
+			sb.append(" c.price, sum(final_price * quantity), d.name, e.status_name ");
 			sb.append(" FROM member a  ");
 			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
