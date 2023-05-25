@@ -222,7 +222,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	// 라멘 
-	
+
 	@Override
 	public Member readMember(Long memberId) throws SQLException {
 		
@@ -249,7 +249,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 				dto.setPassword(rs.getString("password"));
 				dto.setEmail(rs.getString("email"));
 				dto.setTel(rs.getString("tel"));
-				/*
+		
 				if(dto.getTel() != null) {
 					String[] ss = dto.getTel().split("-");
 					if(ss.length == 3) {
@@ -258,11 +258,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 						dto.setTel3(ss[2]);
 					}
 				}
-				*/
-				
-				
-				
-				
+			
 				dto.setPostNum(rs.getString("post_num"));
 				dto.setAddress1(rs.getString("address1"));
 				dto.setAddress2(rs.getString("address2"));
@@ -278,6 +274,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		return dto;
 	}
 
+	
 	
 	 
 	// findByEmail 
