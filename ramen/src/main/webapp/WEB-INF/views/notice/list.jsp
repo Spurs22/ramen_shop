@@ -86,10 +86,7 @@
 			<div class="body-main">
 				<form name="listForm" method="post">
 					<div class="row board-list-header">
-						<p>
-							${dataCount}개(${page}/${total_page} 페이지)
-						</p>
-						<div class="col-1">
+						<div class="col-auto">
 							<a>
 							<c:if test="${sessionScope.member.userRoll==1}">
 								<button type="button" class="btn btn-light" id="btnDeleteList" title="삭제">
@@ -97,15 +94,11 @@
 								</button>
 							</c:if>
 							</a>
-							<a>
-							<c:if test="${sessionScope.member.userRoll!=1}">
-								<p class="form-control-plaintext">
-									${dataCount}개(${page}/${total_page}페이지)
-								</p>
-							</c:if>
-							</a>
 						</div>
-						<div class="col-auto">
+						<div class="col-auto" style="text-align: center; margin-right: 280px;">
+							${dataCount}개(${page}/${total_page}페이지)
+						</div>
+						<div style="" class="col-auto">
 							<c:if test="${dataCount!=0}">
 								<select name="size" class="form-select" onchange="changeList();">
 									<option value="5"  ${size==5 ? "selected='selected' ":""}>5개씩 출력</option>
