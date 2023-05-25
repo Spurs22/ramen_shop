@@ -17,6 +17,7 @@
 	.table-list .quantity { width: 100px; color: #787878; }
 	.table-list .total { width: 250px; color: #787878; }
 	.table-list .status { width: 150px; color: #787878; }
+	.table-list .name { width: 150px; color: #787878; }
 	.table-list .clickre { color: black; }
 	</style>
 </head>
@@ -40,6 +41,8 @@
 					<tr class="table-list">
 						<th class="num">주문 번호</th>
 						<th class="product">제품 번호</th>
+						<th class="picture">제 품</th>
+						<th class="name">제품 이름</th>
 						<th class="price">제품 가격</th>
 						<th class="quantity">제품 개수</th>
 						<th class="total">총 금액</th>
@@ -52,6 +55,8 @@
 						<tr>
 							<td>${dto.orderItemId}</td>
 							<td>${dto.productId}</td>
+							<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="height: 100px;"></td>
+							<td>${dto.productName}</td>
 							<td>${dto.price}원</td>
 							<td>${dto.quantity}개</td>
 							<td>${dto.totalPrice}원</td>

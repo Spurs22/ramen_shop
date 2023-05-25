@@ -91,7 +91,9 @@
 					<table class="table table-borderless">
 						<tr>
 							<td width="50%">
-								<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/reply.do?id=${dto.id}&page=${page}';">답변</button>
+								<c:if test="${sessionScope.member.userRoll==1}">
+									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/reply.do?id=${dto.id}&page=${page}';">답변</button>
+								</c:if>
 								<c:choose>
 									<c:when test="${sessionScope.member.memberId==dto.memberId}">
 										<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/update.do?id=${dto.id}&page=${page}';">수정</button>

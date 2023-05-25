@@ -19,7 +19,7 @@
 	.table-list .num { width: 60px; color: #787878; }
 	.table-list .subject { color: #787878; }
 	.table-list .name { width: 100px; color: #787878; }
-	.table-list .date { width: 100px; color: #787878; }
+	.table-list .date { width: 150px; color: #787878; }
 	.table-list .hit { width: 70px; color: #787878; }
 	
 	.subject-a { text-decoration :none; color : black; }
@@ -95,7 +95,7 @@
 						  </div>
 						  <div class="col-6 text-center">
 						  	<form class="row" name="searchForm" action="${pageContext.request.contextPath}/qna/list.do" method="post">
-						  	  <div class="col-auto p-1">
+						  	  <div class="col-5 p-1">
 						  	    <select name="condition" class="form-select">
 						  	    	<option value="all"      ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 									<option value="userName" ${condition=="sessionScope.member.userNickname"?"selected='selected'":"" }>작성자</option>
@@ -104,10 +104,10 @@
 									<option value="content"  ${condition=="content"?"selected='selected'":"" }>내용</option>
 						  	    </select>
 						  	  </div>
-						  	  <div class="col-auto p-1">
+						  	  <div class="col-5 p-1">
 						  	  	<input type="text" name="keyword" value="${keyword}" class="form-control">
 						  	  </div>
-						  	  <div class="col-auto p-1">
+						  	  <div class="col-1 p-1">
 						  	  	<button type="button" class="btn btn-light" onclick="searchList()"> <i class="bi bi-search"></i> </button>
 						  	  </div>
 						  	</form>

@@ -97,6 +97,8 @@ public class OrderRepositoryImpl implements OrderRepository{
 		String sql;
 
 		try {
+			
+			
 			sql = "UPDATE order_item SET status_id = 4 "
 					+ " WHERE order_id = ?";
 			

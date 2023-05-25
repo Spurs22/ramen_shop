@@ -38,8 +38,8 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			rs = null;
 			pstmt = null;
 			
-			sql = "INSERT INTO notice_board(id, member_id, subject, content, hit_count, notice, created_date, ip_address ) "
-					+ "  VALUES (?, ?, ?, ?, 0, ?, SYSDATE, ?) ";
+			sql = "INSERT INTO notice_board(id, member_id, subject, content, hit_count, notice, created_date ) "
+					+ "  VALUES (?, ?, ?, ?, 0, ?, SYSDATE) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -48,7 +48,6 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 			pstmt.setString(3, dto.getSubject());
 			pstmt.setString(4, dto.getContent());
 			pstmt.setInt(5, dto.getNotice());
-			pstmt.setString(6, dto.getIpAddress());
 			
 			pstmt.executeUpdate();
 			
@@ -291,7 +290,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 		String sql;
 		
 		try {
-			sql = " SELECT n.id, member_id, subject, content, ip_address, hit_count, notice, n.created_date "
+			sql = " SELECT n.id, member_id, subject, content, hit_count, notice, n.created_date "
 					+ "  FROM notice_board n "
 					+ "  JOIN member m ON m.id = n.member_id "
 					+ "  WHERE n.id = ? ";
@@ -309,7 +308,6 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 				dto.setMemberId(rs.getLong("member_id"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
-				dto.setIpAddress(rs.getString("ip_address"));
 				dto.setHitCount(rs.getInt("hit_count"));
 				dto.setNotice(rs.getInt("notice"));
 				dto.setCreatedDate(rs.getString("created_date"));

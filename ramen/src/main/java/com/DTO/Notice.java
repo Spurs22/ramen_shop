@@ -5,7 +5,6 @@ public class Notice {
 	private Long memberId;
 	private String subject;
 	private String content;
-	private String ipAddress;
 	private int hitCount;
 	private int notice;
 	private String createdDate;
@@ -35,12 +34,7 @@ public class Notice {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getIpAddress() {
-		return ipAddress;
-	}
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
+
 	public int getHitCount() {
 		return hitCount;
 	}
