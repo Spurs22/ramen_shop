@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+	<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -173,7 +173,7 @@ function sendLogin() {
 					<p class="text-center">
 					 <p class="text-center">
 						  <span style="display: flex; justify-content: center;">
-						    <a href="${pageContext.request.contextPath}/" class="link-btn">비밀번호 찾기</a>
+						    <a href="${pageContext.request.contextPath}/member/userIdCheck.do" class="link-btn">비밀번호 찾기</a>
 						    <span class="divider">|</span>
 						    <a href="${pageContext.request.contextPath}/" class="link-btn">아이디 찾기</a>
 						    <span class="divider">|</span>

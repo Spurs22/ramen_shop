@@ -3,6 +3,7 @@ package com.servlet.member;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,14 +45,18 @@ public class MemberServlet extends MyServlet{
 		   pwdSubmit(req, resp);
 		} else if (uri.indexOf("update_ok.do") != -1) {
 		   updateSubmit(req, resp);
-		} else if (uri.indexOf("userIdCheck.do") != -1) {
-			userIdCheck(req, resp);
 		} else if (uri.indexOf("select.do") !=-1) {
 			selectForm(req, resp);
 		} else if(uri.indexOf("delete.do") !=-1) {
 			deleteForm(req, resp);
 		} else if(uri.indexOf("delete.ok") !=-1) {
-			deleteSubmit(req, resp);
+			deleteSubmit(req, resp);		  
+		} else if (uri.indexOf("userIdCheck.do") != -1) {
+			userIdCheck(req, resp);
+		}else if (uri.indexOf("pwdFind_ok.do") != -1) {
+			pwdFindSubmit(req, resp);
+		}else if (uri.indexOf("complete.do") != -1) {
+			complete(req, resp);
 		}
 	}
 
@@ -342,8 +347,146 @@ public class MemberServlet extends MyServlet{
 	}
 
 	protected void userIdCheck(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo)session.getAttribute("memberId");
+        String cp = req.getContextPath();
+        
+        if(info !=null) {
+        	resp.sendRedirect(cp+"/");
+        	return;
+        }
 
+		forward(req, resp, "/WEB-INF/views/member/findpwd.jsp");
 	}
+	
+	
+	protected void pwdFindSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    HttpSession session = req.getSession();
+	    String cp = req.getContextPath();
+
+	    if (req.getMethod().equalsIgnoreCase("GET")) {
+	        resp.sendRedirect(cp + "/");
+	        return;
+	    }
+
+	    String memberIdString = req.getParameter("memberid");
+	    long memberId = Long.parseLong(memberIdString);
+
+	    try {
+	        MemberRepositoryImpl repository = new MemberRepositoryImpl(); // DAO 객체 생성
+
+	        Member dto = repository.readMember(memberId);
+	        if (dto == null) {
+	            String s = "등록된 아이디가 아닙니다.";
+	            req.setAttribute("message", s); // req.setAttribute() 사용
+	            forward(req, resp, "/WEB-INF/views/member/findpwd.jsp");
+	            return;
+	        } else if (dto.getEmail() == null || dto.getEmail().equals("")) {
+	            String s = "이메일을 등록하지 않았습니다. 🙏 ";
+	            req.setAttribute("message", s);
+	            forward(req, resp, "/WEB-INF/views/member/findpwd.jsp");
+	            return;
+	        }
+
+	        // 임시 패스워드 생성	        
+	        String pwd = generatePwd();
+
+	        // 메일로 전송
+	        String msg = dto.getNickName() + "님의 새로 발급된 임시 패스워드는. <span style='color:orange;'><b>"
+	                + pwd + "</b></span> 입니다.<br>"
+	                + "로그인 후 반드시 패스워드 변경하시길 바랍니다.";
+
+	        /*
+	        Mail mail = new Mail();
+	        MailSender sender = new MailSender();
+	        mail.setReceiverEmail(dto.getEmail());
+	        mail.setSenderEmail("ltg0296@gmail.com"); // 메일설정 이메일 입력 
+	        mail.setSenderName("관리자");
+	        mail.setSubject("임시 패스워드 발급");
+	        mail.setContent(msg);
+             
+	        boolean b = sender.mailSend(mail);
+	        if (b) {
+	            // 테이블의 패스워드 변경 
+	            dto.setPassword(pwd);
+	            repository.updateMember(dto);
+	        } else {
+	            req.setAttribute("message", "이메일 전송이 실패했습니다");
+	            forward(req, resp, "/WEB-INF/views/member/findpwd.jsp");
+	            return;
+	        }
+      */
+	        session.setAttribute("userName", dto.getNickName());
+	        resp.sendRedirect(cp + "/member/complete.do?mode=pf");
+	        return;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    resp.sendRedirect(cp + "/");
+	}
+		
+	
+	
+	protected void complete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+       	HttpSession session = req.getSession();
+       	String userName = (String)session.getAttribute("userName");
+       	session.removeAttribute("userName");
+       	
+       	String cp = req.getContextPath();
+       	
+       	String mode = req.getParameter("mode");
+       	if(mode == null) {
+       		resp.sendRedirect(cp + "/");
+       		return;
+       	}
+       	String msg;
+       	String title = "";
+        msg = "<span style='color:blue;'>" + userName + "</span>님<br>"; 
+       	if(mode.equals("join")) {
+       		title = "회원가입";
+       		msg +="회원가입을 축하합니다.";
+       		msg +="로그인 후 서비스를 이용하시기 바랍니다🙏";
+       		
+       	}else if(mode.equals("pf")) {
+    		
+       	    title = "패스워드 찾기";
+       	    msg +="임시 패스워드를 메일로 전송했습니다.<br>";
+       	    msg +="로그인 후 패스워드를 변경하시기 바랍니다.";
+        	    		
+       	  
+       	}else {
+       		resp.sendRedirect(cp+"/");
+       		return;
+       	}
+       	
+       	req.setAttribute("title", title);
+       	req.setAttribute("message", msg);
+       	
+       	forward(req, resp, "/WEB-INF/views/member/complete.jsp");	
+		}
+
+	
+	
+		private String generatePwd() {
+	
+		StringBuilder sb = new StringBuilder();
+		
+		Random rd = new Random();
+		String s = "-!@#$%^&*~_+=ABCDEFGHIJKLMNOPQRSTUVMXYZabcdefghijklmnopqrstuvwxy0123456789";
+		for(int i=0; i<10; i++) {
+			int n = rd.nextInt(s.length());
+			sb.append(s.substring(n, n+1));
+		}
+	
+		return sb.toString();
+	}
+
+
+	
+	
 	
 	protected void selectForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
