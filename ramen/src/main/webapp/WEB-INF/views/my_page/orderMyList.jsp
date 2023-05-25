@@ -2,11 +2,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<title>Title</title>
+	<title>주문내역</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/paginate.css" type="text/css">
-
+ 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+ 
 	<style>
 		.table-list {
 			padding: 5px;
@@ -142,6 +143,7 @@
 				</div>
 			</div>
 
+			<div><h2><i class="bi bi-receipt"></i> 주문 내역 </h2></div>
 
 <%--					<c:forEach var="dto" items="${list}" varStatus="status">--%>
 <%--						<tr>--%>
@@ -178,9 +180,9 @@
 
 
 			<div>
-				<table style="margin: 10px 0">
-					<td> ${dataCount}개 (${page}/${total_page} 페이지) </td>
-				</table>
+				<div style="margin: 10px 0">
+					<div> ${dataCount}개 (${page}/${total_page} 페이지) </div>
+				</div>
 
 				<div style="display: flex; flex-direction: column; gap: 10px">
 					<div style="" class="table-header bg-light">

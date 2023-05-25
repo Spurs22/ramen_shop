@@ -2,24 +2,75 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<title>Title</title>
+	<title>주문상세</title>
 	<jsp:include page="/WEB-INF/views/fragment/static-header.jsp"/>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 	<style>
-	.table-list thead > tr:first-child{ background: #f8f8f8; }
-	.table-list th, .table-list td { text-align: center; height: 70px; }
-	.table-list .left { text-align: left; padding-left: 5px; }
-	
-	.table-list .num { width: 150px; color: #787878; }
-	.table-list .product { width: 150px; color: #787878; }
-	.table-list .price { width: 200px; color: #787878; }
-	.table-list .quantity { width: 100px; color: #787878; }
-	.table-list .picture { width: 100px; color: #787878; }
-	.table-list .total { width: 250px; color: #787878; }
-	.table-list .status { width: 150px; color: #787878; }
-	.table-list .name { width: 150px; color: #787878; }
-	.table-list .clickre { color: black; }
+		.table-list {
+			padding: 5px;
+        }
+
+        .table-list thead > tr:first-child {
+            background: #f8f8f8;
+        }
+
+        .table-list th, .table-list td {
+            text-align: center;
+            height: 70px;
+        }
+
+        .table-list .left {
+            text-align: left;
+            padding-left: 5px;
+        }
+
+        .href {
+            text-decoration: none;
+            color: gray;
+        }
+
+
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 10% 20% 15% 17% 10% 10% 18%;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            border: 1px solid black;
+            padding: 10px;
+            border-radius: 5px;
+            /*background: #e6f1e8;*/
+        }
+
+        .table-main {
+            display: grid;
+            grid-template-columns: 10% 20% 15% 17% 10% 10% 18%;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            border: 1px solid black;
+            padding: 10px;
+            border-radius: 5px;
+            grid-template-rows: 100%;
+            height: 110px;
+            color: black;
+        }
+
+        .table-main:hover {
+            cursor: pointer;
+            background: rgba(161, 161, 161, 0.15);
+        }
+
+		.item {
+			padding: 2px;
+		}
 	</style>
 </head>
 <script>
@@ -32,53 +83,62 @@
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
+	
 	<div class="main-container shadow-lg">
-		<div class="content-container">
-			<div><h2> 주문 상세 </h2></div>
-			
-			<div>
-				<table  class="table-list">
-					<thead>
-						<tr class="table-list">
-							<th class="num">주문 번호</th>
-							<th class="picture">이미지</th>
-							<th class="name">제품 이름</th>
-							<th class="price">제품 가격</th>
-							<th class="quantity">제품 개수</th>
-							<th class="total">총 금액</th>
-							<th class="status">배송상태</th>
-						</tr>
-					</thead>
-					
-					<tbody>
-						<c:forEach var="dto" items="${list}" varStatus="status">
-							<tr>
-								<td>${dto.orderItemId}</td>
-								<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="height: 100px;"></td>
-								<td>${dto.productName}</td>
-								<td>${dto.price}원</td>
-								<td>${dto.quantity}개</td>
-								<td>${dto.totalPrice}원</td>
-								<c:choose>
-									<c:when test="${dto.statusName == '배송완료'}">
-										<td>${dto.statusName}<a class="clickre" href="${pageContext.request.contextPath}/product/review-form?product-id=${dto.productId}&order-id=${dto.orderItemId}"><br>리뷰작성</a></td>
-									</c:when>
-
-									<c:when test="${dto.statusName == '배송중'}">
-										<td>${dto.statusName}</td>
-									</c:when>
-
-									<c:when test="${dto.statusName == '결제완료'}">
-										<td>${dto.statusName}</td>
-									</c:when>
-								</c:choose>
-
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+		
+	  <div class="content-container">
+		<div class="sub-menu w-100">
+			<div style="display: flex; flex-direction: column; width: 100%">
+				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeLikeList.do'"> 내가 좋아요 한 레시피 </button>
+					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/recipeBoardMyList.do'"> 내가 작성한 글 </button>
+					<button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/orderMyList.do'"> 나의 주문내역 </button>
+				</div>
 			</div>
 		</div>
+			<div><h2><i class="bi bi-receipt"></i> 주문 상세 </h2></div>
+			
+		 <div>
+			<div style="display: flex; flex-direction: column; gap: 10px">
+				<div class="table-header bg-light">
+					<div class="item num">주문 번호</div>
+					<div class="item picture">이미지</div>
+					<div class="item name">제품 이름</div>
+					<div class="item price">제품 가격</div>
+					<div class="item quantity">제품 개수</div>
+					<div class="item total">총 금액</div>
+					<div class="item status">배송상태</div>
+				</div>
+					
+				<c:forEach var="dto" items="${list}" varStatus="status">
+				  <div class="table-main">
+					<div class="item num">${dto.orderItemId}</div>
+					<div class="item picture"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="width: 100px;"></div>
+					<div class="item name">${dto.productName}</div>
+					<div class="item price">${dto.price}원</div>
+					<div class="item quantity">${dto.quantity}개</div>
+					<div class="item total">${dto.totalPrice}원</div>
+					<div class="item status">
+						<c:choose>
+							<c:when test="${dto.statusName == '배송완료'}">
+								<div>${dto.statusName}<a class="clickre" href="${pageContext.request.contextPath}/product/review-form?product-id=${dto.productId}&order-id=${dto.orderItemId}"><br>리뷰작성</a></div>
+							</c:when>
+
+							<c:when test="${dto.statusName == '배송중'}">
+								<div>${dto.statusName}</div>
+							</c:when>
+
+							<c:when test="${dto.statusName == '결제완료'}">
+								<div>${dto.statusName}</div>
+							</c:when>
+						</c:choose>
+					</div>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+	  </div>
 	</div>
 </div>
 

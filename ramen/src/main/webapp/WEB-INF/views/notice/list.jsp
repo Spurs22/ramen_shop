@@ -95,7 +95,7 @@
 							</c:if>
 							</a>
 						</div>
-						<div class="col-auto" style="text-align: center; margin-right: 280px;">
+						<div class="col-auto" style="text-align: center; margin-right: 290px;">
 							${dataCount}개(${page}/${total_page}페이지)
 						</div>
 						<div style="" class="col-auto">
