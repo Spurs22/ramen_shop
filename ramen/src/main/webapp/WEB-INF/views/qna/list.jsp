@@ -139,7 +139,6 @@
 
 
 					<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between" action="${pageContext.request.contextPath}/notice/list.do" method="post">
-
 						<button type="button" class="btn btn-light" style=""
 								onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">
 							<i class="bi bi-arrow-clockwise"></i></button>
@@ -158,11 +157,17 @@
 							<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
 						</div>
 
-						<c:if test="${sessionScope.member.userRoll == 0}">
-							<button type="button" class="btn btn-light"
-									onclick="location.href='${pageContext.request.contextPath}/qna/write.do';">글올리기
-							</button>
-						</c:if>
+						<c:choose>
+							<c:when test="${sessionScope.member.userRoll == 0}">
+								<button type="button" class="btn btn-light"
+										onclick="location.href='${pageContext.request.contextPath}/qna/write.do';">글올리기
+								</button>
+							</c:when>
+
+							<c:otherwise>
+								<div></div>
+							</c:otherwise>
+						</c:choose>
 					</form>
 
 <%--					<div class="col">--%>
