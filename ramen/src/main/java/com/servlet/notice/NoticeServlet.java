@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import com.repository.notice.NoticeRepositoryImpl;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
+@MultipartConfig
 @WebServlet("/notice/*")
 public class NoticeServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;

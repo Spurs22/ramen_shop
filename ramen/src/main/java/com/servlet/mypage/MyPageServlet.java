@@ -481,11 +481,15 @@ public class MyPageServlet extends MyServlet {
 		String cp = req.getContextPath();
 		
 		try {
+			// HttpSession session = req.getSession();
+			// SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
 			Long orderId = Long.parseLong(req.getParameter("orderId"));
 			
 			orderrepository.cancelOrder(orderId);
 			
-			
+			forward(req, resp, "/WEB-INF/views/my_page/orderMyList.jsp");
+			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

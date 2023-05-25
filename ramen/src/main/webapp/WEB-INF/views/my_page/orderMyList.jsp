@@ -114,6 +114,11 @@
 </head>
 <script>
     let menuIndex = 5
+    
+    function ordercancel(orderId)  {
+    	let url = "${pageContext.request.contextPath}/mypage/orderCancel?orderId="+orderId;
+    	location.href= url;
+    }
 
 </script>
 <body>
@@ -214,13 +219,11 @@
 
 							<c:choose>
 								<c:when test="${dto.statusName == '배송완료'}">
-									<div>${dto.statusName}
-										<button type="button">주문취소</button>
-									</div>
+									<div>${dto.statusName}</div>
 								</c:when>
 
 								<c:when test="${dto.statusName == '결제완료'}">
-									<div>${dto.statusName}</div>
+									<div>${dto.statusName}<button class="btn btn-outline-primary" type="button" >주문취소</button></div>
 								</c:when>
 
 								<c:when test="${dto.statusName == '배송중'}">
