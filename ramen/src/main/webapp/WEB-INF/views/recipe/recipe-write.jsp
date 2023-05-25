@@ -107,7 +107,7 @@
 			height: 30px;
 		}
 	
-		.product-quantity{ border: none; width: 40px; text-align: center; outline: none;}
+		.product-quantity{ border: none; width: 40px; text-align: center; outline: none; text-align: center;}
 		
 		.contenttb { width: 100%; padding: 20px; }
 		.contenttxt { border: 1px solid #DFE2E6; outline: none; width: 100%; height: 200px; resize: none; padding: 10px; border-radius: 5px; background: #ffffff;}
@@ -179,6 +179,13 @@
 		
 		.quantity-btn:hover {
 			background: #f8f8ff;
+		}
+		
+		.fa-minus {
+			color: #6f798B;
+		}
+		.fa-plus {
+			color: #6f798B;
 		}
 	</style>
 </head>
@@ -432,9 +439,9 @@
 		out += "<img class='product-img' src='${pageContext.request.contextPath}/resource/picture/${"+picture+" == null ? 'default2.png' : "+picture+"}'>";
 	    out += "<p class='cart-name'>" + name + "</p>";
 	    out += "<p class='cart-quantity'>";
-	    out += "<button type='button' class='quantity-btn minus' data-product-id='" + productId + "'>&lt;</button>";
+	    out += "<button type='button' class='quantity-btn minus' data-product-id='" + productId + "'><i class='fa-solid fa-minus'></i></button>";
 	    out += "<span class='quantity-value'><input type='number' name='product-quantity' class='product-quantity' value='1' readonly='readonly'></span>";
-	    out += "<button type='button' class='quantity-btn plus' data-product-id='" + productId + "'>&gt;</button>";
+	    out += "<button type='button' class='quantity-btn plus' data-product-id='" + productId + "'><i class='fa-solid fa-plus'></i></button>";
 	    out += "<input type='hidden' class='product-id' name='productId' value='" + productId + "'>";
 	    out += "</p>";
 	    out += "</div>";
