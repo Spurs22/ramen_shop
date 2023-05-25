@@ -270,8 +270,8 @@ public class OrderRepositoryImpl implements OrderRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT id, product_id, order_id, status_id, quantity, price, final_price"
-					+ "FROM order_item WHERE orderItemId = ? ";
+			sql = " SELECT id, product_id, order_id, status_id, quantity, price, final_price "
+					+ " FROM order_item WHERE orderItemId = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, orderItemId);
@@ -285,7 +285,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 				orderItem.setStatusId(rs.getLong(4));
 				orderItem.setQuantity(rs.getInt(5));
 				orderItem.setPrice(rs.getLong(6));
-				orderItem.setFinalPrice(orderItemId);
+				orderItem.setFinalPrice(rs.getLong(7));
 			}
 			
 		} catch (Exception e) {
