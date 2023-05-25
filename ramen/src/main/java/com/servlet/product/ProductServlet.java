@@ -5,11 +5,15 @@ import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
 import com.repository.member.MemberRepository;
 import com.repository.member.MemberRepositoryImpl;
+import com.repository.order.OrderRepository;
+import com.repository.order.OrderRepositoryImpl;
 import com.repository.product.*;
 import com.service.cart.CartService;
 import com.service.cart.CartServiceImpl;
 import com.service.member.MemberService;
 import com.service.member.MemberServiceImpl;
+import com.service.order.OrderService;
+import com.service.order.OrderServiceImpl;
 import com.service.product.*;
 import com.util.FileManager;
 import com.util.MyUploadServlet;
@@ -41,6 +45,7 @@ public class ProductServlet extends MyUploadServlet {
 	ProductCommentRepository productCommentRepository = new ProductCommentRepositoryImpl();
 	ProductLikeRepository productLikeRepository = new ProductLikeRepositoryImpl();
 	MemberRepository memberRepository = new MemberRepositoryImpl();
+	OrderRepository orderRepository = new OrderRepositoryImpl();
 
 	MemberService memberService = new MemberServiceImpl(memberRepository);
 	CartService cartService = new CartServiceImpl(cartRepository);
@@ -48,6 +53,7 @@ public class ProductServlet extends MyUploadServlet {
 	ProductBoardService productBoardService = new ProductBoardServiceImpl(productBoardRepository);
 	ProductCommentService productCommentService = new ProductCommentServiceImpl(productCommentRepository);
 	ProductLikeService productLikeService = new ProductLikeServiceImpl(productLikeRepository);
+	OrderService orderService = new OrderServiceImpl(orderRepository);
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, UnsupportedEncodingException {
@@ -102,8 +108,6 @@ public class ProductServlet extends MyUploadServlet {
 			validProductName(req, resp);
 		} else if (uri.contains("manage-product")) {
 			manageProduct(req, resp);
-		} else if (uri.contains("sample")) {
-			sample(req, resp);
 		}
 	}
 
@@ -392,8 +396,22 @@ public class ProductServlet extends MyUploadServlet {
 				return;
 			}
 
-			Member member = memberRepository.readMember(memberId);
-			req.setAttribute("member", member);
+			Long productId = Long.valueOf(req.getParameter("product-id"));
+			Long orderId = Long.valueOf(req.getParameter("order-id"));
+
+			// 이미 남긴 리뷰가 있는지, 구매했는지, 확인
+
+
+			//
+			ProductBoard post = productBoardService.findPostByProductId(productId);
+			if (post == null) {
+				resp.sendRedirect(req.getContextPath() + "/home");
+				return;
+			}
+
+
+
+			req.setAttribute("post", post);
 
 			String path = "/WEB-INF/views/product/product-review.jsp";
 			forward(req, resp, path);

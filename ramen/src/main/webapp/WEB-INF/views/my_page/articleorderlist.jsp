@@ -38,41 +38,41 @@
 			<div>
 				<table  class="table-list">
 					<thead>
-					<tr class="table-list">
-						<th class="num">주문 번호</th>
-						<th class="picture">제 품</th>
-						<th class="name">제품 이름</th>
-						<th class="price">제품 가격</th>
-						<th class="quantity">제품 개수</th>
-						<th class="total">총 금액</th>
-						<th class="status">배송상태</th>
-					</tr>
+						<tr class="table-list">
+							<th class="num">주문 번호</th>
+							<th class="picture">제 품</th>
+							<th class="name">제품 이름</th>
+							<th class="price">제품 가격</th>
+							<th class="quantity">제품 개수</th>
+							<th class="total">총 금액</th>
+							<th class="status">배송상태</th>
+						</tr>
 					</thead>
 					
 					<tbody>
 						<c:forEach var="dto" items="${list}" varStatus="status">
-						<tr>
-							<td>${dto.orderItemId}</td>
-							<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="height: 100px;"></td>
-							<td>${dto.productName}</td>
-							<td>${dto.price}원</td>
-							<td>${dto.quantity}개</td>
-							<td>${dto.totalPrice}원</td>
-							<c:choose>
-								<c:when test="${dto.statusName == '배송완료'}">
-									<td>${dto.statusName}<a class="clickre" href="#">리뷰작성하러가기</a></td>
-								</c:when>
-								
-								<c:when test="${dto.statusName == '배송중'}">
-									<td>${dto.statusName}</td>
-								</c:when>
-								
-								<c:when test="${dto.statusName == '결제완료'}">
-									<td>${dto.statusName}</td>
-								</c:when>
-							</c:choose>
-							
-						</tr>
+							<tr>
+								<td>${dto.orderItemId}</td>
+								<td><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="height: 100px;"></td>
+								<td>${dto.productName}</td>
+								<td>${dto.price}원</td>
+								<td>${dto.quantity}개</td>
+								<td>${dto.totalPrice}원</td>
+								<c:choose>
+									<c:when test="${dto.statusName == '배송완료'}">
+										<td>${dto.statusName}<a class="clickre" href="${pageContext.request.contextPath}/product/review-form?product-id=${dto.productId}&order-id=${dto.orderItemId}"><br>리뷰작성</a></td>
+									</c:when>
+
+									<c:when test="${dto.statusName == '배송중'}">
+										<td>${dto.statusName}</td>
+									</c:when>
+
+									<c:when test="${dto.statusName == '결제완료'}">
+										<td>${dto.statusName}</td>
+									</c:when>
+								</c:choose>
+
+							</tr>
 						</c:forEach>
 					</tbody>
 				</table>

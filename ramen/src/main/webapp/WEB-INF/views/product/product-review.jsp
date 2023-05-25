@@ -18,8 +18,8 @@
         .rating-container-bundle {
             width: 100%;
             /*margin: 20px 0;*/
-            /*border-radius: 10px;*/
-            border: 1px solid #b7b7b7;
+            border-radius: 2px;
+            border: 1px solid #767676;
 			padding: 10px;
 			background: #FFFFFF;
             /*padding: 0 15px;*/
@@ -65,11 +65,11 @@
             display: flex;
             flex-direction: column;
             align-items: start;
-            border-radius: 5px;
+            border-radius: 15px;
             background: rgba(246, 246, 246, 0.54);
             padding: 5%;
             gap: 15px;
-
+			margin-top: 20px;
         }
 
 
@@ -105,19 +105,18 @@
 		<jsp:include page="/WEB-INF/views/fragment/menubar.jsp"/>
 	</header>
 
-	<div class="main-container shadow-lg">
+	<div class="main-container shadow-lg" style="padding-bottom: 40px">
 		<div class="content-container">
-
-			<div class="container-fluid mt-5 mb-5">
+			<div class="container-fluid mb-5">
+				<button class="btn btn-outline-secondary" type="reset" id="foldBtn" style="width: 100px; height: 45px" onclick="history.back()">뒤로가기</button>
 				<form method="post" action=""
 					  class="flex-col-container shadow align-top" name="commentForm" id="commentForm">
 
 					<div style="height: 130px; display: flex; flex-direction: row; gap: 20px">
-						<img src="${pageContext.request.contextPath}/resource/picture/1.png" style="height: 100%; aspect-ratio: 1/1 object-fit: cover; border: 1px solid black">
+						<img src="${pageContext.request.contextPath}/resource/picture/${post.product.picture}" style="height: 100%; width: 130px;object-fit: cover; border: 1px solid black">
 						<div style="display: flex; flex-direction: column; height: 100%; justify-content: center">
-							<div style="font-weight: 600; font-size: 18px">상품명</div>
-							<div>상품 가격</div>
-							<div>구매 개수</div>
+							<div style="font-weight: 600; font-size: 18px">상품명 : ${post.product.name}</div>
+							<div>상품 가격 : ${post.price} 원</div>
 						</div>
 					</div>
 
@@ -142,8 +141,7 @@
 					</div>
 
 					<div id="comment-btn-container" class="w-100" style="text-align: right">
-						<button class="btn btn-danger" type="reset" id="foldBtn" style="width: 100px; height: 45px">Cancel</button>
-						<button class="btn btn-success" type="button" onclick="" style="width: 100px; height: 45px; margin-left: 5px">Submit</button>
+						<button class="btn btn-outline-secondary" type="button" onclick="submitComment()" style="width: 100px; height: 45px; margin-left: 5px">확인</button>
 					</div>
 				</form>
 			</div>
@@ -166,8 +164,8 @@
     let comment = document.getElementsByClassName('comment-input')[0];
     let ratingCon = document.getElementsByClassName('rating-container-bundle')[0];
     let commentBtnCon = document.getElementById('comment-btn-container')
-    let ratingBtn = document.getElementById('rating-btn');
-    let ratingBtn_status = false;
+    // let ratingBtn = document.getElementById('rating-btn');
+    // let ratingBtn_status = false;
 
     let starBundles = document.getElementsByClassName('starBundle')[0];
     let STAR_COLOR_DEFAULT = '#F0974E'
@@ -175,8 +173,9 @@
     let taste = document.getElementById('taste-rate');
     let price = document.getElementById('price-rate');
     let distance = document.getElementById('distance-rate');
-    let ratingArr = [taste, price, distance];
     let commentForm = document.getElementById('commentForm');
+
+    let rateValue = 0
 
     // let starBundle = document.getElementsByClassName('rate');
     // let rating=0, lastStarIsFull
@@ -187,42 +186,26 @@
     function submitComment() {
 
         // 평점 댓글일 때,
-        if (ratingBtn_status === true) {
-            for (const rate of ratingArr) {
-                if (rate.value === '0') {
-                    alert('점수를 입력해주세요.')
-                    return
-                }
-            }
+		if (rateValue === '0') {
+			alert('점수를 입력해주세요.')
+			return
+		}
 
-            if (!commentForm.content.value) {
-                if (!confirm('내용이 없습니다. 평점만 등록하시겠습니까?')) {
-                    return
-                }
+        if (!commentForm.content.value) {
+            if (!confirm('내용이 없습니다. 평점만 등록하시겠습니까?')) {
+                return
             }
         } else {
-            // 일반 댓글일 때,
-            // 내용이 없을 때,
-            if (!commentForm.content.value) {
-                alert('내용이 없습니다. 내용을 입력해 주세요.')
-                commentForm.content.focus();
-                return;
-            } else {
-                if (!confirm('평점 없이 댓글만 등록합니다.')) {
-                    return
-                }
+            if (!confirm('리뷰를 등록하시겠습니까?')) {
+                return
             }
         }
+
         commentForm.submit();
     }
 
     function getRating() {
-        for (let i = 0; i < 3; i++) {
-            // result.push(rating[i] + (lastStarIsFull[i]?1:0.5))
-            ratingArr[i].value = rating[i] + (lastStarIsFull[i] ? 1 : 0.5);
-        }
-
-        // alert('맛 : ' + ratingArr[0].value + ' 가격 : ' + ratingArr[1].value + ' 거리 : ' + ratingArr[2].value)
+		rateValue = rating + (lastStarIsFull ? 1 : 0.5);
     }
 
 	let starBundle = starBundles.getElementsByTagName('i');

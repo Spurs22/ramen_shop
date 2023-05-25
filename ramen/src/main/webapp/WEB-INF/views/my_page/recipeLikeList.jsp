@@ -17,6 +17,47 @@
 .table-list .date { width: 200px; color: #787878; }
 .table-list .hit { width: 70px; color: #787878; }
 .table-list .heart { width: 70px; color: #787878; }
+
+.table-header {
+    display: grid;
+    grid-template-columns: 10% 20% 30% 25% 15%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+    /*background: #e6f1e8;*/
+}
+
+.table-main {
+    display: grid;
+    grid-template-columns: 10% 20% 30% 25% 15%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+    grid-template-rows: 100%;
+    height: 130px;
+    color: black;
+}
+
+.table-main:hover {
+    cursor: pointer;
+    background: rgba(161, 161, 161, 0.15);
+}
+
+.recipe-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
 </style>
 </head>
 <script>
@@ -31,7 +72,6 @@
 
 	<div class="main-container shadow-lg">
 		<div class="sub-menu w-100">
-
 			<div style="display: flex; flex-direction: column; width: 100%">
 				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
 					<button class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mypage/productLikeList.do'"> 내가 찜 한 상품 </button>
@@ -43,44 +83,34 @@
 		</div>
 
 		<div class="content-container">
-			<div><h3><i class="bi bi-bookmark-heart"></i>내가 좋아요 한 조합레시피 글</h3></div>
-			
 			<div>
-				<table>
-					<tr>
-						<td width="50%"> ${likedataCount}개(${page}/${total_page} 페이지) </td>
-						<td align="right">&nbsp;</td>
-					</tr>	
-				</table>
-				
-				<table>
-					<thead>
-					<tr class="table-list">
-						<th class="subject"> 레시피 제목 </th>
-						<th class="date"> 작성일 </th>
-						<th class="hit"> 조회수 </th>
-						<th class="heart"> 좋아요 수 </th>
-					</tr>
-					</thead>
-					
-					<tbody>
-						<c:forEach var="dto" items="${list}" varStatus="status">
-						<tr>
-							<td class=left>
-								<a href="${pageContext.request.contextPath}/recipe/recipe.do?id=${dto.id}">${dto.subject}</a>
-							</td>
-							<td> ${dto.createdDate} </td>
-							<td> ${dto.hitCount} </td>
-							<td><i class="fa-solid fa-heart" style="color: red;"></i> ${dto.recipeLikeCount} </td>
-						</tr>	
-						</c:forEach>
-					</tbody>
-				</table>
-				
-				<div class="page-navigation">
-					${likedataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+				<div style="margin: 10px 0">
+					${likedataCount}개 (${page}/${total_page} 페이지)
 				</div>
-				
+
+				<div style="display: flex; flex-direction: column; gap: 10px">
+					<div style="" class="table-header bg-light">
+						<div class="num">글 번호</div>
+						<div class="date">이미지</div>
+						<div class="num">레시피 이름</div>
+						<div class="hit">조회수</div>
+						<div class="heart">좋아요</div>
+					</div>
+
+					<c:forEach var="dto" items="${list}" varStatus="status">
+						<div style="" class="table-main" onclick="location.href='${pageContext.request.contextPath}/recipe/recipe.do?id=${dto.id}'">
+							<div>${dto.id}</div>
+							<img class="recipe-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}">
+							<div>${dto.subject}</div>
+							<div>${dto.hitCount}</div>
+							<div><i class="fa-solid fa-heart" style="color: red; margin-right: 5px"> </i>${dto.recipeLikeCount}</div>
+						</div>
+					</c:forEach>
+
+					<div class="page-navigation">
+						${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

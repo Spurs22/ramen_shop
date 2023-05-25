@@ -55,9 +55,8 @@
 
 	.recipe-img {
 		height: 100%;
-		width: 100px;
+		width: 100%;
 		object-fit: cover;
-
 	}
 </style>
 
@@ -103,7 +102,7 @@
 
 						<c:forEach var="dto" items="${list}" varStatus="status">
 							<div style="" class="table-main" onclick="location.href='${pageContext.request.contextPath}/recipe/recipe.do?id=${dto.id}'">
-								<div>${dataCount - (page-1) * size - status.index} </div>
+								<div>${dto.id}</div>
 								<img class="recipe-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}">
 								<div>${dto.subject}</div>
 								<div>${dto.hitCount}</div>
