@@ -320,7 +320,13 @@ public class MemberServlet extends MyServlet{
 			dto.setPassword(req.getParameter("password"));
 			dto.setNickName(req.getParameter("nickName"));
 			dto.setEmail(req.getParameter("email"));
-			dto.setTel(req.getParameter("tel"));
+			
+			String tel1 = req.getParameter("tel1");
+			String tel2 = req.getParameter("tel2");
+			String tel3 = req.getParameter("tel3");
+			dto.setTel(tel1 + "-" + tel2 + "-" + tel3);
+			
+			
 			dto.setPostNum(req.getParameter("postNum"));
 			dto.setAddress1(req.getParameter("address1"));
 			dto.setAddress2(req.getParameter("address2"));
