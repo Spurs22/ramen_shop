@@ -91,7 +91,7 @@ public class NoticeServlet extends MyServlet {
 			}
 			
 			String pageSize = req.getParameter("size");
-			int size = pageSize == null ? 10 : Integer.parseInt(pageSize);
+			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
 			//if(pageSize == null) pageSize = "10";
 			
 			int dataCount, total_page;

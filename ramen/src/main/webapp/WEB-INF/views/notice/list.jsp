@@ -123,7 +123,7 @@
 					</thead>
 					
 					<tbody>
-						<c:forEach var="dto" items="${list}">
+						<c:forEach var="dto" items="${listNotice}">
 						  <tr>
 						  	<c:if test="${sessionScope.member.userRoll==1}">
 						  	  <td>
@@ -150,7 +150,7 @@
 						    <td>${dataCount - (page-1) * size - status.index}</td>
 						    <td class="left">
 						    	<a href="${articleUrl}&id=${dto.id}" class="text-reset">${dto.subject}</a>
-						    	<c:if test="${dto.gap<1}"><img src="${pageContext.request.contextPath}/resource/picture/new.gif"></c:if>
+						    	<c:if test="${dto.gap<1}"><img style="width: 30px;" src="${pageContext.request.contextPath}/resource/picture/new2.gif"></c:if>
 						    </td>
 						    <td>${sessionScope.member.userNickname}</td>
 						    <td>${dto.createdDate}</td>
