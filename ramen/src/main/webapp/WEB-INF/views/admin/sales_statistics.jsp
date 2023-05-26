@@ -34,7 +34,7 @@
 			<div style="display: flex; flex-direction: column; width: 100%">
 				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
 					<button class="btn btn-outline-primary"
-							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">배송관리
+							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do?status=1'">배송관리
 					</button>
 					<button class="btn btn-outline-primary"
 							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?status=1'">주문관리
@@ -83,10 +83,10 @@
 				</tbody>
 				</table>	
 			</div>
-			</form>
+
 		</div>
 	</div>
-</div>
+
 
 <script>
     $(document).ready(function () {

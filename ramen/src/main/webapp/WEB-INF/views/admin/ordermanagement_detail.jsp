@@ -32,16 +32,9 @@
 			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
-						<td class="orderBundleId">주문번호</td>
-						<td class="createdDate">주문일</td>
-						<td class="deliveryId">송장번호</td>
-						<td class="receiveName">받는분</td>
-						<td class="tel">전화번호</td>
-						<td class="postNum">우편번호</td>
-						<td class="address1">주소1</td>
-						<td class="address2">주소2</td>
-						<td class="userEmail">사용자이메일</td>
-						<td class="userEmail">주문상태</td>
+						<th class="orderBundleId">주문번호</th>
+						<th class="createdDate">주문일</th>
+						<th class="deliveryId">송장번호</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -49,6 +42,24 @@
 						<td>${orderBundlelist.orderBundleId}</td>
 						<td>${orderBundlelist.createdDate}</td>
 						<td>${orderBundlelist.deliveryId}</td>
+					</tr>
+				</tbody>
+			</table>
+			
+						<table class="table table-border table-list" style="text-align:center;">
+				<thead>
+					<tr>
+						<th class="receiveName">받는분</th>
+						<th class="tel">전화번호</th>
+						<th class="postNum">우편번호</th>
+						<th class="address1">주소1</th>
+						<th class="address2">주소2</th>
+						<th class="userEmail">사용자이메일</th>
+						<th class="userEmail">주문상태</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
 						<td>${orderBundlelist.receiveName}</td>
 						<td>${orderBundlelist.tel}</td>
 						<td>${orderBundlelist.postNum}</td>
@@ -63,33 +74,24 @@
 			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
-						<th class="orderItemId">주문상세번호</th>
 						<th class="productName">상품명</th>
 						<th class="price">가격</th>
 						<th class="quantity">수량</th>
-						<th class="finalPrice">합계</th>
+						<th class="totalPrice">합계</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach var="orderitems" items="${orderitems}">
+					<c:forEach var="orderitems" items="${orderBundlelist.orderItems}">
 						<tr>
-							<td>${orderitems.orderItemId}</td>
 							<td>${orderitems.productName}</td>
 							<td>${orderitems.price}</td>
 							<td>${orderitems.quantity}</td>
-							<td>${orderitems.finalPrice}</td>
+							<td>${orderitems.totalPrice}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 
-			<div>
-				<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?${query}';">리스트</button>
-			</div>
-
-			<div class="page-navigation">
-				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
-			</div>
 		</div>
 	</div>
 </div>

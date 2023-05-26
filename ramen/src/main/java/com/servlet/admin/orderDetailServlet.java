@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.DTO.OrderBundle;
-import com.DTO.OrderItem;
 import com.DTO.OrderStatistics;
 import com.DTO.SessionInfo;
 import com.repository.admin.OrderDetailRepositoryImpl;
@@ -258,9 +257,9 @@ public class orderDetailServlet extends MyServlet{
 			
 			// 페이징처리
 			String query = "status=" + status;
-			String orderIdURL = "orderBundleId" + orderId;
-			String listUrl = cp + "/admin/ordermanagement.do" + size;
-			String articleUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page;
+			String orderIdURL = "orderBundleId=" + orderId;
+			String listUrl = cp + "/admin/ordermanagement.do?size=" + size;
+			String articleUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page + "&size=" + size;
 			if (keyword.length() != 0) {
 				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 				listUrl += "&" + query;
@@ -291,8 +290,6 @@ public class orderDetailServlet extends MyServlet{
 	}
 	protected void ordermanagementDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 상세페이지
-		MyUtil util = new MyUtil();
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
@@ -301,107 +298,18 @@ public class orderDetailServlet extends MyServlet{
 			return;
 		}
 		
-		String cp = req.getContextPath();
-		
 		try {
 			// 넘어온 페이지
 			String page = req.getParameter("page"); 
-			int current_page = 1;
-			if(page != null) {
-				current_page = Integer.parseInt(page);
-			}
-			
-			// 검색
-			String condition = req.getParameter("condition");
-			String keyword = req.getParameter("keyword");
-			
-			if(condition == null) { // 전체 주문리스트
-				condition = "all";
-				keyword = "";
-			}
-			
-			// GET 방식인 경우 디코딩
-			if (req.getMethod().equalsIgnoreCase("GET")) {
-				keyword = URLDecoder.decode(keyword, "utf-8");
-			}
-			
-			// 한페이지 표시할 데이터 개수
-			String pageSize = req.getParameter("size");
-			int size = pageSize == null ? 5 : Integer.parseInt(pageSize);
 
-			int dataCount, total_page;
+			Long orderId = Long.parseLong(req.getParameter("orderId"));
 			
-			// 주문상태
-			int status = 0;
-			String statusId = req.getParameter("status");
-			if(statusId != null) {
-				status = Integer.parseInt(statusId);
-			}
-			
-			if (keyword.length() != 0) {
-				dataCount = odri.dataCount(condition, keyword, status);
-			} else {
-				dataCount = odri.dataCount(status);
-			}
-			total_page = util.pageCount(dataCount, size);
-
-			if (current_page > total_page) {
-				current_page = total_page;
-			}
-			
-			// 게시물 가져오기
-			int offset = (current_page - 1) * size;
-			if(offset < 0) offset = 0;
-			
-			int orderBundleId = 0;
-			String orderId = req.getParameter("orderBundleId");
-			if(orderId != null) {
-				orderBundleId = Integer.parseInt(orderId);
-			}
-			
-			//Long orderBundleId = Long.parseLong(req.getParameter("orderBundleId"));
-			
-			OrderBundle orderBundlelist;
-			List<OrderItem> orderitems;
-			
-			if (keyword.length() != 0) {
-				orderBundlelist = odri.findOrderDetail(offset, size, condition, keyword, status, orderBundleId);
-				orderitems = orderBundlelist.getOrderItems();
-			} else {
-				orderBundlelist = odri.findOrderDetail(offset, size, status, orderBundleId);
-				orderitems = orderBundlelist.getOrderItems();
-			}
-			
-			// 페이징 처리
-			String query = "status=" + status;
-			String orderIdUrl = "orderBundleId=" + orderBundleId;
-			String listUrl = cp + "/admin/ordermanagement.do?size=" + size;
-			String listDetailUrl = cp + "/admin/ordermanagement_detail.do?page=" + current_page + "&size=" + size;
-			if (keyword.length() != 0) { // 검색할 때
-				query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
-				listUrl += "&" + query;
-				listDetailUrl += "&" + query;
-			} else {
-				query += "&" + orderIdUrl;
-				listUrl += "&" + query;
-				listDetailUrl += "&" + query;
-			}
-			
-			String paging = util.paging(current_page, total_page, listUrl);
-			
+			OrderBundle orderBundlelist = odri.findOrderDetail(orderId);
+				
 			// ordermanagement.jsp에 넘겨줄 데이터		
-			req.setAttribute("orderitems", orderitems);
 			req.setAttribute("orderBundlelist", orderBundlelist);
-			req.setAttribute("status", status);
-			req.setAttribute("page", current_page);
-			req.setAttribute("total_page", total_page);
-			req.setAttribute("dataCount", dataCount);
-			req.setAttribute("size", size);
-			req.setAttribute("articleUrl", listDetailUrl);
-			req.setAttribute("paging", paging);
-			req.setAttribute("condition", condition);
-			req.setAttribute("keyword", keyword);
-			
+			req.setAttribute("page", page);
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

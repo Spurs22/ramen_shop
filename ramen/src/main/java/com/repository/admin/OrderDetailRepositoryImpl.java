@@ -189,10 +189,10 @@ private Connection conn = DBConn.getConnection();
 				pstmt.setString(1, keyword);
 				pstmt.setInt(2, offset);
 				pstmt.setInt(3, size);
-			} else {
-				pstmt.setInt(1, offset);
-				pstmt.setInt(2, size);
-			}
+			} 
+			pstmt.setInt(1, offset);
+			pstmt.setInt(2, size);
+			
 			
 			rs = pstmt.executeQuery();
 			
@@ -221,17 +221,17 @@ private Connection conn = DBConn.getConnection();
 	
 	// 상세 주문내역 확인 >> orderBundle, orderitem 데이터 출력 (OrderBundle 내 OrderItem List 출력O)	
 	@Override
-	public OrderBundle findOrderDetail(int offset, int size, int statusId, int orderBundleId) {
+	public OrderBundle findOrderDetail(long orderBundleId) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-		OrderBundle orderBundle = new OrderBundle();
+		OrderBundle orderBundle = null;
 		List<OrderItem> orderItems = new ArrayList<>();
 		
 		try {
 			// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 우편번호, 주소1, 주소2, 주문상태, 송장번호, 합계
 			sb.append("SELECT DISTINCT b.id as orderbundleid, b.created_date, a.email, b.tel, ");
-			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, ");
+			sb.append(" b.receive_name, b.post_num, b.address1, b.address2, c.status_id, ");
 			sb.append(" d.status_name, b.delivery_id, NVL(tot,0) tot ");
 			sb.append(" FROM order_bundle b  ");
 			sb.append(" JOIN member a ON a.id = b.member_id ");
@@ -240,89 +240,57 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" LEFT OUTER JOIN( ");
 			sb.append("       SELECT order_id, sum(final_price * quantity) tot FROM order_item  GROUP BY order_id ");
 			sb.append(" ) s ON c.order_id = s.order_id ");
-			
-			// status주문상태 검색 조건
-			if(statusId == 1) {
-				sb.append(" WHERE c.status_id = 1 AND b.id = ?");
-			} else if(statusId == 2) {
-				sb.append(" WHERE c.status_id = 2 AND b.id = ?");
-			} else if(statusId == 3) {
-				sb.append(" WHERE c.status_id = 3 AND b.id = ?");
-			} else if(statusId == 4) {
-				sb.append(" WHERE c.status_id = 4 AND b.id = ?");
-			}
-			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			sb.append(" WHERE  b.id = ?");
 			
 			pstmt = conn.prepareStatement(sb.toString());
-			
-			if(statusId>= 1 && statusId <=4) {
-				pstmt.setLong(1, orderBundleId);		
-				pstmt.setInt(2, offset);
-				pstmt.setInt(3, size);
-			} else {				
-				pstmt.setInt(1, offset);
-				pstmt.setInt(2, size);
-			}
+
+			pstmt.setLong(1, orderBundleId);		
 			
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				OrderBundle ob = new OrderBundle();
+				orderBundle = new OrderBundle();
 
 				// 주문번호, 주문일, 주문자이메일, 전화번호, 받는분, 주문상태, 송장번호, 합계
-				ob.setOrderBundleId(rs.getLong("orderbundleid"));
-				ob.setCreatedDate(rs.getString("created_date"));
-				ob.setUserEmail(rs.getString("email"));
-				ob.setTel(rs.getString("tel"));
-				ob.setReceiveName(rs.getString("receive_name"));
-				ob.setPostNum(rs.getString("post_num"));
-				ob.setAddress1(rs.getString("address1"));
-				ob.setAddress2(rs.getString("address2"));
-				ob.setStatusName(rs.getString("status_name"));
-				ob.setDeliveryId(rs.getLong("delivery_id"));
-				ob.setTotalPrice(rs.getLong("tot"));
+				orderBundle.setOrderBundleId(rs.getLong("orderbundleid"));
+				orderBundle.setCreatedDate(rs.getString("created_date"));
+				orderBundle.setUserEmail(rs.getString("email"));
+				orderBundle.setTel(rs.getString("tel"));
+				orderBundle.setReceiveName(rs.getString("receive_name"));
+				orderBundle.setPostNum(rs.getString("post_num"));
+				orderBundle.setAddress1(rs.getString("address1"));
+				orderBundle.setAddress2(rs.getString("address2"));
+				orderBundle.setStatusName(rs.getString("status_name"));
+				orderBundle.setDeliveryId(rs.getLong("delivery_id"));
+				orderBundle.setTotalPrice(rs.getLong("tot"));
 			} 
+			
+			rs.close();
+			rs = null;	
 			
 			pstmt.close();
 			pstmt = null;
+
 			
-			rs.close();
-			rs = null;
+			if(orderBundle == null) return null;
 			
 			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
 			// 주문번호, 주문상세번호, 상품명, 단가, 수량, 상품별합계, 주문상태명, 우편번호, 주소1, 주소2
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
+			sb = new StringBuilder();
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
-			sb.append(" c.price, sum(c.final_price * c.quantity) tot, d.name, e.status_name ");
+			sb.append(" c.price, c.final_price * c.quantity tot, d.name, e.status_name ");
 			sb.append(" FROM  order_bundle b   ");
 			sb.append(" INNER JOIN member a ON a.id = b.member_id ");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id ");
 			sb.append(" INNER JOIN product d ON d.id = c.product_id ");
 			sb.append(" INNER JOIN order_status e ON c.status_id = e.id ");
-			
-			// status주문상태 검색 조건
-			if(statusId == 1) {
-				sb.append(" WHERE c.status_id = 1 AND b.id = ?");
-			} else if(statusId == 2) {
-				sb.append(" WHERE c.status_id = 2 AND b.id = ?");
-			} else if(statusId == 3) {
-				sb.append(" WHERE c.status_id = 3 AND b.id = ?");
-			} else if(statusId == 4) {
-				sb.append(" WHERE c.status_id = 4 AND b.id = ?");
-			}
-			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
-			
+			sb.append(" WHERE b.id = ? ");
+		
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			if(statusId>= 1 && statusId <=4) {
-				pstmt.setLong(1, orderBundleId);		
-				pstmt.setInt(2, offset);
-				pstmt.setInt(3, size);
-			} else {
-				pstmt.setInt(1, offset);
-				pstmt.setInt(2, size);				
-			}
-			
+			pstmt.setLong(1, orderBundleId);
+				
 			rs = pstmt.executeQuery();
 			
 			// orderItems 조회
@@ -336,7 +304,7 @@ private Connection conn = DBConn.getConnection();
 				orderItem.setStatusId(rs.getLong("status_id"));
 				orderItem.setQuantity(rs.getInt("quantity"));
 				orderItem.setPrice(rs.getLong("price"));
-				orderItem.setFinalPrice(rs.getLong("tot"));
+				orderItem.setTotalPrice(rs.getLong("tot"));
 				orderItem.setProductName(rs.getString("name"));
 				orderItem.setStatusName(rs.getString("status_name"));
 
@@ -452,7 +420,7 @@ private Connection conn = DBConn.getConnection();
 			// 입력받은 orderBundleId에 대한 orderItems 조회 쿼리
 			// 주문상세번호, 상품번호, 주문번호, 주문상태번호, 수량, 단가, 상품별합계, 상품명, 주문상태명
 			sb.append("SELECT c.id orderitemid, c.product_id, b.id orderbundleid, c.status_id, c.quantity, ");
-			sb.append(" c.price, sum(final_price * quantity), d.name, e.status_name ");
+			sb.append(" c.price, sum(final_price * quantity) tot, d.name, e.status_name ");
 			sb.append(" FROM member a  ");
 			sb.append(" INNER JOIN order_bundle b ON a.id = b.member_id");
 			sb.append(" INNER JOIN order_item c ON b.id = c.order_id");
@@ -520,7 +488,7 @@ private Connection conn = DBConn.getConnection();
 				orderItem.setStatusId(rs.getLong("status_id"));
 				orderItem.setQuantity(rs.getInt("quantity"));
 				orderItem.setPrice(rs.getLong("price"));
-				orderItem.setFinalPrice(rs.getLong("final_price"));
+				orderItem.setTotalPrice(rs.getLong("tot"));
 				orderItem.setProductName(rs.getString("name"));
 				orderItem.setStatusName(rs.getString("status_name"));
 

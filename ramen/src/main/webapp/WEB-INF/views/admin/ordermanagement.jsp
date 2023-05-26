@@ -43,10 +43,10 @@
 			<div style="display: flex; flex-direction: column; width: 100%">
 				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
 					<button class="btn btn-outline-primary"
-							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">배송관리
+							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do?status=1'">배송관리
 					</button>
 					<button class="btn btn-primary"
-							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?status=1'"> 주문관리
+							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?status=1'">주문관리
 					</button>
 					<button class="btn btn-outline-primary"
 							onclick="location.href='${pageContext.request.contextPath}/admin/sales_statistics.do'">매출통계
@@ -61,8 +61,8 @@
 					 style="height: 40px">
 					<button class="btn btn-outline-secondary" onclick="changeList(1)">결제완료</button>
 					<button class="btn btn-outline-secondary" onclick="changeList(2)">배송중</button>
-					<button class="btn btn-outline-secondary" onclick="changeList(3)">배송 완료</button>
-					<button class="btn btn-outline-secondary" onclick="changeList(4)">주문 취소</button>
+					<button class="btn btn-outline-secondary" onclick="changeList(3)">배송완료</button>
+					<button class="btn btn-outline-secondary" onclick="changeList(4)">주문취소</button>
 				</div>
 			</div>
 		</div>
@@ -117,8 +117,8 @@
 
 			<tbody>
 			<c:forEach var="orderBundle" items="${orderBundlelist}">
-				<tr>
-					<td onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement_detail.do?orderId=${orderBundle.orderBundleId}';">
+				<tr style="cursor: pointer;" onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement_detail.do?orderId=${orderBundle.orderBundleId}&page=${page}';">
+					<td >
 							${orderBundle.orderBundleId}
 					</td>
 					<td>${orderBundle.createdDate}</td>

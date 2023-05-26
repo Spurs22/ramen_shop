@@ -15,6 +15,7 @@
 	<script type="text/javascript">
 	$(function(){
 		$(".btnRegistration").click(function(){
+	
 			let orderBundleId = $(this).attr("data-orderBundleId");
 			let deliveryId = $(this).closest("td").find("input[name=deliveryId]").val().trim();
 			if( ! deliveryId ) {
@@ -26,7 +27,7 @@
 			let qs = "orderId="+orderBundleId+"&deliveryId="+deliveryId;
 
 			let url = "${pageContext.request.contextPath}/admin/delivery_ok.do?" + qs;
-			
+			location.href=url;
 			
 		});
 	})
@@ -47,7 +48,7 @@
 			<div style="display: flex; flex-direction: column; width: 100%">
 				<div class="btn-group" role="group" aria-label="Basic outlined example" style="height: 40px">
 					<button class="btn btn-primary"
-							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do'">배송관리
+							onclick="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do?status=1'">배송관리
 					</button>
 					<button class="btn btn-outline-primary"
 							onclick="location.href='${pageContext.request.contextPath}/admin/ordermanagement.do?status=1'">주문관리
@@ -60,7 +61,7 @@
 		</div>
 
 		<div class="content-container">
-			<form action="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do';">
+			<form action="location.href='${pageContext.request.contextPath}/admin/deliverymanagement.do?status=1';">
 			<div>
 			 <h3>주문배송</h3>
 			 <hr>
@@ -97,9 +98,20 @@
 							<td>${orderBundle.receiveName}</td>
 							<td>${orderBundle.statusName}</td>
 							<td>
-								<input type="text" name="deliveryId" value="${deliveryId}" class="form-control" size=13 maxlength=12>
-								<button type="button" class="btn btnRegistration" data-orderBundleId="${orderBundle.orderBundleId}" style="margin:5px 0 0 0; background-color:#eee; text-align:center;">
-									입력</button>
+								<c:if test="${orderBundle.statusName == '결제완료'}"> 
+									<input type="text" name="deliveryId" value="${deliveryId}" class="form-control" size=10 maxlength=12>
+									<button type="button" class="btn btnRegistration" data-orderBundleId="${orderBundle.orderBundleId}" style="margin:5px 0 0 0; background-color:#eee; text-align:center;">
+										입력</button>
+								</c:if>
+								<c:if test="${orderBundle.statusName != '결제완료'}"> 
+									${orderBundle.deliveryId}
+								</c:if>
+								<!-- 
+								<c:if test="${orderBundle.statusName == '배송중'}"> 
+									<button type="button" class="btn btnRegistration" data-orderBundleId="${orderBundle.orderBundleId}" style="margin:5px 0 0 0; background-color:#eee; text-align:center;">
+										배송완료</button>
+								</c:if>
+								 -->
 							</td>
 							<td>${orderBundle.totalPrice}</td>
 						</tr>
