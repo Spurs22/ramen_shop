@@ -383,7 +383,7 @@ public class MemberServlet extends MyServlet{
 	            forward(req, resp, "/WEB-INF/views/member/findpwd.jsp");
 	            return;
 	        } else if (dto.getEmail() == null || dto.getEmail().equals("")) {
-	            String s = "이메일을 등록하지 않았습니다. 🙏 ";
+	            String s = "이메일을 등록하지 않았습니다.";
 	            req.setAttribute("message", s);
 	            forward(req, resp, "/WEB-INF/views/member/findpwd.jsp");
 	            return;
@@ -432,8 +432,8 @@ public class MemberServlet extends MyServlet{
 	
 	protected void complete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        	HttpSession session = req.getSession();
-       	String userName = (String)session.getAttribute("userName");
-       	session.removeAttribute("userName");
+       	String userName = (String)session.getAttribute("nickName");
+       	session.removeAttribute("nickName");
        	
        	String cp = req.getContextPath();
        	
@@ -442,21 +442,21 @@ public class MemberServlet extends MyServlet{
        		resp.sendRedirect(cp + "/");
        		return;
        	}
-       	String msg;
+       	String msg = "";
        	String title = "";
-        msg = "<span style='color:blue;'>" + userName + "</span>님<br>"; 
+       /*
+       	msg = "<span style='color:blue;'>" + userName + "</span>님<br>"; 
        	if(mode.equals("join")) {
        		title = "회원가입";
        		msg +="회원가입을 축하합니다.";
-       		msg +="로그인 후 서비스를 이용하시기 바랍니다🙏";
-       		
-       	}else if(mode.equals("pf")) {
+       		msg +="로그인 후 서비스를 이용하시기 바랍니다";
+       */		
+        if(mode.equals("pf")) {
     		
        	    title = "패스워드 찾기";
        	    msg +="임시 패스워드를 메일로 전송했습니다.<br>";
        	    msg +="로그인 후 패스워드를 변경하시기 바랍니다.";
-        	    		
-       	  
+        	    		    	  
        	}else {
        		resp.sendRedirect(cp+"/");
        		return;
