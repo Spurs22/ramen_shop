@@ -66,7 +66,7 @@
 				</div>
 			</div>
 		</div>
-
+<!-- 
 		<table class="table">
 			<tr>
 				<td align="center">
@@ -91,7 +91,7 @@
 				</td>
 			</tr>
 		</table>
-
+ -->
 
 		<table class="table">
 			<tr>

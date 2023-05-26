@@ -28,7 +28,11 @@
 	<div class="main-container shadow-lg">
 		<div class="content-container">
 			<div style="margin-bottom: 20px"><button class="btn btn-outline-secondary" onclick="history.back()">뒤로가기</button></div>
-
+			
+			<br>
+			
+			<h4>주문정보</h4>
+			<hr>
 			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
@@ -46,14 +50,15 @@
 				</tbody>
 			</table>
 			
-						<table class="table table-border table-list" style="text-align:center;">
+
+			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
 						<th class="receiveName">받는분</th>
 						<th class="tel">전화번호</th>
 						<th class="postNum">우편번호</th>
-						<th class="address1">주소1</th>
-						<th class="address2">주소2</th>
+						<th class="address1">기본주소</th>
+						<th class="address2">상세주소</th>
 						<th class="userEmail">사용자이메일</th>
 						<th class="userEmail">주문상태</th>
 					</tr>
@@ -70,7 +75,10 @@
 					</tr>
 				</tbody>
 			</table>
-			
+			<br>
+			<br>
+			<h4>주문상품정보</h4>
+			<hr>
 			<table class="table table-border table-list" style="text-align:center;">
 				<thead>
 					<tr>
