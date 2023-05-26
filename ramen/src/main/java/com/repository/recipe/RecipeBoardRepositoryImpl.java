@@ -1138,10 +1138,11 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 		List<RecipeBoard> list = new ArrayList<>();
 		
 		try {
-			sql = "SELECT r.id, m.nickname, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, m.nickname, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount, rp.picture_path "
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON m.id = r.member_id "
 					+ " JOIN recipe_product p ON p.recipe_id = r.id "
+					+ " LEFT OUTER JOIN recipe_picture rp ON rp.recipe_id = r.id "
 					+ " LEFT OUTER JOIN ( "
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount "
 					+ " 	FROM recipe_like "
@@ -1164,6 +1165,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 				recipeboard.setHitCount(rs.getInt("hit_count"));
 				recipeboard.setCreatedDate(rs.getString("created_date"));
 				recipeboard.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				recipeboard.setPicture(rs.getString("picture_path"));
 				
 				list.add(recipeboard);
 			}
