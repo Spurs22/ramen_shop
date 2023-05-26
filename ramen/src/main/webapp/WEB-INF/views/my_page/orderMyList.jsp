@@ -74,7 +74,7 @@
 
         .table-header {
             display: grid;
-            grid-template-columns: 5% 15% 10% 10% 27% 15% 10% 8%;
+            grid-template-columns: 5% 15% 10% 10% 27% 15% 8% 10%;
             width: 100%;
             justify-content: center;
             align-items: center;
@@ -88,7 +88,7 @@
 
         .table-main {
             display: grid;
-            grid-template-columns: 5% 15% 10% 10% 27% 15% 10% 8%;
+            grid-template-columns: 5% 15% 10% 10% 27% 15% 8% 10%;
             width: 100%;
             justify-content: center;
             align-items: center;
