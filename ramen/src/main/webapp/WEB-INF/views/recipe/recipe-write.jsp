@@ -460,7 +460,8 @@
 		
 		var product = {
 	        productId: productId,
-	        quantity: 1
+	        quantity: 1,
+	        picture : picture
 	    };
 	
 		addedProducts.push(product);

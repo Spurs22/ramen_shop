@@ -20,6 +20,7 @@ import javax.servlet.http.Part;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.DTO.Product;
 import com.DTO.ProductBoard;
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeComment;
@@ -245,7 +246,7 @@ public class RecipeServlet extends MyUploadServlet {
 		
 		List<ProductBoard> posts = productBoardService.findAllPosts();
 		req.setAttribute("posts", posts);
-
+		
 		forward(req, resp, "/WEB-INF/views/recipe/recipe-write.jsp");
 	}
 

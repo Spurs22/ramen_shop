@@ -205,6 +205,16 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 			pstmt.close();
 			pstmt = null;
 			
+			sql = "DELETE FROM recipe_comment WHERE board_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, postId);
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
 			sql = "DELETE FROM recipe_board WHERE id = ? AND member_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
