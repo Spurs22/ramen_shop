@@ -10,6 +10,8 @@ public interface OrderDetailRepository {
 
 	// 송장번호 입력하기
 	void setDeliveryNumber(Long orderId, Long deliveryId);
+
+	void deliveryComplete(Long orderId);
 	
 	// 전체 주문내역 확인 >> orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X)
 	List<OrderBundle> findOrderAll(int offset, int size, int statusId);

@@ -56,6 +56,29 @@ private Connection conn = DBConn.getConnection();
 			DBUtil.closeResource(pstmt);
 		}
 	}
+	@Override
+	public void deliveryComplete(Long orderId) {
+		// 배송완료 상태 변경
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql =  " UPDATE order_item "
+					+ " SET status_id = 3 "
+					+ " WHERE order_id = ? ";
+					
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, orderId);
+		
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeResource(pstmt);
+		}
+	}
 
 	// 전체 주문내역 확인 >> orderBundle 데이터만 출력 (OrderBundle 내 OrderItem List 출력X)
 	@Override

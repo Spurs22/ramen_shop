@@ -76,6 +76,8 @@ public class orderDetailServlet extends MyServlet{
 			salesStatistics(req,resp);
 		} else if(uri.indexOf("delivery_ok.do") != -1) {
 			deliveryok(req,resp);
+		} else if(uri.indexOf("delivery_completeok.do") != -1) {
+			delivery_completeok(req,resp);
 		}
 	}
 	
@@ -174,6 +176,29 @@ public class orderDetailServlet extends MyServlet{
 			Long deliveryId = Long.parseLong(req.getParameter("deliveryId"));
 			
 			odri.setDeliveryNumber(orderId, deliveryId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp + "/admin/deliverymanagement.do");
+	}
+	
+	protected void delivery_completeok(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 배송완료 등록 완료
+	
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		String cp = req.getContextPath();
+		try {
+			
+			Long orderId = Long.parseLong(req.getParameter("orderId"));
+			
+			odri.deliveryComplete(orderId);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

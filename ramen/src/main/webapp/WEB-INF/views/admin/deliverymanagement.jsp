@@ -27,7 +27,20 @@
 			let qs = "orderId="+orderBundleId+"&deliveryId="+deliveryId;
 
 			let url = "${pageContext.request.contextPath}/admin/delivery_ok.do?" + qs;
-			location.href=url;
+			location.href = url;
+			
+		});
+	})
+	
+	$(function(){
+		$(".btnDliveryComplete").click(function(){
+	
+			let orderBundleId = $(this).attr("data-orderBundleId");
+			
+			let qs = "orderId="+orderBundleId;
+
+			let url = "${pageContext.request.contextPath}/admin/delivery_completeok.do?" + qs;
+			location.href = url;
 			
 		});
 	})
@@ -106,12 +119,12 @@
 								<c:if test="${orderBundle.statusName != '결제완료'}"> 
 									${orderBundle.deliveryId}
 								</c:if>
-								<!-- 
+								
 								<c:if test="${orderBundle.statusName == '배송중'}"> 
-									<button type="button" class="btn btnRegistration" data-orderBundleId="${orderBundle.orderBundleId}" style="margin:5px 0 0 0; background-color:#eee; text-align:center;">
+									<button type="button" class="btn btnDliveryComplete" data-orderBundleId="${orderBundle.orderBundleId}" style="margin:5px 0 0 0; background-color:#eee; text-align:center;">
 										배송완료</button>
 								</c:if>
-								 -->
+								 
 							</td>
 							<td>${orderBundle.totalPrice}</td>
 						</tr>
