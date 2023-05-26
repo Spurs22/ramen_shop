@@ -220,15 +220,19 @@
 							<div class="item">${dto.totalPrice}원</div>
 							<c:choose>
 								<c:when test="${dto.statusName == '배송완료'}">
-									<div>${dto.statusName}</div>
+									<div>배송완료</div>
 								</c:when>
 
 								<c:when test="${dto.statusName == '결제완료'}">
-									<div>${dto.statusName}<button class="btn btn-outline-primary" type="button">주문취소</button></div>
+									<div>결제완료<button class="btn btn-outline-primary" type="button">주문취소</button></div>
 								</c:when>
 
 								<c:when test="${dto.statusName == '배송중'}">
-									<div>${dto.statusName}</div>
+									<div>배송중</div>
+								</c:when>
+								
+								<c:when test="${dto.statusName == '주문취소'}">
+									<div>주문취소</div>
 								</c:when>
 							</c:choose>
 						</div>
