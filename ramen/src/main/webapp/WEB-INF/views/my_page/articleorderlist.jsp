@@ -133,8 +133,8 @@
 								<div>결제완료</div>
 							</c:when>
 							
-							<c:when test="${dto.statusName == '결제취소'}">
-								<div>결제취소</div>
+							<c:when test="${dto.statusName == '주문취소'}">
+								<div>주문취소</div>
 							</c:when>
 						</c:choose>
 					</div>

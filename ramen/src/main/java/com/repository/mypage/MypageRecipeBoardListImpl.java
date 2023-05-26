@@ -24,9 +24,10 @@ public class MypageRecipeBoardListImpl implements MypageRecipeBoardList{
 		RecipeBoard board = null;
 		
 		try {
-			sql = "SELECT r.id, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date,  NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date,  NVL(recipeLikeCount, 0) recipeLikeCount, rp.picture_path "
 					+ "  FROM recipe_board r "
 					+ "  JOIN member m ON m.id = r.member_id "
+					+ "  LEFT OUTER JOIN recipe_picture rp ON rp.recipe_id = r.id "
 					+ "  LEFT OUTER JOIN ( "
 					+ "  	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
 					+ "  	GROUP BY recipe_id "
@@ -51,6 +52,7 @@ public class MypageRecipeBoardListImpl implements MypageRecipeBoardList{
 				board.setHitCount(rs.getInt("hit_count"));
 				board.setCreatedDate(rs.getString("created_date"));
 				board.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				board.setPicture(rs.getString("picture_path"));
 				
 				list.add(board);
 			}
@@ -132,9 +134,10 @@ public class MypageRecipeBoardListImpl implements MypageRecipeBoardList{
 		List<RecipeBoard> list = new ArrayList<>();
 		
 		try { // 좋아요 수 작성일 조회수
-			sql = "SELECT r.id, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount "
+			sql = "SELECT r.id, subject, hit_count, TO_CHAR(r.created_date, 'YYYY-MM-DD') created_date, NVL(recipeLikeCount, 0) recipeLikeCount, rp.picture_path "
 					+ " FROM recipe_board r "
 					+ " JOIN recipe_like l ON r.id = l.recipe_id "
+					+ " LEFT OUTER JOIN recipe_picture rp ON rp.recipe_id = r.id "
 					+ " LEFT OUTER JOIN ( "
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount FROM recipe_like "
 					+ "		GROUP BY recipe_id "
@@ -159,6 +162,7 @@ public class MypageRecipeBoardListImpl implements MypageRecipeBoardList{
 				board.setHitCount(rs.getInt("hit_count"));
 				board.setCreatedDate(rs.getString("created_date"));
 				board.setRecipeLikeCount(rs.getInt("recipeLikeCount"));
+				board.setPicture(rs.getString("picture_path"));
 				
 				list.add(board);
 			}

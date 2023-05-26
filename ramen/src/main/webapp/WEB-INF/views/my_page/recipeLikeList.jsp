@@ -100,7 +100,9 @@
 					<c:forEach var="dto" items="${list}" varStatus="status">
 						<div style="" class="table-main" onclick="location.href='${pageContext.request.contextPath}/recipe/recipe.do?id=${dto.id}'">
 							<div>${dto.id}</div>
-							<img class="recipe-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}">
+							<div>
+							<img class="product-img" style="width: 60%;" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? "default2.png" : dto.picture}"/>
+							</div>
 							<div>${dto.subject}</div>
 							<div>${dto.hitCount}</div>
 							<div><i class="fa-solid fa-heart" style="color: red; margin-right: 5px"> </i>${dto.recipeLikeCount}</div>
