@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import com.DTO.Product;
 import com.DTO.ProductBoard;
+import com.DTO.ProductCategory;
 import com.DTO.RecipeBoard;
 import com.DTO.RecipeComment;
 import com.DTO.RecipeProduct;
@@ -244,7 +245,7 @@ public class RecipeServlet extends MyUploadServlet {
 		
 		req.setAttribute("mode", "write");
 		
-		List<ProductBoard> posts = productBoardService.findAllPosts();
+		List<ProductBoard> posts = productBoardService.findByCategoryAndKeyword(ProductCategory.BONGJI, null);
 		req.setAttribute("posts", posts);
 		
 		forward(req, resp, "/WEB-INF/views/recipe/recipe-write.jsp");

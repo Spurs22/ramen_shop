@@ -209,38 +209,29 @@
 			<div class="sub-menu">
 		
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-					<input type="radio" class="btn-check" name="category" id="btnradio1" autocomplete="off" value="1"
-						   onclick="clickCategory(this)" checked>
-					<label class="btn btn-outline-secondary" for="btnradio1">봉지 라면</label>
-	
-					<input type="radio" class="btn-check" name="category" id="btnradio2" autocomplete="off" value="2"
-						   onclick="clickCategory(this)">
-					<label class="btn btn-outline-secondary" for="btnradio2">컵 라면</label>
-	
-					<input type="radio" class="btn-check" name="category" id="btnradio3" autocomplete="off" value="3"
-						   onclick="clickCategory(this)">
-					<label class="btn btn-outline-secondary" for="btnradio3">토핑</label>
-				</div>
-	
-				<div style="display: flex; flex-direction: row; gap: 5px" >
-					<input type="text" class="search-box" id="searchInput">
-					<button class="btn btn-secondary" id="searchButton">검색</button>
-				</div>
+				<input type="radio" class="btn-check" name="category" id="btnradio1" autocomplete="off" value="1"
+					   onclick="clickCategory(this)" checked>
+				<label class="btn btn-outline-secondary radio-btn" for="btnradio1">봉지 라면</label>
+
+				<input type="radio" class="btn-check" name="category" id="btnradio2" autocomplete="off" value="2"
+					   onclick="clickCategory(this)">
+				<label class="btn btn-outline-secondary radio-btn" for="btnradio2">컵 라면</label>
+
+				<input type="radio" class="btn-check" name="category" id="btnradio3" autocomplete="off" value="3"
+					   onclick="clickCategory(this)">
+				<label class="btn btn-outline-secondary radio-btn" for="btnradio3">토핑</label>
+			</div>
+
+			<div style="display: flex; flex-direction: row; gap: 5px" >
+				<input type="text" class="search-box" id="searchInput">
+			</div>
 	
 				<div style="display: flex; flex-direction: row; gap: 5px">
 					<button type="button" class="btn btn-warning btnwrite1toggle" onclick="">다음</button>
 				</div>
 			</div>
 	
-			<div class="product-container" id="resultForm">
-				<c:forEach var="post" items="${posts}">
-					<a class="product-item" onclick="addToCart('${post.product.productId}', '${post.price}', '${post.product.name}', '${post.product.picture}')">
-						<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? "default2.png" : post.product.picture}">
-						<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">${post.product.name}</div>
-						<div style="color: #5d5d5d; font-size: 11px;">${post.price}원</div>
-					</a>
-				</c:forEach>
-			</div>
+			<div class="product-container" id="resultForm"></div>
 			<hr>
 			
 			
@@ -340,14 +331,17 @@
                 // resultForm2.css('display','none')
 
                 $.each(data, function(i, post) {
-                    let userCardTemplate = `
-                    		<a class="product-item" onclick="addToCart(`+post.productId+`, `+post.price+`, '`+post.productName+`')">
-								<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${post.product.picture == null ? 'default2.png' : post.product.picture}">
-								<div style="margin-top: 5px; font-weight: 750; font-size: 13px;">` + post.productName + `</div>
-								<div style="color: #5d5d5d; font-size: 11px;">` + post.price + `원</div>
+                    let userCardTemplate = `<a class="product-item shadow" onclick="addToCart('`+post.productId+`', `+post.price+`, '`+post.productName+`','`+post.picture+`')">`
+
+					if (post.picture == null) {
+						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/default2.png"/>`
+					} else {
+						userCardTemplate += `<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/` + post.picture + `"/>`
+					}
+
+                    userCardTemplate += `<div style="margin-top: 5px; font-weight: 600">` + post.productName + `</div>
 							</a>
                         `;
-
                     resultForm.append(userCardTemplate);
                 });
 
