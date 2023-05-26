@@ -21,7 +21,6 @@ public class ProductLikeRepositoryImpl implements ProductLikeRepository {
 		PreparedStatement pstmt = null;
 
 		String sql;
-
 		try {
 			sql = "insert INTO PRODUCT_LIKE (MEMBER_ID, PRODUCT_BOARD_ID) " +
 					"VALUES (?, ?) ";
@@ -69,7 +68,7 @@ public class ProductLikeRepositoryImpl implements ProductLikeRepository {
 		List<ProductBoard> result = new ArrayList<>();
 
 		try {
-			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id " +
+			sql = "SELECT pb.id, member_id, REMAIN_QUANTITY, NAME, PRICE, content, created_date, hit_count, ROUND(TRUNC((NVL(rating, 0)), 1)*2)/2 as rating, category_id, PICTURE " +
 					"FROM PRODUCT_BOARD pb " +
 					"JOIN product p ON pb.id = p.id " +
 					"LEFT JOIN (SELECT oi.product_id, AVG(rating) as rating " +
@@ -211,7 +210,7 @@ public class ProductLikeRepositoryImpl implements ProductLikeRepository {
 						ProductCategory.getByValue(rs.getInt("category_id")),
 						rs.getString("name"),
 						rs.getInt("remain_quantity"),
-						null
+						rs.getString("picture")
 				),
 				rs.getLong("member_id" ),
 				null,

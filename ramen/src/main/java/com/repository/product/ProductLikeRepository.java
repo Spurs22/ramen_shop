@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ProductLikeRepository {
 	/**
-	 *
 	 * @param memberId          멤버 아이디
 	 * @param ProductPostId     찜 할 누를 포스트 아이디
 	 */
@@ -32,9 +31,7 @@ public interface ProductLikeRepository {
 	 * @return                  찜 여부 Boolean으로 반환
 	 */
 	Boolean isLike(Long memberId, Long ProductPostId);
-
 	int getCntLikePost(Long memberId);
-
 	List<ProductBoard> findLikePostById(Long memberId, int offset, int size);
 
 }

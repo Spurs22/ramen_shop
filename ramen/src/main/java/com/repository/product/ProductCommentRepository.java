@@ -15,6 +15,4 @@ public interface ProductCommentRepository {
 	List<ProductComment> findCommentsByMemberId(Long memberId);
 
 	List<ProductComment> findCommentsByProductId(Long productId);
-
-
 }
