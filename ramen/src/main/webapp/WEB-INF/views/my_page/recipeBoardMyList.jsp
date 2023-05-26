@@ -104,7 +104,7 @@
 							<div style="" class="table-main" onclick="location.href='${pageContext.request.contextPath}/recipe/recipe.do?id=${dto.id}'">
 								<div>${dto.id}</div>
 								<div>
-									<img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? "default2.png" : dto.picture}"/>
+									<img class="product-img" style="width: 100%; height: 100%;" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? "default2.png" : dto.picture}"/>
 								</div>
 								<div>${dto.subject}</div>
 								<div>${dto.hitCount}</div>
