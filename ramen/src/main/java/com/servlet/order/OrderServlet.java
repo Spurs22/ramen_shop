@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.DTO.Cart;
 import com.DTO.OrderBundle;
 import com.DTO.OrderItem;
+import com.DTO.Product;
 import com.DTO.SessionInfo;
 import com.repository.cart.CartRepository;
 import com.repository.cart.CartRepositoryImpl;
@@ -144,11 +145,13 @@ public class OrderServlet extends MyServlet {
 			userTel = memberRepository.readMember(memberId).getTel();
 			userEmail = memberRepository.readMember(memberId).getEmail();
 			
+		
 			Cart cart = new Cart();
 			cart.setProductId(productIds);
 			cart.setProductName(productName);
 			cart.setPrice(price);
 			cart.setQuantity(quantity);
+			cart.setPicture(productService.findProductByProductId(productIds).getPicture());
 			
 			list.add(cart);
 			
