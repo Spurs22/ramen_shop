@@ -24,7 +24,7 @@
 <script>
     let menuIndex = 4
     
-    <c:if test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userRoll==1}">
+    <c:if test="${sessionScope.member.memberId==dto.memberId}">
 		function deleteBoard() {
 		    if(confirm("게시글을 삭제 하시 겠습니까 ? ")) {
 		        let query = "id=${dto.id}&${query}";
@@ -33,6 +33,16 @@
 		    }
 		}
 	</c:if>
+	
+	<c:if test="${sessionScope.member.userRoll == 1}">
+	function deleteBoard() {
+	    if(confirm("게시글을 삭제 하시 겠습니까 ? ")) {
+	        let query = "id=${dto.id}&${query}";
+	        let url = "${pageContext.request.contextPath}/qna/delete.do?" + query;
+	    	location.href = url;
+	    }
+	}
+</c:if>
 </script>
 <body>
 <div class="whole-container">
@@ -123,10 +133,16 @@
 								</c:choose>
 						    	
 								<c:choose>
-						    		<c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userRoll==1}">
+						    		<c:when test="${sessionScope.member.userRoll==1}">
 						    			<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
 						    		</c:when>
-						    		<c:when test="${sessionScope.member.userRoll != 1 && sessionScope.member.memberId != dto.memberId}">
+						    		<c:when test="${sessionScope.member.memberId==dto.memberId}">
+						    			<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
+						    		</c:when>
+						    		<c:when test="${sessionScope.member.memberId != dto.memberId}">
+						    			<input type="hidden" class="btn btn-light" disabled="disabled">
+						    		</c:when>
+						    		<c:when test="${sessionScope.member.userRoll != 1}">
 						    			<input type="hidden" class="btn btn-light" disabled="disabled">
 						    		</c:when>
 						    	</c:choose>

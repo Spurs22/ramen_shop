@@ -74,7 +74,7 @@
 
         .table-header {
             display: grid;
-            grid-template-columns: 5% 10% 10% 10% 28% 15% 12% 10%;
+            grid-template-columns: 5% 15% 10% 10% 27% 15% 10% 8%;
             width: 100%;
             justify-content: center;
             align-items: center;
@@ -88,7 +88,7 @@
 
         .table-main {
             display: grid;
-            grid-template-columns: 5% 10% 10% 10% 28% 15% 12% 10%;
+            grid-template-columns: 5% 15% 10% 10% 27% 15% 10% 8%;
             width: 100%;
             justify-content: center;
             align-items: center;
@@ -117,11 +117,11 @@
     let menuIndex = 5
     
     function ordercancel(orderId)  {
-    	if(! confirm("주문을 취소하시겠습니까 ?")) {
-    		return;
+    	if(confirm("주문을 취소하시겠습니까 ?")) {
+    
+	    	let url = "${pageContext.request.contextPath}/mypage/orderCancel.do?orderId="+orderId;
+	    	location.href= url;
     	}
-    	let url = "${pageContext.request.contextPath}/mypage/orderCancel.do?orderId="+orderId;
-    	location.href= url;
     }
     
     $(function(){
@@ -131,6 +131,8 @@
     		location.href="${pageContext.request.contextPath}/mypage/articleorderlist.do?orderBundleId="+orderBundleId;
     	});
     });
+    
+
 
 </script>
 <body>
@@ -218,9 +220,8 @@
 					<c:forEach var="dto" items="${list}" varStatus="status">
 						<div style="" class="table-main" data-orderBundleId="${dto.orderBundleId}">
 							<div class="item orderView">${dto.orderBundleId}</div>
-							<div class="item orderView" style="padding: 0 5px;" >
-<%--									${dto.deliveryId}--%>
-								<button class="btn btn-outline-secondary" style="font-size: 13px">송장<br>확인</button>
+							<div class="item orderView">
+								[ ${dto.deliveryId} ]
 							</div>
 							<div class="item orderView">${dto.receiveName}</div>
 							<div class="item orderView">${dto.createdDate}</div>
