@@ -139,10 +139,10 @@
 						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
 					</div>
 					<div class="carousel-inner" style="height: 400px">
-						<div class="carousel-item active">
+						<div class="carousel-item active" onclick="location.href='${pageContext.request.contextPath}/recipe/recipe.do?id=82'">
 							<img src="${pageContext.request.contextPath}/resource/picture/jjapaguri.png" class="d-block h-100 w-100" alt="...">
 						</div>
-						<div class="carousel-item">
+						<div class="carousel-item" onclick="location.href='${pageContext.request.contextPath}/recipe/recipe.do?id=76'">
 							<img src="${pageContext.request.contextPath}/resource/picture/buldakgeti.png" class="d-block h-100 w-100" alt="...">
 						</div>
 						<div class="carousel-item">
