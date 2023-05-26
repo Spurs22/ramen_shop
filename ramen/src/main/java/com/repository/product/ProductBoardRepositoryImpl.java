@@ -33,6 +33,9 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 			pstmt.setInt(4, productBoard.getPrice());
 			pstmt.executeUpdate();
 
+			DBUtil.closeResource(pstmt);
+			pstmt = null;
+
 			if (productBoard.getImgList() != null) {
 				sql = "INSERT INTO PRODUCT_BOARD_PICTURE (ID, PRODUCT_BOARD_ID, PICTURE_PATH) " +
 						"VALUES (PRODUCT_BOARD_PICTURE_SEQ.nextval, ?, ?)";
@@ -76,20 +79,32 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 			pstmt.setLong(3, productBoard.getProduct().getProductId());
 			pstmt.executeUpdate();
 
-			// 이미 있던 이미지는?
-			// 이미 있던 이미지를 수정한다면?
-			// 추가로 이미지를 올린다면?
-//			sql = "INSERT INTO PRODUCT_BOARD_PICTURE (ID, PRODUCT_BOARD_ID, PICTURE_PATH) " +
-//					"VALUES (PRODUCT_BOARD_PICTURE_SEQ.nextval, ?, ?)";
-//			pstmt = conn.prepareStatement(sql);
+			DBUtil.closeResource(pstmt);
+			pstmt = null;
 
-//			List<String> imgList = productBoard.getImgList();
-//
-//			for (String img : imgList) {
-//				pstmt.setLong(1, productBoard.getProductId());
-//				pstmt.setString(2, img);
-//				pstmt.executeUpdate();
-//			}
+			if (productBoard.getImgList() != null) {
+				sql = "DELETE PRODUCT_BOARD_PICTURE WHERE PRODUCT_BOARD_ID = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setLong(1, productBoard.getProduct().getProductId());
+				pstmt.executeUpdate();
+
+				DBUtil.closeResource(pstmt);
+				pstmt = null;
+
+				sql = "INSERT INTO PRODUCT_BOARD_PICTURE (ID, PRODUCT_BOARD_ID, PICTURE_PATH) " +
+						"VALUES (PRODUCT_BOARD_PICTURE_SEQ.nextval, ?, ?)";
+				pstmt = conn.prepareStatement(sql);
+
+				List<String> imgList = productBoard.getImgList();
+
+				for (String img : imgList) {
+					pstmt.setLong(1, productBoard.getProduct().getProductId());
+					pstmt.setString(2, img);
+					pstmt.executeUpdate();
+				}
+			}
+
+			conn.commit();
 
 		} catch (Exception e) {
 			e.printStackTrace();

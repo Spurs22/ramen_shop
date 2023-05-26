@@ -317,24 +317,41 @@ public class ProductServlet extends MyUploadServlet {
 	}
 
 	protected void editPost(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("ProductServlet.editPost");
+
 		String content = req.getParameter("content");
 		int price = Integer.parseInt(req.getParameter("price"));
 		Long productId = Long.valueOf(req.getParameter("productId"));
 //		req.getParameter("picture");
 
 		Long memberId = SessionUtil.getMemberIdFromSession(req);
-
 		try {
-			System.out.println("content");
-			System.out.println("content = " + content + ", price = " + price + ", productId = " + productId);
+			System.out.println("게시글 수정 content = " + content + ", price = " + price + ", productId = " + productId);
 
 			ProductBoard productBoard = new ProductBoard(new Product(productId), memberId, null, content, price);
+
+			ServletContext context = getServletContext();
+			String path = context.getRealPath("/resource/picture");
+
+			System.out.println(path);
+
+			List<String> fileNameList = doFileUpload(req.getParts(), path);
+
+			if (fileNameList != null) {
+				for (String s : fileNameList) {
+					System.out.println(s);
+				}
+			}
+
+			if (fileNameList != null) {
+				productBoard.setImgList(fileNameList);
+			}
 
 			System.out.println(productBoard);
 
 			productBoardService.editPost(productBoard);
 
-			resp.sendRedirect(req.getContextPath() + "/product/post?id=" + productId);
+			resp.sendRedirect(req.getContextPath() + "/product/post-board?id=" + productId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

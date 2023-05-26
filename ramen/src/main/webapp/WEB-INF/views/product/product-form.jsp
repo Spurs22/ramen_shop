@@ -294,9 +294,23 @@
     let productImgInput = document.getElementById('imgInput');
     let productImg = document.getElementById('imgPreview');
     let imgPool = document.getElementById('imgPool');
-    let imgTag = '<img style="width: 100px; height: 100px" + src="'
 
+    $(function () {
+        let imgTag;
+        if (${mode.equals('edit')}) {
+            <c:forEach var="img" items="${editBoard.imgList}">
+				imgTag = document.createElement('img');
+				imgTag.src = '${pageContext.request.contextPath}/resource/picture/${img}';
+				imgPool.appendChild(imgTag)
+			</c:forEach>
+        }
+    });
+
+
+	// 이미지 미리보기
     productImgInput.addEventListener('change', function () {
+		$(imgPool).empty()
+
         for (const file of productImgInput.files) {
             const reader = new FileReader();
             reader.onload = ({ target }) => {
