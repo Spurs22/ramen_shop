@@ -164,7 +164,7 @@ function sendLogin() {
 					<p class="text-center">
 					 <p class="text-center">
 						  <span style="display: flex; justify-content: center;">
-						    <a href="${pageContext.request.contextPath}/member/userIdCheck.do" class="link-btn">비밀번호 찾기</a>
+						    <a href="#" class="link-btn">비밀번호 찾기</a>
 						    <span class="divider">|</span>
 						    <a href="${pageContext.request.contextPath}/" class="link-btn">아이디 찾기</a>
 						    <span class="divider">|</span>
