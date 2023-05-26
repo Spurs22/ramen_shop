@@ -291,6 +291,7 @@
 <script>
     $(document).ready(function () {
         selectMenu(menuIndex)
+        getList();
     })
 </script>
 
