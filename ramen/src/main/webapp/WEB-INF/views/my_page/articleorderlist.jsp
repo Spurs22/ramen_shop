@@ -114,7 +114,7 @@
 				<c:forEach var="dto" items="${list}" varStatus="status">
 				  <div class="table-main">
 					<div class="item num">${dto.orderItemId}</div>
-					<div class="item picture"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture}" style="width: 100px;"></div>
+					<div class="item picture"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture	}"></div>
 					<div class="item name">${dto.productName}</div>
 					<div class="item price">${dto.price}원</div>
 					<div class="item quantity">${dto.quantity}개</div>

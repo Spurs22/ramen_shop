@@ -111,11 +111,11 @@
 						<tr>
 							<td width="50%">
 								<c:if test="${sessionScope.member.userRoll==1}">
-									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/reply.do?id=${dto.id}&page=${page}';">답변</button>
+									<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/reply.do?id=${dto.id}&page=${page}';">답변</button>
 								</c:if>
 								<c:choose>
 									<c:when test="${sessionScope.member.memberId==dto.memberId}">
-										<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/update.do?id=${dto.id}&page=${page}';">수정</button>
+										<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/update.do?id=${dto.id}&page=${page}';">수정</button>
 									</c:when>
 									<c:when test="${sessionScope.member.userRoll != 1 && sessionScope.member.memberId != dto.memberId}">
 										<input type="hidden" class="btn btn-light" disabled="disabled">
@@ -124,7 +124,7 @@
 						    	
 								<c:choose>
 						    		<c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userRoll==1}">
-						    			<button type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
+						    			<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
 						    		</c:when>
 						    		<c:when test="${sessionScope.member.userRoll != 1 && sessionScope.member.memberId != dto.memberId}">
 						    			<input type="hidden" class="btn btn-light" disabled="disabled">
@@ -132,7 +132,7 @@
 						    	</c:choose>
 							</td>
 							<td class="text-end">
-								<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/list.do?${query}';">리스트</button>
+								<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/list.do?${query}';">리스트</button>
 							</td>
 						</tr>
 					</table>

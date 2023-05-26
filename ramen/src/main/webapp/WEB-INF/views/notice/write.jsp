@@ -107,9 +107,9 @@
 			  	      <table class="table table-boarderless">
 			  	        <tr>
 			  	          <td class="text-center">
-			  	            <button type="button" class="btn btn-dark" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}&nbsp;<i class="bi bi-check2"></i></button>
-			  	            <button type="reset" class="btn btn-light">다시입력</button>
-			  	            <button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/notice/list.do';">
+			  	            <button type="button" style="background: #206CD9; color: white;" class="btn btn-light" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}&nbsp;<i class="bi bi-check2"></i></button>
+			  	            <button type="reset" style="background: #206CD9; color: white;" class="btn btn-light">다시입력</button>
+			  	            <button type="button" style="background: #206CD9; color: white;" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/notice/list.do';">
 			  	              ${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i>
 			  	            </button>
 			  	            <input type="hidden" name="size" value="${size}">

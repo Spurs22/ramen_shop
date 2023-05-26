@@ -152,7 +152,7 @@
 				</div>
 
 				<form class="" name="searchForm" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; margin-top: 10px" action="${pageContext.request.contextPath}/qna/list.do" method="post">
-					<button type="button" class="btn btn-light" style=""
+					<button type="button" class="btn btn-light" style="background: #206CD9; color: white;"
 							onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">
 						<i class="bi bi-arrow-clockwise"></i></button>
 
@@ -166,12 +166,12 @@
 						</select>
 
 						<input type="text" name="keyword" value="${keyword}" class="form-control">
-						<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
+						<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i></button>
 					</div>
 
 					<c:choose>
 						<c:when test="${sessionScope.member.userRoll == 0}">
-							<button type="button" class="btn btn-light"
+							<button style="background: #206CD9; color: white;" type="button" class="btn btn-light"
 									onclick="location.href='${pageContext.request.contextPath}/qna/write.do';">글올리기
 							</button>
 						</c:when>

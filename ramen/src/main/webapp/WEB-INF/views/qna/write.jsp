@@ -99,9 +99,9 @@
 						<table class="table table-borderless">
 							<tr> 
 								<td class="text-center">
-									<button type="button" class="btn btn-dark" onclick="sendOk();">${mode=='update'?'수정완료':(mode=='reply'? '답변완료':'등록하기')}</button>
-									<button type="reset" class="btn btn-light">다시입력</button>
-									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">${mode=='update'?'수정취소':(mode=='reply'? '답변취소':'등록취소')}</button>
+									<button style="background: #206CD9; color: white;" type="button" class="btn btn-dark" onclick="sendOk();">${mode=='update'?'수정완료':(mode=='reply'? '답변완료':'등록하기')}</button>
+									<button style="background: #206CD9; color: white;" type="reset" class="btn btn-light">다시입력</button>
+									<button style="background: #206CD9; color: white;" type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/qna/list.do';">${mode=='update'?'수정취소':(mode=='reply'? '답변취소':'등록취소')}</button>
 									<c:if test="${mode=='update'}">
 										<input type="hidden" name="id" value="${dto.id}">
 										<input type="hidden" name="page" value="${page}">
