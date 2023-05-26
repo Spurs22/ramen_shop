@@ -487,7 +487,6 @@ public class MyPageServlet extends MyServlet {
 			
 			orderrepository.cancelOrder(orderId);
 			
-			resp.sendRedirect(cp+ "/mypage/orderMyList.do");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

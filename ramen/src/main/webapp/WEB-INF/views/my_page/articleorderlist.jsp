@@ -102,24 +102,24 @@
 		 <div>
 			<div style="display: flex; flex-direction: column; gap: 10px">
 				<div class="table-header bg-light">
-					<div class="item num">주문 번호</div>
-					<div class="item picture">이미지</div>
-					<div class="item name">제품 이름</div>
-					<div class="item price">제품 가격</div>
-					<div class="item quantity">제품 개수</div>
-					<div class="item total">총 금액</div>
-					<div class="item status">배송상태</div>
+					<div class="item">주문 번호</div>
+					<div class="item">이미지</div>
+					<div class="item">제품 이름</div>
+					<div class="item">제품 가격</div>
+					<div class="item">제품 개수</div>
+					<div class="item">총 금액</div>
+					<div class="item">배송상태</div>
 				</div>
 					
 				<c:forEach var="dto" items="${list}" varStatus="status">
 				  <div class="table-main">
-					<div class="item num">${dto.orderItemId}</div>
-					<div class="item picture"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}"></div>
-					<div class="item name">${dto.productName}</div>
-					<div class="item price">${dto.price}원</div>
-					<div class="item quantity">${dto.quantity}개</div>
-					<div class="item total">${dto.totalPrice}원</div>
-					<div class="item status">
+					<div class="item">${dto.orderItemId}</div>
+					<div class="item"><img style="width: 20%;" class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}"></div>
+					<div class="item">${dto.productName}</div>
+					<div class="item">${dto.price}원</div>
+					<div class="item">${dto.quantity}개</div>
+					<div class="item">${dto.totalPrice}원</div>
+					<div class="item">
 						<c:choose>
 							<c:when test="${dto.statusName == '배송완료'}">
 								<div>배송완료<a class="clickre" href="${pageContext.request.contextPath}/product/review-form?product-id=${dto.productId}&order-id=${dto.orderItemId}"><br>리뷰작성</a></div>

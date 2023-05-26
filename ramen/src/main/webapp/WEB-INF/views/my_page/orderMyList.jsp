@@ -117,9 +117,20 @@
     let menuIndex = 5
     
     function ordercancel(orderId)  {
-    	let url = "${pageContext.request.contextPath}/mypage/orderCancel?orderId="+orderId;
+    	if(! confirm("주문을 취소하시겠습니까 ?")) {
+    		return;
+    	}
+    	let url = "${pageContext.request.contextPath}/mypage/orderCancel.do?orderId="+orderId;
     	location.href= url;
     }
+    
+    $(function(){
+    	$(".orderView").click(function(){
+    		let orderBundleId = $(this).parent("div").attr("data-orderBundleId");
+
+    		location.href="${pageContext.request.contextPath}/mypage/articleorderlist.do?orderBundleId="+orderBundleId;
+    	});
+    });
 
 </script>
 <body>
@@ -177,8 +188,6 @@
 <%--					</c:forEach>--%>
 
 
-
-
 			<div>
 				<div style="margin: 10px 0">
 					<div> ${dataCount}개 (${page}/${total_page} 페이지) </div>
@@ -207,24 +216,24 @@
 <%--					</c:forEach>--%>
 
 					<c:forEach var="dto" items="${list}" varStatus="status">
-						<div style="" class="table-main" onclick="location.href='${pageContext.request.contextPath}/mypage/articleorderlist.do?orderBundleId=${dto.orderBundleId}'">
-							<div class="item">${dto.orderBundleId}</div>
-							<div class="item" style="padding: 0 5px;" >
+						<div style="" class="table-main" data-orderBundleId="${dto.orderBundleId}">
+							<div class="item orderView">${dto.orderBundleId}</div>
+							<div class="item orderView" style="padding: 0 5px;" >
 <%--									${dto.deliveryId}--%>
 								<button class="btn btn-outline-secondary" style="font-size: 13px">송장<br>확인</button>
 							</div>
-							<div class="item">${dto.receiveName}</div>
-							<div class="item">${dto.createdDate}</div>
-							<div class="item" style="padding: 0 10px">[${dto.postNum}] ${dto.address1} ${dto.address2}</div>
-							<div class="item">${dto.tel}</div>
-							<div class="item">${dto.totalPrice}원</div>
+							<div class="item orderView">${dto.receiveName}</div>
+							<div class="item orderView">${dto.createdDate}</div>
+							<div class="item orderView" style="padding: 0 10px">[${dto.postNum}] ${dto.address1} ${dto.address2}</div>
+							<div class="item orderView">${dto.tel}</div>
+							<div class="item orderView">${dto.totalPrice}원</div>
 							<c:choose>
 								<c:when test="${dto.statusName == '배송완료'}">
 									<div>배송완료</div>
 								</c:when>
 
 								<c:when test="${dto.statusName == '결제완료'}">
-									<div>결제완료<button class="btn btn-outline-primary" type="button">주문취소</button></div>
+									<div>결제완료<button class="btn btn-outline-primary" type="button" onclick="ordercancel('${dto.orderBundleId}');">주문취소</button></div>
 								</c:when>
 
 								<c:when test="${dto.statusName == '배송중'}">
