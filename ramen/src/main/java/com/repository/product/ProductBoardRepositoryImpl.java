@@ -300,7 +300,7 @@ public class ProductBoardRepositoryImpl implements ProductBoardRepository{
 				sql += "WHERE category_id = ? ";
 			}
 
-			sql += "ORDER BY ID DESC ";
+			sql += "ORDER BY created_date DESC ";
 
 			pstmt = conn.prepareStatement(sql);
 
