@@ -231,7 +231,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 		String sql;
 		
 		try {
-			sql = "SELECT oi.id, oi.product_id, order_id, status_id, quantity, price, name "
+			sql = "SELECT oi.id, oi.product_id, order_id, status_id, quantity, price, name, p.picture  "
 					+ " FROM order_item oi JOIN product p ON p.id = oi.product_id "
 					+ " WHERE order_id = ? ";
 			pstmt = conn.prepareStatement(sql);
@@ -248,6 +248,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 				orderItem.setQuantity(rs.getInt(5));
 				orderItem.setPrice(rs.getLong(6));
 				orderItem.setProductName(rs.getString(7));
+				orderItem.setPicture(rs.getString(8));
 				
 				list.add(orderItem);
 			}
