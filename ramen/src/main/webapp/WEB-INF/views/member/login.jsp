@@ -56,7 +56,7 @@
 }
 
 .members-message p {
-  color: #FFBB00;
+  color: black;
 }
 
 .text-center {
