@@ -22,13 +22,9 @@ public class ProductRepositoryImplTest {
 				null
 		);
 
-
-
 //		// 상품 생성
 //		System.out.println("createProduct test");
 //		productRepository.createProduct(product);
-//
-
 
 		// 상품 찾기
 //		System.out.println("findProductByProductId test");

@@ -117,7 +117,7 @@
 							<div>${product.remainQuantity}</div>
 							<div style="display: flex; flex-direction: column; gap: 5px; width: 100%; padding: 5px">
 								<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/product/edit-product?id=' + ${product.productId}">수정</button>
-								<button class="btn btn-outline-danger">삭제</button>
+<%--								<button class="btn btn-outline-danger">삭제</button>--%>
 							</div>
 						</div>
 					</c:forEach>
