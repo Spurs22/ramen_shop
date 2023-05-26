@@ -19,7 +19,6 @@ public class OrderBundle {
 	
 	private String statusName;
 	
-	private String picture;
 
 	private List<OrderItem> orderItems;
 	
@@ -136,13 +135,6 @@ public class OrderBundle {
 		this.statusName = statusName;
 	}
 
-	public String getPicture() {
-		return picture;
-	}
-
-	public void setPicture(String picture) {
-		this.picture = picture;
-	}
 	
 	
 }
