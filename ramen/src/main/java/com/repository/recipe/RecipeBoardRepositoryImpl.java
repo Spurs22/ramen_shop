@@ -1142,7 +1142,7 @@ public class RecipeBoardRepositoryImpl implements RecipeBoardRepository {
 					+ " FROM recipe_board r "
 					+ " JOIN member m ON m.id = r.member_id "
 					+ " JOIN recipe_product p ON p.recipe_id = r.id "
-					+ " LEFT OUTER JOIN recipe_picture rp ON p.recipe_id = r.id "
+					+ " LEFT OUTER JOIN recipe_picture rp ON rp.recipe_id = r.id "
 					+ " LEFT OUTER JOIN ( "
 					+ " 	SELECT recipe_id, COUNT(*) recipeLikeCount "
 					+ " 	FROM recipe_like "
