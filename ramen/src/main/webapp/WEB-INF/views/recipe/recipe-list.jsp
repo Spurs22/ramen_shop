@@ -154,10 +154,11 @@
 
 <script>
     $(document).ready(function () {
-        selectMenu(menuIndex)
+        selectMenu(menuIndex);
     })
 </script>
 <script type="text/javascript">
+
 	let btnradio = document.getElementsByName('btnradio');
 	
 	let selectedBtnradio = 'btnradio1';

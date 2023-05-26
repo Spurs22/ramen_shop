@@ -411,15 +411,14 @@
 	        success: function(data) {
 	        	let state = data.state;
 	        	if(state == "true") {
-		        	window.location.href = "${pageContext.request.contextPath}/recipe/recipe-list.do";
+		        	window.location.href = "${pageContext.request.contextPath}/recipe/list.do";
 	        	}
 	        },
 	        error: function(xhr, status, error) {
 	            console.error(error);
 	        }
 	    });
-	    
-		f.submit();
+	    f.submit;
 	}
     
     let addedProducts = [];
