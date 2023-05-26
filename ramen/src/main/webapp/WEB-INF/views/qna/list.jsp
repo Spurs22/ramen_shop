@@ -136,7 +136,7 @@
 							<td>${dataCount - (page-1) * size - status.index}</td>
 							<td class="left">
 								<c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
-								<c:if test="${dto.depth!=0}">└&nbsp;</c:if>
+								<c:if test="${dto.depth!=0}"><i class="bi bi-arrow-return-right"></i>&nbsp;</c:if>
 								<a href="${articleUrl}&id=${dto.id}" class="text-reset">${dto.subject}</a>
 							</td>
 							<td>${dto.nickname}</td>

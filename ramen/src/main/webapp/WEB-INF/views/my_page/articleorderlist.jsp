@@ -114,7 +114,7 @@
 				<c:forEach var="dto" items="${list}" varStatus="status">
 				  <div class="table-main">
 					<div class="item num">${dto.orderItemId}</div>
-					<div class="item picture"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture	}"></div>
+					<div class="item picture"><img class="product-img" src="${pageContext.request.contextPath}/resource/picture/${dto.picture == null ? 'default2.png' : dto.picture}"></div>
 					<div class="item name">${dto.productName}</div>
 					<div class="item price">${dto.price}원</div>
 					<div class="item quantity">${dto.quantity}개</div>
@@ -122,15 +122,19 @@
 					<div class="item status">
 						<c:choose>
 							<c:when test="${dto.statusName == '배송완료'}">
-								<div>${dto.statusName}<a class="clickre" href="${pageContext.request.contextPath}/product/review-form?product-id=${dto.productId}&order-id=${dto.orderItemId}"><br>리뷰작성</a></div>
+								<div>배송완료<a class="clickre" href="${pageContext.request.contextPath}/product/review-form?product-id=${dto.productId}&order-id=${dto.orderItemId}"><br>리뷰작성</a></div>
 							</c:when>
 
 							<c:when test="${dto.statusName == '배송중'}">
-								<div>${dto.statusName}</div>
+								<div>배송중</div>
 							</c:when>
 
 							<c:when test="${dto.statusName == '결제완료'}">
-								<div>${dto.statusName}</div>
+								<div>결제완료</div>
+							</c:when>
+							
+							<c:when test="${dto.statusName == '결제취소'}">
+								<div>결제취소</div>
 							</c:when>
 						</c:choose>
 					</div>

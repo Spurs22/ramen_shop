@@ -18,6 +18,8 @@ public class OrderBundle {
 	private Long totalPrice;
 	
 	private String statusName;
+	
+	private String picture;
 
 	private List<OrderItem> orderItems;
 	
@@ -132,6 +134,14 @@ public class OrderBundle {
 
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 	
 	

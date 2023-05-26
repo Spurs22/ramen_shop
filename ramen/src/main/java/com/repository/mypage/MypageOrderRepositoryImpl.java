@@ -61,13 +61,14 @@ public class MypageOrderRepositoryImpl implements MypageOrderRepository {
 			
 			sb.append(" SELECT ob.id, ob.member_id, ob.receive_name, ob.delivery_id, ob.created_date, os.status_name,  ");
 			sb.append("  ob.post_num, ob.address2, ob.address1, ob.tel, ");
-			sb.append("  SUM(oi.price * oi.quantity) AS total ");
+			sb.append("  SUM(oi.price * oi.quantity) AS total, p.picture ");
 			sb.append("  FROM order_bundle ob ");
 			sb.append("  LEFT JOIN order_item oi ON oi.order_id = ob.id ");
 			sb.append("  JOIN order_status os ON oi.status_id = os.id ");
+			sb.append("  JOIN product p ON p.id = oi.product_id ");
 			sb.append("  WHERE ob.member_id = ? ");
 			sb.append("  GROUP BY ob.id, ob.member_id, ob.receive_name, ob.delivery_id, ob.created_date, os.status_name, ");
-			sb.append("  ob.post_num, ob.address2, ob.address1, ob.tel");
+			sb.append("  ob.post_num, ob.address2, ob.address1, ob.tel, p.picture");
 			sb.append("  ORDER BY ob.created_date DESC ");
 			sb.append("  OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
@@ -93,6 +94,7 @@ public class MypageOrderRepositoryImpl implements MypageOrderRepository {
 				dto.setAddress1(rs.getString(9));
 				dto.setTel(rs.getString(10));
 				dto.setTotalPrice(rs.getLong(11));
+				dto.setPicture(rs.getString(12));
 				
 				list.add(dto);
 			}
