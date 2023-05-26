@@ -434,12 +434,12 @@
 			alert('이미 추가된 상품입니다.');
 			return;
 		}
-    	
+		
     	let out = "";
 		// 체크 포인트
-		out += "<div class='cart-product shadow xm'>";
+		out += "<div class='cart-product shadow-sm'>";
 			out += "<p class='delete-p'><button type='button' class='delete-btn'><i class='fa-solid fa-xmark'></i></button></p>";
-			out += "<img class='product-img' src='${pageContext.request.contextPath}/resource/picture/"+picture+">";
+			out += "<img class='product-img' src='${pageContext.request.contextPath}/resource/picture/"+picture+"'>";
 			out += "<p class='cart-name'>" + name + "</p>";
 			out += "<div style='display: flex; flex-direction: row; justify-content: space-between; width: 100%'>"
 				out += "<button type='button' class='quantity-btn minus' data-product-id='" + productId + "'><i class='fa-solid fa-minus'></i></button>";
