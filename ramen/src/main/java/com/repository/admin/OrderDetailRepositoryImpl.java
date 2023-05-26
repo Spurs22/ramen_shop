@@ -26,13 +26,27 @@ private Connection conn = DBConn.getConnection();
 		String sql;
 
 		try {
-			sql = "UPDATE order_bundle "
-					+ " SET delivery_id = ? , status_id = 2  "
-					+ " WHERE id = ?" ;
+			sql = " UPDATE order_bundle "
+					+ " SET delivery_id = ? " 
+					+ " WHERE id = ? ";
+					
 			pstmt = conn.prepareStatement(sql);
-			 
+	 
 			pstmt.setLong(1, deliveryId);
 			pstmt.setLong(2, orderId);
+		
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			sql =  " UPDATE order_item "
+					+ " SET status_id = 2 "
+					+ " WHERE order_id = ? ";
+					
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, orderId);
 		
 			pstmt.executeUpdate();
 			
