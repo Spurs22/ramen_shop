@@ -136,7 +136,7 @@
 							<div style="font-size: 14px"><i class="fa-solid fa-eye"></i> ${recipe.hitCount}</div>
 							<div style="font-size: 14px;">${recipe.createdDate}</div>
 						</div>
-
+	
 						<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
 							<div style="font-size: 14px;">작성자 : ${recipe.nickname}</div>
 							<div style="font-size: 14px"><i class="fa-solid fa-heart" style="color: red;"></i> ${recipe.recipeLikeCount}</div>
